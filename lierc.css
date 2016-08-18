@@ -1,0 +1,277 @@
+body {
+  margin: 0;
+  padding: 0;
+  font-family: sans-serif;
+  font-size: 14px;
+  overflow-x: hidden;
+}
+#panel ol {
+  margin: 0;
+  padding: 0;
+  margin-left: 150px;
+  padding-bottom: 42px;
+  box-sizing: border-box;
+  list-style: none;
+}
+#panel ol li {
+  padding: 5px 10px;
+  border-top: 1px solid #eee;
+}
+#panel li:first-child {
+  border-top: none;
+}
+#panel ol li.filler {
+  padding: 0;
+  margin: 0;
+  border: none;
+  height: 0px;
+}
+#panel ol li.event {
+  color: #999;
+  font-style: italic;
+  border-top: 1px solid #eee;
+}
+#panel ol li.raw {
+  font-family: monospace;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  border: none;
+  white-space: pre-wrap;
+  line-height: 1em;
+}
+
+#panel ol li.sending.sent {
+  opacity: 1;
+  transition: opacity .5s;
+}
+
+#panel ol li.sending {
+  opacity: 0.25;
+  transition: opacity 0s;
+}
+
+#panel ol div.backlog-block + li.event,
+#panel ol li.event:first-child,
+#panel ol li.event + li.event {
+  border-top: none;
+}
+
+#panel ol li.message span.message-nick {
+  font-weight: bold;
+}
+#panel ol li.message a {
+  word-break: break-all;
+}
+#foot {
+  border-top: 2px solid #fff;
+  display: block;
+  margin: 0;
+  padding: 0;
+  background: #eee;
+  position: fixed;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+}
+#prefix {
+  width: 150px;
+  box-sizing: border-box;
+  padding: 10px;
+  font-size: 16px;
+  float: left;
+  text-align: right;
+  color: #aaa;
+}
+#input {
+  margin-left: 150px;
+  padding: 5px;
+}
+#input input {
+  display: block;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  padding: 5px;
+}
+
+#nav {
+  width: 150px;
+  position: fixed;
+  box-sizing: border-box;
+  top: 0px;
+  bottom: 0px;
+  left: 0px;
+  background: #fff;
+  border-right: 1px solid #ccc;
+}
+
+.nav {
+  margin: 0;
+  padding: 0;
+}
+
+.nav-title {
+  padding: 10px 0 0 15px;
+  font-size: 12px;
+  color: #999;
+}
+
+.nav li.missed.unread:hover,
+.nav li.missed.unread,
+.nav li.unread:hover,
+.nav li.unread {
+  list-style-type: disc;
+  color: green;
+}
+.nav li.missed:hover,
+.nav li.missed {
+  list-style-type: disc;
+  color: #ccc;
+}
+.nav li.missed:hover {
+  color: #000;
+}
+.nav li {
+  cursor: pointer;
+  padding: 8px 0px 8px 15px;
+  list-style-type: circle;
+  color: #ccc;
+  font-size: 28px;
+  line-height: 14px;
+  list-style-position: inside;
+  position: relative;
+}
+.nav li.active {
+  background: #efefef;
+}
+.nav li.active:hover {
+  color: #ccc;
+}
+.nav li.active span,
+.nav li:hover {
+  color: #000;
+}
+.nav li:hover {
+  background: #efefef;
+}
+.nav li > span {
+  color: #555;
+  font-size: 14px;
+  line-height: 14px;
+  display: block;
+  position: absolute;
+  left: 32px;
+  top: 9px;
+}
+.nav li > span > span.pill {
+  background: #bbb;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: bold;
+  display: inline-block;
+  padding: 0 5px;
+  margin-left: 5px;
+  font-size: 12px;
+}
+#topic {
+  position: fixed;
+  top: 0px;
+  left: 150px;
+  right: 0px;
+  padding: 8px 0 8px 10px;
+  border-bottom: 2px solid #fff;
+  margin: 0;
+  background: #eee;
+}
+#topic p {
+  margin: 0;
+  padding: 0;
+  line-height: 14px;
+  font-size: 14px;
+  color: #555;
+}
+div.backlog-block {
+  border-bottom: 1px dashed #ccc;
+  padding-bottom: 10px;
+  margin: 10px 0;
+}
+div.overlay {
+  z-index: 9999999;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  right: 0px;
+  bottom: 0px;
+  background: #fff;
+}
+
+div.login {
+  display: none;
+  width: 220px;
+  margin: 20px auto;
+  font-size: 18px;
+  background: #eee;
+  padding: 10px;
+}
+
+.overlay label,
+.overlay input[type=text],
+.overlay input[type=number],
+.overlay input[type=email],
+.overlay input[type=password]
+{
+  width: 200px;
+  display: block;
+}
+
+
+.overlay input[type=number],
+.overlay input[type=text],
+.overlay input[type=email],
+.overlay input[type=password] {
+  font-size: 18px;
+  padding: 5px;
+}
+
+.overlay .input-group {
+  margin-top: 10px;
+}
+
+.overlay label {
+  color: #555;
+}
+
+.overlay input {
+  font-size: 18px;
+}
+
+.config {
+  display: none;
+  width: 220px;
+  margin: 20px auto;
+  font-size: 18px;
+  background: #eee;
+  padding: 10px;
+
+}
+
+h1 {
+  margin: 0;
+  padding: 8px 0 8px 15px;
+  font-size: 14px;
+  line-height: 14px;
+  background: #eee;
+}
+
+#add-connection {
+  display: inline-block;
+  border-radius: 10px;
+  padding: 0 4px;
+  line-height: 14px;
+  cursor: pointer;
+}
+
+#add-connection:hover {
+  color: #000;
+}
