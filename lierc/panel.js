@@ -38,28 +38,30 @@ var Panel = function(name, id, connection) {
   this.build_nav = function() {
     var el = $('<li/>', {'data-panel-id': id});
     var name = $('<span/>', {'class':'panel-name'}).text(this.name);
+    var pill = $('<span/>', {'class':'pill'});
+    name.append(pill);
     el.append(name);
-
-    if (this.focused) {
-      el.addClass("active")
-    }
-
-    if (this.unread) {
-      var count = $('<span/>', {'class':'pill'}).text(this.unread);
-      name.append(count);
-      el.addClass("unread");
-    }
-    if (this.missed) {
-      el.addClass("missed");
-    }
-
     return el;
   };
 
   this.update_nav = function() {
-    var updated = this.build_nav();
-    this.elem.nav.replaceWith(updated);
-    this.elem.nav = updated;
+    this.elem.nav.find('.panel-name').text(this.name);
+    this.elem.nav.find('.pill').text(this.unread);
+
+    if (this.unread)
+      this.elem.nav.addClass('unread');
+    else
+      this.elem.nav.removeClass('unread');
+
+    if (this.missed)
+      this.elem.nav.addClass('missed');
+    else
+      this.elem.nav.removeClass('missed');
+
+    if (this.focused)
+      this.elem.nav.addClass('active');
+    else
+      this.elem.nav.removeClass('active');
   };
 
   this.incr_unread = function() {

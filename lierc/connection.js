@@ -115,7 +115,20 @@ var Connection = function(config) {
       if (channel) {
         channel.topic = topic;
         fire("channel:msg", this.id, name, message);
-        fire("channel:topic", this.id, name, message);
+        fire("channel:topic", this.id, name, topic);
+      }
+      break;
+
+    case "TOPIC":
+      var nick = message.Prefix.Name;
+      var name = message.Params[0];
+      var text = message.Params[1];
+      var channel = this.channel(name);
+
+      if (channel) {
+        channel.topic = topic;
+        fire("channel:msg", this.id, name, message);
+        fire("channel:topic", this.id, name, text);
       }
       break;
 
@@ -152,7 +165,9 @@ var Connection = function(config) {
         fire("channel:msg", this.id, name, message);
       else if (name == this.nick)
         fire("private:msg", this.id, nick, message);
+      break;
 
+    case "PING":
       break;
 
     default:

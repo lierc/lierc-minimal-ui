@@ -31,6 +31,11 @@ body {
   font-style: italic;
   border-top: 1px solid #eee;
 }
+
+#panel ol li.notice span.channel {
+  color: magenta;
+}
+
 #panel ol li.raw {
   font-family: monospace;
   padding-top: 0px;
@@ -51,6 +56,8 @@ body {
 }
 
 #panel ol div.backlog-block + li.event,
+#panel ol div.backlog-block + li.message,
+#panel ol div.backlog-block + li.raw,
 #panel ol li.event:first-child,
 #panel ol li.event + li.event {
   border-top: none;
@@ -117,6 +124,10 @@ body {
   color: #999;
 }
 
+.nav li.unread span.pill {
+  display: inline;
+}
+
 .nav li.missed.unread:hover,
 .nav li.missed.unread,
 .nav li.unread:hover,
@@ -124,14 +135,17 @@ body {
   list-style-type: disc;
   color: green;
 }
+
 .nav li.missed:hover,
 .nav li.missed {
   list-style-type: disc;
   color: #ccc;
 }
+
 .nav li.missed:hover {
   color: #000;
 }
+
 .nav li {
   cursor: pointer;
   padding: 8px 0px 8px 15px;
@@ -142,19 +156,25 @@ body {
   list-style-position: inside;
   position: relative;
 }
+
 .nav li.active {
-  background: #efefef;
+  background: #ddd;
 }
+
 .nav li.active:hover {
   color: #ccc;
+  background: #ddd;
 }
+
 .nav li.active span,
 .nav li:hover {
   color: #000;
 }
+
 .nav li:hover {
   background: #efefef;
 }
+
 .nav li > span {
   color: #555;
   font-size: 14px;
@@ -164,7 +184,9 @@ body {
   left: 32px;
   top: 9px;
 }
+
 .nav li > span > span.pill {
+  display: none;
   background: #bbb;
   border-radius: 10px;
   color: #fff;

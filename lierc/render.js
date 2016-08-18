@@ -31,9 +31,25 @@ var Render = function(message) {
   case "332":
     var name = message.Params[1];
     var text = message.Params[2];
-    return make("event", message).text(
-      "Topic changed to: " + text);
-    break;
+
+    var span = $('<span/>').text(
+      "Topic: " + text
+    );
+
+    linkify(span.get(0));
+    return make("event", message).append(span);
+
+  case "TOPIC":
+    var nick = message.Prefix.Name;
+    var name = message.Params[0];
+    var text = message.Params[1];
+
+    var span = $('<span/>').text(
+      nick + " changed the topic: " + text
+    );
+
+    linkify(span.get(0));
+    return make("event", message).append(span);
 
   case "PRIVMSG":
     var nick = message.Prefix.Name;
@@ -58,10 +74,26 @@ var Render = function(message) {
 
     return make("message", message).append(from, msg);
 
+  case "NOTICE":
+    var name = message.Params[0];
+    var text = message.Params[1];
+
+    var chan = $('<span/>', {'class':'channel'}).text(name);
+    var span = $('<span/>').text(' ' + text);
+    linkify(span.get(0));
+
+    return make("raw notice", message).append(chan, span);
+
   default:
-    var text = message.Command.match(/^[0-9][0-9][0-9]$/)
-      ? message.Params.slice(1).join(" ")
-      : [message.Command].concat(message.Params).join(" ");
+    var text = "";
+
+    if (message.Command.match(/^[45][0-9][0-9]$/))
+      text = message.Params.join(" ");
+    else if (message.Command.match(/^[0-9][0-9][0-9]$/))
+      text = message.Params.slice(1).join(" ");
+    else
+      text = [message.Command].concat(message.Params).join(" ");
+
     return make("raw", message).text(text);
   };
 

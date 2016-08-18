@@ -20,6 +20,8 @@ var Liercd = function(url) {
     prefix: $('#prefix')
   };
 
+  sortable('.sortable');
+
   function panel_id(name, connection) {
     return window.btoa(name + connection).replace(/=+$/, "");
   }
@@ -63,9 +65,9 @@ var Liercd = function(url) {
       panel.append(Render(message));
     }.bind(this));
 
-    connection.on("channel:topic", function(conn, channel, message) {
+    connection.on("channel:topic", function(conn, channel, text) {
       var panel = this.get_panel(channel, conn);
-      panel.update_topic(message.Params[2]);
+      panel.update_topic(text);
     }.bind(this));
 
     this.connections[connection.id] = connection;
@@ -143,6 +145,8 @@ var Liercd = function(url) {
       this.elem.privates.append(panel.elem.nav);
     else
       this.elem.channels.append(panel.elem.nav);
+
+    sortable('.sortable');
 
     if (!this.focused)
       this.focus_panel(id);
@@ -305,18 +309,22 @@ var Liercd = function(url) {
     input.val("");
 
     var panel = this.panels[input.attr('data-panel-id')];
+    var connection = this.connections[panel.connection];
     var privmsg = false;
+    var method = "POST";
 
-    if (value.substring(0,1) != "/") {
+    if (value.substring(0,1) == "/") {
+      var command = value.substring(1).split(/\s+/, 2);
+      value = command[0].toUpperCase();
+      if (value == "QUIT")
+        method = "DELETE";
+      if (command.length == 2)
+        value += " :" + command[1];
+    }
+    else if (panel.type != "status") {
       privmsg = value;
       value = "PRIVMSG " + panel.name + " :" + value;
     }
-    else {
-      value = value.substring(1);
-    }
-
-    var method = value.match(/^quit\b/i) ? "DELETE" : "POST";
-    var connection = this.connections[panel.connection];
 
     if (privmsg) {
       var el = panel.own_message(connection.nick, privmsg);
