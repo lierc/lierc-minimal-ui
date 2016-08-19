@@ -5,68 +5,112 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link type="text/css" rel="stylesheet" href="./lierc.css"></link>
+    <title>liercc</title>
   </head>
   <body>
-    <div id="topic"></div>
-    <div id="nav">
+    <header id="topic"></header>
+
+    <nav id="nav">
       <h1>liercc</h1>
-      <div class="nav-title">Networks <span id="add-connection">[add]</span></div>
+      <h2 class="nav-title">Networks <span id="add-connection">add</span></h2>
       <ul class="nav sortable" id="status"></ul>
-      <div class="nav-title">Channels</div>
+      <h2 class="nav-title">Channels</h2>
       <ul class="nav sortable" id="channels"></ul>
-      <div class="nav-title">Privates</div>
+      <h2 class="nav-title">Privates</h2>
       <ul class="nav sortable" id="privates"></ul>
-    </div>
+      <aside id="help">
+        <dl>
+          <dt>Alt + arrow</dt>
+          <dd>Next/Prev panel</dd>
+          <dt>Shift + Alt + arrow</dt>
+          <dd>Next/Prev unread panel</dd>
+        </dl>
+      </aside>
+    </nav>
+
     <div id="filler"></div>
-    <div id="panel"></div>
-    <div id="foot">
-      <div id="prefix"></div>
+    <main id="panel"></main>
+
+    <footer id="foot">
+      <label id="prefix"></label>
       <form id="input"></form>
-    </div>
-    <div class="login">
-      <div class="input-group">
-        <label for="email">Email address</label>
-        <input name="email" id="email" type="email" value="">
-      </div>
-      <div class="input-group">
-        <label for="pass">Password</label>
-        <input name="pass" id="pass" type="password" value="">
-      </div>
-      <div class="input-group">
-        <input type="submit" name="register" id="register" value="Register">
-        <input type="submit" name="auth" id="auth" value="Log In">
-      </div>
-    </div>
-    <div class="config">
-      <div class="input-group">
-        <label for="host">Server</label>
-        <input name="Host" type="text" value="" placeholder="irc.freenode.com">
-      </div>
-      <div class="input-group">
-        <label for="port">Port</label>
-        <input name="Port" type="number" value="6667">
-      </div>
-      <div class="input-group">
-        <label for="ssl">SSL</label>
-        <input name="Ssl" type="checkbox">
-      </div>
-      <div class="input-group">
-        <label for="nick">Nickname</label>
-        <input name="Nick" type="text" value="">
-      </div>
-      <div class="input-group">
-        <label for="user">Username</label>
-        <input name="User" type="text" value="">
-      </div>
-      <div class="input-group">
-        <label for="pass">Password</label>
-        <input name="Pass" type="text" value="">
-      </div>
-      <div class="input-group">
-        <input type="submit" name="connect" value="Connect">
-        <a href="#" class="close">close</a>
-      </div>
-    </div>
+    </footer>
+
+    <section class="login">
+      <h2>Login</h2>
+      <form method="POST">
+        <fieldset class="input-group">
+          <label for="email">Email address</label>
+          <input name="email" type="email" value="">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="pass">Password</label>
+          <input name="pass" type="password" value="">
+        </fieldset>
+        <fieldset class="submit-group">
+          <input type="submit" name="auth" value="Log In">
+        </fieldset>
+      </form>
+
+      <br/>
+
+      <h2>Register</h2>
+      <form method="POST">
+        <fieldset class="input-group">
+          <label for="email">Email address</label>
+          <input name="email" type="email" value="">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="pass">Password</label>
+          <input name="pass" type="password" value="">
+        </fieldset>
+        <fieldset class="submit-group">
+          <input type="submit" name="register" value="Register">
+        </fieldset>
+      </form>
+    </section>
+
+    <section class="config">
+      <a href="#" class="close">close</a>
+      <h2>Add a connection</h2>
+      <form method="POST">
+        <fieldset class="input-group">
+          <label for="host">Address *</label>
+          <input name="Host" type="text" value="" placeholder="irc.freenode.com">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="port">Port *</label>
+          <input name="Port" type="number" value="6667">
+        </fieldset>
+        <fieldset class="checkbox-group">
+          <label for="ssl">SSL</label>
+          <input name="Ssl" type="checkbox">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="nick">Nickname *</label>
+          <input name="Nick" type="text" value="">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="user">Username</label>
+          <input name="User" type="text" value="">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="pass">Password</label>
+          <input name="Pass" type="text" value="">
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="channels">Channels</label>
+          <input name="Channels" type="text" value="">
+          <p class="note">(comma separated list)</p>
+        </fieldset>
+        <fieldset class="submit-group">
+          <input type="submit" name="connect" value="Connect">
+          <p class="note">* required</p>
+        </fieldset>
+      </form>
+    </section>
+
+    <script type="text/javascript" src="./lierc/favicon.js"></script>
     <script src="//code.jquery.com/jquery.js"></script>
     <script src="//cdnjs.cloudflare.com/ajax/libs/html5sortable/0.4.1/html.sortable.min.js"></script>
     <script type="text/javascript" src="./lierc/completion.js"></script>
@@ -79,13 +123,15 @@
     <script type="text/javascript" src="./lierc/render.js"></script>
     <script type="text/javascript" src="./lierc/auth.js"></script>
     <script type="text/javascript" src="./lierc/lierc.js"></script>
+
     <script type="text/javascript">
       $(document).ready(function() {
         var auth = new Auth("/api");
         auth.auth(function() {
-          var liercd = new Liercd("/api");
+          window.liercd = new Liercd("/api");
         });
       });
     </script>
+
   </body>
 </html>

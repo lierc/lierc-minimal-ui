@@ -1,7 +1,4 @@
 var Render = function(message) {
-  var img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
-  var url_re = /(https?:\/\/[^\s<"]*)/ig;
-
   switch (String(message.Command)) {
   case "NICK":
     var old = message.Prefix.Name;
@@ -72,10 +69,10 @@ var Render = function(message) {
 
     linkify(msg.get(0));
 
-    return make("message", message).append(from, msg);
+    return make("message", message).append(flex(from, msg));
 
   case "NOTICE":
-    var name = message.Params[0];
+    var name = message.Prefix.Name;
     var text = message.Params[1];
 
     var chan = $('<span/>', {'class':'channel'}).text(name);
@@ -97,34 +94,22 @@ var Render = function(message) {
     return make("raw", message).text(text);
   };
 
-  function linkify(elem) {
-    var children = elem.childNodes;
-    var length = children.length;
-
-    for (var i=0; i < length; i++) {
-      var node = children[i];
-      if (node.nodeName == "A") {
-        continue;
-      }
-      else if (node.nodeName != "#text") {
-        linkify(node);
-      }
-      else if (node.nodeValue.match(url_re)) {
-        var span = document.createElement("SPAN");
-        var escaped = $('<div/>').text(node.nodeValue).html();
-        span.innerHTML = escaped.replace(
-          url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
-        node.parentNode.replaceChild(span, node);
-      }
-    }
-  }
-
   function make (type, message) {
     return $('<li/>', {
       'class':type,
       'data-time': message.Time,
       'data-message-id': message.Id
     });
+  }
+
+  function flex (a,b) {
+    var wrap = $('<div/>',{'class':'flex'});
+    var l = $('<div/>', {'class':'left'});
+    var r = $('<div/>', {'class':'right'});
+    l.append(a);
+    r.append(b);
+    wrap.append(l,r);
+    return wrap;
   }
 
   function string_to_rgb(str){
@@ -140,3 +125,28 @@ var Render = function(message) {
     return "00000".substring(0, 6 - c.length) + c;
   }
 };
+
+var img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
+var url_re = /(https?:\/\/[^\s<"]*)/ig;
+
+function linkify(elem) {
+  var children = elem.childNodes;
+  var length = children.length;
+
+  for (var i=0; i < length; i++) {
+    var node = children[i];
+    if (node.nodeName == "A") {
+      continue;
+    }
+    else if (node.nodeName != "#text") {
+      linkify(node);
+    }
+    else if (node.nodeValue.match(url_re)) {
+      var span = document.createElement("SPAN");
+      var escaped = $('<div/>').text(node.nodeValue).html();
+      span.innerHTML = escaped.replace(
+        url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
+      node.parentNode.replaceChild(span, node);
+    }
+  }
+}

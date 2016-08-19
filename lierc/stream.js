@@ -1,14 +1,17 @@
 var Stream = function(baseurl) {
-  this.baseurl = baseurl;
-  this.retries = 0;
-  this.eventsource = null;
+  var stream = this;
+
+  stream.baseurl = baseurl;
+  stream.retries = 0;
+  stream.eventsource = null;
+  stream.last_msg_id = 0;
 
   var listeners = {};
 
-  this.on = function(name, func) {
+  stream.on = function(name, func) {
     if (!listeners[name])
       listeners[name] = [];
-    listeners[name].push(func.bind(this));
+    listeners[name].push(func);
   };
 
   function fire (name) {
@@ -21,47 +24,55 @@ var Stream = function(baseurl) {
   }
 
   function connect() {
-    var es = new EventSource(this.baseurl + "/events");
+    var url = stream.baseurl + "/events";
 
-    es.addEventListener("irc",     this.onmessage.bind(this));
-    es.addEventListener("open",    this.onopen.bind(this));
-    es.addEventListener("close",   this.onclose.bind(this));
-    es.addEventListener("error",   this.onclose.bind(this));
+    if (stream.last_msg_id)
+      url += "?" + stream.last_msg_id;
 
-    this.eventsource = es;
+    var es = new EventSource(url);
+
+    es.addEventListener("irc",     stream.onmessage);
+    es.addEventListener("open",    stream.onopen);
+    es.addEventListener("close",   stream.onclose);
+    es.addEventListener("error",   stream.onclose);
+
+    stream.eventsource = es;
   };
 
-  this.connect = function() {
-    var backoff = Math.min(this.retries++, 30);
+  stream.connect = function() {
+    var backoff = Math.min(stream.retries++, 30);
     console.log("connecting in " + backoff + " seconds");
-    setTimeout(connect.bind(this), backoff * 1000);
+    setTimeout(connect, backoff * 1000);
   };
 
-  this.onopen = function() {
+  stream.onopen = function() {
     fire("open");
-    this.retries = 0;
+    console.log("opened");
+    stream.retries = 0;
   };
 
-  this.onclose = function() {
+  stream.onclose = function() {
     fire("close");
     console.log("closed");
   };
 
-  this.onmessage = function(e) {
+  stream.onmessage = function(e) {
     var data = JSON.parse(e.data);
+    if (data.MessageId)
+      stream.last_msg_id = data.MessageId;
     fire("message", data);
   };
 
-  this.check = function() {
-    if (! this.eventsource || this.eventsource.readyState == 2 ) {
-      this.connect();
+  stream.check = function() {
+    if (! stream.eventsource || stream.eventsource.readyState == 2 ) {
+      stream.connect();
     }
   };
 
-  this.send = function(line) {
-    var url = this.baseurl + "/" + this.id
+  stream.send = function(line) {
+    var url = stream.baseurl + "/" + stream.id
     $.ajax({
-      url: this.baseurl + "/" + this.id,
+      url: stream.baseurl + "/" + stream.id,
       type: "POST",
       headers: { "Content-type": "application/irc" },
       data: line,
@@ -71,5 +82,5 @@ var Stream = function(baseurl) {
     });
   };
 
-  setInterval(this.check.bind(this), 1000);
+  setInterval(stream.check, 1000);
 };

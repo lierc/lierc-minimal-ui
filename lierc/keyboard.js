@@ -1,46 +1,56 @@
 var Keyboard = function(element) {
+  var keyboard = this;
+
   var TAB = 9;
   var UP = 38;
   var DOWN = 40;
   var ENTER = 13;
   var ALT = 18;
 
-  this.meta_down = false;
-  this.el = element;
-  this.completion = new Completion(element);
-  this.history = new History(element);
+  keyboard.focused = false;
+  keyboard.meta_down = false;
+  keyboard.el = element;
+  keyboard.completion = new Completion(element);
+  keyboard.history = new History(element);
 
-  this.intercept = [TAB, UP, DOWN];
-
-  this.keydown = function(e) {
-    if (this.intercept.indexOf(e.which) != -1)
-      e.preventDefault();
-
+  keyboard.keydown = function(e) {
     if (e.which == TAB) {
-      this.completion.complete();
+      e.preventDefault();
+      keyboard.completion.complete();
       return;
     }
 
-    this.completion.stop();
+    keyboard.completion.stop();
 
     if (e.which == UP) {
-      this.history.up();
+      e.preventDefault();
+      keyboard.history.up();
     }
     else if (e.which == DOWN) {
-      this.history.down();
+      e.preventDefault();
+      keyboard.history.down();
     }
   };
 
-  this.keypress = function(e) {
+  keyboard.keypress = function(e) {
     if (e.which == ENTER) {
-      this.history.record();
+      keyboard.history.record();
     }
 
     if (e.which != UP && e.which != DOWN) {
-      this.history.reset();
+      keyboard.history.reset();
     }
   };
 
-  this.el.addEventListener("keydown",  this.keydown.bind(this), true);
-  this.el.addEventListener("keypress", this.keypress.bind(this));
+  keyboard.blur = function() {
+    keyboard.focused = false;
+  };
+
+  keyboard.focus = function() {
+    keyboard.focused = true;
+  };
+
+  keyboard.el.addEventListener("blur", keyboard.blur);
+  keyboard.el.addEventListener("focus", keyboard.focus);
+  keyboard.el.addEventListener("keypress", keyboard.keypress);
 };

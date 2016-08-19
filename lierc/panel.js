@@ -1,18 +1,20 @@
 var Panel = function(name, id, connection) {
-  this.name = name;
-  this.id = id;
-  this.connection = connection;
-  this.unread = 0;
-  this.missed = 0;
-  this.type = determine_panel_type(name);
-  this.focused = false;
-  this.backlog_empty = false;
-  this.nicks = [];
+  var panel = this;
 
-  this.change_name = function(name) {
-    this.name = name;
-    this.update_nav();
-    this.elem.prefix.text(name);
+  panel.name = name;
+  panel.id = id;
+  panel.connection = connection;
+  panel.unread = 0;
+  panel.missed = 0;
+  panel.type = determine_panel_type(name);
+  panel.focused = false;
+  panel.backlog_empty = false;
+  panel.nicks = [];
+
+  panel.change_name = function(name) {
+    panel.name = name;
+    panel.update_nav();
+    panel.elem.prefix.text(name);
   };
 
   function determine_panel_type(name) {
@@ -21,130 +23,127 @@ var Panel = function(name, id, connection) {
     return "private";
   }
   
-  this.update_completions = function(nicks) {
-    this.keyboard.completion.completions = nicks;
+  panel.update_completions = function(nicks) {
+    panel.keyboard.completion.completions = nicks;
   };
 
-  this.focus = function() {
-    this.focused = true;
-    this.resize_filler();
-    this.elem.input.focus();
-    this.unread = 0;
-    this.missed = 0;
-    this.update_nav();
-    this.scroll();
+  panel.focus = function() {
+    panel.focused = true;
+    panel.resize_filler();
+    panel.elem.input.focus();
+    panel.unread = 0;
+    panel.missed = 0;
+    panel.update_nav();
+    panel.scroll();
   };
 
-  this.build_nav = function() {
+  panel.build_nav = function() {
     var el = $('<li/>', {'data-panel-id': id});
-    var name = $('<span/>', {'class':'panel-name'}).text(this.name);
+    var name = $('<span/>', {'class':'panel-name'}).text(panel.name);
     var pill = $('<span/>', {'class':'pill'});
     name.append(pill);
     el.append(name);
     return el;
   };
 
-  this.update_nav = function() {
-    this.elem.nav.find('.panel-name').text(this.name);
-    this.elem.nav.find('.pill').text(this.unread);
+  panel.update_nav = function() {
+    panel.elem.nav.find('.panel-name').text(panel.name);
+    panel.elem.nav.find('.pill').text(panel.unread);
 
-    if (this.unread)
-      this.elem.nav.addClass('unread');
+    if (panel.unread)
+      panel.elem.nav.addClass('unread');
     else
-      this.elem.nav.removeClass('unread');
+      panel.elem.nav.removeClass('unread');
 
-    if (this.missed)
-      this.elem.nav.addClass('missed');
+    if (panel.missed)
+      panel.elem.nav.addClass('missed');
     else
-      this.elem.nav.removeClass('missed');
+      panel.elem.nav.removeClass('missed');
 
-    if (this.focused)
-      this.elem.nav.addClass('active');
+    if (panel.focused)
+      panel.elem.nav.addClass('active');
     else
-      this.elem.nav.removeClass('active');
+      panel.elem.nav.removeClass('active');
   };
 
-  this.incr_unread = function() {
-    this.unread++;
-    if (this.unread > 10)
-      this.unread = "10+"
-    this.update_nav();
+  panel.incr_unread = function() {
+    panel.unread++;
+    if (panel.unread > 10)
+      panel.unread = "10+"
+    panel.update_nav();
   };
 
-  this.incr_missed = function() {
-    this.missed++;
-    this.update_nav();
+  panel.incr_missed = function() {
+    panel.missed++;
+    panel.update_nav();
   }
 
-  this.unfocus = function() {
-    this.focused = false;
-    this.elem.nav.removeClass("active");
+  panel.unfocus = function() {
+    panel.focused = false;
+    panel.elem.nav.removeClass("active");
   };
 
-  this.set_topic = function(text) {
-    this.elem.topic.text(text);
+  panel.prepend = function(el) {
+    panel.elem.list.prepend(el);
+    panel.resize_filler();
   };
 
-  this.prepend = function(el) {
-    this.elem.list.prepend(el);
-    this.resize_filler();
-  };
-
-  this.is_scrolled = function() {
+  panel.is_scrolled = function() {
     if (document.documentElement.scrollHeight <= window.innerHeight)
       return true;
     return window.scrollY == document.documentElement.scrollHeight - window.innerHeight;
   };
 
-  this.append = function(el) {
-    var scrolled = this.is_scrolled();
-    this.elem.list.append(el);
+  panel.append = function(el) {
+    var scrolled = panel.is_scrolled();
+    panel.elem.list.append(el);
 
-    if (this.focused && scrolled) {
-      this.scroll();
+    if (panel.focused && scrolled) {
+      panel.scroll();
     }
     else {
       if (el.hasClass("message"))
-        this.incr_unread();
+        panel.incr_unread();
       else (el.hasClass("event"))
-        this.incr_missed();
+        panel.incr_missed();
     }
 
-    this.resize_filler();
+    panel.resize_filler();
   };
 
-  this.resize_filler = function() {
-    if (!this.focused) return;
+  panel.resize_filler = function() {
+    if (!panel.focused) return;
 
-    this.elem.filler.height(
-      Math.max(0, window.innerHeight - this.elem.list.outerHeight())
+    panel.elem.filler.height(
+      Math.max(0, window.innerHeight - panel.elem.list.outerHeight())
     );
   };
 
-  this.scroll = function() {
+  panel.scroll = function() {
     var b = document.body;
     b.scrollTop = b.scrollHeight;
   };
 
-  this.own_message = function(nick, text) {
+  panel.own_message = function(nick, text) {
     var el = Render({
       Prefix: {Name: nick},
-      Params: [this.name, text],
+      Params: [panel.name, text],
       Command: "PRIVMSG"
     });
-    this.append(el);
+    panel.append(el);
     return el;
   };
 
-  this.oldest_message_id = function() {
-    return this.elem.list.find('li[data-message-id]:first').attr('data-message-id');
+  panel.oldest_message_id = function() {
+    return panel.elem.list.find('li[data-message-id]:first').attr('data-message-id');
   };
 
-  this.update_topic = function(text) {
-    this.elem.topic.text(text);
+  panel.update_topic = function(text) {
+    panel.elem.topic.text(text);
+    linkify(panel.elem.topic.get(0));
   };
 
-  this.elem = {
+  panel.elem = {
     input: $('<input/>', {
       'type': 'text',
       'data-panel-id': id
@@ -152,9 +151,21 @@ var Panel = function(name, id, connection) {
     list: $('<ol/>'),
     topic: $('<p>No topic set</p>'),
     filler: $('<div/>', {'class':'filler'}),
-    prefix: $('<span/>').text(this.name),
-    nav: this.build_nav()
+    prefix: $('<span/>').text(panel.name),
+    nav: panel.build_nav()
   };
 
-  this.keyboard = new Keyboard(this.elem.input.get(0));
+  panel.prune = function() {
+    if (panel.focused && !panel.is_scrolled())
+      return;
+
+    var l = panel.elem.list.find('li:gt(' + 200 + ')').length;
+    if (l) {
+      panel.elem.list.find('li:lt(' + l + ')').remove();
+      panel.elem.list.find('.backlog-block:empty').remove();
+    }
+  };
+
+  panel.keyboard = new Keyboard(panel.elem.input.get(0));
+  panel.pruner = setInterval(panel.prune, 1000 * 60);
 };

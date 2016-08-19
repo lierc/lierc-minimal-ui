@@ -18,11 +18,12 @@ var Auth = function(baseurl) {
     overlay.append($('.login').clone().show());
     $('body').append(overlay);
 
-    overlay.on("click", "input[type=submit]", function(e) {
+    overlay.on("submit", function(e) {
       e.preventDefault();
-      var action = $(e.target).attr('name');
-      var email = overlay.find('input[type=email]').val();
-      var pass = overlay.find('input[type=password]').val();
+      var form = $(e.target);
+      var action = form.find('input[type=submit]').attr('name');
+      var email = form.find('input[type=email]').val();
+      var pass = form.find('input[type=password]').val();
 
       $.ajax({
         url: baseurl + "/" + action,

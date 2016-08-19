@@ -1,14 +1,14 @@
 var Liercd = function(url) {
-  this.baseurl = url;
-  this.stream;
-  this.meta_down = false;
-  this.shift_down = false;
-  this.connections = {};
-  this.filling_backlog = false;
-  this.panels = {};
-  this.focused = null;
+  var liercd = this;
 
-  this.elem = {
+  liercd.baseurl = url;
+  liercd.stream;
+  liercd.connections = {};
+  liercd.filling_backlog = false;
+  liercd.panels = {};
+  liercd.focused = null;
+
+  liercd.elem = {
     panel: $('#panel'),
     nav: $('#nav'),
     'status': $('#status'),
@@ -17,7 +17,8 @@ var Liercd = function(url) {
     input: $('#input'),
     topic: $('#topic'),
     filler: $('#filler'),
-    prefix: $('#prefix')
+    prefix: $('#prefix'),
+    title: $('title')
   };
 
   sortable('.sortable');
@@ -26,143 +27,151 @@ var Liercd = function(url) {
     return window.btoa(name + connection).replace(/=+$/, "");
   }
 
-  this.setup_connection = function(config) {
-    if (this.connections[config.id])
+  liercd.setup_connection = function(config) {
+    if (liercd.connections[config.id])
       return;
 
     var connection = new Connection(config);
 
-    var panel = this.add_panel("status", connection.id);
+    var panel = liercd.add_panel("status", connection.id);
     panel.change_name(connection.config.Host);
     panel.update_topic("status.");
 
     connection.on("channel:new", function(conn, channel, message) {
-      var panel = this.add_panel(channel, conn);
+      var panel = liercd.add_panel(channel, conn);
       panel.append(Render(message));
-    }.bind(this));
+    });
 
     connection.on("private:msg", function(conn, nick, message) {
-      var panel = this.add_panel(nick, conn);
+      var panel = liercd.add_panel(nick, conn);
       panel.append(Render(message));
-    }.bind(this));
+    });
 
     connection.on("channel:msg", function(conn, channel, message) {
-      var panel = this.get_panel(channel, conn);
+      var panel = liercd.get_panel(channel, conn);
       panel.append(Render(message));
-    }.bind(this));
+    });
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
-      var panel = this.get_panel(channel, conn);
+      var panel = liercd.get_panel(channel, conn);
       panel.update_completions(nicks);
-    }.bind(this));
+    });
 
     connection.on("channel:close", function(conn, channel) {
-      this.remove_panel(channel, conn);
-    }.bind(this));
+      liercd.remove_panel(channel, conn);
+    });
 
     connection.on("status", function(conn, message) {
-      var panel = this.get_panel("status", conn);
+      var panel = liercd.get_panel("status", conn);
       panel.append(Render(message));
-    }.bind(this));
+    });
 
     connection.on("channel:topic", function(conn, channel, text) {
-      var panel = this.get_panel(channel, conn);
+      var panel = liercd.get_panel(channel, conn);
       panel.update_topic(text);
-    }.bind(this));
+    });
 
-    this.connections[connection.id] = connection;
+    liercd.connections[connection.id] = connection;
   };
 
-  this.init = function() {
+  liercd.init = function() {
     $.ajax({
-      url: this.baseurl + '/connection',
+      url: liercd.baseurl + '/connection',
       type: "GET",
       dataType: "json",
       success: function(configs) {
         if (!configs.length)
-          this.config_modal();
+          liercd.config_modal();
 
         configs.forEach( function(config) {
-          this.setup_connection(config);
-        }.bind(this));
+          liercd.setup_connection(config);
+        });
 
-        if (!this.stream)
-          this.connect();
-      }.bind(this)
+        if (!liercd.stream)
+          liercd.connect();
+      }
     });
   };
 
-  this.connect = function() {
-    var stream = new Stream(this.baseurl);
+  liercd.connect = function() {
+    var stream = new Stream(liercd.baseurl);
 
     stream.on('message', function(e) {
-        var conn_id = e.ConnectionId;
-        var message = e.Message;
+      var conn_id = e.ConnectionId;
+      var message = e.Message;
 
-        if (e.MessageId)
-          message.Id =  e.MessageId;
+      if (e.MessageId)
+        message.Id =  e.MessageId;
 
-        if (this.connections[conn_id]) {
-          this.connections[conn_id].on_message(message);
-        }
-      }.bind(this));
+      if (liercd.connections[conn_id]) {
+        liercd.connections[conn_id].on_message(message);
+      }
+    });
 
-    this.stream = stream;
+    stream.on('close', function(e) {
+      liercd.elem.input.addClass('disconnected');
+    });
 
-    this.elem.nav.on('click', 'li', function(e) {
+    stream.on('open', function(e) {
+      liercd.elem.input.removeClass('disconnected');
+    });
+
+    liercd.stream = stream;
+
+    liercd.elem.nav.on('click', 'li', function(e) {
       var el = $(e.currentTarget);
       var id = el.attr('data-panel-id');
-      this.focus_panel(id);
-    }.bind(this));
+      liercd.focus_panel(id);
+    });
   };
 
-  this.get_panel = function(name, connection) {
+  liercd.get_panel = function(name, connection) {
     var id = panel_id(name, connection);
-    return this.panels[id];
+    return liercd.panels[id];
   };
 
-  this.remove_panel = function(name, connection) {
+  liercd.remove_panel = function(name, connection) {
     var id = panel_id(name, connection);
-    this.panels[id].elem.input.remove();
-    this.panels[id].elem.list.remove();
-    this.panels[id].elem.nav.remove();
-    this.panels[id].elem.topic.remove();
-    delete this.panels[id];
+    liercd.panels[id].elem.input.remove();
+    liercd.panels[id].elem.list.remove();
+    liercd.panels[id].elem.nav.remove();
+    liercd.panels[id].elem.topic.remove();
+    delete liercd.panels[id];
   };
 
-  this.add_panel = function(name, connection) {
+  liercd.add_panel = function(name, connection) {
     var id = panel_id(name, connection);
 
-    if (this.panels[id])
-      return this.panels[id];
+    if (liercd.panels[id])
+      return liercd.panels[id];
 
     var panel = new Panel(name, id, connection);
-    this.panels[id] = panel;
+    liercd.panels[id] = panel;
 
     if (panel.type == "status")
-      this.elem.status.append(panel.elem.nav);
+      liercd.elem.status.append(panel.elem.nav);
     else if (panel.type == "private")
-      this.elem.privates.append(panel.elem.nav);
+      liercd.elem.privates.append(panel.elem.nav);
     else
-      this.elem.channels.append(panel.elem.nav);
+      liercd.elem.channels.append(panel.elem.nav);
 
     sortable('.sortable');
 
-    if (!this.focused)
-      this.focus_panel(id);
+    if (!liercd.focused)
+      liercd.focus_panel(id);
 
-    return this.panels[id];
+    return liercd.panels[id];
   };
 
-  this.fill_backlog = function(panel, time) {
+  liercd.fill_backlog = function(panel, time) {
     if (panel.backlog_empty) return;
 
-    var connection = this.connections[panel.connection];
+    var connection = liercd.connections[panel.connection];
     if (!connection) return;
 
     var name = panel.type == "status" ? "status" : panel.name;
     var parts = [
-      this.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
+      liercd.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
     ];
 
     if (time)
@@ -181,7 +190,7 @@ var Liercd = function(url) {
           var message = e.Message;
           message.Id = e.MessageId;
           block.prepend(Render(message));
-        }.bind(this));
+        });
 
         var height = document.documentElement.scrollHeight;
         var scroll = window.scrollY;
@@ -189,62 +198,91 @@ var Liercd = function(url) {
         var diff = document.documentElement.scrollHeight - height;
         window.scroll(0, scroll + diff);
 
-        this.filling_backlog = false;
-      }.bind(this)
+        liercd.filling_backlog = false;
+      }
     });
   };
 
-  this.prev_panel = function() {
-    var panel = this.focused;
-    var id = panel.elem.nav.prev("li").attr('data-panel-id');
-    if (id && this.panels[id]) {
-      this.focus_panel(id);
+  liercd.prev_panel = function() {
+    var items = liercd.elem.nav.find("li");
+    for (var i=items.length - 1; i >= 0; i--) {
+      var item = $(items[i]);
+      if (item.hasClass("active") && items[i - 1]) {
+        var id = $(items[i - 1]).attr('data-panel-id');
+        liercd.focus_panel(id);
+        return;
+      }
     }
   };
 
-  this.prev_unread_panel = function() {
-    var panel = this.focused;
-    var id = panel.elem.nav.prevAll("li.unread:first").attr('data-panel-id');
-    if (id && this.panels[id]) {
-      this.focus_panel(id);
+  liercd.prev_unread_panel = function() {
+    var items = liercd.elem.nav.find("li");
+    for (var i=items.length - 1; i >= 0; i--) {
+      var item = $(items[i]);
+      if (item.hasClass("active")) {
+        for (var j=i; j < items.length; j++) {
+          var item = $(items[j - 1]);
+          if (item.hasClass("unread")) {
+            var id = item.attr('data-panel-id');
+            liercd.focus_panel(id);
+            return;
+          }
+        }
+        return;
+      }
     }
   };
 
-  this.next_panel = function() {
-    var panel = this.focused;
-    var id = panel.elem.nav.next("li").attr('data-panel-id');
-    if (id && this.panels[id]) {
-      this.focus_panel(id);
+  liercd.next_panel = function() {
+    var items = liercd.elem.nav.find("li");
+    for (var i=0; i < items.length; i++) {
+      var item = $(items[i]);
+      if (item.hasClass("active") && items[i + 1]) {
+        var id = $(items[i + 1]).attr('data-panel-id');
+        liercd.focus_panel(id);
+        return;
+      }
+    }
+  }
+
+  liercd.next_unread_panel = function() {
+    var items = liercd.elem.nav.find("li");
+    for (var i=0; i < items.length; i++) {
+      var item = $(items[i]);
+      if (item.hasClass("active")) {
+        for (var j=i; j < items.length; j++) {
+          var item = $(items[j + 1]);
+          if (item.hasClass("unread")) {
+            var id = item.attr('data-panel-id');
+            liercd.focus_panel(id);
+            return;
+          }
+        }
+        return;
+      }
     }
   };
 
-  this.next_unread_panel = function() {
-    var panel = this.focused;
-    var id = panel.elem.nav.nextAll("li.unread:first").attr('data-panel-id');
-    if (id && this.panels[id]) {
-      this.focus_panel(id);
-    }
-  };
+  liercd.focus_panel = function(id) {
+    var panel = liercd.panels[id];
+    liercd.elem.panel.html(panel.elem.list);
+    liercd.elem.input.html(panel.elem.input);
+    liercd.elem.topic.html(panel.elem.topic);
+    liercd.elem.filler.html(panel.elem.filler);
+    liercd.elem.prefix.html(panel.elem.prefix);
 
-  this.focus_panel = function(id) {
-    var panel = this.panels[id];
-    this.elem.panel.html(panel.elem.list);
-    this.elem.input.html(panel.elem.input);
-    this.elem.topic.html(panel.elem.topic);
-    this.elem.filler.html(panel.elem.filler);
-    this.elem.prefix.html(panel.elem.prefix);
+    liercd.elem.title.text(panel.name);
 
-    for (id in this.panels) {
-      this.panels[id].unfocus();
+    for (id in liercd.panels) {
+      liercd.panels[id].unfocus();
     }
 
     panel.focus();
-    this.focused = panel;
-
+    liercd.focused = panel;
   };
 
-  this.config_modal = function() {
-    var url = this.baseurl + "/connection";
+  liercd.config_modal = function() {
+    var url = liercd.baseurl + "/connection";
     var overlay = $('<div/>', {'class':'overlay'});
     overlay.append($('.config').clone().show());
     $('body').append(overlay);
@@ -253,17 +291,18 @@ var Liercd = function(url) {
       overlay.remove();
     });
 
-    overlay.on("click", "input[type=submit]", function(e) {
+    overlay.on("submit", function(e) {
       e.preventDefault();
+      var form = $(e.target);
 
       var data = {
-        Host: overlay.find('input[name=Host]').val(),
-        Port: parseInt(overlay.find('input[name=Port]').val()),
-        Ssl:  overlay.find('input[name=Ssl]').get(0).checked,
-        Nick: overlay.find('input[name=Nick]').val(),
-        User: overlay.find('input[name=User]').val(),
-        Pass: overlay.find('input[name=Pass]').val(),
-        Channels: []
+        Host: form.find('input[name=Host]').val(),
+        Port: parseInt(form.find('input[name=Port]').val()),
+        Ssl:  form.find('input[name=Ssl]').get(0).checked,
+        Nick: form.find('input[name=Nick]').val(),
+        User: form.find('input[name=User]').val(),
+        Pass: form.find('input[name=Pass]').val(),
+        Channels: form.find('input[name=Channels]').val().split(',')
       };
 
       $.ajax({
@@ -273,43 +312,43 @@ var Liercd = function(url) {
         data: JSON.stringify(data),
         success: function(res) {
           overlay.remove();
-          this.init();
-        }.bind(this),
+          liercd.init();
+        },
         error: function(res) {
           console.log(res);
           alert("i'm sorry");
-        }.bind(this)
+        }
       });
-    }.bind(this));
+    });
   };
 
-  this.check_scroll = function() {
-    if (this.filling_backlog) return;
-    if (!this.focused) return;
+  liercd.check_scroll = function() {
+    if (liercd.filling_backlog) return;
+    if (!liercd.focused) return;
 
     if (window.scrollY == 0) {
-      if (!this.connections[this.focused.connection])
+      if (!liercd.connections[liercd.focused.connection])
         return;
-      if (this.focused.backlog_empty) return;
-      this.filling_backlog = true;
-      this.fill_backlog(
-        this.focused, this.focused.oldest_message_id()
+      if (liercd.focused.backlog_empty) return;
+      liercd.filling_backlog = true;
+      liercd.fill_backlog(
+        liercd.focused, liercd.focused.oldest_message_id()
       );
     }
   };
 
-  setInterval(this.check_scroll.bind(this), 1000);
+  setInterval(liercd.check_scroll, 1000);
 
-  $('#add-connection').on('click', this.config_modal.bind(this));
+  $('#add-connection').on('click', liercd.config_modal);
 
-  this.elem.input.on("submit", function(e) {
+  liercd.elem.input.on("submit", function(e) {
     e.preventDefault();
     var input = $(e.target).find("input");
     var value = input.val();
     input.val("");
 
-    var panel = this.panels[input.attr('data-panel-id')];
-    var connection = this.connections[panel.connection];
+    var panel = liercd.panels[input.attr('data-panel-id')];
+    var connection = liercd.connections[panel.connection];
     var privmsg = false;
     var method = "POST";
 
@@ -332,7 +371,7 @@ var Liercd = function(url) {
     }
 
     $.ajax({
-      url: this.baseurl + "/connection/" + panel.connection,
+      url: liercd.baseurl + "/connection/" + panel.connection,
       type: method,
       dataType: "json",
       data: value,
@@ -341,43 +380,60 @@ var Liercd = function(url) {
           window.location.reload();
         if (el)
           el.addClass("sent");
-      }.bind(this)
+      }
     });
-  }.bind(this));
+  });
 
+  var meta_down = false;
+  var shift_down = false;
 
   document.addEventListener("keydown", function(e) {
-    if (e.which == 18)
-      this.meta_down = true;
-
-    if (e.which == 16)
-      this.shift_down = true;
-
-    if (e.which == 38 && this.meta_down) {
-      e.preventDefault();
-      if (this.shift_down)
-        this.prev_unread_panel();
-      else
-        this.prev_panel();
+    if (e.which == 18) {
+      meta_down = true;
+      return;
     }
 
-    if (e.which == 40 && this.meta_down) {
-      e.preventDefault();
-      if (this.shift_down)
-        this.next_unread_panel();
-      else
-        this.next_panel();
+    if (e.which == 16) {
+      shift_down = true;
+      return;
     }
 
-  }.bind(this));
+    if (e.which == 38 && meta_down) {
+      e.preventDefault();
+      shift_down ? liercd.prev_unread_panel() : liercd.prev_panel();
+      return;
+    }
+
+    if (e.which == 40 && meta_down) {
+      e.preventDefault();
+      shift_down ? liercd.next_unread_panel() : liercd.next_panel();
+      return;
+    }
+
+    if (liercd.focused.keyboard.focused)
+      liercd.focused.keyboard.keydown(e);
+    else if (! meta_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
+      liercd.focused.elem.input.focus();
+  });
+
+  window.addEventListener("blur", function(e) {
+    shift_down = false;
+    meta_down = false;
+  });
+
+  window.addEventListener("focus", function(e) {
+    shift_down = false;
+    meta_down = false;
+    liercd.focused.elem.input.focus();
+  });
 
   document.addEventListener("keyup", function(e) {
     if (e.which == 18)
-      this.meta_down = false;
+      meta_down = false;
     if (e.which == 16)
-      this.shift_down = false;
-  }.bind(this));
+      shift_down = false;
+  });
 
-  this.init();
+  liercd.init();
 };
 

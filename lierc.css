@@ -1,10 +1,14 @@
 body {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
+  font-family: -apple-system, BlinkMacSystemFont, 
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
+    "Fira Sans", "Droid Sans", "Helvetica Neue", 
+    sans-serif;
   font-size: 14px;
   overflow-x: hidden;
 }
+
 #panel ol {
   margin: 0;
   padding: 0;
@@ -13,19 +17,23 @@ body {
   box-sizing: border-box;
   list-style: none;
 }
+
 #panel ol li {
   padding: 5px 10px;
   border-top: 1px solid #eee;
 }
+
 #panel li:first-child {
   border-top: none;
 }
+
 #panel ol li.filler {
   padding: 0;
   margin: 0;
   border: none;
   height: 0px;
 }
+
 #panel ol li.event {
   color: #999;
   font-style: italic;
@@ -33,11 +41,11 @@ body {
 }
 
 #panel ol li.notice span.channel {
-  color: magenta;
+  color: green;
 }
 
 #panel ol li.raw {
-  font-family: monospace;
+  font-family: "Menlo", "Segoe UI Mono", "Droid Sans Mono", monospace;
   padding-top: 0px;
   padding-bottom: 0px;
   border: none;
@@ -55,9 +63,9 @@ body {
   transition: opacity 0s;
 }
 
-#panel ol div.backlog-block + li.event,
-#panel ol div.backlog-block + li.message,
-#panel ol div.backlog-block + li.raw,
+#panel ol .backlog-block + li.event,
+#panel ol .backlog-block + li.message,
+#panel ol .backlog-block + li.raw,
 #panel ol li.event:first-child,
 #panel ol li.event + li.event {
   border-top: none;
@@ -66,9 +74,11 @@ body {
 #panel ol li.message span.message-nick {
   font-weight: bold;
 }
+
 #panel ol li.message a {
   word-break: break-all;
 }
+
 #foot {
   border-top: 2px solid #fff;
   display: block;
@@ -80,6 +90,7 @@ body {
   right: 0px;
   bottom: 0px;
 }
+
 #prefix {
   width: 150px;
   box-sizing: border-box;
@@ -89,10 +100,12 @@ body {
   text-align: right;
   color: #aaa;
 }
+
 #input {
   margin-left: 150px;
   padding: 5px;
 }
+
 #input input {
   display: block;
   width: 100%;
@@ -122,6 +135,8 @@ body {
   padding: 10px 0 0 15px;
   font-size: 12px;
   color: #999;
+  font-weight: normal;
+  margin: 0;
 }
 
 .nav li.unread span.pill {
@@ -196,6 +211,7 @@ body {
   margin-left: 5px;
   font-size: 12px;
 }
+
 #topic {
   position: fixed;
   top: 0px;
@@ -205,7 +221,9 @@ body {
   border-bottom: 2px solid #fff;
   margin: 0;
   background: #eee;
+  white-space: pre;
 }
+
 #topic p {
   margin: 0;
   padding: 0;
@@ -213,28 +231,40 @@ body {
   font-size: 14px;
   color: #555;
 }
-div.backlog-block {
+
+.backlog-block {
   border-bottom: 1px dashed #ccc;
   padding-bottom: 10px;
   margin: 10px 0;
 }
-div.overlay {
+
+.backlog-block:first-child {
+  margin-top: 0;
+}
+
+.backlog-block:last-child {
+  margin-bottom: 0;
+}
+
+.overlay {
   z-index: 9999999;
   position: fixed;
   top: 0px;
   left: 0px;
   right: 0px;
   bottom: 0px;
-  background: #fff;
+  background: rgba(0,0,0,0.5);
 }
 
-div.login {
+.login {
   display: none;
   width: 220px;
   margin: 20px auto;
-  font-size: 18px;
+  font-size: 14px;
   background: #eee;
-  padding: 10px;
+  padding: 20px;
+  border-radius: 2px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
 }
 
 .overlay label,
@@ -247,35 +277,83 @@ div.login {
   display: block;
 }
 
-
 .overlay input[type=number],
 .overlay input[type=text],
 .overlay input[type=email],
 .overlay input[type=password] {
-  font-size: 18px;
+  font-size: 14px;
   padding: 5px;
 }
 
 .overlay .input-group {
+  margin: 0;
+  padding: 0;
   margin-top: 10px;
+  border: none;
+}
+
+.overlay .submit-group {
+  margin: 0;
+  padding: 0;
+  margin-top: 10px;
+  border: none;
+  text-align: right;
+}
+
+p.note {
+  font-size: 12px;
+  margin: 0;
+  padding: 0;
+}
+
+.overlay .submit-group p.note {
+  float: left;
+}
+
+.overlay .checkbox-group {
+  margin: 0;
+  padding: 0;
+  margin-top: 10px;
+  border: none;
+}
+
+.overlay .checkbox-group input,
+.overlay .checkbox-group label {
+  display: inline-block;
+  width: auto;
 }
 
 .overlay label {
   color: #555;
+  margin-bottom: 3px;
 }
 
 .overlay input {
-  font-size: 18px;
+  font-size: 14px;
 }
 
 .config {
   display: none;
   width: 220px;
   margin: 20px auto;
-  font-size: 18px;
+  font-size: 14px;
   background: #eee;
-  padding: 10px;
+  padding: 20px;
+  border-radius: 2px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
 
+.config a.close {
+  color: #000;
+  display: inline-block;
+  float: right;
+  font-size: 14px;
+}
+
+.overlay h2 {
+  font-size: 18px;
+  margin-top: 0;
+  border-bottom: 1px solid #ccc;
 }
 
 h1 {
@@ -292,8 +370,50 @@ h1 {
   padding: 0 4px;
   line-height: 14px;
   cursor: pointer;
+  float: right;
 }
 
 #add-connection:hover {
   color: #000;
+}
+
+.flex {
+  display: flex;
+  flex-direction: row;
+  flex-wrap: nowrap;
+  justify-content: flex-start;
+  align-items: flex-start;
+}
+.message-nick {
+  white-space: pre;
+}
+.message-text {
+  white-space: pre-wrap;
+}
+
+#help {
+  position: absolute;
+  bottom: 48px;
+  margin-top: 20px;
+  font-size: 10px;
+  color: #999;
+  font-weight: normal;
+  padding: 0 15px;
+}
+
+#help dt, dd {
+  margin: 0;
+  padding: 0;
+}
+
+#help dt {
+  font-weight: bold;
+}
+
+#help dd {
+  margin-bottom: 10px;
+}
+
+#help dd:last-child {
+  margin-bottom: 0;
 }
