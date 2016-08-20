@@ -42,8 +42,7 @@ var Liercd = function(url) {
     panel.update_topic("status.");
 
     connection.on("channel:new", function(conn, channel, message) {
-      var panel = liercd.add_panel(channel, conn);
-      panel.append(Render(message));
+      liercd.add_panel(channel, conn);
     });
 
     connection.on("private:msg", function(conn, nick, message) {
@@ -219,7 +218,7 @@ var Liercd = function(url) {
 
         if (insert.length) {
           var block = $('<div/>', {'class':'backlog-block'});
-          block.append(insert);
+          block.append(insert.reverse);
           panel.append(block);
 
           if (insert.length == 100) {
