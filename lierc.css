@@ -42,10 +42,12 @@ body {
 
 #panel ol li.notice span.channel {
   color: green;
+  font-weight: bold;
 }
 
 #panel ol li.raw {
-  font-family: "Menlo", "Segoe UI Mono", "Droid Sans Mono", monospace;
+  font-family: "Menlo", "Inconsolata", "Consolas",
+    "Droid Sans Mono", "Monaco", monospace;
   padding-top: 0px;
   padding-bottom: 0px;
   border: none;
@@ -75,6 +77,10 @@ body {
   font-weight: bold;
 }
 
+#panel ol li span.message-nick {
+  cursor: pointer;
+}
+
 #panel ol li.message a {
   word-break: break-all;
 }
@@ -94,7 +100,7 @@ body {
 
 #prefix {
   box-sizing: border-box;
-  padding: 10px;
+  padding: 8px 5px;
   font-size: 16px;
   color: #aaa;
 }
@@ -116,6 +122,8 @@ body {
 #nav {
   width: 200px;
   position: fixed;
+  display: flex;
+  flex-direction: column;
   box-sizing: border-box;
   top: 30px;
   bottom: 0px;
@@ -123,12 +131,16 @@ body {
   overflow-y: auto;
   overflow-x: hidden;
   background: #fff;
-  border-right: 1px solid #ccc;
+  border-right: 1px solid #ddd;
 }
 
 .nav {
   margin: 0;
   padding: 0;
+}
+
+.nav#privates {
+  flex-grow: 1;
 }
 
 .nav-title {
@@ -367,7 +379,7 @@ h1 {
   font-size: 14px;
   line-height: 14px;
   background: LightPink;
-  color: #fff;
+  color: darkred;
   position: fixed;
   top: 0px;
   left: 0px;
@@ -395,6 +407,11 @@ h1 {
   justify-content: flex-start;
   align-items: flex-start;
 }
+
+.flex .left {
+  flex-shrink: 0;
+}
+
 .message-nick {
   white-space: pre;
 }
@@ -403,6 +420,7 @@ h1 {
 }
 
 #help {
+  flex-shrink: 1;
   margin-top: 20px;
   font-size: 10px;
   color: #999;

@@ -4,8 +4,10 @@ var Render = function(message, force_raw) {
   case "NICK":
     var old = message.Prefix.Name;
     var nick = message.Params[0];
-    return make("event", message).text(
-      old + " is now known as " + nick)
+    return make("event", message).append(
+      make_text(old + " is now known as "),
+      make_nick(message)
+    );
 
   case "PART":
     var nick = message.Prefix.Name;
@@ -23,16 +25,19 @@ var Render = function(message, force_raw) {
   case "JOIN":
     var name = message.Params[0];
     var nick = message.Prefix.Name;
-    return make("event", message).text(
-      nick + ' has joined the channel');
+    return make("event", message).append(
+      make_nick(message),
+      make_text(' has joined the channel')
+    );
 
   case "332":
     var name = message.Params[1];
     var text = message.Params[2];
 
-    var span = $('<span/>').text(
-      "Topic: "
-    ).append(Format(text));
+    var span = $('<span/>').append(
+      make_text("Topic: "),
+      Format(text)
+    );
 
     linkify(span.get(0));
     return make("event", message).append(span);
@@ -42,9 +47,11 @@ var Render = function(message, force_raw) {
     var name = message.Params[0];
     var text = message.Params[1];
 
-    var span = $('<span/>').text(
-      nick + " changed the topic: "
-    ). append(Format(text));
+    var span = $('<span/>').append(
+      make_nick(message),
+      make_text(" changed the topic: "),
+      Format(text)
+    );
 
     linkify(span.get(0));
     return make("event", message).append(span);
@@ -54,8 +61,8 @@ var Render = function(message, force_raw) {
     var name = message.Params[0];
     var text = message.Params[1];
 
-    var from = $('<span/>', {'class':'message-nick'});
-    var color = string_to_color(nick);
+    var from = make_nick(message);
+    var color = string_to_color(message.Prefix.User || nick);
     var msg = $('<span/>', {'class':'message-text'});
     from.css({'color': color});
 
@@ -85,6 +92,19 @@ var Render = function(message, force_raw) {
   default:
     return raw(message);
   };
+
+  function make_text(text) {
+    return $('<span/>').text(text);
+  }
+
+  function make_nick(message) {
+    return $('<span/>', {
+      'class': 'message-nick',
+      'data-nick': message.Prefix.Name,
+      'data-user': message.Prefix.User,
+      'data-server': message.Prefix.Server
+    }).text(message.Prefix.Name);
+  }
 
   function raw (message) {
     var text = "";

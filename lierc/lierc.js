@@ -25,7 +25,9 @@ var Liercd = function(url) {
   sortable('.sortable');
 
   function panel_id(name, connection) {
-    return window.btoa(name + connection).replace(/=+$/, "");
+    return window.btoa(
+      unescape(encodeURIComponent(name + connection))
+    ).replace(/=+$/, "");
   }
 
   liercd.setup_connection = function(config) {
@@ -397,8 +399,14 @@ var Liercd = function(url) {
 
   var meta_down = false;
   var shift_down = false;
+  var ctrl_down = false;
 
   document.addEventListener("keydown", function(e) {
+    if (e.which == 17) {
+      ctrl_down = true;
+      return;
+    }
+
     if (e.which == 18) {
       meta_down = true;
       return;
@@ -426,7 +434,7 @@ var Liercd = function(url) {
     if (liercd.focused) {
       if (liercd.focused.keyboard.focused)
         liercd.focused.keyboard.keydown(e);
-      else if (! meta_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
+      else if (! meta_down && ! ctrl_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
         liercd.focused.elem.input.focus();
     }
   });
@@ -434,11 +442,13 @@ var Liercd = function(url) {
   window.addEventListener("blur", function(e) {
     shift_down = false;
     meta_down = false;
+    ctrl_down = false;
   });
 
   window.addEventListener("focus", function(e) {
     shift_down = false;
     meta_down = false;
+    ctrl_down = false;
     liercd.focused.elem.input.focus();
   });
 
@@ -447,6 +457,15 @@ var Liercd = function(url) {
       meta_down = false;
     if (e.which == 16)
       shift_down = false;
+    if (e.which == 17)
+      ctrl_down = false;
+  });
+
+  $(document).on('click', 'span[data-nick]', function() {
+    var nick = $(this).attr('data-nick');
+    var connection = liercd.focused.connection;
+    var panel = liercd.add_panel(nick, connection);
+    liercd.focus_panel(panel.id);
   });
 
   liercd.init();
