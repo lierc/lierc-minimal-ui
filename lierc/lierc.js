@@ -19,6 +19,7 @@ var Liercd = function(url) {
     topic: $('#topic'),
     filler: $('#filler'),
     prefix: $('#prefix'),
+    scroll: $('#panel-scroll').get(0),
     title: $('title')
   };
 
@@ -117,16 +118,29 @@ var Liercd = function(url) {
     });
 
     stream.on('close', function(e) {
-      liercd.elem.input.addClass('disconnected');
+      if (liercd.focused)
+        liercd.focused.stream_status_change(false);
     });
 
     stream.on('open', function(e) {
-      liercd.elem.input.removeClass('disconnected');
+      if (liercd.focused) {
+        liercd.focused.stream_status_change(true);
+        var newest = liercd.focused.latest_message_id();
+        if (newest)
+          liercd.fill_missed(liercd.focused, newest);
+      }
+
+      for (var id in liercd.panels) {
+        if (!liercd.focused || id != liercd.focused.id) {
+          liercd.panels[id].elem.list.html('');
+        }
+      }
     });
 
     liercd.stream = stream;
 
-    liercd.elem.nav.on('click', 'li', function(e) {
+    liercd.elem.nav.on('click touchstart', 'li', function(e) {
+      e.preventDefault();
       var el = $(e.currentTarget);
       var id = el.attr('data-panel-id');
       liercd.focus_panel(id);
@@ -171,7 +185,52 @@ var Liercd = function(url) {
     return liercd.panels[id];
   };
 
-  liercd.fill_backlog = function(panel, time) {
+  liercd.fill_missed = function(panel, stop, start) {
+    var connection = liercd.connections[panel.connection];
+    if (!connection) return;
+
+    var name = panel.type == "status" ? "status" : panel.name;
+    var parts = [
+      liercd.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
+    ];
+
+    if (start)
+      parts.push(start);
+
+    $.ajax({
+      url: parts.join("/"),
+      type: "GET",
+      dataType: "json",
+      success: function(events) {
+        var insert = [];
+
+        // newest to oldest
+        for (var i=0; i < events.length; i++) {
+          var e = events[i];
+          var message = e.Message;
+          message.Id = e.MessageId;
+
+          // done if message is older than stop
+          if (message.Id <= stop)
+            break;
+
+          insert.push(Render(message));
+        }
+
+        if (insert.length) {
+          var block = $('<div/>', {'class':'backlog-block'});
+          block.append(insert);
+          panel.append(block);
+
+          if (insert.length == 100) {
+            liercd.fill_missed(panel, stop, insert[0].messageId);
+          }
+        }
+      }
+    });
+  };
+
+  liercd.fill_backlog = function(panel, msgid) {
     if (panel.backlog_empty) return;
 
     var connection = liercd.connections[panel.connection];
@@ -182,8 +241,8 @@ var Liercd = function(url) {
       liercd.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
     ];
 
-    if (time)
-      parts.push(time);
+    if (msgid)
+      parts.push(msgid);
 
     $.ajax({
       url: parts.join("/"),
@@ -200,11 +259,13 @@ var Liercd = function(url) {
           block.prepend(Render(message));
         });
 
-        var height = document.documentElement.scrollHeight;
-        var scroll = window.scrollY;
+        var height = liercd.elem.scroll.scrollHeight;
+        var scroll = liercd.elem.scroll.scrollTop;
+        block.css({'opacity': '0'});
         panel.prepend(block);
-        var diff = document.documentElement.scrollHeight - height;
-        window.scroll(0, scroll + diff);
+        block.css({'opacity': '1'});
+        var diff = liercd.elem.scroll.scrollHeight - height;
+        liercd.elem.scroll.scrollTop = scroll + diff;
 
         liercd.filling_backlog = false;
       }
@@ -291,14 +352,16 @@ var Liercd = function(url) {
     liercd.focused = panel;
   };
 
-  liercd.config_modal = function() {
+  liercd.config_modal = function(e) {
+    e.preventDefault();
     var url = liercd.baseurl + "/connection";
     var overlay = $('<div/>', {'class':'overlay'});
     overlay.append($('.config').clone().show());
     $('body').append(overlay);
     liercd.overlayed = true;
 
-    overlay.on("click", "a.close", function(e) {
+    overlay.on("click touchstart", "a.close", function(e) {
+      e.preventDefault();
       liercd.overlayed = false;
       overlay.remove();
     });
@@ -339,7 +402,7 @@ var Liercd = function(url) {
     if (liercd.filling_backlog) return;
     if (!liercd.focused) return;
 
-    if (window.scrollY == 0) {
+    if (liercd.elem.scroll.scrollTop <= liercd.elem.scroll.scrollHeight / 8) {
       if (!liercd.connections[liercd.focused.connection])
         return;
       if (liercd.focused.backlog_empty) return;
@@ -352,7 +415,7 @@ var Liercd = function(url) {
 
   setInterval(liercd.check_scroll, 1000);
 
-  $('#add-connection').on('click', liercd.config_modal);
+  $('#add-connection').on('click touchstart', liercd.config_modal);
 
   liercd.elem.input.on("submit", function(e) {
     e.preventDefault();
@@ -461,11 +524,39 @@ var Liercd = function(url) {
       ctrl_down = false;
   });
 
-  $(document).on('click', 'span[data-nick]', function() {
+  $(document).on('click', 'span[data-nick]', function(e) {
+    e.preventDefault();
     var nick = $(this).attr('data-nick');
     var connection = liercd.focused.connection;
     var panel = liercd.add_panel(nick, connection);
     liercd.focus_panel(panel.id);
+  });
+
+  liercd.elem.prefix.on('click touchstart', function(e) {
+    e.preventDefault();
+    $('.flex-wrap').toggleClass("open");
+  });
+
+  $('#logout').on('click touchstart', function(e) {
+    e.preventDefault();
+
+    if (!confirm("Are you sure you want to log out?"))
+      return;
+
+    $.ajax({
+      url: liercd.baseurl + "/logout",
+      type: "POST",
+      dataType: "json",
+      complete: function() {
+        window.location.reload();
+      }
+    });
+  });
+
+  $(window).on('resize', function(e) {
+    if (liercd.focused)
+      liercd.focused.scroll();
+    console.log('resize');
   });
 
   liercd.init();

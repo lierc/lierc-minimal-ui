@@ -9,11 +9,13 @@ body {
   overflow-x: hidden;
 }
 
+#panel {
+  flex-grow: 1;
+}
+
 #panel ol {
   margin: 0;
   padding: 0;
-  margin-left: 200px;
-  padding-bottom: 42px;
   box-sizing: border-box;
   list-style: none;
 }
@@ -38,6 +40,7 @@ body {
   color: #999;
   font-style: italic;
   border-top: 1px solid #eee;
+  padding-left: 20px;
 }
 
 #panel ol li.notice span.channel {
@@ -57,7 +60,7 @@ body {
 
 #panel ol li.sending.sent {
   opacity: 1;
-  transition: opacity .5s;
+  transition: opacity .25s;
 }
 
 #panel ol li.sending {
@@ -65,6 +68,7 @@ body {
   transition: opacity 0s;
 }
 
+#panel ol .status-change + li.event,
 #panel ol .backlog-block + li.event,
 #panel ol .backlog-block + li.message,
 #panel ol .backlog-block + li.raw,
@@ -73,8 +77,24 @@ body {
   border-top: none;
 }
 
-#panel ol li.message span.message-nick {
+#panel ol li.event + li.event {
+  padding-top: 0px;
+}
+
+#panel ol li.status-change {
+  background: #eee;
+}
+
+#panel ol li span.message-nick {
   font-weight: bold;
+}
+
+#panel ol li.message time {
+  color: #999;
+  margin-left: 5px;
+  font-size: 11px;
+  line-height: 11px;
+  padding-top: 5px;
 }
 
 #panel ol li span.message-nick {
@@ -86,19 +106,18 @@ body {
 }
 
 #foot {
-  border-top: 2px solid #fff;
   display: flex;
+  flex-shrink: 0;
   flex-flow: row;
   margin: 0;
   padding: 0;
   background: #eee;
-  position: fixed;
-  left: 200px;
   right: 0px;
   bottom: 0px;
 }
 
 #prefix {
+  flex-shrink: 0;
   box-sizing: border-box;
   padding: 8px 5px;
   font-size: 16px;
@@ -121,17 +140,14 @@ body {
 
 #nav {
   width: 200px;
-  position: fixed;
   display: flex;
+  flex-grow: 1;
   flex-direction: column;
   box-sizing: border-box;
-  top: 30px;
-  bottom: 0px;
-  left: 0px;
-  overflow-y: auto;
-  overflow-x: hidden;
   background: #fff;
   border-right: 1px solid #ddd;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
 }
 
 .nav {
@@ -225,12 +241,9 @@ body {
 }
 
 #topic {
-  position: fixed;
-  top: 0px;
-  left: 200px;
-  right: 0px;
-  padding: 8px 0 8px 10px;
-  border-bottom: 2px solid #fff;
+  flex-shrink: 0;
+  padding: 8px 10px;
+  overflow-x: hidden;
   margin: 0;
   background: #eee;
   white-space: pre;
@@ -239,15 +252,26 @@ body {
 #topic p {
   margin: 0;
   padding: 0;
+  height: 14px;
   line-height: 14px;
   font-size: 14px;
   color: #555;
+  text-overflow: ellipsis;
+}
+
+.backlog-block:empty {
+  display: none;
 }
 
 .backlog-block {
   border-bottom: 1px dashed #ccc;
   padding-bottom: 10px;
   margin: 10px 0;
+  transition: opacity 0.25s ease-out;
+}
+
+.status-change {
+  margin: 10px;
 }
 
 .backlog-block:first-child {
@@ -373,6 +397,17 @@ p.note {
   border-bottom: 1px solid #ccc;
 }
 
+#logout {
+  display: inline-block;
+  padding: 0 4px;
+  margin-top: 7px;
+  font-size: 12px;
+  line-height: 14px;
+  cursor: pointer;
+  float: right;
+  color: darkred;
+}
+
 h1 {
   margin: 0;
   padding: 8px 0 8px 15px;
@@ -380,16 +415,11 @@ h1 {
   line-height: 14px;
   background: LightPink;
   color: darkred;
-  position: fixed;
-  top: 0px;
-  left: 0px;
-  width: 200px;
   box-sizing: border-box;
 }
 
 #add-connection {
   display: inline-block;
-  border-radius: 10px;
   padding: 0 4px;
   line-height: 14px;
   cursor: pointer;
@@ -400,23 +430,32 @@ h1 {
   color: #000;
 }
 
-.flex {
+.message-flex {
   display: flex;
   flex-direction: row;
-  flex-wrap: nowrap;
   justify-content: flex-start;
   align-items: flex-start;
-}
-
-.flex .left {
-  flex-shrink: 0;
 }
 
 .message-nick {
   white-space: pre;
 }
+
+.message-flex .message-nick {
+  display: block;
+  flex-shrink: 0;
+  flex-grow: 0;
+}
 .message-text {
-  white-space: pre-wrap;
+  /white-space: pre-wrap;
+  display: block;
+  flex-grow: 1;
+  flex-shrink: 1;
+}
+.message-flex time {
+  flex-grow:  0;
+  flex-shrink: 0;
+  display: inline-block;
 }
 
 #help {
@@ -443,4 +482,88 @@ h1 {
 
 #help dd:last-child {
   margin-bottom: 0;
+}
+
+div.flex-wrap {
+  display: flex;
+  flex-direction: row;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  overflow: hidden;
+}
+
+.flex-wrap-left {
+  width: 200px;
+  flex-shrink: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.flex-wrap-right {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+#panel-scroll {
+  overflow-x: hidden;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+  flex-grow: 1;
+}
+
+@media (max-width: 500px) {
+  #foot {
+    flex-direction: row-reverse;
+  }
+  #prefix {
+    color: #555;
+    cursor: pointer;
+    padding-top: 12px;
+  }
+  #prefix:before {
+    content: "\0000AB ";
+    font-weight: bold;
+    padding-right: 5px;
+  }
+  .flex-wrap.open #prefix:before {
+    content: "\0000BB ";
+  }
+  .flex-wrap.open #foot #input {
+    width: 1px;
+  }
+  .flex-wrap .flex-wrap-left {
+    margin-left: -200px;
+  }
+  .flex-wrap.open .flex-wrap-left {
+    margin-left: 0px;
+  }
+  .flex-wrap.open .flex-wrap-right {
+    margin-right: -200px;
+  }
+  .flex-wrap-right,
+  .flex-wrap-left {
+    transition: all 0.1s ease-out;
+  }
+
+  .message-flex {
+    display: block;
+    position: relative;
+  }
+  .message-flex .message-nick {
+    display: inline-block;
+  }
+  .message-flex time {
+    position: absolute;
+    top: 0px;
+    right: 0px;
+  }
+
+  #panel ol li.event {
+    padding-left: 10px;
+  }
 }

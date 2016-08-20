@@ -4,6 +4,7 @@ var Render = function(message, force_raw) {
   case "NICK":
     var old = message.Prefix.Name;
     var nick = message.Params[0];
+    message.Prefix.Name = nick;
     return make("event", message).append(
       make_text(old + " is now known as "),
       make_nick(message)
@@ -13,14 +14,16 @@ var Render = function(message, force_raw) {
     var nick = message.Prefix.Name;
     var name = message.Params[0];
     var msg = message.Params[1];
-    return make("event", message).text(
-      nick + ' has quit' + (msg ? " ("+msg+")" : ""));
+    return make("event", message).append(
+      make_nick(message),
+      ' has quit' + (msg ? " ("+msg+")" : ""));
 
   case "QUIT":
     var nick = message.Prefix.Name;
     var msg = message.Params[0];
-    return make("event", message).text(
-      nick + ' has quit' + (msg ? " ("+msg+")" : ""));
+    return make("event", message).append(
+      make_nick(message),
+      ' has quit' + (msg ? " ("+msg+")" : ""));
 
   case "JOIN":
     var name = message.Params[0];
@@ -68,16 +71,18 @@ var Render = function(message, force_raw) {
 
     if (text.substring(0, 7) == "\x01"+"ACTION") {
       from.text('* ' + nick);
-      msg.html(Format(text.substring(7)));
+      msg.append(Format(text.substring(7)));
     }
     else {
       from.text('< '+nick+'> ');
-      msg.html(Format(text));
+      msg.append(Format(text));
     }
 
     linkify(msg.get(0));
 
-    return make("message", message).append(flex(from, msg));
+    return make("message", message).append(
+      
+      flex(from, msg, timestamp(message)));
 
   case "NOTICE":
     var name = message.Prefix.Name;
@@ -98,12 +103,20 @@ var Render = function(message, force_raw) {
   }
 
   function make_nick(message) {
-    return $('<span/>', {
+    var nick = $('<span/>', {
       'class': 'message-nick',
       'data-nick': message.Prefix.Name,
       'data-user': message.Prefix.User,
       'data-server': message.Prefix.Server
     }).text(message.Prefix.Name);
+
+    if (message.Prefix.User && message.Prefix.Server) {
+      var title = message.Prefix.Name
+        + "!" + message.Prefix.User
+        + '@' + message.Prefix.Server;
+      nick.attr('title', title);
+    }
+    return nick;
   }
 
   function raw (message) {
@@ -114,26 +127,38 @@ var Render = function(message, force_raw) {
     else if (message.Command.match(/^[0-9][0-9][0-9]$/))
       text = message.Params.slice(1).join(" ");
     else
-      text = [message.Command].concat(message.Params).join(" ");
+      text = [message.Prefix.Name, message.Command].concat(message.Params).join(" ");
 
     return make("raw", message).text(text);
+  }
+
+  function timestamp (message) {
+    var date = new Date(message.Time * 1000);
+    var h = String(date.getHours());
+    if (h.length < 2)
+      h = "0" + h;
+    var m = String(date.getMinutes());
+    if (m.length < 2)
+      m = "0" + m;
+
+    return $('<time/>', {
+      'data-time': message.Time,
+      'title': date.toString()
+    }).text(h + ":" + m);
   }
 
   function make (type, message) {
     return $('<li/>', {
       'class':type,
-      'data-time': message.Time,
       'data-message-id': message.Id
     });
   }
 
-  function flex (a,b) {
-    var wrap = $('<div/>',{'class':'flex'});
-    var l = $('<div/>', {'class':'left'});
-    var r = $('<div/>', {'class':'right'});
-    l.append(a);
-    r.append(b);
-    wrap.append(l,r);
+  function flex () {
+    var wrap = $('<div/>',{'class':'message-flex'});
+    for (var i=0; i < arguments.length; i++) {
+      wrap.append(arguments[i]);
+    }
     return wrap;
   }
 

@@ -4,7 +4,6 @@ var Stream = function(baseurl) {
   stream.baseurl = baseurl;
   stream.retries = 0;
   stream.eventsource = null;
-  stream.last_msg_id = 0;
 
   var listeners = {};
 
@@ -26,23 +25,21 @@ var Stream = function(baseurl) {
   function connect() {
     var url = stream.baseurl + "/events";
 
-    if (stream.last_msg_id)
-      url += "?" + stream.last_msg_id;
-
     var es = new EventSource(url);
 
     es.addEventListener("irc",     stream.onmessage);
     es.addEventListener("open",    stream.onopen);
-    es.addEventListener("close",   stream.onclose);
-    es.addEventListener("error",   stream.onclose);
 
     stream.eventsource = es;
+    stream.timer = null;
   };
 
   stream.connect = function() {
+    if (stream.eventsource)
+      stream.eventsource.close();
     var backoff = Math.min(stream.retries++, 30);
     console.log("connecting in " + backoff + " seconds");
-    setTimeout(connect, backoff * 1000);
+    stream.timer = setTimeout(connect, backoff * 1000);
   };
 
   stream.onopen = function() {
@@ -51,20 +48,17 @@ var Stream = function(baseurl) {
     stream.retries = 0;
   };
 
-  stream.onclose = function() {
-    fire("close");
-    console.log("closed");
-  };
-
   stream.onmessage = function(e) {
     var data = JSON.parse(e.data);
-    if (data.MessageId)
-      stream.last_msg_id = data.MessageId;
     fire("message", data);
   };
 
   stream.check = function() {
-    if (! stream.eventsource || stream.eventsource.readyState == 2 ) {
+    if (! stream.timer && (! stream.eventsource || stream.eventsource.readyState != 1) ) {
+      if (stream.retries == 0) { 
+        fire("close");
+        console.log("closed");
+      }
       stream.connect();
     }
   };
@@ -82,5 +76,6 @@ var Stream = function(baseurl) {
     });
   };
 
+  stream.connect();
   setInterval(stream.check, 1000);
 };

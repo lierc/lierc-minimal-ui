@@ -42,11 +42,11 @@ var Connection = function(config) {
     case "NICK":
       var old = message.Prefix.Name;
       var nick = message.Params[0];
-      fire("status:raw", conn.id, message);
       if (old == conn.nick) {
         conn.nick = nick;
         conn.channels.forEach(function(channel) {
           channel.rename_nick(old, nick);
+          fire("status:raw", conn.id, message);
           fire("channel:msg", conn.id, channel.name, message);
           fire("channel:nicks", conn.id, channel.name, channel.nicks)
         });
@@ -120,7 +120,6 @@ var Connection = function(config) {
       var channel = conn.channel(name);
       if (channel) {
         channel.topic = topic;
-        fire("channel:msg", conn.id, name, message);
         fire("channel:topic", conn.id, name, topic);
       }
       break;

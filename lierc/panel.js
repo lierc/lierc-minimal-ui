@@ -30,7 +30,8 @@ var Panel = function(name, id, connection) {
   panel.focus = function() {
     panel.focused = true;
     panel.resize_filler();
-    panel.elem.input.focus();
+    if (!("ontouchstart" in document.documentElement))
+      panel.elem.input.focus();
     panel.unread = 0;
     panel.missed = 0;
     panel.update_nav();
@@ -89,9 +90,9 @@ var Panel = function(name, id, connection) {
   };
 
   panel.is_scrolled = function() {
-    if (document.documentElement.scrollHeight <= window.innerHeight)
+    if (panel.scroller.scrollHeight <= panel.scroller.offsetHeight)
       return true;
-    return window.scrollY == document.documentElement.scrollHeight - window.innerHeight;
+    return panel.scroller.scrollTop == panel.scroller.scrollHeight - panel.scroller.offsetHeight;
   };
 
   panel.append = function(el) {
@@ -115,13 +116,12 @@ var Panel = function(name, id, connection) {
     if (!panel.focused) return;
 
     panel.elem.filler.height(
-      Math.max(0, window.innerHeight - panel.elem.list.outerHeight())
+      Math.max(0, panel.scroller.offsetHeight - panel.elem.list.outerHeight())
     );
   };
 
   panel.scroll = function() {
-    var b = document.body;
-    b.scrollTop = b.scrollHeight;
+    panel.scroller.scrollTop = panel.scroller.scrollHeight;
   };
 
   panel.own_message = function(nick, text) {
@@ -134,12 +134,26 @@ var Panel = function(name, id, connection) {
     return el;
   };
 
+  panel.stream_status_change = function(connected) {
+    var li = $('<li/>', {'class':'status-change'});
+    if (connected)
+      li.text("Connected to lierc.");
+    else
+      li.text("Disconnected from lierc. Reconnecting…");
+
+    panel.append(li);
+  };
+
+  panel.latest_message_id = function() {
+    return panel.elem.list.find('li[data-message-id]:last').attr('data-message-id');
+  };
+
   panel.oldest_message_id = function() {
     return panel.elem.list.find('li[data-message-id]:first').attr('data-message-id');
   };
 
   panel.update_topic = function(text) {
-    panel.elem.topic.text(text);
+    panel.elem.topic.html(Format(text));
     linkify(panel.elem.topic.get(0));
   };
 
@@ -155,6 +169,7 @@ var Panel = function(name, id, connection) {
     nav: panel.build_nav()
   };
 
+  panel.scroller = $('#panel-scroll').get(0);
   panel.prune = function() {
     if (panel.focused && !panel.is_scrolled())
       return;
