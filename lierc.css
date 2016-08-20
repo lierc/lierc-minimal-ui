@@ -12,7 +12,7 @@ body {
 #panel ol {
   margin: 0;
   padding: 0;
-  margin-left: 150px;
+  margin-left: 200px;
   padding-bottom: 42px;
   box-sizing: border-box;
   list-style: none;
@@ -50,7 +50,7 @@ body {
   padding-bottom: 0px;
   border: none;
   white-space: pre-wrap;
-  line-height: 1em;
+  line-height: 1.2em;
 }
 
 #panel ol li.sending.sent {
@@ -81,28 +81,26 @@ body {
 
 #foot {
   border-top: 2px solid #fff;
-  display: block;
+  display: flex;
+  flex-flow: row;
   margin: 0;
   padding: 0;
   background: #eee;
   position: fixed;
-  left: 0px;
+  left: 200px;
   right: 0px;
   bottom: 0px;
 }
 
 #prefix {
-  width: 150px;
   box-sizing: border-box;
   padding: 10px;
   font-size: 16px;
-  float: left;
-  text-align: right;
   color: #aaa;
 }
 
 #input {
-  margin-left: 150px;
+  flex-grow: 1;
   padding: 5px;
 }
 
@@ -116,12 +114,14 @@ body {
 }
 
 #nav {
-  width: 150px;
+  width: 200px;
   position: fixed;
   box-sizing: border-box;
-  top: 0px;
+  top: 30px;
   bottom: 0px;
   left: 0px;
+  overflow-y: auto;
+  overflow-x: hidden;
   background: #fff;
   border-right: 1px solid #ccc;
 }
@@ -158,7 +158,7 @@ body {
 }
 
 .nav li.missed:hover {
-  color: #000;
+  color: #555;
 }
 
 .nav li {
@@ -181,12 +181,12 @@ body {
   background: #ddd;
 }
 
-.nav li.active span,
-.nav li:hover {
+.nav li.active span {
   color: #000;
 }
 
 .nav li:hover {
+  color: #555;
   background: #efefef;
 }
 
@@ -215,7 +215,7 @@ body {
 #topic {
   position: fixed;
   top: 0px;
-  left: 150px;
+  left: 200px;
   right: 0px;
   padding: 8px 0 8px 10px;
   border-bottom: 2px solid #fff;
@@ -265,6 +265,11 @@ body {
   padding: 20px;
   border-radius: 2px;
   box-shadow: 0 0 4px rgba(0,0,0,0.5);
+}
+
+.login hr {
+  border: none;
+  margin: 20px 0;
 }
 
 .overlay label,
@@ -361,7 +366,13 @@ h1 {
   padding: 8px 0 8px 15px;
   font-size: 14px;
   line-height: 14px;
-  background: #eee;
+  background: LightPink;
+  color: #fff;
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 200px;
+  box-sizing: border-box;
 }
 
 #add-connection {
@@ -392,8 +403,6 @@ h1 {
 }
 
 #help {
-  position: absolute;
-  bottom: 48px;
   margin-top: 20px;
   font-size: 10px;
   color: #999;

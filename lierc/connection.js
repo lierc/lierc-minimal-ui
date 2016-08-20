@@ -36,11 +36,13 @@ var Connection = function(config) {
     switch (String(message.Command)) {
     case "001":
       conn.nick = message.Params[0];
+      fire("status:raw", conn.id, message);
       break;
 
     case "NICK":
       var old = message.Prefix.Name;
       var nick = message.Params[0];
+      fire("status:raw", conn.id, message);
       if (old == conn.nick) {
         conn.nick = nick;
         conn.channels.forEach(function(channel) {
@@ -69,6 +71,7 @@ var Connection = function(config) {
       if (channel) {
         if (nick == conn.nick) {
           conn.remove_channel(name);
+          fire("status:raw", conn.id, message);
           fire("channel:close", conn.id, name);
         }
         else {
@@ -97,6 +100,7 @@ var Connection = function(config) {
       if (nick == conn.nick) {
         var channel = new Channel(name);
         conn.channels.push(channel);
+        fire("status:raw", conn.id, message);
         fire("channel:new", conn.id, name, message);
       }
       else {

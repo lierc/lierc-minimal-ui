@@ -1,4 +1,5 @@
-var Render = function(message) {
+var Render = function(message, force_raw) {
+  if (force_raw) return raw(message);
   switch (String(message.Command)) {
   case "NICK":
     var old = message.Prefix.Name;
@@ -30,8 +31,8 @@ var Render = function(message) {
     var text = message.Params[2];
 
     var span = $('<span/>').text(
-      "Topic: " + text
-    );
+      "Topic: "
+    ).append(Format(text));
 
     linkify(span.get(0));
     return make("event", message).append(span);
@@ -42,8 +43,8 @@ var Render = function(message) {
     var text = message.Params[1];
 
     var span = $('<span/>').text(
-      nick + " changed the topic: " + text
-    );
+      nick + " changed the topic: "
+    ). append(Format(text));
 
     linkify(span.get(0));
     return make("event", message).append(span);
@@ -54,17 +55,17 @@ var Render = function(message) {
     var text = message.Params[1];
 
     var from = $('<span/>', {'class':'message-nick'});
-    var color = string_to_rgb(nick);
+    var color = string_to_color(nick);
     var msg = $('<span/>', {'class':'message-text'});
-    from.css({'color': '#' + color});
+    from.css({'color': color});
 
     if (text.substring(0, 7) == "\x01"+"ACTION") {
       from.text('* ' + nick);
-      msg.text(text.substring(7));
+      msg.html(Format(text.substring(7)));
     }
     else {
       from.text('< '+nick+'> ');
-      msg.text(text);
+      msg.html(Format(text));
     }
 
     linkify(msg.get(0));
@@ -76,12 +77,16 @@ var Render = function(message) {
     var text = message.Params[1];
 
     var chan = $('<span/>', {'class':'channel'}).text(name);
-    var span = $('<span/>').text(' ' + text);
+    var span = $('<span/>').text(' ').append(Format(text));
     linkify(span.get(0));
 
     return make("raw notice", message).append(chan, span);
 
   default:
+    return raw(message);
+  };
+
+  function raw (message) {
     var text = "";
 
     if (message.Command.match(/^[45][0-9][0-9]$/))
@@ -92,7 +97,7 @@ var Render = function(message) {
       text = [message.Command].concat(message.Params).join(" ");
 
     return make("raw", message).text(text);
-  };
+  }
 
   function make (type, message) {
     return $('<li/>', {
@@ -112,17 +117,58 @@ var Render = function(message) {
     return wrap;
   }
 
-  function string_to_rgb(str){
-    var hash = 0;
+  function string_to_color(str){
+    var colors = [
+      "MediumVioletRed",
+      "PaleVioletRed",
+      "DeepPink",
+      "HotPink",
+      "Red",
+      "DarkRed",
+      "FireBrick",
+      "Crimson",
+      "IndianRed",
+      "Orange",
+      "DarkOrange",
+      "Coral",
+      "Tomato",
+      "OrangeRed",
+      "Maroon",
+      "Brown",
+      "Sienna",
+      "SaddleBrown",
+      "Chocolate",
+      "Peru",
+      "DarkGoldenrod",
+      "Goldenrod",
+      "MidnightBlue",
+      "MediumBlue",
+      "Blue",
+      "RoyalBlue",
+      "SteelBlue",
+      "CornflowerBlue",
+      "DodgerBlue",
+      "DeepSkyBlue",
+      "LightSkyBlue",
+      "SkyBlue",
+      "MediumSlateBlue",
+      "SlateBlue",
+      "DarkSlateBlue",
+      "Indigo",
+      "Purple",
+      "DarkMagenta",
+      "DarkOrchid",
+      "DarkViolet"
+    ];
+
+    var c = 0;
+    var m = colors.length;
+
     for (var i = 0; i < str.length; i++) {
-       hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      c = ((c << 5) + str.charCodeAt(i)) % m
     }
 
-    var c = (hash & 0x00FFFFFF)
-      .toString(16)
-      .toUpperCase();
-
-    return "00000".substring(0, 6 - c.length) + c;
+    return colors[c];
   }
 };
 

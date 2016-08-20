@@ -5,6 +5,7 @@ var Liercd = function(url) {
   liercd.stream;
   liercd.connections = {};
   liercd.filling_backlog = false;
+  liercd.overlayed = false;
   liercd.panels = {};
   liercd.focused = null;
 
@@ -59,6 +60,11 @@ var Liercd = function(url) {
 
     connection.on("channel:close", function(conn, channel) {
       liercd.remove_panel(channel, conn);
+    });
+
+    connection.on("status:raw", function(conn, message) {
+      var panel = liercd.get_panel("status", conn);
+      panel.append(Render(message, true));
     });
 
     connection.on("status", function(conn, message) {
@@ -277,6 +283,8 @@ var Liercd = function(url) {
       liercd.panels[id].unfocus();
     }
 
+    //liercd.scroll_to_nav(panel.elem.nav);
+
     panel.focus();
     liercd.focused = panel;
   };
@@ -286,8 +294,10 @@ var Liercd = function(url) {
     var overlay = $('<div/>', {'class':'overlay'});
     overlay.append($('.config').clone().show());
     $('body').append(overlay);
+    liercd.overlayed = true;
 
     overlay.on("click", "a.close", function(e) {
+      liercd.overlayed = false;
       overlay.remove();
     });
 
@@ -312,6 +322,7 @@ var Liercd = function(url) {
         data: JSON.stringify(data),
         success: function(res) {
           overlay.remove();
+          liercd.overlayed = false;
           liercd.init();
         },
         error: function(res) {
@@ -398,6 +409,8 @@ var Liercd = function(url) {
       return;
     }
 
+    if (liercd.overlayed) return;
+
     if (e.which == 38 && meta_down) {
       e.preventDefault();
       shift_down ? liercd.prev_unread_panel() : liercd.prev_panel();
@@ -410,10 +423,12 @@ var Liercd = function(url) {
       return;
     }
 
-    if (liercd.focused.keyboard.focused)
-      liercd.focused.keyboard.keydown(e);
-    else if (! meta_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
-      liercd.focused.elem.input.focus();
+    if (liercd.focused) {
+      if (liercd.focused.keyboard.focused)
+        liercd.focused.keyboard.keydown(e);
+      else if (! meta_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
+        liercd.focused.elem.input.focus();
+    }
   });
 
   window.addEventListener("blur", function(e) {
