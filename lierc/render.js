@@ -70,7 +70,7 @@ var Render = function(message, force_raw) {
     from.css({'color': color});
 
     if (text.substring(0, 7) == "\x01"+"ACTION") {
-      from.text('* ' + nick);
+      from.text('* ' + nick + ' ');
       msg.append(Format(text.substring(7)));
     }
     else {
@@ -217,7 +217,6 @@ var Render = function(message, force_raw) {
   }
 };
 
-var img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
 var url_re = /(https?:\/\/[^\s<"]*)/ig;
 
 function linkify(elem) {

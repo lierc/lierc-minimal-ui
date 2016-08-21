@@ -3,7 +3,6 @@
   <head>
     <meta charset="utf-8" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-
     <meta name="apple-mobile-web-app-capable" content="yes">
     <link type="text/css" rel="stylesheet" href="./lierc.css"></link>
     <title>liercc</title>
@@ -11,10 +10,7 @@
   <body>
     <div class="flex-wrap">
       <div class="flex-wrap-left">
-        <header>
-          <a id="logout">logout</a>
-          <h1>liercc</h1>
-        </header>
+        <h1>liercc</h1>
         <nav id="nav">
           <h2 class="nav-title">Networks <span id="add-connection">add</span></h2>
           <ul class="nav sortable" id="status"></ul>
@@ -22,21 +18,23 @@
           <ul class="nav sortable" id="channels"></ul>
           <h2 class="nav-title">Privates</h2>
           <ul class="nav sortable" id="privates"></ul>
-          <aside id="help">
-            <dl>
-              <dt>Alt + arrow</dt>
-              <dd>Next/Prev panel</dd>
-              <dt>Shift + Alt + arrow</dt>
-              <dd>Next/Prev unread panel</dd>
-            </dl>
-          </aside>
         </nav>
+        <ul id="global-controls">
+          <li><a id="help">Help</a></li>
+          <li><a id="toggle-nicks">Nick List</a></li>
+        </ul>
       </div>
-      <div class="flex-wrap-right">
+      <div class="flex-wrap-right" id="chat">
         <header id="topic"></header>
-        <div id="panel-scroll">
-          <div id="filler"></div>
-          <main id="panel"></main>
+        <div class="flex-wrap-panel">
+          <div id="panel-scroll">
+            <div id="filler"></div>
+            <main id="panel"></main>
+          </div>
+          <div class="nicks-wrap">
+            <h2 class="nav-title">Chatters</h2>
+            <div id="nicks"></div>
+          </div>
         </div>
         <footer id="foot">
           <form id="input"></form>
@@ -45,16 +43,35 @@
       </div>
     </div>
 
+    <aside class="help">
+      <p><strong><code>/COMMAND</code></strong>s are sent mostly unmodified to the IRC server.</p>
+      <p>Example commands:</p>
+      <ul>
+        <li><code>/JOIN #channel</code></li>
+        <li><code>/PART #channel</code></li>
+        <li><code>/PRIVMSG user message</code></li>
+      </ul>
+
+      <dl>
+        <dt><code>/QUIT</code></dt>
+        <dd>Closes and destroys connection.</dd>
+        <dt>Alt + arrow</dt>
+        <dd>Next/Prev panel</dd>
+        <dt>Shift + Alt + arrow</dt>
+        <dd>Next/Prev unread panel</dd>
+      </dl>
+          </aside>
+
     <section class="login">
       <h2>Login</h2>
       <form method="POST">
         <fieldset class="input-group">
           <label for="email">Email address</label>
-          <input name="email" type="email" value="">
+          <input name="email" type="email" value="" required>
         </fieldset>
         <fieldset class="input-group">
           <label for="pass">Password</label>
-          <input name="pass" type="password" value="">
+          <input name="pass" type="password" value="" required>
         </fieldset>
         <fieldset class="submit-group">
           <input type="submit" name="auth" value="Log In">
@@ -67,11 +84,11 @@
       <form method="POST">
         <fieldset class="input-group">
           <label for="email">Email address</label>
-          <input name="email" type="email" value="">
+          <input name="email" type="email" value="" required>
         </fieldset>
         <fieldset class="input-group">
           <label for="pass">Password</label>
-          <input name="pass" type="password" value="">
+          <input name="pass" type="password" value="" required>
         </fieldset>
         <fieldset class="submit-group">
           <input type="submit" name="register" value="Register">
@@ -85,11 +102,11 @@
       <form method="POST">
         <fieldset class="input-group">
           <label for="host">Address *</label>
-          <input name="Host" type="text" value="" placeholder="irc.freenode.com">
+          <input name="Host" type="text" value="" placeholder="irc.freenode.com" required>
         </fieldset>
         <fieldset class="input-group">
           <label for="port">Port *</label>
-          <input name="Port" type="number" value="6667">
+          <input name="Port" type="number" value="6667" required>
         </fieldset>
         <fieldset class="checkbox-group">
           <label for="ssl">SSL</label>
@@ -97,7 +114,7 @@
         </fieldset>
         <fieldset class="input-group">
           <label for="nick">Nickname *</label>
-          <input name="Nick" type="text" value="">
+          <input name="Nick" type="text" value="" required>
         </fieldset>
         <fieldset class="input-group">
           <label for="user">Username</label>

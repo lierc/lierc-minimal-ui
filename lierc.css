@@ -1,12 +1,21 @@
 body {
   margin: 0;
   padding: 0;
+  text-rendering: optimizeLegibility;
   font-family: -apple-system, BlinkMacSystemFont, 
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
     "Fira Sans", "Droid Sans", "Helvetica Neue", 
     sans-serif;
   font-size: 14px;
   overflow-x: hidden;
+}
+
+a:link {
+  color: #0093ff;
+}
+
+a:visited {
+  color: #7600bd;
 }
 
 #panel {
@@ -44,7 +53,7 @@ body {
 }
 
 #panel ol li.notice span.channel {
-  color: green;
+  color: #02c702;
   font-weight: bold;
 }
 
@@ -105,9 +114,20 @@ body {
   word-break: break-all;
 }
 
+.image-wrap a {
+  display: inline-block;
+}
+
+.image-wrap a img {
+  max-width: 100%;
+  max-height: 200px;
+  display: block;
+}
+
 #foot {
   display: flex;
   flex-shrink: 0;
+  flex-grow: 0;
   flex-flow: row;
   margin: 0;
   padding: 0;
@@ -119,8 +139,9 @@ body {
 #prefix {
   flex-shrink: 0;
   box-sizing: border-box;
-  padding: 11px 10px; /* to match input border */
+  padding: 11px 5px; /* to match input border */
   font-size: 16px;
+  line-height: 16px;
   color: #aaa;
 }
 
@@ -145,9 +166,8 @@ body {
   flex-grow: 1;
   flex-direction: column;
   box-sizing: border-box;
-  background: #fff;
-  border-right: 1px solid #ddd;
   overflow-y: auto;
+  border-right: 1px solid #ddd;
   -webkit-overflow-scrolling: touch;
 }
 
@@ -161,7 +181,7 @@ body {
 }
 
 .nav-title {
-  padding: 10px 0 0 15px;
+  padding: 10px 15px 0 15px;
   font-size: 12px;
   color: #999;
   font-weight: normal;
@@ -177,7 +197,7 @@ body {
 .nav li.unread:hover,
 .nav li.unread {
   list-style-type: disc;
-  color: green;
+  color: #02c702;
 }
 
 .nav li.missed:hover,
@@ -203,15 +223,12 @@ body {
 
 .nav li.active {
   background: #ddd;
+  color: #ddd;
 }
 
 .nav li.active:hover {
-  color: #ccc;
+  color: #ddd;
   background: #ddd;
-}
-
-.nav li.active span {
-  color: #000;
 }
 
 .nav li:hover {
@@ -246,9 +263,9 @@ body {
   padding: 8px 10px;
   overflow-x: hidden;
   margin: 0;
-  background: lightpink;
-  box-sizing: border-box;
+  background: #ffccd3;
   white-space: pre;
+  min-height: 14px;
 }
 
 #topic p {
@@ -257,12 +274,12 @@ body {
   height: 14px;
   line-height: 14px;
   font-size: 14px;
-  color: #fff;
+  color: #b74151;
   text-overflow: ellipsis;
 }
 
 #topic p a {
-  color: #fff;
+  color: #b74151;
 }
 
 .backlog-block:empty {
@@ -300,15 +317,21 @@ body {
   background: rgba(0,0,0,0.5);
 }
 
-.login {
-  display: none;
+.help,
+.login,
+.config {
   width: 220px;
+  display: none;
   margin: 20px auto;
   font-size: 14px;
   background: #eee;
-  padding: 20px;
-  border-radius: 2px;
+  border-top: 1px solid #fff;
+  border-left: 1px solid #fff;
+  border-right: 1px solid #ccc;
+  border-bottom: 1px solid #ccc;
   box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  border-radius: 2px;
+  padding: 20px;
 }
 
 .login hr {
@@ -381,17 +404,6 @@ p.note {
   font-size: 14px;
 }
 
-.config {
-  display: none;
-  width: 220px;
-  margin: 20px auto;
-  font-size: 14px;
-  background: #eee;
-  padding: 20px;
-  border-radius: 2px;
-  box-shadow: 0 0 4px rgba(0,0,0,0.5);
-}
-
 .config a.close {
   color: #000;
   display: inline-block;
@@ -406,12 +418,11 @@ p.note {
 }
 
 #logout {
-  display: inline-block;
-  padding: 8px 4px;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 11px;
+  font-weight: normal;
+  line-height: 11px;
+  margin-left: 10px;
   cursor: pointer;
-  float: right;
   color: darkred;
 }
 
@@ -420,15 +431,13 @@ h1 {
   padding: 8px 0 8px 15px;
   font-size: 14px;
   line-height: 14px;
-  background: LightPink;
-  color: darkred;
+  background: #ffb6c0;
+  color: #b74151;
   box-sizing: border-box;
 }
 
 #add-connection {
   display: inline-block;
-  padding: 0 4px;
-  line-height: 14px;
   cursor: pointer;
   float: right;
 }
@@ -465,29 +474,62 @@ h1 {
   display: inline-block;
 }
 
-#help {
-  flex-shrink: 1;
-  margin-top: 20px;
-  font-size: 10px;
-  color: #999;
-  font-weight: normal;
-  padding: 0 15px;
+#global-controls {
+  display: inline-block;
+  margin-left: 15px;
+  font-size: 12px;
+  margin: 0;
+  padding: 5px 15px;
 }
 
-#help dt, dd {
+#global-controls li {
+  margin: 0;
+  padding: 0;
+  display: inline-block;
+  margin-left: 4px;
+  padding-left: 6px;
+  border-left: 1px solid #ccc;
+  box-sizing: border-box;
+}
+
+#global-controls li:first-child {
+  border-left: none;
+  padding-left: 0;
+  margin-left: 0;
+}
+
+#global-controls li a {
+  color: #555;
+  cursor: pointer;
+  list-style:  none;
+}
+
+.help {
+  display: none;
+  width: 300px;
+  background: #eee;
+  margin: 20px auto;
+  font-size: 14px;
+  background: #eee;
+  padding: 20px;
+  border-radius: 2px;
+
+}
+
+.help dt, dd {
   margin: 0;
   padding: 0;
 }
 
-#help dt {
+.help dt {
   font-weight: bold;
 }
 
-#help dd {
+.help dd {
   margin-bottom: 10px;
 }
 
-#help dd:last-child {
+.help dd:last-child {
   margin-bottom: 0;
 }
 
@@ -507,6 +549,7 @@ div.flex-wrap {
   flex-shrink: 0;
   display: flex;
   flex-direction: column;
+  background: #fff;
 }
 
 .flex-wrap-right {
@@ -514,6 +557,56 @@ div.flex-wrap {
   display: flex;
   flex-direction: column;
   overflow: hidden;
+  background: #fff;
+}
+
+#toggle-nicks {
+  display: none;
+}
+
+body[data-panel-type=channel] #toggle-nicks,
+body[data-panel-type=channel] .nicks-wrap {
+  display: block;
+}
+body[data-panel-type=channel] .nicks-wrap.hidden {
+  display: none;
+}
+
+.nicks-wrap {
+  min-width: 100px;
+  max-width: 150px;
+  overflow-x: hidden;
+  overflow-y: auto;
+  border-left: 1px solid #eee;
+  flex-grow: 0;
+  flex-shrink: 0;
+  display: none;
+}
+
+#nicks ul {
+  margin: 0;
+  padding: 0;
+}
+
+#nicks ul li {
+  list-style: none;
+  margin: 0;
+  padding: 2px 15px;
+}
+
+#nicks ul li a {
+  cursor: pointer;
+  color: #555;
+}
+
+#nicks ul li a:hover {
+  color: #000;
+}
+
+.flex-wrap-panel {
+  display: flex;
+  flex-direction: row;
+  flex-grow: 1;
 }
 
 #panel-scroll {
@@ -527,8 +620,13 @@ div.flex-wrap {
   #foot {
     flex-direction: row-reverse;
   }
+  #global-controls {
+    display: none;
+  }
+  .nicks-wrap {
+    display: none !important;
+  }
   #prefix {
-    color: #555;
     cursor: pointer;
     padding-right: 0px;
     padding-left: 5px;
@@ -539,7 +637,7 @@ div.flex-wrap {
     font-size: 18px;
     line-height: 16px;
     font-weight: bold;
-    color: royalblue;
+    color: #0093ff;
     transition: transform 0.5s;
     padding-right: 5px;
   }

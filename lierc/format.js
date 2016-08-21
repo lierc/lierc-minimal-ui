@@ -4,7 +4,7 @@ var Format = function(text) {
       return acc;
 
     var token = tokens.shift();
-    var head = acc[ acc.length - 1];
+    var head = acc.length ? acc[ acc.length - 1] : make;
     var node = clone(head);
 
     switch (token.substring(0, 1)) {
@@ -13,6 +13,10 @@ var Format = function(text) {
       var colors = token.substring(1).split(",", 2);
       node.color = colors[0];
       node.background = colors[1];
+      break;
+
+    case "\x02":
+      node.bold = ! head.bold;
       break;
 
     case "\x0F":
@@ -28,8 +32,8 @@ var Format = function(text) {
       break;
 
     case "\x16":
-      node.color = head.background
-      node.background = head.color
+      node.color = head.background || 0;
+      node.background = head.color || 1;
       break;
 
     default:
@@ -83,14 +87,16 @@ var Format = function(text) {
 
   var split = /(\x03\d*(?:,\d+)?|\x0F|\x1D|\x1F|\x16|\x02)/;
   var tokens = text.split(split);
-  var list = parse([make()], tokens);
+  if (tokens.length == 1) return text;
 
-  var spans = list.map(function(item) {
+  return parse([], tokens).filter(function(item) {
+    return item.text != "";
+  }).map(function(item) {
     var span = $('<span/>').text(item.text);
 
-    if (item.background)
+    if (item.background != null)
       span.css("background-color", color_map[item.background]);
-    if (item.color)
+    if (item.color != null)
       span.css("color", color_map[item.color]);
     if (item.bold)
       span.css("font-weight", "bold");
@@ -101,6 +107,4 @@ var Format = function(text) {
 
     return span;
   });
-
-  return $('<span/>').append(spans);;
 };

@@ -20,7 +20,9 @@ var Liercd = function(url) {
     filler: $('#filler'),
     prefix: $('#prefix'),
     scroll: $('#panel-scroll').get(0),
-    title: $('title')
+    title: $('title'),
+    nicks: $('#nicks'),
+    body: $(document.body)
   };
 
   sortable('.sortable');
@@ -57,7 +59,7 @@ var Liercd = function(url) {
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
       var panel = liercd.get_panel(channel, conn);
-      panel.update_completions(nicks);
+      panel.update_nicks(nicks);
     });
 
     connection.on("channel:close", function(conn, channel) {
@@ -258,13 +260,8 @@ var Liercd = function(url) {
           block.prepend(Render(message));
         });
 
-        var height = liercd.elem.scroll.scrollHeight;
-        var scroll = liercd.elem.scroll.scrollTop;
-        block.css({'opacity': '0'});
         panel.prepend(block);
-        block.css({'opacity': '1'});
-        var diff = liercd.elem.scroll.scrollHeight - height;
-        liercd.elem.scroll.scrollTop = scroll + diff;
+
 
         liercd.filling_backlog = false;
       }
@@ -339,6 +336,9 @@ var Liercd = function(url) {
     liercd.elem.filler.html(panel.elem.filler);
     liercd.elem.prefix.html(panel.elem.prefix);
 
+    liercd.elem.body.attr("data-panel-type", panel.type);
+    liercd.elem.nicks.html(panel.elem.nicks);
+
     liercd.elem.title.text(panel.name);
 
     for (id in liercd.panels) {
@@ -401,7 +401,7 @@ var Liercd = function(url) {
     if (liercd.filling_backlog) return;
     if (!liercd.focused) return;
 
-    if (liercd.elem.scroll.scrollTop <= liercd.elem.scroll.scrollHeight / 8) {
+    if (liercd.elem.scroll.scrollTop <= 100) {
       if (!liercd.connections[liercd.focused.connection])
         return;
       if (liercd.focused.backlog_empty) return;
@@ -413,6 +413,11 @@ var Liercd = function(url) {
   };
 
   setInterval(liercd.check_scroll, 1000);
+
+  $('#toggle-nicks').on('click touchstart', function(e) {
+    e.preventDefault();
+    $('.nicks-wrap').toggleClass("hidden");
+  });
 
   $('#add-connection').on('click touchstart', liercd.config_modal);
 
@@ -430,10 +435,20 @@ var Liercd = function(url) {
     if (value.substring(0,1) == "/") {
       var command = value.substring(1).split(/\s+/, 2);
       value = command[0].toUpperCase();
-      if (value == "QUIT")
+      if (value.match(/QUIT/i)) {
         method = "DELETE";
-      if (command.length == 2)
+      }
+      else if (value.match(/^PART|QUIT|CLOSE|WC/i)) {
+        if (panel.type == "channel") {
+          value = "PART " + panel.name;
+        }
+        else {
+          return liercd.remove_panel(panel.name, panel.connection);
+        }
+      }
+      if (command.length == 2) {
         value += " :" + command[1];
+      }
     }
     else if (panel.type != "status") {
       privmsg = value;
@@ -523,7 +538,7 @@ var Liercd = function(url) {
       ctrl_down = false;
   });
 
-  $(document).on('click', 'span[data-nick]', function(e) {
+  $(document).on('click', '[data-nick]', function(e) {
     e.preventDefault();
     var nick = $(this).attr('data-nick');
     var connection = liercd.focused.connection;
@@ -534,6 +549,19 @@ var Liercd = function(url) {
   liercd.elem.prefix.on('click touchstart', function(e) {
     e.preventDefault();
     $('.flex-wrap').toggleClass("open");
+  });
+
+  $('#help').on('click touchstart', function(e) {
+    e.preventDefault();
+    var overlay = $('<div/>', {'class':'overlay'});
+    overlay.append($('.help').clone().show());
+    $('body').append(overlay);
+    liercd.overlayed = true;
+    overlay.on('touchstart click', function(e) {
+      e.preventDefault();
+      overlay.remove();
+      liercd.overlayed = false;
+    });
   });
 
   $('#logout').on('click touchstart', function(e) {
