@@ -87,7 +87,8 @@ var Format = function(text) {
 
   var split = /(\x03\d*(?:,\d+)?|\x0F|\x1D|\x1F|\x16|\x02)/;
   var tokens = text.split(split);
-  if (tokens.length == 1) return $('<span/>').text(text);
+  if (tokens.length == 1)
+    return document.createTextNode(text);
 
   return parse([], tokens).filter(function(item) {
     return item.text != "";
