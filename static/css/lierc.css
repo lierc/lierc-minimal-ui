@@ -162,13 +162,13 @@ a:visited {
 
 #nav {
   width: 200px;
-  display: flex;
+  height: 100%;
   flex-grow: 1;
-  flex-direction: column;
+  flex-shrink: 1;
   box-sizing: border-box;
   overflow-y: auto;
-  border-right: 1px solid #ddd;
   -webkit-overflow-scrolling: touch;
+  border-right: 1px solid #ddd;
 }
 
 .nav {
@@ -236,7 +236,7 @@ a:visited {
   background: #efefef;
 }
 
-.nav li > span {
+.nav li > a {
   color: #555;
   font-size: 14px;
   line-height: 14px;
@@ -246,7 +246,7 @@ a:visited {
   top: 9px;
 }
 
-.nav li > span > span.pill {
+.nav li > a > span.pill {
   display: none;
   background: #bbb;
   border-radius: 10px;
@@ -417,15 +417,6 @@ p.note {
   border-bottom: 1px solid #ccc;
 }
 
-#logout {
-  font-size: 11px;
-  font-weight: normal;
-  line-height: 11px;
-  margin-left: 10px;
-  cursor: pointer;
-  color: darkred;
-}
-
 h1 {
   margin: 0;
   padding: 8px 0 8px 15px;
@@ -434,6 +425,9 @@ h1 {
   background: #ffb6c0;
   color: #b74151;
   box-sizing: border-box;
+  font-weight: normal;
+  flex-grow: 0;
+  flex-shrink: 0;
 }
 
 #add-connection {
@@ -455,6 +449,7 @@ h1 {
 
 .message-nick {
   white-space: pre;
+  line-height: 15px;
 }
 
 .message-flex .message-nick {
@@ -475,21 +470,34 @@ h1 {
 }
 
 #global-controls {
-  display: inline-block;
-  margin-left: 15px;
-  font-size: 12px;
+  display: block;
   margin: 0;
-  padding: 5px 15px;
+  flex-shrink: 0;
+  flex-grow: 0;
+  padding: 11px 15px;
+  height: 18px;
+  background: #eee;
+  border-right: 1px solid #ccc;
 }
 
 #global-controls li {
   margin: 0;
   padding: 0;
   display: inline-block;
+  font-size: 14px;
+  line-height: 14px;
   margin-left: 4px;
   padding-left: 6px;
   border-left: 1px solid #ccc;
   box-sizing: border-box;
+}
+
+#global-controls li#toggle-nicks {
+  display: none;
+}
+
+body[data-panel-type=channel] #global-controls #toggle-nicks {
+  display: inline-block;
 }
 
 #global-controls li:first-child {
@@ -499,7 +507,7 @@ h1 {
 }
 
 #global-controls li a {
-  color: #555;
+  color: #777;
   cursor: pointer;
   list-style:  none;
 }
@@ -550,6 +558,7 @@ div.flex-wrap {
   display: flex;
   flex-direction: column;
   background: #fff;
+  overflow: hidden;
 }
 
 .flex-wrap-right {
@@ -560,11 +569,6 @@ div.flex-wrap {
   background: #fff;
 }
 
-#toggle-nicks {
-  display: none;
-}
-
-body[data-panel-type=channel] #toggle-nicks,
 body[data-panel-type=channel] .nicks-wrap {
   display: block;
 }
@@ -573,8 +577,7 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
 }
 
 .nicks-wrap {
-  min-width: 100px;
-  max-width: 150px;
+  width: 150px;
   overflow-x: hidden;
   overflow-y: auto;
   border-left: 1px solid #eee;

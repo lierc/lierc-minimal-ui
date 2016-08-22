@@ -49,7 +49,7 @@ var Panel = function(name, id, connection) {
 
   panel.build_nav = function() {
     var el = $('<li/>', {'data-panel-id': id});
-    var name = $('<span/>', {'class':'panel-name'}).text(panel.name);
+    var name = $('<a/>', {'class':'panel-name'}).text(panel.name);
     var pill = $('<span/>', {'class':'pill'});
     name.append(pill);
     el.append(name);

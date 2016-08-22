@@ -139,13 +139,6 @@ var Liercd = function(url) {
     });
 
     liercd.stream = stream;
-
-    liercd.elem.nav.on('click touchstart', 'li', function(e) {
-      e.preventDefault();
-      var el = $(e.currentTarget);
-      var id = el.attr('data-panel-id');
-      liercd.focus_panel(id);
-    });
   };
 
   liercd.get_panel = function(name, connection) {
@@ -177,6 +170,12 @@ var Liercd = function(url) {
       liercd.elem.privates.append(panel.elem.nav);
     else
       liercd.elem.channels.append(panel.elem.nav);
+
+    panel.elem.nav.on('click', function(e) {
+      e.preventDefault();
+      var id = $(this).attr('data-panel-id');
+      liercd.focus_panel(id);
+    });
 
     sortable('.sortable');
 
@@ -250,7 +249,7 @@ var Liercd = function(url) {
       type: "GET",
       dataType: "json",
       success: function(events) {
-        if (events.length < 100)
+        if (events.length < 50)
           panel.backlog_empty = true;
 
         var block = $('<div/>', {'class':'backlog-block'});
@@ -285,7 +284,7 @@ var Liercd = function(url) {
     for (var i=items.length - 1; i >= 0; i--) {
       var item = $(items[i]);
       if (item.hasClass("active")) {
-        for (var j=i; j < items.length; j++) {
+        for (var j=i; j <= 0; j--) {
           var item = $(items[j - 1]);
           if (item.hasClass("unread")) {
             var id = item.attr('data-panel-id');
@@ -416,7 +415,9 @@ var Liercd = function(url) {
 
   $('#toggle-nicks').on('click touchstart', function(e) {
     e.preventDefault();
+    scroll = liercd.focused && liercd.focused.is_scrolled();
     $('.nicks-wrap').toggleClass("hidden");
+    if (scroll) liercd.focused.scroll();
   });
 
   $('#add-connection').on('click touchstart', liercd.config_modal);

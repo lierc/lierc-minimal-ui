@@ -4,13 +4,13 @@
     <meta charset="utf-8" /> 
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
     <meta name="apple-mobile-web-app-capable" content="yes">
-    <link type="text/css" rel="stylesheet" href="./lierc.css"></link>
-    <title>liercc</title>
+    <link type="text/css" rel="stylesheet" href="/static/site.css"></link>
+    <title>lier𝓬𝓬</title>
   </head>
   <body>
     <div class="flex-wrap">
       <div class="flex-wrap-left">
-        <h1>liercc</h1>
+        <h1>lier<abbr title="chat constant">𝓬𝓬</abbr></h1>
         <nav id="nav">
           <h2 class="nav-title">Networks <span id="add-connection">add</span></h2>
           <ul class="nav sortable" id="status"></ul>
@@ -21,7 +21,8 @@
         </nav>
         <ul id="global-controls">
           <li><a id="help">Help</a></li>
-          <li><a id="toggle-nicks">Nick List</a></li>
+          <li><a id="logout">Logout</a></li>
+          <li id="toggle-nicks"><a>Nick List</a></li>
         </ul>
       </div>
       <div class="flex-wrap-right" id="chat">
@@ -136,19 +137,7 @@
       </form>
     </section>
 
-    <script src="//code.jquery.com/jquery.js"></script>
-    <script src="//cdnjs.cloudflare.com/ajax/libs/html5sortable/0.4.1/html.sortable.min.js"></script>
-    <script type="text/javascript" src="./lierc/format.js"></script>
-    <script type="text/javascript" src="./lierc/completion.js"></script>
-    <script type="text/javascript" src="./lierc/history.js"></script>
-    <script type="text/javascript" src="./lierc/keyboard.js"></script>
-    <script type="text/javascript" src="./lierc/stream.js"></script>
-    <script type="text/javascript" src="./lierc/channel.js"></script>
-    <script type="text/javascript" src="./lierc/connection.js"></script>
-    <script type="text/javascript" src="./lierc/panel.js"></script>
-    <script type="text/javascript" src="./lierc/render.js"></script>
-    <script type="text/javascript" src="./lierc/auth.js"></script>
-    <script type="text/javascript" src="./lierc/lierc.js"></script>
+    <script type="text/javascript" src="/static/site.js"></script>
 
     <script type="text/javascript">
       $(document).ready(function() {
