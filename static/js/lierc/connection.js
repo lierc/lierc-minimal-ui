@@ -165,11 +165,14 @@ var Connection = function(config) {
       var nick = message.Prefix.Name;
       var name = message.Params[0];
       var text = message.Params[1];
+      var priv = name.match(/^[^#&!+]/);
 
-      if (conn.channel(name))
-        fire("channel:msg", conn.id, name, message);
-      else if (name == conn.nick)
+      if (name == conn.nick && priv)
         fire("private:msg", conn.id, nick, message);
+      else if (priv)
+        fire("private:msg", conn.id, name, message);
+      else if (conn.channel(name))
+        fire("channel:msg", conn.id, name, message);
       break;
 
     case "PING":

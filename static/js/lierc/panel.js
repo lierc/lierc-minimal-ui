@@ -144,17 +144,6 @@ var Panel = function(name, id, connection) {
     panel.scroller.scrollTop = panel.scroller.scrollHeight;
   };
 
-  panel.own_message = function(nick, text) {
-    var el = Render({
-      Time: (new Date()).getTime() / 1000,
-      Prefix: {Name: nick},
-      Params: [panel.name, text],
-      Command: "PRIVMSG"
-    });
-    panel.append(el);
-    return el;
-  };
-
   panel.stream_status_change = function(connected) {
     var li = $('<li/>', {'class':'status-change'});
     if (connected)

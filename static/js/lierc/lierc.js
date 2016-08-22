@@ -284,7 +284,7 @@ var Liercd = function(url) {
     for (var i=items.length - 1; i >= 0; i--) {
       var item = $(items[i]);
       if (item.hasClass("active")) {
-        for (var j=i; j <= 0; j--) {
+        for (var j=i; j >= 0; j--) {
           var item = $(items[j - 1]);
           if (item.hasClass("unread")) {
             var id = item.attr('data-panel-id');
@@ -456,11 +456,6 @@ var Liercd = function(url) {
       value = "PRIVMSG " + panel.name + " :" + value;
     }
 
-    if (privmsg) {
-      var el = panel.own_message(connection.nick, privmsg);
-      el.addClass("sending");
-    }
-
     $.ajax({
       url: liercd.baseurl + "/connection/" + panel.connection,
       type: method,
@@ -469,8 +464,6 @@ var Liercd = function(url) {
       success: function(res) {
         if (method == "DELETE")
           window.location.reload();
-        if (el)
-          el.addClass("sent");
       }
     });
   });
