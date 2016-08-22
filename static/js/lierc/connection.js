@@ -147,7 +147,9 @@ var Connection = function(config) {
           channel.nicks = [];
           channel.nicks_done = false;
         }
-        channel.nicks = channel.nicks.concat(nicks);
+        channel.nicks = nicks.map(function(nick) {
+          return nick.replace(/^[^a-zA-Z]/, "");
+        }).concat(channel.nicks);
       }
       break;
 
