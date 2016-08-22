@@ -6,6 +6,7 @@ var Liercd = function(url) {
   liercd.connections = {};
   liercd.filling_backlog = false;
   liercd.overlayed = false;
+  liercd.sorting = [];
   liercd.panels = {};
   liercd.focused = null;
 
@@ -169,7 +170,7 @@ var Liercd = function(url) {
     else if (panel.type == "private")
       liercd.elem.privates.append(panel.elem.nav);
     else
-      liercd.elem.channels.append(panel.elem.nav);
+      liercd.insert_sorted_nav(panel);
 
     panel.elem.nav.on('click', function(e) {
       e.preventDefault();
@@ -183,6 +184,24 @@ var Liercd = function(url) {
       liercd.focus_panel(id);
 
     return liercd.panels[id];
+  };
+
+  liercd.insert_sorted_nav = function(panel) {
+    var index = liercd.sorting.indexOf(panel.id);
+    if (index == -1) {
+      liercd.elem.channels.append(panel.elem.nav);
+      return;
+    }
+    var items = liercd.elem.channels.find('li');
+    for (var i=0; i < items.length; i++) {
+      var id = $(items[i]).attr('data-panel-id');
+      if (index < liercd.sorting.indexOf(id)) {
+        panel.elem.nav.insertBefore(items[i]);
+        return;
+      }
+    }
+
+    liercd.elem.channels.append(panel.elem.nav);
   };
 
   liercd.fill_missed = function(panel, stop, start) {
@@ -580,7 +599,43 @@ var Liercd = function(url) {
     console.log('resize');
   });
 
-  liercd.init();
+  $('#channels.sortable').on('sortupdate', function(e) {
+    var order = $(this).find('li').toArray().map(function(li) {
+      return $(li).attr('data-panel-id');
+    });
+
+    liercd.sorting = order;
+    liercd.update_pref("sorting", order);
+  });
+
+  liercd.get_pref = function(name, cb) {
+    $.ajax({
+      url: this.baseurl + "/preference/" + encodeURIComponent(name),
+      type: "GET",
+      dataType: "json",
+      error: function(e) {
+        cb();
+      },
+      success: function(res) {
+        cb(JSON.parse(res.value));
+      }
+    });
+  };
+
+  liercd.update_pref = function(name, value) {
+    $.ajax({
+      url: this.baseurl + "/preference/" + encodeURIComponent(name),
+      type: "POST",
+      dataType: "json",
+      data: JSON.stringify(value),
+      success: function(res) { }
+    });
+  };
+
+  liercd.get_pref("sorting", function(order) {
+    liercd.sorting = order || [];
+    liercd.init();
+  });
 };
 
 
