@@ -425,6 +425,7 @@ var Liercd = function(url) {
   liercd.check_scroll = function() {
     if (liercd.filling_backlog) return;
     if (!liercd.focused) return;
+    if (!$(liercd.elem.scroll).is(':visible')) return;
 
     if (liercd.elem.scroll.scrollTop <= 100) {
       if (!liercd.connections[liercd.focused.connection])
@@ -568,7 +569,16 @@ var Liercd = function(url) {
 
   liercd.elem.prefix.on('click touchstart', function(e) {
     e.preventDefault();
+    var visible = $(liercd.elem.scroll).is(":visible");
+
     $('.flex-wrap').toggleClass("open");
+
+    // was closed, now open. so it's mobile and we
+    // need to scroll this manually
+    if (liercd.focused && !visible) {
+      liercd.focused.resize_filler();
+      liercd.focused.scroll();
+    }
   });
 
   $('#help').on('click touchstart', function(e) {

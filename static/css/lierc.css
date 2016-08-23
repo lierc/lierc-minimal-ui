@@ -143,8 +143,10 @@ a:visited {
   flex-shrink: 0;
   box-sizing: border-box;
   padding: 11px 5px; /* to match input border */
+  padding-right: 10px;
   font-size: 14px;
   color: #aaa;
+  -webkit-user-select: none;
 }
 
 #input {
@@ -170,6 +172,7 @@ a:visited {
   box-sizing: border-box;
   overflow-y: auto;
   -webkit-overflow-scrolling: touch;
+  -webkit-user-select: none;
   border-right: 1px solid #ddd;
 }
 
@@ -432,6 +435,7 @@ h1 {
   font-weight: bold;
   flex-grow: 0;
   flex-shrink: 0;
+  -webkit-user-select: none;
 }
 
 #add-connection {
@@ -481,6 +485,7 @@ h1 {
   padding: 11px 15px;
   background: #eee;
   border-right: 1px solid #ccc;
+  -webkit-user-select: none;
 }
 
 #global-controls li {
@@ -586,6 +591,8 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
   flex-grow: 0;
   flex-shrink: 0;
   display: none;
+  -webkit-overflow-scrolling: touch;
+  -webkit-user-select: none;
 }
 
 #nicks ul {
@@ -622,49 +629,57 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
 }
 
 @media (max-width: 500px) {
-  #foot {
-    flex-direction: row-reverse;
-  }
-  #global-controls {
-    display: none;
-  }
-  .nicks-wrap {
-    display: none !important;
-  }
   #prefix {
     cursor: pointer;
-    padding-right: 0px;
-    padding-left: 5px;
   }
-  #prefix:before {
+  #prefix:after {
     content: "\0000BB ";
     display: inline-block;
     font-size: 18px;
     line-height: 16px;
     font-weight: bold;
+    padding-left: 5px;
     color: #0093ff;
     transition: transform 0.5s;
-    padding-right: 5px;
   }
-  .flex-wrap.open #prefix:before {
+  .flex-wrap.open #prefix:after {
     transform: scaleX(-1);
-    padding-left: 5px;
-  }
-  .flex-wrap.open #foot #input {
-    width: 1px;
   }
   .flex-wrap .flex-wrap-left {
-    margin-left: -200px;
+    display: none;
   }
   .flex-wrap.open .flex-wrap-left {
-    margin-left: 0px;
+    display: flex;
+    width: 50vw;
+    flex-grow: 1;
   }
-  .flex-wrap.open .flex-wrap-right {
-    margin-right: -200px;
+  .flex-wrap.open .flex-wrap-left {
+    width: 50vw;
   }
-  .flex-wrap-right,
-  .flex-wrap-left {
-    transition: all 0.1s ease-out;
+  .flex-wrap.open #nav {
+    width: auto;
+  }
+  .flex-wrap.open #panel-scroll {
+    display: none;
+  }
+  #toggle-nicks {
+    display: none !important;
+  }
+  body[data-panel-type=channel] .flex-wrap.open .nicks-wrap {
+    display: block;
+    width: auto;
+    flex-grow: 1;
+  }
+  body[data-panel-type=channel] .nicks-wrap {
+    display: none;
+    border-left: none;
+  }
+
+  .flex-wrap.open #foot {
+    flex-direction: row-reverse;
+  }
+  .flex-wrap.open #input {
+    display: none;
   }
 
   .message-flex {
