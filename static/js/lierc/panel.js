@@ -60,20 +60,17 @@ var Panel = function(name, id, connection) {
     panel.elem.nav.find('.panel-name').text(panel.name);
     panel.elem.nav.find('.pill').text(panel.unread);
 
-    if (panel.unread)
-      panel.elem.nav.addClass('unread');
-    else
-      panel.elem.nav.removeClass('unread');
-
-    if (panel.missed)
-      panel.elem.nav.addClass('missed');
-    else
-      panel.elem.nav.removeClass('missed');
-
-    if (panel.focused)
+    if (panel.focused) {
       panel.elem.nav.addClass('active');
-    else
+      panel.elem.nav.removeClass('unread missed');
+    }
+    else {
       panel.elem.nav.removeClass('active');
+      if (panel.unread)
+        panel.elem.nav.addClass('unread');
+      if (panel.missed)
+        panel.elem.nav.addClass('missed');
+    }
   };
 
   panel.incr_unread = function() {
@@ -93,12 +90,15 @@ var Panel = function(name, id, connection) {
     panel.elem.nav.removeClass("active");
   };
 
-  panel.prepend = function(el) {
+  panel.prepend = function(el, target) {
     var height = liercd.elem.scroll.scrollHeight;
     var scroll = liercd.elem.scroll.scrollTop;
     el.css({'opacity': '0'});
 
-    panel.elem.list.prepend(el);
+    if (target)
+      target.prepend(el);
+    else
+      panel.elem.list.prepend(el);
 
     el.css({'opacity': '1'});
     var diff = liercd.elem.scroll.scrollHeight - height;
