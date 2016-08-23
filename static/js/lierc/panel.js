@@ -50,15 +50,12 @@ var Panel = function(name, id, connection) {
   panel.build_nav = function() {
     var el = $('<li/>', {'data-panel-id': id});
     var name = $('<a/>', {'class':'panel-name'}).text(panel.name);
-    var pill = $('<span/>', {'class':'pill'});
-    name.append(pill);
     el.append(name);
     return el;
   };
 
   panel.update_nav = function() {
     panel.elem.nav.find('.panel-name').text(panel.name);
-    panel.elem.nav.find('.pill').text(panel.unread);
 
     if (panel.focused) {
       panel.elem.nav.addClass('active');
@@ -72,18 +69,6 @@ var Panel = function(name, id, connection) {
         panel.elem.nav.addClass('missed');
     }
   };
-
-  panel.incr_unread = function() {
-    panel.unread++;
-    if (panel.unread > 10)
-      panel.unread = "10+"
-    panel.update_nav();
-  };
-
-  panel.incr_missed = function() {
-    panel.missed++;
-    panel.update_nav();
-  }
 
   panel.unfocus = function() {
     panel.focused = false;
@@ -123,10 +108,14 @@ var Panel = function(name, id, connection) {
       panel.scroll();
     }
     else {
-      if (el.hasClass("message"))
-        panel.incr_unread();
-      else (el.hasClass("event"))
-        panel.incr_missed();
+      if (el.hasClass("message")) {
+        panel.unread = true;
+        panel.update_nav();
+      }
+      else if (el.hasClass("event")) {
+        panel.missed = true;
+        panel.update_nav();
+      }
     }
 
     panel.resize_filler();
