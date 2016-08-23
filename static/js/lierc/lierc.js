@@ -128,8 +128,11 @@ var Liercd = function(url) {
       if (liercd.focused) {
         liercd.focused.stream_status_change(true);
         var newest = liercd.focused.latest_message_id();
-        if (newest)
-          liercd.fill_missed(liercd.focused, newest);
+        if (newest) {
+          var block = $('<div/>', {'class':'backlog-block'});
+          liercd.focused.append(block);
+          liercd.fill_missed(liercd.focused, newest, block);
+        }
       }
 
       for (var id in liercd.panels) {
@@ -204,7 +207,7 @@ var Liercd = function(url) {
     liercd.elem.channels.append(panel.elem.nav);
   };
 
-  liercd.fill_missed = function(panel, stop, start) {
+  liercd.fill_missed = function(panel, stop, elem, start) {
     var connection = liercd.connections[panel.connection];
     if (!connection) return;
 
@@ -233,16 +236,20 @@ var Liercd = function(url) {
           if (message.Id <= stop)
             break;
 
-          insert.push(Render(message));
+          insert.push(message);
         }
 
         if (insert.length) {
-          var block = $('<div/>', {'class':'backlog-block'});
-          block.append(insert.reverse);
-          panel.append(block);
+          var block = $('<div/>');
+          for (var i=insert.length -1; i >= 0; i--) {
+            block.append(Render(insert[i]));
+          }
+
+          panel.prepend(block, elem);
 
           if (insert.length == 100) {
-            liercd.fill_missed(panel, stop, insert[0].messageId);
+            var last = insert[ insert.length - 1];
+            liercd.fill_missed(panel, stop, elem, last.Id);
           }
         }
       }
