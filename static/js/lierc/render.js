@@ -16,7 +16,7 @@ var Render = function(message, force_raw) {
     var msg = message.Params[1];
     return make("event", message).append(
       make_nick(message),
-      ' has quit' + (msg ? " ("+msg+")" : ""));
+      ' has left' + (msg ? " ("+msg+")" : ""));
 
   case "QUIT":
     var nick = message.Prefix.Name;
@@ -81,8 +81,8 @@ var Render = function(message, force_raw) {
     linkify(msg.get(0));
 
     return make("message", message).append(
-      
-      flex(from, msg, timestamp(message)));
+      flex(from, msg, timestamp(message))
+    );
 
   case "NOTICE":
     var name = message.Prefix.Name;

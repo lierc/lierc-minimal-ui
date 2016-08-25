@@ -9,7 +9,6 @@ var Panel = function(name, id, connection) {
   panel.type = determine_panel_type(name);
   panel.focused = false;
   panel.backlog_empty = false;
-  panel.nicks = [];
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -41,10 +40,11 @@ var Panel = function(name, id, connection) {
     panel.resize_filler();
     if (!("ontouchstart" in document.documentElement))
       panel.elem.input.focus();
-    panel.unread = 0;
-    panel.missed = 0;
+    panel.unread = false;
+    panel.missed = false;
     panel.update_nav();
     panel.scroll();
+    setTimeout(function() { panel.scroll() } , 10);
   };
 
   panel.build_nav = function() {
@@ -63,8 +63,9 @@ var Panel = function(name, id, connection) {
     }
     else {
       panel.elem.nav.removeClass('active');
-      if (panel.unread)
+      if (panel.unread) {
         panel.elem.nav.addClass('unread');
+      }
       if (panel.missed)
         panel.elem.nav.addClass('missed');
     }
@@ -91,12 +92,49 @@ var Panel = function(name, id, connection) {
     panel.resize_filler();
 
     panel.imagify(el.get(0), false);
+    Embed.embed_all(el.find(".message-text"), panel);
+  };
+
+  panel.embed = function(a, embed) {
+    var height = liercd.elem.scroll.scrollHeight;
+    var scroll = liercd.elem.scroll.scrollTop;
+
+    var li = $(a).parents('li');
+    var wrap = $('<div/>', {
+      'class': 'embed-wrap',
+      'data-embed-provider': embed.provider_name.toLowerCase()
+    });
+    wrap.append(embed.html);
+    li.append(wrap);
+
+    var diff = liercd.elem.scroll.scrollHeight - height;
+    liercd.elem.scroll.scrollTop = scroll + diff;
+    panel.resize_filler();
+
+    var prev = wrap.outerHeight();
+
+    var o = new MutationObserver(function(s) {
+      var cur = wrap.outerHeight();
+      if (cur > prev)
+        liercd.elem.scroll.scrollTop += cur - prev;
+      prev = cur;
+    });
+
+    var config = {
+      childList: true,
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['class', 'style']
+    };
+
+    o.observe(wrap.get(0), config);
   };
 
   panel.is_scrolled = function() {
     if (panel.scroller.scrollHeight <= panel.scroller.offsetHeight)
       return true;
-    return panel.scroller.scrollTop == panel.scroller.scrollHeight - panel.scroller.offsetHeight;
+    var diff = panel.scroller.scrollTop - (panel.scroller.scrollHeight - panel.scroller.offsetHeight);
+    return Math.abs(diff) <= 1;
   };
 
   panel.append = function(el) {
@@ -109,6 +147,9 @@ var Panel = function(name, id, connection) {
     }
     else {
       if (el.hasClass("message")) {
+        if (panel.type == "private") {
+          panel.elem.audio.play();
+        }
         panel.unread = true;
         panel.update_nav();
       }
@@ -119,6 +160,7 @@ var Panel = function(name, id, connection) {
     }
 
     panel.resize_filler();
+    Embed.embed_all(el.find(".message-text"), panel);
   };
 
   panel.resize_filler = function() {
@@ -166,7 +208,8 @@ var Panel = function(name, id, connection) {
     topic: $('<p>No topic set</p>'),
     filler: $('<div/>', {'class':'filler'}),
     prefix: $('<span/>').text(panel.name),
-    nav: panel.build_nav()
+    nav: panel.build_nav(),
+    audio: new Audio("/static/ent_communicator1.mp3")
   };
 
   panel.scroller = $('#panel-scroll').get(0);

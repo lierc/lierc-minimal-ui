@@ -119,6 +119,7 @@ a:visited {
 
 .image-wrap a {
   display: inline-block;
+  box-shadow: 0 0 2px rgba(0,0,0,0.25);
 }
 
 .image-wrap a img {
@@ -628,10 +629,25 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
   flex-grow: 1;
 }
 
+.embed-wrap {
+  margin-top: 10px;
+  overflow-x: hidden;
+}
+
+.embed-wrap[data-embed-provider=twitter] {
+  max-width: 350px;
+}
+
+.embed-wrap[data-embed-provider=wikipedia] {
+  border-left: 10px solid #eee;
+  padding-left: 10px;
+}
+
 @media (max-width: 500px) {
   #prefix {
     cursor: pointer;
   }
+
   #prefix:after {
     content: "\0000BB ";
     display: inline-block;
@@ -642,34 +658,43 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
     color: #0093ff;
     transition: transform 0.5s;
   }
+
   .flex-wrap.open #prefix:after {
     transform: scaleX(-1);
   }
+
   .flex-wrap .flex-wrap-left {
     display: none;
   }
+
   .flex-wrap.open .flex-wrap-left {
     display: flex;
     width: 50vw;
     flex-grow: 1;
   }
+
   .flex-wrap.open .flex-wrap-left {
     width: 50vw;
   }
+
   .flex-wrap.open #nav {
     width: auto;
   }
+
   .flex-wrap.open #panel-scroll {
     display: none;
   }
+
   #toggle-nicks {
     display: none !important;
   }
+
   body[data-panel-type=channel] .flex-wrap.open .nicks-wrap {
     display: block;
     width: auto;
     flex-grow: 1;
   }
+
   body[data-panel-type=channel] .nicks-wrap {
     display: none;
     border-left: none;
@@ -678,6 +703,7 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
   .flex-wrap.open #foot {
     flex-direction: row-reverse;
   }
+
   .flex-wrap.open #input {
     display: none;
   }
@@ -686,9 +712,11 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
     display: block;
     position: relative;
   }
+
   .message-flex .message-nick {
     display: inline-block;
   }
+
   .message-flex time {
     position: absolute;
     top: 0px;

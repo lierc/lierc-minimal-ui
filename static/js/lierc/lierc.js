@@ -127,11 +127,10 @@ var Liercd = function(url) {
     stream.on('open', function(e) {
       if (liercd.focused) {
         liercd.focused.stream_status_change(true);
-        var newest = liercd.focused.latest_message_id();
-        if (newest) {
+        if (stream.last_id) {
           var block = $('<div/>', {'class':'backlog-block'});
           liercd.focused.append(block);
-          liercd.fill_missed(liercd.focused, newest, block);
+          liercd.fill_missed(liercd.focused, stream.last_id, block);
         }
       }
 
@@ -140,6 +139,9 @@ var Liercd = function(url) {
           liercd.panels[id].elem.list.html('');
         }
       }
+
+      if (stream.last_id)
+        liercd.sync_unread(stream.last_id);
     });
 
     liercd.stream = stream;
@@ -613,7 +615,6 @@ var Liercd = function(url) {
   $(window).on('resize', function(e) {
     if (liercd.focused)
       liercd.focused.scroll();
-    console.log('resize');
   });
 
   $('#channels.sortable').on('sortupdate', function(e) {
@@ -627,7 +628,7 @@ var Liercd = function(url) {
 
   liercd.get_pref = function(name, cb) {
     $.ajax({
-      url: this.baseurl + "/preference/" + encodeURIComponent(name),
+      url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
       type: "GET",
       dataType: "json",
       error: function(e) {
@@ -641,7 +642,7 @@ var Liercd = function(url) {
 
   liercd.update_pref = function(name, value) {
     $.ajax({
-      url: this.baseurl + "/preference/" + encodeURIComponent(name),
+      url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
       type: "POST",
       dataType: "json",
       data: JSON.stringify(value),
@@ -653,6 +654,32 @@ var Liercd = function(url) {
     liercd.sorting = order || [];
     liercd.init();
   });
+
+  liercd.sync_unread = function(last_id) {
+    $.ajax({
+      url: liercd.baseurl + "/unread/" + last_id,
+      type: 'GET',
+      dataType: 'json',
+      error: function(res) {
+        console.log(res);
+      },
+      success: function(res) {
+        for (connection in res) {
+          for (channel in res[connection]) {
+            var panel = liercd.add_panel(channel, connection);
+            if (!liercd.focused || panel.id != liercd.focused.id) {
+              if (res[connection][channel].messages) {
+                panel.unread = true;
+                panel.update_nav();
+              }
+              else if (res[connection][channel].events) {
+                panel.missed = true;
+                panel.update_nav();
+              }
+            }
+          }
+        }
+      }
+    });
+  };
 };
-
-

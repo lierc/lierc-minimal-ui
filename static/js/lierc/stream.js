@@ -4,6 +4,7 @@ var Stream = function(baseurl) {
   stream.baseurl = baseurl;
   stream.retries = 0;
   stream.eventsource = null;
+  stream.last_id = null;
 
   var listeners = {};
 
@@ -50,6 +51,8 @@ var Stream = function(baseurl) {
 
   stream.onmessage = function(e) {
     var data = JSON.parse(e.data);
+    if (data.MessageId)
+      stream.last_id = data.MessageId;
     fire("message", data);
   };
 
