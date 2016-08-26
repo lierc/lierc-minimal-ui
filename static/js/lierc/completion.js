@@ -23,9 +23,10 @@ var Completion = function(element) {
   };
 
   this.start = function() {
-    this.position = this.el.selectionStart;
+    var word = this.last_word();
+    this.position = this.el.selectionStart - word.length;
     this.completing = true
-    this.matches = this.find_matches().concat([RESET]);
+    this.matches = this.find_matches(word).concat([RESET]);
     this.index = 0;
   };
 
@@ -53,8 +54,8 @@ var Completion = function(element) {
     this.el.setSelectionRange(length, length);
   }
 
-  this.find_matches = function() {
-    var word = this.last_word();
+  this.find_matches = function(word) {
+    word = word.toLowerCase();
     var matches = [];
     var length = word.length;
     
@@ -62,8 +63,8 @@ var Completion = function(element) {
       var w = this.completions[i];
       if (w.length < length)
         continue;
-      if (w.substring(0, length) == word)
-        matches.push(w.substr(length));
+      if (w.substring(0, length).toLowerCase() == word)
+        matches.push(w);
     }
 
     return matches;
