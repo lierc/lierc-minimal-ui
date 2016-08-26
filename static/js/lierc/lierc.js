@@ -29,9 +29,7 @@ var Liercd = function(url) {
   sortable('.sortable');
 
   function panel_id(name, connection) {
-    return window.btoa(
-      unescape(encodeURIComponent(name + connection))
-    ).replace(/=+$/, "");
+    return [connection, name].join("-");
   }
 
   liercd.setup_connection = function(config) {
@@ -615,6 +613,29 @@ var Liercd = function(url) {
   $(window).on('resize', function(e) {
     if (liercd.focused)
       liercd.focused.scroll();
+  });
+
+  document.addEventListener('paste', function(e) {
+    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    for (i in items) {
+      if (items[i].type && items[i].type.match(/^image\//)) {
+        e.preventDefault();
+        liercd.focused.elem.input.focus();
+        var blob = items[i].getAsFile();
+        var fd = new FormData();
+        fd.append("image", blob);
+        var xhr = new XMLHttpRequest();
+        xhr.open("POST", "//api.imgur.com/3/image");
+        xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
+        xhr.onload = function() {
+          var res = JSON.parse(xhr.responseText);
+          var val = liercd.focused.elem.input.val();
+          liercd.focused.elem.input.val([val, res.data.link].join(" "));
+        };
+        xhr.send(fd);
+        return;
+      }
+    }
   });
 
   $('#channels.sortable').on('sortupdate', function(e) {

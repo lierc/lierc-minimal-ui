@@ -11,11 +11,14 @@ static/site.map.js.gz: $(map)
 
 static/site.map.js static/site.js.gz: $(jquery) $(vendor) $(site)
 	uglifyjs \
-		--source-map $(map) \
+		--source-map /tmp/site.map.js \
 		--source-map-url /$(map) \
 		--prefix 1 \
 		$(jquery) $(vendor) $(site) \
-	| gzip > static/site.js.gz
+	| gzip > /tmp/site.js.gz
+	install /tmp/site.js.gz static/site.js.gz
+	install /tmp/site.map.js static/site.map.js
 
 static/site.css.gz: $(css)
-	cat $(css) | gzip > static/site.css.gz
+	cat $(css) | gzip > /tmp/site.css.gz
+	install /tmp/site.css.gz
