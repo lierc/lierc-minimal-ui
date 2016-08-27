@@ -64,6 +64,9 @@ var Render = function(message, force_raw) {
     var name = message.Params[0];
     var text = message.Params[1];
 
+    if (!name || !text)
+      return raw(message);
+
     var from = make_nick(message);
     var color = string_to_color(message.Prefix.User || nick);
     var msg = $('<span/>', {'class':'message-text'});
