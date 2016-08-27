@@ -64,7 +64,7 @@ var Render = function(message, force_raw) {
     var name = message.Params[0];
     var text = message.Params[1];
 
-    if (!name || !text)
+    if (!name.length || !text.length)
       return raw(message);
 
     var from = make_nick(message);
