@@ -23,7 +23,17 @@ var Panel = function(name, id, connection) {
   }
   
   panel.update_nicks = function(nicks) {
-    panel.elem.nicks.html( nicks.sort().map(function(nick) {
+    var sorted = nicks.map(function(n) {
+      return [n, n.toLowerCase()];
+    }).sort(function(a, b) {
+      return a[1] < b[1]
+        ? -1 : a[1] > b[1]
+          ? 1 : 0;
+    }).map(function(n) {
+      return n[0];
+    });
+
+    panel.elem.nicks.html( sorted.map(function(nick) {
       return $('<li/>').append(
         $('<a/>', {
           'class': 'nick-list-nick',
@@ -32,7 +42,7 @@ var Panel = function(name, id, connection) {
         }).text(nick)
       );
     }));
-    panel.keyboard.completion.completions = nicks;
+    panel.keyboard.completion.completions = sorted;
   };
 
   panel.focus = function() {
