@@ -60,7 +60,9 @@ var Panel = function(name, id, connection) {
   panel.build_nav = function() {
     var el = $('<li/>', {'data-panel-id': id});
     var name = $('<a/>', {'class':'panel-name'}).text(panel.name);
+    var close = $('<a/>', {'class':'close-panel'}).text('✖');
     el.append(name);
+    el.append(close);
     return el;
   };
 

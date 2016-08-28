@@ -180,6 +180,39 @@ a:visited {
 .nav {
   margin: 0;
   padding: 0;
+  height: auto;
+  transition: height 0.5s;
+}
+
+.nav-title.collapsed:before {
+  content: "\0025B6";
+}
+
+.nav-title .count {
+  font-size: 10px;
+}
+
+.count:before {
+  content: "(";
+}
+.count:after {
+  content: ")";
+}
+
+.nav-title:before {
+  content: "\0025BC";
+  color: #ddd;
+  padding-right: 7px;
+}
+
+.nav-title:hover:before {
+  color: #999;
+}
+
+.nav-title.collapsed + .nav {
+  height: 0px;
+  overflow: hidden;
+  transition: height 0.5s;
 }
 
 .nav#privates {
@@ -192,23 +225,57 @@ a:visited {
   color: #999;
   font-weight: normal;
   margin: 0;
+  cursor: pointer;
 }
 
-.nav li.unread span.pill {
-  display: inline;
+.nav-title:hover {
+  color: #555;
+}
+
+.nav li a.close-panel {
+  display: block;
+  float: right;
+  margin-right: 15px;
+  opacity: 0;
+  color: #ccc;
+}
+
+.nav li.active a.close-panel {
+  color: #999;
+}
+
+.nav li:hover a.close-panel {
+  opacity: 1;
+}
+
+.nav li a.close-panel:hover {
+  color: #555;
+}
+
+.nav li.missed:before,
+.nav li.unread:before {
+  content: '●';
+  font-family: sans-serif;
+}
+
+.nav li:before {
+  content: '○';
+  font-family: sans-serif;
+  font-size: 20px;
+  height: 14px;
+  display: block;
+  float: left;
 }
 
 .nav li.missed.unread:hover,
 .nav li.missed.unread,
 .nav li.unread:hover,
 .nav li.unread {
-  list-style-type: disc;
   color: #02c702;
 }
 
 .nav li.missed:hover,
 .nav li.missed {
-  list-style-type: disc;
   color: #ccc;
 }
 
@@ -219,12 +286,9 @@ a:visited {
 .nav li {
   cursor: pointer;
   padding: 8px 0px 8px 15px;
-  list-style-type: circle;
   color: #ccc;
-  font-size: 28px;
+  font-size: 14px;
   line-height: 14px;
-  list-style-position: inside;
-  position: relative;
 }
 
 .nav li.active {
@@ -242,26 +306,9 @@ a:visited {
   background: #efefef;
 }
 
-.nav li > a {
+.nav li a {
   color: #555;
-  font-size: 14px;
-  line-height: 14px;
-  display: block;
-  position: absolute;
-  left: 32px;
-  top: 9px;
-}
-
-.nav li > a > span.pill {
-  display: none;
-  background: #bbb;
-  border-radius: 10px;
-  color: #fff;
-  font-weight: bold;
-  display: inline-block;
-  padding: 0 5px;
-  margin-left: 5px;
-  font-size: 12px;
+  padding-left: 4px;
 }
 
 #topic {
@@ -325,6 +372,7 @@ a:visited {
 
 .help,
 .login,
+.join,
 .config {
   width: 220px;
   display: none;
@@ -345,6 +393,7 @@ a:visited {
   margin: 20px 0;
 }
 
+.overlay select,
 .overlay label,
 .overlay input[type=text],
 .overlay input[type=number],
@@ -355,6 +404,7 @@ a:visited {
   display: block;
 }
 
+.overlay select,
 .overlay input[type=number],
 .overlay input[type=text],
 .overlay input[type=email],
@@ -410,6 +460,7 @@ p.note {
   font-size: 14px;
 }
 
+.join a.close,
 .config a.close {
   color: #000;
   display: inline-block;
@@ -439,12 +490,14 @@ h1 {
   -webkit-user-select: none;
 }
 
+#join-channel,
 #add-connection {
   display: inline-block;
   cursor: pointer;
   float: right;
 }
 
+#join-channel:hover,
 #add-connection:hover {
   color: #000;
 }

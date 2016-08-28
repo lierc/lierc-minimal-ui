@@ -21,4 +21,4 @@ static/site.map.js static/site.js.gz: $(jquery) $(vendor) $(site)
 
 static/site.css.gz: $(css)
 	cat $(css) | gzip > /tmp/site.css.gz
-	install /tmp/site.css.gz
+	install /tmp/site.css.gz static/site.css.gz
