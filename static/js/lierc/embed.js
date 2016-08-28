@@ -16,7 +16,8 @@ var Embed = {
           dataType: "json",
           data: {url: href, maxwidth: 450},
           success: function(res) {
-            panel.embed(a, res);
+            if (! res.error)
+              panel.embed(a, res);
           }
         });
         return;
