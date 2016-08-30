@@ -29,7 +29,7 @@ var Liercd = function(url) {
 
   $('.sortable').each(function() {
     Sortable.create(this, {
-
+      delay: 250,
       onSort: function(e) {
         var order = $(this.el).find('li').toArray().map(function(li) {
           return $(li).attr('data-panel-id');
