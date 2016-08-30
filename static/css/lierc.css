@@ -124,7 +124,7 @@ a:visited {
 
 .image-wrap a img {
   max-width: 100%;
-  max-height: 200px;
+  max-height: 300px;
   display: block;
 }
 
@@ -185,7 +185,7 @@ a:visited {
 }
 
 .nav-title.collapsed:before {
-  content: "\0025B6";
+  content: "\0025B6\00FE0E";
 }
 
 .nav-title .count {
@@ -236,6 +236,9 @@ a:visited {
   display: block;
   float: right;
   margin-right: 15px;
+  font-size: 14px;
+  height: 14px;
+  font-family: Arial, sans-serif;
   opacity: 0;
   color: #ccc;
 }
@@ -254,15 +257,15 @@ a:visited {
 
 .nav li.missed:before,
 .nav li.unread:before {
-  content: '●';
-  font-family: sans-serif;
+  content: '\0025CF';
+  font-family: Arial, sans-serif;
 }
 
 .nav li:before {
-  content: '○';
-  font-family: sans-serif;
+  content: '\0025CB';
+  font-family: Arial, sans-serif;
   font-size: 20px;
-  height: 14px;
+  line-height: 11px;
   display: block;
   float: left;
 }
@@ -673,6 +676,7 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
   display: flex;
   flex-direction: row;
   flex-grow: 1;
+  overflow: hidden;
 }
 
 #panel-scroll {
@@ -684,11 +688,66 @@ body[data-panel-type=channel] .nicks-wrap.hidden {
 
 .embed-wrap {
   margin-top: 10px;
-  overflow-x: hidden;
+  overflow: hidden;
+  max-width: 100%;
+  border-radius: 5px;
+  border: 1px solid #eee;
+  cursor: pointer;
+  max-width: 500px;
+}
+
+.embed-wrap.open {
+  border: none;
+  border-radius: 0px;
+  cursor: auto;
+  max-width: none;
+}
+
+.embed-wrap:hover {
+  border-color: #ccc;
+}
+
+.embed-wrap p,
+.embed-wrap h2 {
+  font-size: 14px;
+  margin: 5px 15px;
+}
+
+.embed-thumb {
+  background-repeat: no-repeat;
+  position: relative;
+  background-position: center center;
+  background-size: cover;
+  width: 100px;
+  height: 100px;
+  float: left;
+  border-top-left-radius: 5px;
+  border-bottom-left-radius: 5px;
+  margin-right: 10px;
+}
+
+p.embed-source {
+  color: #999;
+  font-size: 12px;
+  margin-bottom: 5px;
+}
+
+.embed-play {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  bottom: 0px;
+  right: 0px;
+  background-image: url(/static/play_overlay.png);
+  background-repeat: no-repeat;
+  background-size: 30px 45px;
+  background-position: center center;
+  cursor: pointer;
 }
 
 .embed-wrap[data-embed-provider=twitter] {
   max-width: 350px;
+  border: none;
 }
 
 .embed-wrap[data-embed-provider=wikipedia] {

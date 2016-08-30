@@ -116,8 +116,32 @@ var Panel = function(name, id, connection) {
       'class': 'embed-wrap',
       'data-embed-provider': embed.provider_name.toLowerCase()
     });
-    wrap.append(embed.html);
-    li.append(wrap);
+
+    if (embed.provider_name == "Twitter") {
+      wrap.html(embed.html).addClass("open");
+    }
+    else {
+      if (embed.thumbnail_url) {
+        var img = $('<div/>', {
+          'class': 'embed-thumb'
+        }).css({
+          "background-image": "url(//noembed.com/i/0/450/" + embed.thumbnail_url + ')',
+        });
+        img.append($('<div/>', {
+          'class': 'embed-play'
+        }));
+        wrap.append(img);
+      }
+      wrap.attr('data-embed', embed.html);
+      wrap.append($('<h2/>').text(embed.title));
+      if (embed.description)
+        wrap.append($('<p/>').text(embed.description));
+      wrap.append($('<p/>', {
+        'class': 'embed-source'
+      }).text(embed.provider_name));
+    }
+
+    li.find('.message-text').append(wrap);
 
     var diff = liercd.elem.scroll.scrollHeight - height;
     liercd.elem.scroll.scrollTop = scroll + diff;
@@ -127,7 +151,7 @@ var Panel = function(name, id, connection) {
 
     var o = new MutationObserver(function(s) {
       var cur = wrap.outerHeight();
-      if (cur > prev)
+      if (! panel.is_scrolled())
         liercd.elem.scroll.scrollTop += cur - prev;
       prev = cur;
     });
@@ -262,7 +286,7 @@ var Panel = function(name, id, connection) {
               panel.scroller.scrollTop += end - start;
             };
         })(image, link);
-        image.src = "https://noembed.com/i/0/400/" + link.href;
+        image.src = "https://noembed.com/i/0/600/" + link.href;
       }
     }
   };

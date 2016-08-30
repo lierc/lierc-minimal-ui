@@ -450,8 +450,11 @@ var Liercd = function(url) {
   };
 
   liercd.focus_panel = function(id) {
-    if (liercd.focused)
+    if (liercd.focused) {
+      if (liercd.focused.id == id)
+        return;
       liercd.last_panel_id = liercd.focused.id;
+    }
 
     var panel = liercd.panels[id];
     liercd.elem.panel.html(panel.elem.list);
@@ -547,7 +550,7 @@ var Liercd = function(url) {
   });
 
   $('#nav .nav-title').on('click', function(e) { 
-    if ($(e.target).hasClass('nav-title')) {
+    if ($(e.target).hasClass('nav-title')|| $(e.target).hasClass('nav-title-text')) {
       e.preventDefault();
       $(this).toggleClass('collapsed');
     }
@@ -571,16 +574,16 @@ var Liercd = function(url) {
     if (value.substring(0,1) == "/") {
       var command = value.substring(1).split(/\s+/, 2);
       value = command[0].toUpperCase();
-      if (value.match(/QUIT/i)) {
-        method = "DELETE";
-      }
-      else if (value.match(/^PART|QUIT|CLOSE|WC/i)) {
+      if (value.match(/^PART|QUIT|CLOSE|WC/i)) {
         if (panel.type == "channel") {
           value = "PART " + panel.name;
         }
         else {
           return liercd.remove_panel(panel_id(panel.name, panel.connection));
         }
+      }
+      else if (value == "TOPIC") {
+        value += " " + panel.name;
       }
       if (command.length == 2) {
         value += " :" + command[1];
@@ -669,13 +672,13 @@ var Liercd = function(url) {
 
     if (liercd.overlayed) return;
 
-    if (e.which == 38 && meta_down) {
+    if ((e.which == 38 || e.which == 75) && meta_down) {
       e.preventDefault();
       shift_down ? liercd.prev_unread_panel() : liercd.prev_panel();
       return;
     }
 
-    if (e.which == 40 && meta_down) {
+    if ((e.which == 40 || e.which == 74) && meta_down) {
       e.preventDefault();
       shift_down ? liercd.next_unread_panel() : liercd.next_panel();
       return;
@@ -789,6 +792,14 @@ var Liercd = function(url) {
         return;
       }
     }
+  });
+
+  liercd.elem.panel.on('click', '[data-embed]', function(e) {
+      e.preventDefault();
+      var wrap = $(this);
+      wrap.html(wrap.attr('data-embed'));
+      wrap.addClass('open');
+      wrap.removeAttr('data-embed');
   });
 
   $('#channels.sortable').on('sortupdate', function(e) {
