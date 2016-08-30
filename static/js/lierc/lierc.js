@@ -27,7 +27,19 @@ var Liercd = function(url) {
     body: $(document.body)
   };
 
-  sortable('.sortable');
+  $('.sortable').each(function() {
+    Sortable.create(this, {
+
+      onSort: function(e) {
+        var order = $(this.el).find('li').toArray().map(function(li) {
+          return $(li).attr('data-panel-id');
+        });
+
+        liercd.sorting = order;
+        liercd.update_pref("sorting", order);
+      }
+    });
+  });
 
   function panel_id(name, connection) {
     return [connection, name].join("-");
@@ -234,8 +246,6 @@ var Liercd = function(url) {
 
       liercd.focus_panel(id);
     });
-
-    sortable('.sortable');
 
     if (focus === true || !liercd.focused)
       liercd.focus_panel(id);
@@ -800,15 +810,6 @@ var Liercd = function(url) {
       wrap.html(wrap.attr('data-embed'));
       wrap.addClass('open');
       wrap.removeAttr('data-embed');
-  });
-
-  $('#channels.sortable').on('sortupdate', function(e) {
-    var order = $(this).find('li').toArray().map(function(li) {
-      return $(li).attr('data-panel-id');
-    });
-
-    liercd.sorting = order;
-    liercd.update_pref("sorting", order);
   });
 
   liercd.get_pref = function(name, cb) {
