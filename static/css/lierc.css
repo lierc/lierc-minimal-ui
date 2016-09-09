@@ -532,6 +532,7 @@ h1 {
   flex-grow:  0;
   flex-shrink: 0;
   display: inline-block;
+  -webkit-user-select: none;
 }
 
 #global-controls {
