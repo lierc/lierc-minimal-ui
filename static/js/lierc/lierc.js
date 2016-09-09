@@ -608,6 +608,7 @@ var Liercd = function(url) {
       url: liercd.baseurl + "/connection/" + panel.connection,
       type: method,
       dataType: "json",
+      jsonp: false,
       data: value,
       success: function(res) {
         if (method == "DELETE")
