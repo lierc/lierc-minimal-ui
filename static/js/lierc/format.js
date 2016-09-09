@@ -32,8 +32,8 @@ var Format = function(text) {
       break;
 
     case "\x16":
-      node.color = head.background == null ? 0 : head.background;
-      node.background = head.color == null ? 1 : head.color;
+      node.color = head.background === null ? 0 : head.background;
+      node.background = head.color === null ? 1 : head.color;
       break;
 
     default:
