@@ -1,0 +1,35 @@
+#!/usr/bin/env perl
+
+use LWP::UserAgent;
+use JSON::XS;
+
+my $url = "http://unicode.org/emoji/charts/full-emoji-list.html";
+my $ua  = LWP::UserAgent->new;
+
+my @emoji;
+
+my $res = $ua->get($url);
+
+die $res->status unless $res->is_success;
+
+my @lines = split "\n", $res->decoded_content;
+my %current;
+
+for (@lines) {
+  if (m{<td class='code'>.+U\+([^<]+)}) {
+    $current{code} = $1;
+    next;
+  }
+  elsif (m{<td class='chars'>([^<]+)}) {
+    $current{chars} = $1;
+    next;
+  }
+  elsif (m{<td class='name'>([^<]+)}) {
+    $current{name} = $1;
+    push @emoji, {%current};
+    %current = ();
+    next;
+  }
+}
+
+print encode_json \@emoji;

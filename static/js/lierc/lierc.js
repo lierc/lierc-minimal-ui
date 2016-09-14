@@ -10,6 +10,8 @@ var Liercd = function(url) {
   liercd.panels = {};
   liercd.focused = null;
   liercd.last_panel_id = null;
+  liercd.window_focused = true;
+  liercd.emoji = new Emoji();
 
   liercd.elem = {
     panel: $('#panel'),
@@ -24,7 +26,9 @@ var Liercd = function(url) {
     scroll: $('#panel-scroll').get(0),
     title: $('title'),
     nicks: $('#nicks'),
-    body: $(document.body)
+    body: $(document.body),
+    audio: new Audio("/static/ent_communicator1.mp3"),
+    emoji: $('#emoji')
   };
 
   $('.sortable').each(function() {
@@ -61,12 +65,22 @@ var Liercd = function(url) {
 
     connection.on("private:msg", function(conn, nick, message) {
       var panel = liercd.add_panel(nick, conn, false);
-      panel.append(Render(message));
+      var highlight = !liercd.is_focused(panel);
+
+      panel.append(Render(message), highlight);
+
+      if ( highlight )
+        liercd.elem.audio.play();
     });
 
     connection.on("channel:msg", function(conn, channel, message) {
       var panel = liercd.get_panel(channel, conn);
-      panel.append(Render(message));
+      var highlight = !liercd.is_focused(panel) && liercd.is_highlight(conn, message);
+
+      panel.append(Render(message), highlight);
+
+      if ( highlight )
+        liercd.elem.audio.play();
     });
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
@@ -94,6 +108,16 @@ var Liercd = function(url) {
     });
 
     liercd.connections[connection.id] = connection;
+  };
+
+  liercd.is_focused = function(panel) {
+    console.log(panel, liercd.focused);
+    return liercd.window_focused && liercd.focused && liercd.focused.id == panel.id;
+  };
+
+  liercd.is_highlight = function(conn, message) {
+    var nick = liercd.connections[conn].nick;
+    return message.Command == "PRIVMSG" && message.Params[1].indexOf(nick) != -1;
   };
 
   liercd.init = function() {
@@ -231,20 +255,26 @@ var Liercd = function(url) {
     panel.elem.nav.on('click', function(e) {
       e.preventDefault();
 
+      $('.flex-wrap').removeClass("open");
+
       var id = $(this).attr('data-panel-id');
+      var panel = liercd.panels[id];
 
       if ($(e.target).hasClass('close-panel')) {
-        var panel = liercd.panels[id];
         if (panel.type == "channel")
           liercd.part_channel(panel.name, panel.connection);
-        if (panel.type == "status")
+        else if (panel.type == "status")
           liercd.remove_connection(panel.connection);
         else
           liercd.remove_panel(id);
-        return;
       }
-
-      liercd.focus_panel(id);
+      else if ($(e.target).hasClass('edit-panel')) {
+        var connection = liercd.connections[panel.connection];
+        liercd.config_modal(null, connection);
+      }
+      else {
+        liercd.focus_panel(id);
+      }
     });
 
     if (focus === true || !liercd.focused)
@@ -257,6 +287,8 @@ var Liercd = function(url) {
   };
 
   liercd.part_channel = function(name, connection) {
+    if (!confirm("Are you sure you want to leave this channel?"))
+      return;
     $.ajax({
       url: liercd.baseurl + '/connection/' + connection,
       type: "POST",
@@ -488,11 +520,33 @@ var Liercd = function(url) {
     liercd.focused = panel;
   };
 
-  liercd.config_modal = function(e) {
+  liercd.config_modal = function(e, connection) {
     if (e) e.preventDefault();
+
+    var method = "POST";
     var url = liercd.baseurl + "/connection";
+
     var overlay = $('<div/>', {'class':'overlay'});
     overlay.append($('.config').clone().show());
+
+    if (connection) {
+      var config = connection.config;
+      var form = overlay.find('form');
+      form.find('input[name=Host]').val(config.Host);
+      form.find('input[name=Port]').val(config.Port);
+      if (config.Ssl)
+        form.find('input[name=Ssl]').get(0).checked ="checked";
+      form.find('input[name=Nick]').val(config.Nick);
+      form.find('input[name=User]').val(config.User);
+      form.find('input[name=Pass]').val(config.Pass);
+      form.find('input[name=Channels]').val(config.Channels);
+
+      overlay.find('h2').text('Edit connection');
+      overlay.find('input[type=submit]').val('Reconnect');
+      url += '/' + connection.id;
+      method = "PUT";
+    }
+
     $('body').append(overlay);
     liercd.overlayed = true;
 
@@ -518,10 +572,11 @@ var Liercd = function(url) {
 
       $.ajax({
         url: url,
-        type: "POST",
+        type: method,
         dataType: "json",
         data: JSON.stringify(data),
         success: function(res) {
+          if (connection) delete liercd.connections[connection.id];
           overlay.remove();
           liercd.overlayed = false;
           liercd.init();
@@ -551,267 +606,6 @@ var Liercd = function(url) {
   };
 
   setInterval(liercd.check_scroll, 1000);
-
-  $('#toggle-nicks').on('click touchstart', function(e) {
-    e.preventDefault();
-    scroll = liercd.focused && liercd.focused.is_scrolled();
-    $('.nicks-wrap').toggleClass("hidden");
-    if (scroll) liercd.focused.scroll();
-  });
-
-  $('#nav .nav-title').on('click', function(e) { 
-    if ($(e.target).hasClass('nav-title')|| $(e.target).hasClass('nav-title-text')) {
-      e.preventDefault();
-      $(this).toggleClass('collapsed');
-    }
-  });
-
-  $('#add-connection').on('click', liercd.config_modal);
-
-  liercd.elem.input.on("submit", function(e) {
-    e.preventDefault();
-    var input = $(e.target).find("input");
-    var value = input.val();
-    if (value == "") return;
-
-    input.val("");
-
-    var panel = liercd.panels[input.attr('data-panel-id')];
-    var connection = liercd.connections[panel.connection];
-    var privmsg = false;
-    var method = "POST";
-
-    if (value.substring(0,1) == "/") {
-      var command = value.substring(1).split(/\s+/, 2);
-      value = command[0].toUpperCase();
-      if (value.match(/^PART|QUIT|CLOSE|WC/i)) {
-        if (panel.type == "channel") {
-          value = "PART " + panel.name;
-        }
-        else {
-          return liercd.remove_panel(panel_id(panel.name, panel.connection));
-        }
-      }
-      else if (value == "TOPIC") {
-        value += " " + panel.name;
-      }
-      if (command.length == 2) {
-        value += " :" + command[1];
-      }
-    }
-    else if (panel.type != "status") {
-      privmsg = value;
-      value = "PRIVMSG " + panel.name + " :" + value;
-    }
-
-    $.ajax({
-      url: liercd.baseurl + "/connection/" + panel.connection,
-      type: method,
-      dataType: "json",
-      jsonp: false,
-      data: value,
-      success: function(res) {
-        if (method == "DELETE")
-          window.location.reload();
-      }
-    });
-  });
-
-  $('#join-channel').on('click', function(e) {
-    e.preventDefault();
-    var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.join').clone().show());
-    $('body').append(overlay);
-    liercd.overlayed = true;
-
-    overlay.on('touchstart click', '.overlay, .close', function(e) {
-      e.preventDefault();
-      overlay.remove();
-      liercd.overlayed = false;
-    });
-
-    var select = overlay.find("select[name=connection]");
-    for (connection in liercd.connections) {
-      var option = $('<option/>', {
-        value: connection
-      }).text(liercd.connections[connection].config.Host);
-      select.append(option);
-    }
-
-    overlay.on('submit', function(e) {
-      e.preventDefault();
-      var channel = $(this).find('input[name=channel]').val();
-      var conn = $(this).find('select[name=connection]').val();
-      $.ajax({
-        url: liercd.baseurl + '/connection/' + conn,
-        type: "POST",
-        data: "JOIN " + channel,
-        dataType: "json",
-        complete: function(res) {
-          overlay.remove();
-          liercd.overlayed = false;
-        }
-      });
-    });
-  });
-
-  var meta_down = false;
-  var shift_down = false;
-  var ctrl_down = false;
-
-  document.addEventListener("keydown", function(e) {
-    if (e.which == 17) {
-      ctrl_down = true;
-      return;
-    }
-
-    if (e.which == 18) {
-      meta_down = true;
-      return;
-    }
-
-    if (e.which == 16) {
-      shift_down = true;
-      return;
-    }
-
-    if (e.which == 27 && liercd.overlayed) {
-      $('.overlay').remove();
-      liercd.overlayed = false;
-      return;
-    }
-
-    if (liercd.overlayed) return;
-
-    if ((e.which == 38 || e.which == 75) && meta_down) {
-      e.preventDefault();
-      shift_down ? liercd.prev_unread_panel() : liercd.prev_panel();
-      return;
-    }
-
-    if ((e.which == 40 || e.which == 74) && meta_down) {
-      e.preventDefault();
-      shift_down ? liercd.next_unread_panel() : liercd.next_panel();
-      return;
-    }
-
-    if (liercd.focused) {
-      if (liercd.focused.keyboard.focused)
-        liercd.focused.keyboard.keydown(e);
-      else if (! meta_down && ! ctrl_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
-        liercd.focused.elem.input.focus();
-    }
-  });
-
-  window.addEventListener("blur", function(e) {
-    shift_down = false;
-    meta_down = false;
-    ctrl_down = false;
-  });
-
-  window.addEventListener("focus", function(e) {
-    shift_down = false;
-    meta_down = false;
-    ctrl_down = false;
-    if (liercd.focused && !$('.overlay').length)
-      liercd.focused.elem.input.focus();
-  });
-
-  document.addEventListener("keyup", function(e) {
-    if (e.which == 18)
-      meta_down = false;
-    if (e.which == 16)
-      shift_down = false;
-    if (e.which == 17)
-      ctrl_down = false;
-  });
-
-  $(document).on('click', '[data-nick]', function(e) {
-    e.preventDefault();
-    var nick = $(this).attr('data-nick');
-    var connection = liercd.focused.connection;
-    var panel = liercd.add_panel(nick, connection, true);
-    liercd.focus_panel(panel.id);
-  });
-
-  liercd.elem.prefix.on('click touchstart', function(e) {
-    e.preventDefault();
-    var visible = $(liercd.elem.scroll).is(":visible");
-
-    $('.flex-wrap').toggleClass("open");
-
-    // was closed, now open. so it's mobile and we
-    // need to scroll this manually
-    if (liercd.focused && !visible) {
-      liercd.focused.resize_filler();
-      liercd.focused.scroll();
-    }
-  });
-
-  $('#help').on('click touchstart', function(e) {
-    e.preventDefault();
-    var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.help').clone().show());
-    $('body').append(overlay);
-    liercd.overlayed = true;
-    overlay.on('touchstart click', '.overlay', function(e) {
-      e.preventDefault();
-      overlay.remove();
-      liercd.overlayed = false;
-    });
-  });
-
-  $('#logout').on('click touchstart', function(e) {
-    e.preventDefault();
-
-    if (!confirm("Are you sure you want to log out?"))
-      return;
-
-    $.ajax({
-      url: liercd.baseurl + "/logout",
-      type: "POST",
-      dataType: "json",
-      complete: function() {
-        window.location.reload();
-      }
-    });
-  });
-
-  $(window).on('resize', function(e) {
-    if (liercd.focused)
-      liercd.focused.scroll();
-  });
-
-  document.addEventListener('paste', function(e) {
-    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
-    for (i in items) {
-      if (items[i].type && items[i].type.match(/^image\//)) {
-        e.preventDefault();
-        liercd.focused.elem.input.focus();
-        var blob = items[i].getAsFile();
-        var fd = new FormData();
-        fd.append("image", blob);
-        var xhr = new XMLHttpRequest();
-        xhr.open("POST", "//api.imgur.com/3/image");
-        xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
-        xhr.onload = function() {
-          var res = JSON.parse(xhr.responseText);
-          var val = liercd.focused.elem.input.val();
-          liercd.focused.elem.input.val([val, res.data.link].join(" "));
-        };
-        xhr.send(fd);
-        return;
-      }
-    }
-  });
-
-  liercd.elem.panel.on('click', '[data-embed]', function(e) {
-      e.preventDefault();
-      var wrap = $(this);
-      wrap.html(wrap.attr('data-embed'));
-      wrap.addClass('open');
-      wrap.removeAttr('data-embed');
-  });
 
   liercd.get_pref = function(name, cb) {
     $.ajax({
@@ -869,4 +663,6 @@ var Liercd = function(url) {
       }
     });
   };
+
+  var events = new UIEvents(liercd);
 };

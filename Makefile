@@ -1,7 +1,7 @@
 jquery = static/js/jquery.js
 vendor = $(wildcard static/js/vendor/*)
 site = $(wildcard static/js/lierc/*)
-css = static/css/lierc.css
+css = $(wildcard static/css/*)
 map = static/site.map.js
 
 all: static/site.js.gz static/site.css.gz static/site.map.js.gz

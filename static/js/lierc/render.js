@@ -72,9 +72,14 @@ var Render = function(message, force_raw) {
     var msg = $('<span/>', {'class':'message-text'});
     from.css({'color': color});
 
-    if (text.substring(0, 7) == "\x01"+"ACTION") {
-      from.text('* ' + nick + ' ');
-      msg.append(Format(text.substring(7)));
+    if (text.substring(0, 1) == "\x01") {
+      if (text.substring(1,7) == "ACTION") {
+        from.text('* ' + nick + ' ');
+        msg.append(Format(text.substring(7)));
+      }
+      else {
+        return;
+      }
     }
     else {
       from.text('< '+nick+'> ');
@@ -152,7 +157,7 @@ var Render = function(message, force_raw) {
 
   function make (type, message) {
     return $('<li/>', {
-      'class':type,
+      'class': [type, message.Command.toLowerCase()].join(" "),
       'data-message-id': message.Id
     });
   }

@@ -4,8 +4,9 @@ var Panel = function(name, id, connection) {
   panel.name = name;
   panel.id = id;
   panel.connection = connection;
-  panel.unread = 0;
-  panel.missed = 0;
+  panel.unread = false;
+  panel.missed = false;
+  panel.highlighted = false;
   panel.type = determine_panel_type(name);
   panel.focused = false;
   panel.backlog_empty = false;
@@ -52,6 +53,7 @@ var Panel = function(name, id, connection) {
       panel.elem.input.focus();
     panel.unread = false;
     panel.missed = false;
+    panel.highlighted = false;
     panel.update_nav();
     panel.scroll();
     setTimeout(function() { panel.scroll() } , 10);
@@ -60,9 +62,15 @@ var Panel = function(name, id, connection) {
   panel.build_nav = function() {
     var el = $('<li/>', {'data-panel-id': id});
     var name = $('<a/>', {'class':'panel-name'}).text(panel.name);
-    var close = $('<a/>', {'class':'close-panel'}).text('✖');
     el.append(name);
-    el.append(close);
+    if (panel.type == "status") {
+      var edit = $('<a/>', {'class':'fa fa-pencil edit-panel'});
+      el.append(edit);
+    }
+    else {
+      var close = $('<a/>', {'class':'fa fa-times close-panel'});
+      el.append(close);
+    }
     return el;
   };
 
@@ -71,34 +79,47 @@ var Panel = function(name, id, connection) {
 
     if (panel.focused) {
       panel.elem.nav.addClass('active');
-      panel.elem.nav.removeClass('unread missed');
+      panel.elem.nav.removeClass('unread missed highlighted');
     }
     else {
       panel.elem.nav.removeClass('active');
-      if (panel.unread) {
+      if (panel.unread)
         panel.elem.nav.addClass('unread');
-      }
       if (panel.missed)
         panel.elem.nav.addClass('missed');
+      if (panel.highlighted)
+        panel.elem.nav.addClass('highlighted');
     }
   };
 
   panel.unfocus = function() {
     panel.focused = false;
     panel.elem.nav.removeClass("active");
+    panel.prune();
   };
 
   panel.prepend = function(el, target) {
     var height = liercd.elem.scroll.scrollHeight;
     var scroll = liercd.elem.scroll.scrollTop;
-    el.css({'opacity': '0'});
+    el.css('opacity', '0');
+
+    var prev;
+
+    el.find('span[data-nick]').each(function() {
+      var nick = $(this).attr('data-nick');
+
+      if (prev && nick == prev)
+        $(this).parents('.message').addClass('consecutive');
+
+      prev = nick;
+    });
 
     if (target)
       target.prepend(el);
     else
       panel.elem.list.prepend(el);
 
-    el.css({'opacity': '1'});
+    el.css('opacity', '1');
     var diff = liercd.elem.scroll.scrollHeight - height;
     liercd.elem.scroll.scrollTop = scroll + diff;
     panel.resize_filler();
@@ -147,10 +168,11 @@ var Panel = function(name, id, connection) {
     liercd.elem.scroll.scrollTop = scroll + diff;
     panel.resize_filler();
 
-    var prev = wrap.outerHeight();
+    var wrap_el = wrap.get(0);
+    var prev = wrap_el.getBoundingClientRect().height;
 
     var o = new MutationObserver(function(s) {
-      var cur = wrap.outerHeight();
+      var cur = wrap_el.getBoundingClientRect().height;
       if (! panel.is_scrolled())
         liercd.elem.scroll.scrollTop += cur - prev;
       prev = cur;
@@ -173,20 +195,25 @@ var Panel = function(name, id, connection) {
     return Math.abs(diff) <= 1;
   };
 
-  panel.append = function(el) {
+  panel.append = function(el, highlight) {
     var scrolled = panel.is_scrolled();
     panel.imagify(el.get(0));
     panel.elem.list.append(el);
+
+    var nick = el.find('span[data-nick]').attr('data-nick');
+    var prev = el.prev().find('span[data-nick]').attr('data-nick');
+
+    if (nick == prev)
+      el.addClass('consecutive');
 
     if (panel.focused && scrolled) {
       panel.scroll();
     }
     else {
       if (el.hasClass("message")) {
-        if (panel.type == "private") {
-          panel.elem.audio.play();
-        }
         panel.unread = true;
+        if (highlight)
+          panel.highlighted = true;
         panel.update_nav();
       }
       else if (el.hasClass("event")) {
@@ -202,9 +229,10 @@ var Panel = function(name, id, connection) {
   panel.resize_filler = function() {
     if (!panel.focused) return;
 
-    panel.elem.filler.height(
-      Math.max(0, panel.scroller.offsetHeight - panel.elem.list.outerHeight())
-    );
+    var scroll = panel.scroller.getBoundingClientRect().height;
+    var chat   = panel.elem.list.get(0).getBoundingClientRect().height;
+
+    panel.elem.filler.height(Math.max(0, scroll - chat));
   };
 
   panel.scroll = function() {
@@ -245,7 +273,6 @@ var Panel = function(name, id, connection) {
     filler: $('<div/>', {'class':'filler'}),
     prefix: $('<span/>').text(panel.name),
     nav: panel.build_nav(),
-    audio: new Audio("/static/ent_communicator1.mp3")
   };
 
   panel.scroller = $('#panel-scroll').get(0);
