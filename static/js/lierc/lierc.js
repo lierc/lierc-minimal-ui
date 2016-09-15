@@ -111,7 +111,6 @@ var Liercd = function(url) {
   };
 
   liercd.is_focused = function(panel) {
-    console.log(panel, liercd.focused);
     return liercd.window_focused && liercd.focused && liercd.focused.id == panel.id;
   };
 
@@ -510,9 +509,8 @@ var Liercd = function(url) {
 
     liercd.elem.title.text(panel.name);
 
-    for (id in liercd.panels) {
-      liercd.panels[id].unfocus();
-    }
+    if (liercd.focused)
+      liercd.focused.unfocus();
 
     //liercd.scroll_to_nav(panel.elem.nav);
 

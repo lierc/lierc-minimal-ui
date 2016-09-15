@@ -45,7 +45,12 @@ var UIEvents = function(liercd) {
     if (liercd.focused) {
       if (liercd.focused.keyboard.focused)
         liercd.focused.keyboard.keydown(e);
-      else if (! meta_down && ! ctrl_down && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/))
+      else if (
+        e.target.nodeName != "INPUT"
+        && e.target.nodeName != "TEXTAREA"
+        && ! meta_down && ! ctrl_down
+        && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/)
+      )
         liercd.focused.elem.input.focus();
     }
   });
@@ -152,11 +157,18 @@ var UIEvents = function(liercd) {
     if (target.is('li[data-chars]')) {
       var input = liercd.elem.input.find('input');
       input.val( input.val() + target.attr('data-chars') );
-      liercd.elem.emoji.removeClass("open");
       input.focus();
+
+      liercd.elem.emoji.removeClass("open");
+      $('#emoji-search input').val('');
+      liercd.emoji.filter('');
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
+      if (target.hasClass('open'))
+        $('#emoji-search input').focus();
+      else
+        liercd.elem.input.find('input').focus();
     }
   });
 
@@ -279,4 +291,7 @@ var UIEvents = function(liercd) {
     $('.flex-wrap').toggleClass("open");
   });
 
+  $('#emoji-search input').on('input', function(e) {
+    liercd.emoji.filter($(this).val());
+  });
 }

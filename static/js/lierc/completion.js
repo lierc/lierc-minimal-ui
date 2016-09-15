@@ -26,7 +26,7 @@ var Completion = function(element) {
     var word = this.last_word();
     this.position = this.el.selectionStart - word.length;
     this.completing = true
-    this.matches = this.find_matches(word).concat([RESET]);
+    this.matches = this.find_matches(word).concat([word]);
     this.index = 0;
   };
 
@@ -37,7 +37,7 @@ var Completion = function(element) {
     var start = this.el.value.substring(0, this.position)
     var end = this.matches[this.index++];
 
-    if (end != RESET) {
+    if (this.index != this.matches.length) {
       // add a ":" if this is the first word on the line
       if (start.indexOf(" ") == -1) {
         end += ":";

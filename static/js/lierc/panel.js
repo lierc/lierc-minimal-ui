@@ -95,7 +95,8 @@ var Panel = function(name, id, connection) {
   panel.unfocus = function() {
     panel.focused = false;
     panel.elem.nav.removeClass("active");
-    panel.prune();
+    panel.elem.list.remove();
+    panel.elem.list = $('<ol/>');
   };
 
   panel.prepend = function(el, target) {
