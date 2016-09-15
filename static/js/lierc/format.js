@@ -4,7 +4,7 @@ var Format = function(text) {
       return acc;
 
     var token = tokens.shift();
-    var head = acc.length ? acc[ acc.length - 1] : make;
+    var head = acc.length ? acc[ acc.length - 1] : make();
     var node = clone(head);
 
     switch (token.substring(0, 1)) {
