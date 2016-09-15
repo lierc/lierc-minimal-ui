@@ -1,6 +1,5 @@
 var Completion = function(element) {
   var TAB = 9;
-  var RESET = ""
 
   this.completions = [];
   this.completing = false;
