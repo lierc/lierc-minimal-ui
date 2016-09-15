@@ -178,6 +178,8 @@ var UIEvents = function(liercd) {
     var value = input.val();
     if (value == "") return;
 
+    value = Markdown(value);
+
     input.val("");
 
     var panel = liercd.panels[input.attr('data-panel-id')];
