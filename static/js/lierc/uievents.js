@@ -5,6 +5,7 @@ var UIEvents = function(liercd) {
   var meta_down = false;
   var shift_down = false;
   var ctrl_down = false;
+  var commands = new Commands();
 
   document.addEventListener("keydown", function(e) {
     if (e.which == 17) {
@@ -177,49 +178,36 @@ var UIEvents = function(liercd) {
     var input = $(e.target).find("input");
     var value = input.val();
     if (value == "") return;
+    input.val("");
 
     value = Markdown(value);
 
-    input.val("");
-
     var panel = liercd.panels[input.attr('data-panel-id')];
     var connection = liercd.connections[panel.connection];
-    var privmsg = false;
-    var method = "POST";
 
     if (value.substring(0,1) == "/") {
-      var command = value.substring(1).split(/\s+/, 2);
-      value = command[0].toUpperCase();
-      if (value.match(/^PART|QUIT|CLOSE|WC/i)) {
-        if (panel.type == "channel") {
-          value = "PART " + panel.name;
-        }
-        else {
-          return liercd.remove_panel(panel_id(panel.name, panel.connection));
-        }
+      try {
+        value = commands.handle_command(panel, value.substring(1));
       }
-      else if (value == "TOPIC") {
-        value += " " + panel.name;
-      }
-      if (command.length == 2) {
-        value += " :" + command[1];
+      catch (e) {
+        alert(e);
+        return;
       }
     }
-    else if (panel.type != "status") {
-      privmsg = value;
+    else if (panel.type == "status") {
+      throw "Can not message a status";
+    }
+    else {
       value = "PRIVMSG " + panel.name + " :" + value;
     }
 
     $.ajax({
       url: liercd.baseurl + "/connection/" + panel.connection,
-      type: method,
+      type: "POST",
       dataType: "json",
       jsonp: false,
       data: value,
-      success: function(res) {
-        if (method == "DELETE")
-          window.location.reload();
-      }
+      success: function(res) {}
     });
   });
 
@@ -295,5 +283,58 @@ var UIEvents = function(liercd) {
 
   $('#emoji-search input').on('input', function(e) {
     liercd.emoji.filter($(this).val());
+  });
+
+  $('#panel').on('mouseenter', 'li.message', function(e) {
+    if ($('#react.open').length)
+      return;
+
+    $(this).append($('#react').detach().show());
+  });
+
+  $('#panel').on('mouseleave', 'li.message', function(e) {
+    if ($('#react.open').length)
+      return;
+
+    $('#panel-scroll').append($('#react').detach().hide());
+
+    var emoji = $('#react #emoji-popup');
+    if (emoji.length) {
+      $('#emoji').append(emoji.detach());
+    }
+  });
+
+  $('#react').on('click', function(e) {
+    var react = $(this);
+    var target = $(e.target);
+
+    if (target.is('#react')) {
+      react.toggleClass('open');
+      if (react.hasClass('open')) {
+        var emoji = $('#emoji-popup').detach();
+        react.append(emoji);
+        emoji.find('#emoji-search input').focus();
+      }
+    }
+    if (target.is('li[data-chars]')) {
+      var emoji = $('#emoji-popup').detach();
+      $('#emoji').append(emoji);
+      react.removeClass('open');
+
+      var emoji = target.attr('data-chars');
+      var hash = react.parents('li.message').attr('data-message-hash');
+      var panel = liercd.focused;
+
+      $('#panel-scroll').append(react.detach().hide());
+
+      $.ajax({
+        url: liercd.baseurl + "/connection/" + panel.connection,
+        type: "POST",
+        dataType: "json",
+        jsonp: false,
+        data: "PRIVMSG " + panel.name + " :\x01" + ["REACT", hash, emoji].join(" "),
+        success: function(res) {}
+      });
+    }
   });
 }

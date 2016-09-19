@@ -168,13 +168,17 @@ var Connection = function(config) {
       var name = message.Params[0];
       var text = message.Params[1];
       var priv = name.match(/^[^#&!+]/);
+      var type = "msg";
+
+      if (text.substring(0,6) == "\x01" + "REACT")
+        type = "react";
 
       if (name == conn.nick && priv)
-        fire("private:msg", conn.id, nick, message);
+        fire("private:"+type, conn.id, nick, message);
       else if (priv)
-        fire("private:msg", conn.id, name, message);
+        fire("private:"+type, conn.id, name, message);
       else if (conn.channel(name))
-        fire("channel:msg", conn.id, name, message);
+        fire("channel:"+type, conn.id, name, message);
       break;
 
     case "PING":

@@ -17,39 +17,40 @@
         </header>
 
         <nav id="nav">
-
-
           <h2 class="nav-title collapsed"><span class="nav-title-text">Networks</span> <span class="count">0</span><span class="add-connection fa fa-plus"></span></h2>
           <ul class="nav sortable" id="status"></ul>
           <h2 class="nav-title"><span class="nav-title-text">Channels</span> <span class="count">0</span><span class="join-channel fa fa-plus"></span></h2>
           <ul class="nav sortable" id="channels"></ul>
           <h2 class="nav-title"><span class="nav-title-text">Privates</span> <span class="count">0</span></h2>
           <ul class="nav sortable" id="privates"></ul>
-        <ul id="global-controls">
-          <li id="toggle-nicks"><a>Toggle nicklist</a></li>
-          <li id="toggle-joinpart"><a>Toggle join/part</a></li>
-          <li class="join-channel"><a>Join channel</a></li>
-          <li class="add-connection"><a>Add connection</a></li>
-          <li class="separate" id="help"><a>Help</a></li>
-          <li class="separate" id="logout"><a>Logout</a></li>
-        </ul>
 
-
+          <ul id="global-controls">
+            <li id="toggle-nicks"><a>Toggle nicklist</a></li>
+            <li id="toggle-joinpart"><a>Toggle join/part</a></li>
+            <li class="join-channel"><a>Join channel</a></li>
+            <li class="add-connection"><a>Add connection</a></li>
+            <li class="separate" id="help"><a>Help</a></li>
+            <li class="separate" id="logout"><a>Logout</a></li>
+          </ul>
         </nav>
 
         <label id="prefix"></label>
       </div>
+
       <div class="flex-wrap-right" id="chat">
         <header id="topic"></header>
+
         <div class="flex-wrap-panel">
           <div id="panel-scroll">
             <div id="filler"></div>
             <main id="panel"></main>
+            <div id="react"></div>
           </div>
           <div class="nicks-wrap">
             <div id="nicks"></div>
           </div>
         </div>
+
         <footer id="foot">
           <form id="input"></form>
           <div id="emoji">
@@ -59,27 +60,28 @@
             </div>
           </div>
         </footer>
+
       </div>
     </div>
 
     <aside class="dialog help">
-      <p><strong><code>/COMMAND</code></strong>s are sent mostly unmodified to the IRC server.</p>
       <p>Example commands:</p>
+
       <ul>
-        <li><code>/JOIN #channel</code></li>
-        <li><code>/PART #channel</code></li>
-        <li><code>/PRIVMSG user message</code></li>
+        <li><code>/join #channel</code></li>
+        <li><code>/part reason</code></li>
+        <li><code>/query user message</code></li>
+        <li><code>/topic new topic message</code></li>
       </ul>
 
       <dl>
-        <dt><code>/QUIT</code></dt>
-        <dd>Closes and destroys connection.</dd>
         <dt>Alt + arrow</dt>
         <dd>Next/Prev panel</dd>
         <dt>Shift + Alt + arrow</dt>
         <dd>Next/Prev unread panel</dd>
       </dl>
-          </aside>
+
+    </aside>
 
     <section class="dialog login">
       <h2>Login</h2>

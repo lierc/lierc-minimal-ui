@@ -88,9 +88,11 @@ var Render = function(message, force_raw) {
 
     linkify(msg.get(0));
 
+    var hash = md5(message.Raw);
+
     return make("message", message).append(
       flex(from, msg, timestamp(message))
-    );
+    ).attr('data-message-hash', hash);
 
   case "NOTICE":
     var name = message.Prefix.Name;

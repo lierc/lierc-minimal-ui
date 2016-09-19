@@ -74,13 +74,27 @@ var Liercd = function(url) {
     });
 
     connection.on("channel:msg", function(conn, channel, message) {
+      var html = Render(message);
+      if (html) {
+        var panel = liercd.get_panel(channel, conn);
+        var highlight = !liercd.is_focused(panel) && liercd.is_highlight(conn, message);
+        panel.append(html, highlight);
+
+        if ( highlight )
+          liercd.elem.audio.play();
+      }
+    });
+
+    connection.on("channel:react", function(conn, channel, message) {
       var panel = liercd.get_panel(channel, conn);
-      var highlight = !liercd.is_focused(panel) && liercd.is_highlight(conn, message);
+      var parts = message.Params[1].split(" ");
+      panel.handle_reaction(message.Prefix.Name, parts[1], parts[2]);
+    });
 
-      panel.append(Render(message), highlight);
-
-      if ( highlight )
-        liercd.elem.audio.play();
+    connection.on("private:react", function(conn, nick, message) {
+      var panel = liercd.get_panel(nick, conn);
+      var parts = message.Params[1].split(" ");
+      panel.handle_reaction(message.Prefix.Name, parts[1], parts[2]);
     });
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
@@ -293,6 +307,9 @@ var Liercd = function(url) {
       type: "POST",
       dataType: "json",
       data: "PART " + name,
+      success: function() {
+        liercd.remove_panel(panel_id(name, connection));
+      }
     });
   };
 
@@ -378,11 +395,19 @@ var Liercd = function(url) {
 
         if (insert.length) {
           var block = $('<div/>');
+          var reactions = [];
           for (var i=insert.length -1; i >= 0; i--) {
-            block.append(Render(insert[i]));
+            if (liercd.is_reaction(insert[i]))
+              reactions.push(insert[i]);
+            else
+              block.append(Render(insert[i]));
           }
 
           panel.prepend(block, elem);
+          reactions.forEach(function(reaction) {
+            var parts = reaction.Params[1].split(" ");
+            panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
+          });
 
           if (insert.length == 100) {
             var last = insert[ insert.length - 1];
@@ -415,19 +440,33 @@ var Liercd = function(url) {
         if (events.length < 50)
           panel.backlog_empty = true;
 
+        var list = [];
+        var reactions = [];
         var block = $('<div/>', {'class':'backlog-block'});
+
         events.forEach( function (e) {
           var message = e.Message;
           message.Id = e.MessageId;
-          block.prepend(Render(message));
+          if (liercd.is_reaction(message))
+            reactions.push(message);
+          else
+            list.push(Render(message));
         });
 
-        panel.prepend(block);
-
-
+        panel.prepend(block.append(list.reverse()));
         liercd.filling_backlog = false;
+        reactions.forEach(function(reaction) {
+          var parts = reaction.Params[1].split(" ");
+          panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
+        });
+        panel.react_backlog_check();
       }
     });
+  };
+
+  liercd.is_reaction = function(message) {
+    return message.Command == "PRIVMSG"
+      && message.Params[1].substring(0,6) == "\x01" + "REACT";
   };
 
   liercd.prev_panel = function() {
@@ -540,7 +579,14 @@ var Liercd = function(url) {
       form.find('input[name=Channels]').val(config.Channels);
 
       overlay.find('h2').text('Edit connection');
-      overlay.find('input[type=submit]').val('Reconnect');
+      overlay.find('input[type=submit]').val('Save').attr(
+        "title", "Saving will reconnect."
+      );
+      overlay.find('input[type=submit]').before($('<input/>', {
+        type: "submit",
+        value: "Delete",
+        'class': 'delete-connection'
+      }));
       url += '/' + connection.id;
       method = "PUT";
     }
@@ -552,6 +598,13 @@ var Liercd = function(url) {
       e.preventDefault();
       liercd.overlayed = false;
       overlay.remove();
+    });
+
+    overlay.find('.delete-connection').on('click', function(e) {
+      e.preventDefault();
+      liercd.remove_connection(connection.id);
+      overlay.remove();
+      liercd.overlayed = false;
     });
 
     overlay.on("submit", function(e) {
@@ -574,7 +627,14 @@ var Liercd = function(url) {
         dataType: "json",
         data: JSON.stringify(data),
         success: function(res) {
-          if (connection) delete liercd.connections[connection.id];
+          if (connection) {
+            for (panel in liercd.panels) {
+              if (panel.type == "channel") {
+                liercd.remove_panel(panel.id);
+              }
+            }
+            delete liercd.connections[connection.id];
+          }
           overlay.remove();
           liercd.overlayed = false;
           liercd.init();

@@ -7,7 +7,7 @@ var Markdown = function(src) {
   while (src) {
     if (cap = italic.exec(src)) {
       src = src.substring(cap[0].length);
-      out += "\x16" + cap[1] +"\x16";
+      out += "\x1D" + cap[1] +"\x1D";
       continue;
     }
 

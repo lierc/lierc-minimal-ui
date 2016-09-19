@@ -32,12 +32,15 @@ a:visited {
   list-style: none;
 }
 
-#panel ol li {
+#panel ol > .backlog-block > li,
+#panel ol > li {
   padding: 5px 10px;
   border-top: 1px solid rgba(0,0,0,0.04);
+  position: relative;
 }
 
-#panel li:first-child {
+#panel ol > .backlog-block > li:first-child,
+#panel ol > li:first-child {
   border-top: none;
 }
 
@@ -787,7 +790,7 @@ body.hide-joinpartquit .event.part {
   visibility: hidden;
 }
 
-#emoji.open #emoji-popup {
+.open #emoji-popup {
   height: auto;
   visibility: visible;
 }
@@ -806,7 +809,10 @@ body.hide-joinpartquit .event.part {
   border-left: 1px solid #fff;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+}
 
+.delete-connection {
+  margin-right: 5px;
 }
 
 #emoji-search {
@@ -916,6 +922,51 @@ p.embed-source {
 .embed-wrap[data-embed-provider=wikipedia] {
   border-left: 10px solid #eee;
   padding-left: 10px;
+}
+
+#react {
+  position: absolute;
+  display: none;
+  top: 0px;
+  right: 10px;
+  padding: 4px 2px;
+  font-size: 16px;
+  line-height: 16px;
+  background: #fff;
+  cursor: pointer;
+}
+
+#react:before {
+  content: '\1f610';
+  filter: grayscale(100%);
+}
+
+#react:hover:before {
+  content: '\1f642';
+}
+
+#react.open:hover:before,
+#react.open:before {
+  content: '\1f601';
+}
+
+.reactions {
+  margin-top: 5px;
+  text-align: right;
+  padding-left: 5px;
+}
+
+.reactions span {
+  background: rgba(0,0,0,0.05);
+  display: inline-block;
+  text-align: center;
+  padding: 4px 2px;
+  margin-left: 2px;
+  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 16px;
 }
 
 @media (max-width: 500px) {

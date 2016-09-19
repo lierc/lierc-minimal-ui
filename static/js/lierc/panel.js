@@ -10,6 +10,7 @@ var Panel = function(name, id, connection) {
   panel.type = determine_panel_type(name);
   panel.focused = false;
   panel.backlog_empty = false;
+  panel.reactions = [];
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -97,6 +98,7 @@ var Panel = function(name, id, connection) {
     panel.elem.nav.removeClass("active");
     panel.elem.list.remove();
     panel.elem.list = $('<ol/>');
+    panel.backlog_empty = false;
   };
 
   panel.prepend = function(el, target) {
@@ -105,15 +107,6 @@ var Panel = function(name, id, connection) {
     el.css('opacity', '0');
 
     var prev;
-
-    el.find('span[data-nick]').each(function() {
-      var nick = $(this).attr('data-nick');
-
-      if (prev && nick == prev)
-        $(this).parents('.message').addClass('consecutive');
-
-      prev = nick;
-    });
 
     if (target)
       target.prepend(el);
@@ -316,6 +309,40 @@ var Panel = function(name, id, connection) {
         })(image, link);
         image.src = "https://noembed.com/i/0/600/" + link.href;
       }
+    }
+  };
+
+  panel.react_backlog_check = function() {
+    panel.reactions.forEach(function(reaction, i) {
+      var li = panel.elem.list.find('li[data-message-hash='+reaction[1]+']');
+      if (li.length) {
+        panel.handle_reaction.apply(panel, reaction);
+        panel.reactions.slice(i, 1);
+      }
+    });
+  };
+
+  panel.handle_reaction = function(from, hash, reaction) {
+    var li = panel.elem.list.find('li[data-message-hash=' + hash + ']');
+
+    if (li.length) {
+      var scroll = panel.is_scrolled();
+
+      var reactions = li.find('.reactions');
+      if (!reactions.length) {
+        reactions = $('<div/>', {'class': 'reactions'});
+        li.append(reactions);
+      }
+
+      reactions.prepend($('<span/>').text(reaction).attr('title', from));
+
+      if (scroll) {
+        panel.resize_filler();
+        panel.scroll();
+      }
+    }
+    else {
+      panel.reactions.push([from, hash, reaction]);
     }
   };
 };
