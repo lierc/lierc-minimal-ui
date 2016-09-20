@@ -316,15 +316,14 @@ var UIEvents = function(liercd) {
       }
     }
     if (target.is('li[data-chars]')) {
-      var emoji = $('.emoji-popup').detach();
-      $('#emoji').append(emoji);
-      react.removeClass('open');
-
       var emoji = target.attr('data-chars');
       var hash = react.parents('li.message').attr('data-message-hash');
       var panel = liercd.focused;
 
-      $('#panel-scroll').append(react.detach().hide());
+      react.remove();
+
+      if (! (emoji && hash && panel))
+        return;
 
       $.ajax({
         url: liercd.baseurl + "/connection/" + panel.connection,

@@ -119,6 +119,7 @@ var Panel = function(name, id, connection) {
     panel.resize_filler();
 
     panel.imagify(el.get(0), false);
+    panel.vidify(el.get(0), false);
     Embed.embed_all(el.find(".message-text"), panel);
   };
 
@@ -196,6 +197,7 @@ var Panel = function(name, id, connection) {
 
     var scrolled = panel.is_scrolled();
     panel.imagify(el.get(0));
+    panel.vidify(el.get(0));
     panel.elem.list.append(el);
 
     var nick = el.find('span[data-nick]').attr('data-nick');
@@ -316,6 +318,39 @@ var Panel = function(name, id, connection) {
       }
     }
   };
+  panel.vid_re = /^http[^\s]*\.(?:gifv|mp4)[^\/]*$/i;
+  panel.vidify = function(elem) {
+    var links = elem.querySelectorAll("a");
+    for (var i=links.length - 1; i >= 0; i--) {
+      var link = links[i];
+      if (link.href.match(panel.vid_re)) {
+        if (link.href.match(/i\.imgur\.com\/[^\/\.]+\.gifv/))
+          link.href = link.href.replace('.gifv', '.mp4');
+
+        var video = document.createElement('VIDEO');
+        video.controls = "controls";
+
+        video.addEventListener('loadeddata', (function(video, link) {
+          return function(e) {
+            var s = panel.scroller;
+            var start = s.scrollHeight;
+            var wrap = document.createElement('DIV');
+            link.parentNode.appendChild(wrap);
+            link.parentNode.removeChild(link);
+            wrap.appendChild(link);
+            link.innerHTML = "";
+            link.appendChild(video);
+            wrap.className = "image-wrap";
+            var end = s.scrollHeight
+            panel.scroller.scrollTop += end - start;
+          };
+        })(video, link), false);
+
+        video.src = link.href;
+        video.load();
+      }
+    }
+  };
 
   panel.react_backlog_check = function() {
     panel.reactions.forEach(function(reaction, i) {
@@ -328,6 +363,11 @@ var Panel = function(name, id, connection) {
   };
 
   panel.handle_reaction = function(from, hash, reaction) {
+    if (!hash) {
+      console.log(from, hash, reaction);
+      return;
+    }
+
     var li = panel.elem.list.find('li[data-message-hash=' + hash + ']');
 
     if (li.length) {
