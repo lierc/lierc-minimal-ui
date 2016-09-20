@@ -21,7 +21,7 @@ var Emoji = function() {
     }
   });
 
-  emoji.filter = function(text) {
+  emoji.filter = function(list, text) {
     var items = list.find('li');
 
     if (!text) {

@@ -170,7 +170,7 @@ var Connection = function(config) {
       var priv = name.match(/^[^#&!+]/);
       var type = "msg";
 
-      if (text.substring(0,6) == "\x01" + "REACT")
+      if (text.substring(0,5) == "\x01" + "FACE")
         type = "react";
 
       if (name == conn.nick && priv)

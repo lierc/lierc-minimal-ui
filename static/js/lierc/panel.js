@@ -190,6 +190,10 @@ var Panel = function(name, id, connection) {
   };
 
   panel.append = function(el, highlight) {
+    var id = el.attr('data-message-id');
+    if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
+      return;
+
     var scrolled = panel.is_scrolled();
     panel.imagify(el.get(0));
     panel.elem.list.append(el);
@@ -274,9 +278,10 @@ var Panel = function(name, id, connection) {
     if (panel.focused && !panel.is_scrolled())
       return;
 
-    var l = panel.elem.list.find('li:gt(' + 200 + ')').length;
+    var l = panel.elem.list.find('li.chat:gt(' + 200 + ')').length;
+
     if (l) {
-      panel.elem.list.find('li:lt(' + l + ')').remove();
+      panel.elem.list.find('li.chat:lt(' + l + ')').remove();
       panel.elem.list.find('.backlog-block:empty').remove();
     }
   };

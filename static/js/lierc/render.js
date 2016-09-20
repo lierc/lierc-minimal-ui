@@ -159,7 +159,7 @@ var Render = function(message, force_raw) {
 
   function make (type, message) {
     return $('<li/>', {
-      'class': [type, message.Command.toLowerCase()].join(" "),
+      'class': ["chat", type, message.Command.toLowerCase()].join(" "),
       'data-message-id': message.Id
     });
   }

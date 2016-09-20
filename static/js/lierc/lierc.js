@@ -466,7 +466,7 @@ var Liercd = function(url) {
 
   liercd.is_reaction = function(message) {
     return message.Command == "PRIVMSG"
-      && message.Params[1].substring(0,6) == "\x01" + "REACT";
+      && message.Params[1].substring(0,5) == "\x01" + "FACE";
   };
 
   liercd.prev_panel = function() {

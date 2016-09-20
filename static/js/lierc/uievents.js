@@ -161,13 +161,13 @@ var UIEvents = function(liercd) {
       input.focus();
 
       liercd.elem.emoji.removeClass("open");
-      $('#emoji-search input').val('');
+      $('.emoji-search input').val('');
       liercd.emoji.filter('');
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
       if (target.hasClass('open'))
-        $('#emoji-search input').focus();
+        $('.emoji-search input').focus();
       else
         liercd.elem.input.find('input').focus();
     }
@@ -281,43 +281,42 @@ var UIEvents = function(liercd) {
     $('.flex-wrap').toggleClass("open");
   });
 
-  $('#emoji-search input').on('input', function(e) {
-    liercd.emoji.filter($(this).val());
+  $(document).on('input', '.emoji-search input', function(e) {
+    var list = $(e.target).parents('.emoji-popup').find('ul');
+    liercd.emoji.filter(list, $(e.target).val());
   });
 
   $('#panel').on('mouseenter', 'li.message', function(e) {
-    if ($('#react.open').length)
+    if ($('.react.open').length)
       return;
 
-    $(this).append($('#react').detach().show());
+    $(this).append($('<div/>',{'class':'react'}));
   });
 
   $('#panel').on('mouseleave', 'li.message', function(e) {
-    if ($('#react.open').length)
-      return;
+    var react = $(this).find('.react:not(.open)');
 
-    $('#panel-scroll').append($('#react').detach().hide());
-
-    var emoji = $('#react #emoji-popup');
-    if (emoji.length) {
-      $('#emoji').append(emoji.detach());
-    }
+    if (react.length)
+      react.remove(); 
   });
 
-  $('#react').on('click', function(e) {
+  $('#panel').on('click', '.react', function(e) {
     var react = $(this);
     var target = $(e.target);
 
-    if (target.is('#react')) {
+    if (target.is('.react')) {
       react.toggleClass('open');
       if (react.hasClass('open')) {
-        var emoji = $('#emoji-popup').detach();
+        var emoji = $('#emoji .emoji-popup').clone(true);
         react.append(emoji);
-        emoji.find('#emoji-search input').focus();
+        emoji.find('.emoji-search input').focus();
+      }
+      else {
+        react.find('.emoji-popup').remove();
       }
     }
     if (target.is('li[data-chars]')) {
-      var emoji = $('#emoji-popup').detach();
+      var emoji = $('.emoji-popup').detach();
       $('#emoji').append(emoji);
       react.removeClass('open');
 
@@ -332,7 +331,7 @@ var UIEvents = function(liercd) {
         type: "POST",
         dataType: "json",
         jsonp: false,
-        data: "PRIVMSG " + panel.name + " :\x01" + ["REACT", hash, emoji].join(" "),
+        data: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
         success: function(res) {}
       });
     }
