@@ -107,6 +107,19 @@ var Panel = function(name, id, connection) {
     el.css('opacity', '0');
 
     var prev;
+    el.find('li.chat').each(function() {
+      if (this.className.indexOf('message') != -1) {
+        var time = this.querySelector('time');
+        if (time) {
+          if (time.innerHTML == prev)
+            time.style.visibility = 'hidden';
+          prev = time.innerHTML;
+        }
+      }
+      else {
+        prev = null;
+      }
+    });
 
     if (target)
       target.prepend(el);
@@ -120,6 +133,7 @@ var Panel = function(name, id, connection) {
 
     panel.imagify(el.get(0), false);
     panel.vidify(el.get(0), false);
+    panel.audify(el.get(0), false);
     Embed.embed_all(el.find(".message-text"), panel);
   };
 
@@ -198,6 +212,7 @@ var Panel = function(name, id, connection) {
     var scrolled = panel.is_scrolled();
     panel.imagify(el.get(0));
     panel.vidify(el.get(0));
+    panel.audify(el.get(0));
     panel.elem.list.append(el);
 
     var nick = el.find('span[data-nick]').attr('data-nick');
@@ -351,6 +366,38 @@ var Panel = function(name, id, connection) {
       }
     }
   };
+
+  panel.aud_re = /^http[^\s]*\.(?:mp3|wav|aac|m4a)[^\/]*$/i;
+  panel.audify = function(elem) {
+    var links = elem.querySelectorAll("a");
+    for (var i=links.length - 1; i >= 0; i--) {
+      var link = links[i];
+      if (link.href.match(panel.aud_re)) {
+        var audio = document.createElement('AUDIO');
+        audio.controls = "controls";
+
+        audio.addEventListener('loadeddata', (function(audio, link) {
+          return function(e) {
+            var s = panel.scroller;
+            var start = s.scrollHeight;
+            var wrap = document.createElement('DIV');
+            link.parentNode.appendChild(wrap);
+            link.parentNode.removeChild(link);
+            wrap.appendChild(link);
+            link.innerHTML = "";
+            link.appendChild(audio);
+            wrap.className = "image-wrap";
+            var end = s.scrollHeight
+            panel.scroller.scrollTop += end - start;
+          };
+        })(audio, link), false);
+
+        audio.src = link.href;
+        audio.load();
+      }
+    }
+  };
+
 
   panel.react_backlog_check = function() {
     panel.reactions.forEach(function(reaction, i) {

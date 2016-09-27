@@ -158,7 +158,9 @@ var UIEvents = function(liercd) {
     if (target.is('li[data-chars]')) {
       var input = liercd.elem.input.find('input');
       input.val( input.val() + target.attr('data-chars') );
-      input.focus();
+
+      if (!("ontouchstart" in document.documentElement))
+        input.focus();
 
       liercd.elem.emoji.removeClass("open");
       $('.emoji-search input').val('');
@@ -166,10 +168,12 @@ var UIEvents = function(liercd) {
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
-      if (target.hasClass('open'))
-        $('.emoji-search input').focus();
-      else
-        liercd.elem.input.find('input').focus();
+      if (!("ontouchstart" in document.documentElement)) {
+        if (target.hasClass('open'))
+          $('.emoji-search input').focus();
+        else
+          liercd.elem.input.find('input').focus();
+      }
     }
   });
 

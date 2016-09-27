@@ -136,6 +136,7 @@ a:visited {
   box-shadow: 0 0 2px rgba(0,0,0,0.25);
 }
 
+.image-wrap a audio,
 .image-wrap a video,
 .image-wrap a img {
   max-width: 100%;
@@ -339,6 +340,7 @@ a:visited {
   color: #ccc;
   font-size: 14px;
   line-height: 14px;
+  list-style: none;
 }
 
 .nav li.active {
@@ -394,6 +396,7 @@ a:visited {
 
 .status-change {
   margin: 10px;
+  padding: 5px 10px;
 }
 
 .backlog-block:first-child {
