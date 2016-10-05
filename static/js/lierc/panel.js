@@ -319,11 +319,25 @@ var Panel = function(name, id, connection) {
               var s = panel.scroller;
               var start = s.scrollHeight;
               var wrap = document.createElement('DIV');
+              var a = link.cloneNode(false);
+
+              var toggle = document.createElement('SPAN');
+              toggle.setAttribute("class", "embed-toggle");
+              toggle.setAttribute("aria-hidden", "true");
+              link.parentNode.insertBefore(toggle, link.nextSibling);
+
+              toggle.addEventListener("click", function(e) {
+                e.preventDefault();
+                var scroll = panel.is_scrolled();
+                $(wrap).toggleClass("hidden");
+                $(toggle).toggleClass("hidden");
+                if (scroll) panel.scroll();
+              });
+
               link.parentNode.appendChild(wrap);
-              link.parentNode.removeChild(link);
-              wrap.appendChild(link);
-              link.innerHTML = "";
-              link.appendChild(image);
+              a.appendChild(image);
+
+              wrap.appendChild(a);
               wrap.className = "image-wrap";
               var end = s.scrollHeight
               panel.scroller.scrollTop += end - start;

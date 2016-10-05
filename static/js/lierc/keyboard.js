@@ -11,7 +11,6 @@ var Keyboard = function(element) {
   keyboard.meta_down = false;
   keyboard.el = element;
   keyboard.completion = new Completion(element);
-  keyboard.history = new History(element);
 
   keyboard.keydown = function(e) {
     if (e.which == TAB) {
@@ -21,25 +20,6 @@ var Keyboard = function(element) {
     }
 
     keyboard.completion.stop();
-
-    if (e.which == UP) {
-      e.preventDefault();
-      keyboard.history.up();
-    }
-    else if (e.which == DOWN) {
-      e.preventDefault();
-      keyboard.history.down();
-    }
-  };
-
-  keyboard.keypress = function(e) {
-    if (e.which == ENTER) {
-      keyboard.history.record();
-    }
-
-    if (e.which != UP && e.which != DOWN) {
-      keyboard.history.reset();
-    }
   };
 
   keyboard.blur = function() {

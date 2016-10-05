@@ -131,6 +131,29 @@ a:visited {
   word-break: break-all;
 }
 
+.image-wrap {
+  margin-top: 10px;
+}
+
+.image-wrap.hidden {
+  display: none;
+}
+
+.embed-toggle.hidden:after {
+  content: "\f0d8";
+}
+
+.embed-toggle {
+  margin-left: 4px;
+  cursor: pointer;
+  font-family: FontAwesome;
+}
+
+.embed-toggle:after {
+  content: "\f0d7";
+  color: #555;
+}
+
 .image-wrap a {
   display: inline-block;
   box-shadow: 0 0 2px rgba(0,0,0,0.25);
@@ -541,6 +564,7 @@ p.note {
   line-height: 14px;
   color: #fff;
   position: relative;
+  cursor: pointer;
 }
 
 .nav-title .join-channel,
@@ -592,6 +616,11 @@ p.note {
   display: inline-block;
   float: right;
   -webkit-user-select: none;
+  color: #ffd0d6;
+}
+
+header:hover #global-controls-toggle {
+  color: #fff;
 }
 
 #global-controls li {
@@ -703,6 +732,7 @@ div.flex-wrap {
 }
 
 .flex-wrap-right {
+  position: relative;
   flex-grow: 1;
   display: flex;
   flex-direction: column;
@@ -726,6 +756,22 @@ body.hide-joinpartquit .event.part {
 
 .nicks-wrap:hover {
   overflow-y: auto;
+}
+
+#toggle-nicks {
+  color: #fff;
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  padding: 6px 15px;
+  background: #fff1f2;
+  color: #ffb6c0;
+  font-size: 18px;
+  cursor: pointer;
+}
+
+#toggle-nicks:hover {
+  background: #fff;
 }
 
 .nicks-wrap {
@@ -855,7 +901,7 @@ body.hide-joinpartquit .event.part {
   padding: 2px;
   overflow: hidden;
   box-sizing:  border-box;
-  min-width: 28px;
+  width: 28px;
   height: 28px;
   font-size: 18px;
   line-height: 24px;
@@ -944,13 +990,13 @@ p.embed-source {
   font-size: 16px;
   line-height: 16px;
   background: #fff;
-  cursor: pointer;
 }
 
 .react:before {
   content: '\1f610';
   filter: grayscale(100%);
   opacity: 0.5;
+  cursor: pointer;
 }
 
 .react:hover:before {
@@ -1018,11 +1064,6 @@ p.embed-source {
     display: none;
   }
 
-  .nicks-wrap,
-  #toggle-nicks {
-    display: none !important;
-  }
-
   .message-flex {
     display: block;
     position: relative;
@@ -1087,5 +1128,15 @@ p.embed-source {
   padding: 10px;
 }
 
+body[data-panel-type=channel].hide-nicklist #panel-scroll {
+  display: block;
+}
+body[data-panel-type=channel] #panel-scroll {
+  display: none;
+}
+
+#global-controls-toggle {
+  padding: 8px 10px 8px 10px;
+}
 }
 

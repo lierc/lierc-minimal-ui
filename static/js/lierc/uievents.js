@@ -280,7 +280,7 @@ var UIEvents = function(liercd) {
       wrap.removeAttr('data-embed');
   });
 
-  $('#global-controls-toggle').on('touchstart click', function(e) {
+  $('.flex-wrap-left header').on('touchstart click', function(e) {
     e.preventDefault();
     $('.flex-wrap').toggleClass("open");
   });

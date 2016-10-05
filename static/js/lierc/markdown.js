@@ -1,4 +1,6 @@
 var Markdown = function(src) {
+  return src;
+
   var bold = /^\*([\s\S]+?)\*(?!\*)/;
   var italic = /^_([\s\S]+?)_(?!_)/;
   var text = /^[\s\S]+?(?=[\\<!\[_*`]|$)/;
