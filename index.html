@@ -84,7 +84,8 @@
     </aside>
 
     <section class="dialog login">
-      <h2>Login</h2>
+      <div class="login-wrap">
+      <h2>Login <a href="#" class="reset-toggle">Reset password</a></h2>
       <form method="POST">
         <fieldset class="input-group">
           <label for="email">Email address</label>
@@ -98,6 +99,7 @@
           <input type="submit" name="auth" value="Log In">
         </fieldset>
       </form>
+
 
       <hr/>
 
@@ -115,6 +117,21 @@
           <input type="submit" name="register" value="Register">
         </fieldset>
       </form>
+      </div>
+
+      <div class="reset-wrap">
+      <h2>Reset password <a href="#" class="login-toggle">Login</a></h2>
+      <form method="POST">
+        <fieldset class="input-group">
+          <label for="email">Email address</label>
+          <input name="email" type="email" value="" required>
+        </fieldset>
+        <fieldset class="submit-group">
+          <input type="submit" name="auth" value="Reset">
+        </fieldset>
+      </form>
+      </div>
+
     </section>
 
     <section  class="dialog join">

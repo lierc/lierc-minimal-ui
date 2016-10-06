@@ -39,5 +39,18 @@ var Auth = function(baseurl) {
         }
       });
     });
+
+    overlay.find('.login-toggle').on('click', function(e) {
+      e.preventDefault();
+      overlay.find('.login-wrap').show();
+      overlay.find('.reset-wrap').hide();
+    });
+
+    overlay.find('.reset-toggle').on('click', function(e) {
+      e.preventDefault();
+      overlay.find('.login-wrap').hide();
+      overlay.find('.reset-wrap').show();
+    });
+
   };
 };

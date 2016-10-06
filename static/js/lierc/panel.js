@@ -141,10 +141,29 @@ var Panel = function(name, id, connection) {
     var height = liercd.elem.scroll.scrollHeight;
     var scroll = liercd.elem.scroll.scrollTop;
 
+    var toggle = document.createElement('SPAN');
+    toggle.setAttribute("class", "embed-toggle");
+    toggle.setAttribute("aria-hidden", "true");
+    a.parentNode.insertBefore(toggle, a.nextSibling);
+
     var li = $(a).parents('li');
     var wrap = $('<div/>', {
       'class': 'embed-wrap',
       'data-embed-provider': embed.provider_name.toLowerCase()
+    });
+
+    var temp;
+
+    toggle.addEventListener("click", function(e) {
+      e.preventDefault();
+      $(toggle).toggleClass('hidden');
+      if ($(toggle).hasClass('hidden')) {
+        wrap.remove();
+      }
+      else {
+        $(toggle).remove();
+        panel.embed(a, embed);
+      }
     });
 
     if (embed.provider_name == "Twitter") {
@@ -215,11 +234,22 @@ var Panel = function(name, id, connection) {
     panel.audify(el.get(0));
     panel.elem.list.append(el);
 
-    var nick = el.find('span[data-nick]').attr('data-nick');
-    var prev = el.prev().find('span[data-nick]').attr('data-nick');
+    if (el.hasClass("chat")) {
+      var prev = el.prev();
 
-    if (nick == prev)
-      el.addClass('consecutive');
+      if (prev.hasClass("chat")) {
+        var nick = el.find('span[data-nick]').attr('data-nick');
+        var prev_nick = prev.find('span[data-nick]').attr('data-nick');
+
+        if (nick == prev_nick)
+          el.addClass('consecutive');
+
+        var time = el.find("time");
+        var prev_time = prev.find("time").text();
+        if (time.text() == prev_time)
+          time.css("visibility", "hidden");
+      }
+    }
 
     if (panel.focused && scrolled) {
       panel.scroll();
@@ -364,12 +394,23 @@ var Panel = function(name, id, connection) {
             var s = panel.scroller;
             var start = s.scrollHeight;
             var wrap = document.createElement('DIV');
+
+            var toggle = document.createElement('SPAN');
+            toggle.setAttribute("class", "embed-toggle");
+            toggle.setAttribute("aria-hidden", "true");
+            link.parentNode.insertBefore(toggle, link.nextSibling);
+
+            toggle.addEventListener("click", function(e) {
+              e.preventDefault();
+              var scroll = panel.is_scrolled();
+              $(wrap).toggleClass("hidden");
+              $(toggle).toggleClass("hidden");
+              if (scroll) panel.scroll();
+            });
+
             link.parentNode.appendChild(wrap);
-            link.parentNode.removeChild(link);
-            wrap.appendChild(link);
-            link.innerHTML = "";
-            link.appendChild(video);
             wrap.className = "image-wrap";
+            wrap.appendChild(video);
             var end = s.scrollHeight
             panel.scroller.scrollTop += end - start;
           };

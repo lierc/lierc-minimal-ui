@@ -110,10 +110,9 @@ a:visited {
 }
 
 #panel ol li.message.consecutive .message-nick,
-*/
-#panel ol li.message.consecutive time {
   visibility: hidden;
 }
+*/
 
 #panel ol li.message time {
   color: #999;
@@ -151,7 +150,7 @@ a:visited {
 
 .embed-toggle:after {
   content: "\f0d7";
-  color: #555;
+  color: #7600bd;
 }
 
 .image-wrap a {
@@ -159,9 +158,9 @@ a:visited {
   box-shadow: 0 0 2px rgba(0,0,0,0.25);
 }
 
-.image-wrap a audio,
-.image-wrap a video,
-.image-wrap a img {
+.image-wrap audio,
+.image-wrap video,
+.image-wrap img {
   max-width: 100%;
   max-height: 300px;
   display: block;
@@ -460,6 +459,18 @@ a:visited {
 .login hr {
   border: none;
   margin: 20px 0;
+}
+
+.login-toggle,
+.reset-toggle {
+  font-size: 12px;
+  float: right;
+  font-weight: normal;
+  margin-top: 6px;
+}
+
+.reset-wrap {
+  display: none;
 }
 
 .overlay select,
