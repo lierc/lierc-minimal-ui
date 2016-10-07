@@ -11,6 +11,7 @@ var Panel = function(name, id, connection) {
   panel.focused = false;
   panel.backlog_empty = false;
   panel.reactions = [];
+  panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -388,6 +389,7 @@ var Panel = function(name, id, connection) {
 
         var video = document.createElement('VIDEO');
         video.controls = "controls";
+        video.preload = "metadata";
 
         video.addEventListener('loadeddata', (function(video, link) {
           return function(e) {

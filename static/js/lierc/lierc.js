@@ -12,6 +12,7 @@ var Liercd = function(url) {
   liercd.last_panel_id = null;
   liercd.window_focused = true;
   liercd.emoji = new Emoji();
+  liercd.default_panel = null;
 
   liercd.elem = {
     panel: $('#panel'),
@@ -60,7 +61,7 @@ var Liercd = function(url) {
     panel.update_topic("status.");
 
     connection.on("channel:new", function(conn, channel, message) {
-      liercd.add_panel(channel, conn, true);
+      liercd.add_panel(channel, conn, ("Id" in message));
     });
 
     connection.on("private:msg", function(conn, nick, message) {
@@ -133,7 +134,16 @@ var Liercd = function(url) {
     return message.Command == "PRIVMSG" && message.Params[1].indexOf(nick) != -1;
   };
 
+  liercd.find_default_panel = function() {
+    var parts = window.location.hash.split("/").slice(1);
+    if (parts.length == 2) {
+      return panel_id(decodeURIComponent(parts[1]), parts[0]);
+    }
+    return null;
+  };
+
   liercd.init = function() {
+    liercd.default_panel = liercd.find_default_panel();
     $.ajax({
       url: liercd.baseurl + '/connection',
       type: "GET",
@@ -290,9 +300,17 @@ var Liercd = function(url) {
       }
     });
 
-    if (focus === true || !liercd.focused)
+    // force focusing or no focused panel
+    if (focus === true || !liercd.focused) {
       liercd.focus_panel(id);
+    }
+    // focus the first channel added
     else if (focus !== false && panel.type == "channel" && liercd.channel_panels() == 1) {
+      liercd.focus_panel(id);
+    }
+    // this channel was in the URL on load
+    else if (liercd.default_panel && id == liercd.default_panel) {
+      liercd.default_panel = null;
       liercd.focus_panel(id);
     }
 
@@ -555,6 +573,7 @@ var Liercd = function(url) {
 
     panel.focus();
     liercd.focused = panel;
+    window.history.replaceState({}, "", panel.path);
   };
 
   liercd.config_modal = function(e, connection) {
