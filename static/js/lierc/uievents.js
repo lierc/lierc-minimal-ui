@@ -164,15 +164,16 @@ var UIEvents = function(liercd) {
 
       liercd.elem.emoji.removeClass("open");
       $('.emoji-search input').val('');
-      liercd.emoji.filter('');
+      liercd.emoji.filter(liercd.elem.emoji, '');
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
       if (!("ontouchstart" in document.documentElement)) {
-        if (target.hasClass('open'))
+        if (target.hasClass('open')) {
+          $('.emoji-search input').val('');
+          liercd.emoji.filter(liercd.elem.emoji, '');
           $('.emoji-search input').focus();
-        else
-          liercd.elem.input.find('input').focus();
+        }
       }
     }
   });
