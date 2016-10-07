@@ -309,8 +309,9 @@ var Panel = function(name, id, connection) {
   };
 
   panel.elem = {
-    input: $('<input/>', {
-      'type': 'text',
+    input: $('<div/>', {
+      'contenteditable': 'true',
+      'class': 'input',
       'data-panel-id': id
     }),
     list: $('<ol/>'),

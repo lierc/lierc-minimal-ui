@@ -23,6 +23,12 @@ var UIEvents = function(liercd) {
       mods['shift'] = true;
     }
 
+    if (e.which == 13) {
+      e.preventDefault();
+      liercd.elem.input.submit();
+      return;
+    }
+
     if (e.which == 27 && liercd.overlayed) {
       $('.overlay').remove();
       liercd.overlayed = false;
@@ -182,10 +188,10 @@ var UIEvents = function(liercd) {
 
   liercd.elem.input.on("submit", function(e) {
     e.preventDefault();
-    var input = $(e.target).find("input");
-    var value = input.val();
+    var input = $(e.target).find(".input");
+    var value = Unformat(input.get(0).innerHTML);
     if (value == "") return;
-    input.val("");
+    input.get(0).innerHTML = "";
 
     value = Markdown(value);
 

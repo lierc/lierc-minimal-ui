@@ -23,7 +23,8 @@ var Completion = function(element) {
 
   this.start = function() {
     var word = this.last_word();
-    this.position = this.el.selectionStart - word.length;
+    var sel = window.getSelection();
+    this.position = sel.focusOffset - word.length;
     this.completing = true
     this.matches = this.find_matches(word).concat([word]);
     this.index = 0;
@@ -33,7 +34,10 @@ var Completion = function(element) {
     if (this.index >= this.matches.length)
       this.index = 0;
 
-    var start = this.el.value.substring(0, this.position)
+    var sel = window.getSelection();
+    var node = sel.focusNode;
+
+    var start = node.textContent.substring(0, this.position)
     var end = this.matches[this.index++];
 
     if (this.index != this.matches.length) {
@@ -44,13 +48,20 @@ var Completion = function(element) {
       end += " ";
     }
 
-    this.el.value = start + end;
+    node.textContent = start + end;
     this.move_cursor();
   };
 
   this.move_cursor = function() {
-    var length = this.el.value.length;
-    this.el.setSelectionRange(length, length);
+    var sel = window.getSelection();
+    var node = sel.focusNode;
+    var length = node.textContent.length;
+    var range = document.createRange();
+    range.setStart(node, length);
+    range.setEnd(node, length);
+    var sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
   }
 
   this.find_matches = function(word) {
@@ -70,6 +81,8 @@ var Completion = function(element) {
   };
 
   this.last_word = function() {
-    return this.el.value.replace(/.*\s/, "");
+    var sel = window.getSelection();
+    var node = sel.focusNode;
+    return node.textContent.replace(/.*\s/, "");
   };
 };

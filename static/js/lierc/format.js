@@ -1,3 +1,31 @@
+var Unformat = function(html) {
+  var parser = new DOMParser();
+  var doc = parser.parseFromString(html, "text/html");
+  var tags = {
+    "B": "\x02",
+    "U": "\x1F",
+    "I": "\x1D"
+  };
+
+  function descend(node, string) {
+    if (node.nodeType == 3) {
+      string += node.textContent;
+    }
+    if (node.nodeType == 1 || node.nodeType == 9) {
+      if (tags[node.nodeName])
+        string += tags[node.nodeName];
+      for (var i=0; i < node.childNodes.length; i++) {
+        string = descend(node.childNodes[i], string);
+      }
+      if (tags[node.nodeName])
+        string += tags[node.nodeName];
+    }
+    return string;
+  };
+
+  return descend(doc, "");
+};
+
 var Format = function(text) {
   function parse (acc, tokens) {
     if (tokens.length == 0)

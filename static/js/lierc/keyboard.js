@@ -12,24 +12,6 @@ var Keyboard = function(element) {
   keyboard.completion = new Completion(element);
 
   keyboard.keydown = function(e, mods) {
-    if (mods['ctrl']) {
-      if (e.which == BOLD) {
-        e.preventDefault();
-        keyboard.el.value += "\x02";
-        return;
-      }
-      if (e.which == ITALIC) {
-        e.preventDefault();
-        keyboard.el.value += "\x1D";
-        return;
-      }
-      if (e.which == UNDERLINE) {
-        e.preventDefault();
-        keyboard.el.value += "\x1F";
-        return;
-      }
-    }
-
     if (e.which == TAB) {
       e.preventDefault();
       keyboard.completion.complete();
