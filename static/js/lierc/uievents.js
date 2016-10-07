@@ -2,25 +2,25 @@ var UIEvents = function(liercd) {
   var liercd = liercd;
   var events = this;
 
-  var meta_down = false;
-  var shift_down = false;
-  var ctrl_down = false;
+  var mods = {
+    meta: false,
+    shift: false,
+    ctrl: false
+  };
+
   var commands = new Commands();
 
   document.addEventListener("keydown", function(e) {
     if (e.which == 17) {
-      ctrl_down = true;
-      return;
+      mods['ctrl'] = true;
     }
 
     if (e.which == 18) {
-      meta_down = true;
-      return;
+      mods['meta'] = true;
     }
 
     if (e.which == 16) {
-      shift_down = true;
-      return;
+      mods['shift'] = true;
     }
 
     if (e.which == 27 && liercd.overlayed) {
@@ -31,43 +31,45 @@ var UIEvents = function(liercd) {
 
     if (liercd.overlayed) return;
 
-    if ((e.which == 38 || e.which == 75) && meta_down) {
+    if ((e.which == 38 || e.which == 75) && mods['meta']) {
       e.preventDefault();
-      shift_down ? liercd.prev_unread_panel() : liercd.prev_panel();
+      mods['shift'] ? liercd.prev_unread_panel() : liercd.prev_panel();
       return;
     }
 
-    if ((e.which == 40 || e.which == 74) && meta_down) {
+    if ((e.which == 40 || e.which == 74) && mods['meta']) {
       e.preventDefault();
-      shift_down ? liercd.next_unread_panel() : liercd.next_panel();
+      mods['shift'] ? liercd.next_unread_panel() : liercd.next_panel();
       return;
     }
 
     if (liercd.focused) {
-      if (liercd.focused.keyboard.focused)
-        liercd.focused.keyboard.keydown(e);
+      if (liercd.focused.keyboard.focused) {
+        liercd.focused.keyboard.keydown(e, mods);
+      }
       else if (
         e.target.nodeName != "INPUT"
         && e.target.nodeName != "TEXTAREA"
-        && ! meta_down && ! ctrl_down
+        && ! mods['meta'] && ! mods['ctrl']
         && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/)
-      )
+      ) {
         liercd.focused.elem.input.focus();
+      }
     }
   });
 
   window.addEventListener("blur", function(e) {
-    shift_down = false;
-    meta_down = false;
-    ctrl_down = false;
+    mods['shift'] = false;
+    mods['meta'] = false;
+    mods['ctrl'] = false;
 
     liercd.window_focused = false;
   });
 
   window.addEventListener("focus", function(e) {
-    shift_down = false;
-    meta_down = false;
-    ctrl_down = false;
+    mods['shift'] = false;
+    mods['meta'] = false;
+    mods['ctrl'] = false;
 
     liercd.window_focused = true;
 
@@ -77,11 +79,11 @@ var UIEvents = function(liercd) {
 
   document.addEventListener("keyup", function(e) {
     if (e.which == 18)
-      meta_down = false;
+      mods['meta'] = false;
     if (e.which == 16)
-      shift_down = false;
+      mods['shift'] = false;
     if (e.which == 17)
-      ctrl_down = false;
+      mods['ctrl'] = false;
   });
 
   $(document).on('click', '[data-nick]', function(e) {
