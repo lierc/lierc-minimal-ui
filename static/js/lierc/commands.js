@@ -47,6 +47,12 @@ var Commands = function() {
     return parts.join(" ");
   });
 
+  add_command("me", [], function(panel, line) {
+    var parts = ["PRIVMSG", panel.name];
+    parts.push(":" + "\x01" + "ACTION" + line);
+    return parts.join(" ");
+  });
+
   add_command("topic", ["t"], function(panel, line) {
     if (panel.type != "channel") {
       throw "TOPIC only works for channels";

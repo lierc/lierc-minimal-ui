@@ -671,7 +671,7 @@ var Liercd = function(url) {
     if (!liercd.focused) return;
     if (!$(liercd.elem.scroll).is(':visible')) return;
 
-    if (liercd.elem.scroll.scrollTop <= 100) {
+    if (liercd.elem.scroll.scrollTop <= 150) {
       if (!liercd.connections[liercd.focused.connection])
         return;
       if (liercd.focused.backlog_empty) return;
