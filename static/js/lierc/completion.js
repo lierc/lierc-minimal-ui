@@ -55,6 +55,12 @@ var Completion = function(element) {
   this.move_cursor = function() {
     var sel = window.getSelection();
     var node = sel.focusNode;
+    if (node.nodeType == 1) {
+      if (node.childNodes[0].nodeType == 3)
+        node = node.childNodes[0];
+      else
+        return;
+    }
     var length = node.textContent.length;
     var range = document.createRange();
     range.setStart(node, length);

@@ -7,11 +7,29 @@ var Keyboard = function(element) {
 
   var TAB = 9;
 
-  keyboard.focused = false;
   keyboard.el = element;
   keyboard.completion = new Completion(element);
+  keyboard.focused = false;
 
   keyboard.keydown = function(e, mods) {
+    if (mods['meta'] || mods['ctrl']) {
+      if (e.which == BOLD) {
+        e.preventDefault();
+        document.execCommand('bold');
+        return;
+      }
+      if (e.which == ITALIC) {
+        e.preventDefault();
+        document.execCommand('italic');
+        return;
+      }
+      if (e.which == UNDERLINE) {
+        e.preventDefault();
+        document.execCommand('underline');
+        return;
+      }
+    }
+
     if (e.which == TAB) {
       e.preventDefault();
       keyboard.completion.complete();
@@ -28,7 +46,7 @@ var Keyboard = function(element) {
   keyboard.focus = function() {
     keyboard.focused = true;
   };
-
+  
   keyboard.el.addEventListener("blur", keyboard.blur);
   keyboard.el.addEventListener("focus", keyboard.focus);
 };

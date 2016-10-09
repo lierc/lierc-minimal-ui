@@ -164,11 +164,8 @@ var UIEvents = function(liercd) {
     var target = $(e.target);
 
     if (target.is('li[data-chars]')) {
-      var input = liercd.elem.input.find('input');
-      input.val( input.val() + target.attr('data-chars') );
-
-      if (!("ontouchstart" in document.documentElement))
-        input.focus();
+      liercd.focused.elem.input.focus();
+      document.execCommand("insertText", false, target.attr('data-chars'));
 
       liercd.elem.emoji.removeClass("open");
       $('.emoji-search input').val('');
@@ -272,8 +269,8 @@ var UIEvents = function(liercd) {
         xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
         xhr.onload = function() {
           var res = JSON.parse(xhr.responseText);
-          var val = liercd.focused.elem.input.val();
-          liercd.focused.elem.input.val([val, res.data.link].join(" "));
+          liercd.focused.elem.input.focus();
+          document.execCommand("insertText", false, res.data.link);
         };
         xhr.send(fd);
         return;
@@ -303,7 +300,10 @@ var UIEvents = function(liercd) {
     if ($('.react.open').length)
       return;
 
-    $(this).append($('<div/>',{'class':'react'}));
+    $(this).append($('<div/>', {
+      'class':'react',
+      'title': $(this).find('time').attr('title')
+    }));
   });
 
   $('#panel').on('mouseleave', 'li.message', function(e) {

@@ -505,6 +505,11 @@ a:visited {
   border: none;
 }
 
+.overlay .required {
+  font-weight: bold;
+  color: red;
+}
+
 .overlay .submit-group {
   margin: 0;
   padding: 0;
@@ -933,6 +938,7 @@ body.hide-joinpartquit .event.part {
   margin-top: 10px;
   overflow: hidden;
   max-width: 100%;
+  max-height: 100px;
   border-radius: 5px;
   border: 1px solid #eee;
   cursor: pointer;
@@ -988,14 +994,14 @@ p.embed-source {
   cursor: pointer;
 }
 
-.embed-wrap[data-embed-provider=twitter] {
-  max-width: 350px;
-  border: none;
+.embed-wrap.open {
+  max-height: none;
 }
 
-.embed-wrap[data-embed-provider=wikipedia] {
-  border-left: 10px solid #eee;
-  padding-left: 10px;
+.embed-wrap[data-embed-provider=twitter] {
+  max-width: 350px;
+  max-height: none;
+  border: none;
 }
 
 .react {
@@ -1154,5 +1160,6 @@ body[data-panel-type=channel] #panel-scroll {
 #global-controls-toggle {
   padding: 8px 10px 8px 10px;
 }
+
 }
 
