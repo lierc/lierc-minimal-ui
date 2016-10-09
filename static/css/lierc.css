@@ -217,14 +217,9 @@ a:visited {
   flex-grow: 1;
   flex-shrink: 1;
   box-sizing: border-box;
-  overflow-y: hidden;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
   background: rgba(0,0,0,0.03);
-}
-
-#nav:hover {
-  overflow-y: auto;
 }
 
 .nav {
@@ -466,14 +461,6 @@ a:visited {
   margin: 20px 0;
 }
 
-.login-toggle,
-.reset-toggle {
-  font-size: 12px;
-  float: right;
-  font-weight: normal;
-  margin-top: 6px;
-}
-
 .reset-wrap {
   display: none;
 }
@@ -550,8 +537,7 @@ p.note {
   font-size: 14px;
 }
 
-.join a.close,
-.config a.close {
+.dialog a.close {
   color: #000;
   display: inline-block;
   float: right;
@@ -761,22 +747,18 @@ div.flex-wrap {
   background: #fff;
 }
 
-body[data-panel-type=channel] .nicks-wrap {
-  display: block;
+body[data-panel-type=channel] .channel-meta {
+  display: flex;
 }
 
-body[data-panel-type=channel].hide-nicklist .nicks-wrap {
+body[data-panel-type=channel].hide-nicklist .channel-meta {
   display: none;
 }
 
-body.hide-joinpartquit .event.join,
-body.hide-joinpartquit .event.quit,
-body.hide-joinpartquit .event.part {
+.hide-joinpartquit .event.join,
+.hide-joinpartquit .event.quit,
+.hide-joinpartquit .event.part {
   display: none;
-}
-
-.nicks-wrap:hover {
-  overflow-y: auto;
 }
 
 #toggle-nicks {
@@ -795,16 +777,42 @@ body.hide-joinpartquit .event.part {
   background: #fff;
 }
 
-.nicks-wrap {
+ul.channel-controls {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  background: rgba(0,0,0,0.03);
+  border-bottom: 3px solid #eee;
+}
+
+ul.channel-controls li a {
+  display: block;
+  cursor: pointer;
+  padding: 5px 15px;
+}
+
+ul.channel-controls li a:hover {
+  background: #efefef;
+}
+
+.channel-meta {
   width: 150px;
-  overflow-x: hidden;
-  overflow-y: hidden;
+  overflow: hidden;
   border-left: 1px solid #eee;
   flex-grow: 0;
   flex-shrink: 0;
   display: none;
+  flex-direction: column;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
+  color: #555;
+}
+
+#nicks {
+  flex-grow: 1;
+  flex-shrink: 1;
+  overflow-x: hidden;
+  overflow-y: auto;
 }
 
 #nicks ul {

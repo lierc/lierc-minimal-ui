@@ -147,9 +147,15 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#toggle-joinpart').on('click touchstart', function(e) {
+  $('#toggle-joinpart a').on('click touchstart', function(e) {
     e.preventDefault();
-    liercd.elem.body.toggleClass('hide-joinpartquit');
+    liercd.focused.toggle_show_events();
+    if (liercd.focused.ignore_events) {
+      $(this).text("Show events");
+    }
+    else {
+      $(this).text("Hide events");
+    }
   });
 
   $('#toggle-nicks').on('click touchstart', function(e) {

@@ -26,7 +26,6 @@
           <ul class="nav sortable" id="privates"></ul>
 
           <ul id="global-controls">
-            <li id="toggle-joinpart"><a>Toggle join/part</a></li>
             <li class="join-channel"><a>Join channel</a></li>
             <li class="add-connection"><a>Add connection</a></li>
             <li class="separate" id="help"><a>Help</a></li>
@@ -39,7 +38,7 @@
 
       <div class="flex-wrap-right" id="chat">
         <header id="topic"></header>
-        <div id="toggle-nicks" class="fa fa-ellipsis-v"></div>
+        <div id="toggle-nicks" class="fa fa-ellipsis-v" title="Channel info"></div>
 
         <div class="flex-wrap-panel">
           <div id="panel-scroll">
@@ -47,7 +46,10 @@
             <main id="panel"></main>
             <div id="react"></div>
           </div>
-          <div class="nicks-wrap">
+          <div class="channel-meta">
+            <ul class="channel-controls">
+              <li id="toggle-joinpart"><a>Hide events</a></li>
+            </ul>
             <div id="nicks"></div>
           </div>
         </div>
@@ -86,7 +88,8 @@
 
     <section class="dialog login">
       <div class="login-wrap">
-      <h2>Login <a href="#" class="reset-toggle">Reset password</a></h2>
+      <a href="#" class="close reset-toggle">Reset password</a>
+      <h2>Login</h2>
       <form method="POST">
         <fieldset class="input-group">
           <label for="email">Email address</label>
@@ -121,14 +124,15 @@
       </div>
 
       <div class="reset-wrap">
-      <h2>Reset password <a href="#" class="login-toggle">Login</a></h2>
+      <a href="#" class="close login-toggle">Login</a>
+      <h2>Reset password</h2>
       <form method="POST">
         <fieldset class="input-group">
           <label for="email">Email address</label>
           <input name="email" type="email" value="" required>
         </fieldset>
         <fieldset class="submit-group">
-          <input type="submit" name="auth" value="Reset">
+          <input type="submit" name="auth" value="This doesn't work" disabled>
         </fieldset>
       </form>
       </div>
@@ -136,7 +140,7 @@
     </section>
 
     <section  class="dialog join">
-      <a href="#" class="close">close</a>
+      <a href="#" class="close login-toggle">close</a>
       <h2>Join a channel</h2>
       <form method="POST">
         <fieldset class="input-group">

@@ -12,6 +12,7 @@ var Panel = function(name, id, connection) {
   panel.backlog_empty = false;
   panel.reactions = [];
   panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
+  panel.ignore_events = false;
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -99,6 +100,8 @@ var Panel = function(name, id, connection) {
     panel.elem.nav.removeClass("active");
     panel.elem.list.remove();
     panel.elem.list = $('<ol/>');
+    if (panel.ignore_events)
+      panel.elem.list.addClass('hide-joinpartquit');
     panel.backlog_empty = false;
   };
 
@@ -494,5 +497,14 @@ var Panel = function(name, id, connection) {
     else {
       panel.reactions.push([from, hash, reaction]);
     }
+  };
+
+  panel.toggle_show_events = function() {
+    var el = panel.elem.list;
+    var scrolled = panel.is_scrolled();
+    el.toggleClass('hide-joinpartquit');
+    panel.ignore_events = el.hasClass('hide-joinpartquit');
+    if (scrolled)
+      panel.scroll();
   };
 };
