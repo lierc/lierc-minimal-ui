@@ -305,7 +305,7 @@ var Liercd = function(url) {
       liercd.focus_panel(id);
     }
     // focus the first channel added
-    else if (focus !== false && panel.type == "channel" && liercd.channel_panels() == 1) {
+    else if (panel.type == "channel" && liercd.channel_panels() == 1) {
       liercd.focus_panel(id);
     }
     // this channel was in the URL on load
