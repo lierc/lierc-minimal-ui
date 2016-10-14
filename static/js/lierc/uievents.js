@@ -262,7 +262,8 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('paste', function(e) {
-    var items = (event.clipboardData || event.originalEvent.clipboardData).items;
+    var clipboard = (event.clipboardData || event.originalEvent.clipboardData);
+    var items = clipboard.items;
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
         e.preventDefault();
@@ -279,6 +280,13 @@ var UIEvents = function(liercd) {
           document.execCommand("insertText", false, res.data.link);
         };
         xhr.send(fd);
+        return;
+      }
+      else if (items[i].type && items[i].type == "text/plain") {
+        e.preventDefault();
+        liercd.focused.elem.input.focus();
+        var text = clipboard.getData("Text").replace(/[\r\n]/g, "");
+        document.execCommand("insertText", false, text);
         return;
       }
     }
