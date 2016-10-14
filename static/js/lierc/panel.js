@@ -170,7 +170,8 @@ var Panel = function(name, id, connection) {
       }
     });
 
-    if (embed.provider_name == "Twitter") {
+    var show = ["Twitter", "Imgur"];
+    if (show.indexOf(embed.provider_name) != -1) {
       wrap.html(embed.html).addClass("open");
     }
     else {
@@ -348,6 +349,7 @@ var Panel = function(name, id, connection) {
       var link = links[i];
       if (link.href.match(panel.img_re)) {
         if (link.href.match(/\.gifv/)) continue;
+        if (link.href.match(/#(nsfw|hide)/)) continue;
         var image = new Image();
         image.onload = (function(image, link) {
             return function(e) {
