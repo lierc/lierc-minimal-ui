@@ -170,7 +170,7 @@ var Panel = function(name, id, connection) {
       }
     });
 
-    var show = ["Twitter", "Imgur"];
+    var show = ["Twitter"];
     if (show.indexOf(embed.provider_name) != -1) {
       wrap.html(embed.html).addClass("open");
     }

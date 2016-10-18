@@ -66,7 +66,7 @@ var Liercd = function(url) {
 
     connection.on("private:msg", function(conn, nick, message) {
       var panel = liercd.add_panel(nick, conn, false);
-      var highlight = !liercd.is_focused(panel);
+      var highlight = !liercd.is_focused(panel) && nick != conn.nick;
 
       panel.append(Render(message), highlight);
 
@@ -130,6 +130,8 @@ var Liercd = function(url) {
   };
 
   liercd.is_highlight = function(conn, message) {
+    if (message.Prefix.Nick == conn.nick)
+      return false;
     var nick = liercd.connections[conn].nick;
     return message.Command == "PRIVMSG" && message.Params[1].indexOf(nick) != -1;
   };

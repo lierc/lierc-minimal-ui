@@ -5,7 +5,8 @@ var UIEvents = function(liercd) {
   var mods = {
     meta: false,
     shift: false,
-    ctrl: false
+    ctrl: false,
+    cmd: false
   };
 
   var commands = new Commands();
@@ -21,6 +22,10 @@ var UIEvents = function(liercd) {
 
     if (e.which == 16) {
       mods['shift'] = true;
+    }
+
+    if (e.which == 91) {
+      mods['cmd'] = true;
     }
 
     if (e.which == 13) {
@@ -56,7 +61,7 @@ var UIEvents = function(liercd) {
       else if (
         e.target.nodeName != "INPUT"
         && e.target.nodeName != "TEXTAREA"
-        && ! mods['meta'] && ! mods['ctrl']
+        && ! mods['meta'] && ! mods['ctrl'] && ! mods['cmd']
         && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/)
       ) {
         liercd.focused.elem.input.focus();
@@ -68,6 +73,7 @@ var UIEvents = function(liercd) {
     mods['shift'] = false;
     mods['meta'] = false;
     mods['ctrl'] = false;
+    mods['cmd'] = false;
 
     liercd.window_focused = false;
   });
@@ -76,6 +82,7 @@ var UIEvents = function(liercd) {
     mods['shift'] = false;
     mods['meta'] = false;
     mods['ctrl'] = false;
+    mods['cmd'] = false;
 
     liercd.window_focused = true;
 
@@ -90,6 +97,8 @@ var UIEvents = function(liercd) {
       mods['shift'] = false;
     if (e.which == 17)
       mods['ctrl'] = false;
+    if (e.which == 91)
+      mods['cmd'] = false;
   });
 
   $(document).on('click', '[data-nick]', function(e) {
