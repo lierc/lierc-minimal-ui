@@ -11,8 +11,11 @@ var Keyboard = function(element) {
   keyboard.completion = new Completion(element);
   keyboard.focused = false;
 
+  var osx = window.navigator.userAgent.match(/Macintosh/);
+
   keyboard.keydown = function(e, mods) {
-    if (mods['meta'] || mods['ctrl']) {
+    var style = osx ? mods['cmd'] : mods['ctrl'];
+    if (style) {
       if (e.which == BOLD) {
         e.preventDefault();
         document.execCommand('bold');

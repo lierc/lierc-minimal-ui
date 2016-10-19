@@ -11,7 +11,7 @@ var Unformat = function(html) {
     if (node.nodeType == 3) {
       string += node.textContent;
     }
-    if (node.nodeType == 1 || node.nodeType == 9) {
+    else if (node.nodeType == 1 || node.nodeType == 9) {
       if (tags[node.nodeName])
         string += tags[node.nodeName];
       for (var i=0; i < node.childNodes.length; i++) {
