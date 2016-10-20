@@ -213,6 +213,10 @@ a:visited {
     sans-serif;
 }
 
+#input .input:focus {
+  border: 1px solid #0093ff;
+}
+
 #nav {
   position: relative;
   width: 200px;
