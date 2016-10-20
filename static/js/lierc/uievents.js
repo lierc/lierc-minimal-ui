@@ -270,6 +270,37 @@ var UIEvents = function(liercd) {
       liercd.focused.scroll();
   });
 
+  document.addEventListener('copy', function(e) {
+    e.preventDefault();
+
+    var selected = window.getSelection().toString().split("\n");
+    var lines = [];
+
+    var nick;
+
+    for (i in selected) {
+      var line = selected[i].trim();
+
+      if (line.match(/^\d\d:\d\d$/))
+        continue;
+
+      if (! nick && line.match(/^< [^>]+>$/)) {
+        nick = line;
+        continue;
+      }
+
+      if (nick) {
+        lines.push(nick + " " + line);
+        nick = null;
+        continue;
+      }
+
+      lines.push(line);
+    }
+
+    e.clipboardData.setData('Text', lines.join("\n"));
+  });
+
   document.addEventListener('paste', function(e) {
     var clipboard = (event.clipboardData || event.originalEvent.clipboardData);
     var items = clipboard.items;
