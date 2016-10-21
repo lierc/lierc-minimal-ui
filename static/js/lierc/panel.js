@@ -50,6 +50,11 @@ var Panel = function(name, id, connection) {
   };
 
   panel.focus = function() {
+    if (panel.ignore_events)
+      $("body").addClass('hide-events');
+    else
+      $("body").removeClass('hide-events');
+
     panel.focused = true;
     panel.resize_filler();
     if (!("ontouchstart" in document.documentElement))
@@ -100,8 +105,6 @@ var Panel = function(name, id, connection) {
     panel.elem.nav.removeClass("active");
     panel.elem.list.remove();
     panel.elem.list = $('<ol/>');
-    if (panel.ignore_events)
-      panel.elem.list.addClass('hide-joinpartquit');
     panel.backlog_empty = false;
   };
 
@@ -502,10 +505,9 @@ var Panel = function(name, id, connection) {
   };
 
   panel.toggle_show_events = function() {
-    var el = panel.elem.list;
     var scrolled = panel.is_scrolled();
-    el.toggleClass('hide-joinpartquit');
-    panel.ignore_events = el.hasClass('hide-joinpartquit');
+    $('body').toggleClass('hide-events');
+    panel.ignore_events = $('body').hasClass('hide-events');
     if (scrolled)
       panel.scroll();
   };

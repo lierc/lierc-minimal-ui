@@ -159,13 +159,6 @@ var UIEvents = function(liercd) {
   $('#toggle-hideevents a').on('click touchstart', function(e) {
     e.preventDefault();
     liercd.focused.toggle_show_events();
-
-    if (liercd.focused.ignore_events) {
-      $(this).find('.checkbox').addClass("enabled");
-    }
-    else {
-      $(this).find('.checkbox').removeClass("enabled");
-    }
   });
 
   $('#toggle-nicks').on('click touchstart', function(e) {

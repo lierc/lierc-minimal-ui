@@ -762,9 +762,9 @@ body[data-panel-type=channel].hide-nicklist .channel-meta {
   display: none;
 }
 
-.hide-joinpartquit .event.join,
-.hide-joinpartquit .event.quit,
-.hide-joinpartquit .event.part {
+.hide-events .event.join,
+.hide-events .event.quit,
+.hide-events .event.part {
   display: none;
 }
 
@@ -798,7 +798,7 @@ ul.channel-controls li a {
   padding: 5px 15px;
 }
 
-ul.channel-controls #toggle-hideevents .checkbox:before {
+#toggle-hideevents .checkbox:before {
   content: "\f096";
   font-family: FontAwesome;
   width: 14px;
@@ -807,7 +807,7 @@ ul.channel-controls #toggle-hideevents .checkbox:before {
   padding-right: 4px;
 }
 
-ul.channel-controls #toggle-hideevents .checkbox.enabled:before {
+.hide-events #toggle-hideevents .checkbox:before {
   content: "\f046";
 }
 
