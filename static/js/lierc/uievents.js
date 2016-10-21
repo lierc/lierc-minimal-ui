@@ -156,14 +156,15 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#toggle-joinpart a').on('click touchstart', function(e) {
+  $('#toggle-hideevents a').on('click touchstart', function(e) {
     e.preventDefault();
     liercd.focused.toggle_show_events();
+
     if (liercd.focused.ignore_events) {
-      $(this).text("Show events");
+      $(this).find('.checkbox').addClass("enabled");
     }
     else {
-      $(this).text("Hide events");
+      $(this).find('.checkbox').removeClass("enabled");
     }
   });
 

@@ -798,6 +798,20 @@ ul.channel-controls li a {
   padding: 5px 15px;
 }
 
+ul.channel-controls #toggle-hideevents .checkbox:before {
+  content: "\f096";
+  font-family: FontAwesome;
+  width: 14px;
+  text-align: left;
+  display: inline-block;
+  padding-right: 4px;
+}
+
+ul.channel-controls #toggle-hideevents .checkbox.enabled:before {
+  content: "\f046";
+}
+
+
 ul.channel-controls li a:hover {
   background: #efefef;
 }
