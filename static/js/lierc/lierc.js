@@ -141,6 +141,9 @@ var Liercd = function(url) {
     if (parts.length == 2) {
       return panel_id(decodeURIComponent(parts[1]), parts[0]);
     }
+    else if (liercd.sorting.length) {
+      return liercd.sorting[0];
+    }
     return null;
   };
 
