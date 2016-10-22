@@ -289,7 +289,8 @@ var UIEvents = function(liercd) {
         continue;
       }
 
-      lines.push(line);
+      if (line.match(/\S/))
+        lines.push(line);
     }
 
     e.clipboardData.setData('Text', lines.join("\n"));
