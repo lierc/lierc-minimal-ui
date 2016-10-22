@@ -511,4 +511,13 @@ var Panel = function(name, id, connection) {
     if (scrolled)
       panel.scroll();
   };
+
+  panel.set_loading = function(on) {
+    if (on) {
+      panel.elem.list.addClass("loading");
+    }
+    else {
+      panel.elem.list.removeClass("loading");
+    }
+  };
 };

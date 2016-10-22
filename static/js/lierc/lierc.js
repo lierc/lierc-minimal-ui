@@ -447,6 +447,8 @@ var Liercd = function(url) {
     var connection = liercd.connections[panel.connection];
     if (!connection) return;
 
+    panel.set_loading(true);
+
     var name = panel.type == "status" ? "status" : panel.name;
     var parts = [
       liercd.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
@@ -483,6 +485,7 @@ var Liercd = function(url) {
           panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
         });
         panel.react_backlog_check();
+        panel.set_loading(false);
       }
     });
   };

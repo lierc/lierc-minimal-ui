@@ -32,6 +32,23 @@ a:visited {
   list-style: none;
 }
 
+#panel ol:before {
+  content: "\f110";
+  opacity: 0;
+  display: block;
+  text-align: center;
+  color: #555;
+  transition: opacity 0.5s;
+}
+
+#panel ol.loading:before {
+  opacity: 1;
+  content: "\f110";
+  font-family: FontAwesome;
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
+}
+
 #panel ol li.chat,
 #panel ol li.chat {
   padding: 5px 10px;
