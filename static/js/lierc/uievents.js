@@ -164,7 +164,7 @@ var UIEvents = function(liercd) {
   $('#toggle-nicks').on('click touchstart', function(e) {
     e.preventDefault();
     scroll = liercd.focused && liercd.focused.is_scrolled();
-    liercd.elem.body.toggleClass('hide-nicklist');
+    liercd.elem.body.toggleClass('show-nicklist');
     if (scroll) liercd.focused.scroll();
   });
 

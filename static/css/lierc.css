@@ -139,7 +139,7 @@ a:visited {
 }
 
 .embed-toggle.hidden:after {
-  content: "\f0d8";
+  content: "\f0da";
 }
 
 .embed-toggle {
@@ -150,6 +150,9 @@ a:visited {
 
 .embed-toggle:after {
   content: "\f0d7";
+  width: 10px;
+  display: inline-block;
+  text-align: center;
   color: #7600bd;
 }
 
@@ -755,11 +758,11 @@ div.flex-wrap {
 }
 
 body[data-panel-type=channel] .channel-meta {
-  display: flex;
+  display: none;
 }
 
-body[data-panel-type=channel].hide-nicklist .channel-meta {
-  display: none;
+body[data-panel-type=channel].show-nicklist .channel-meta {
+  display: flex;
 }
 
 .hide-events .event.join,
@@ -780,6 +783,7 @@ body[data-panel-type=channel].hide-nicklist .channel-meta {
   cursor: pointer;
 }
 
+.show-nicklist #toggle-nicks,
 #toggle-nicks:hover {
   background: #fff;
 }
@@ -1181,11 +1185,15 @@ p.embed-source {
   padding: 10px;
 }
 
-body[data-panel-type=channel].hide-nicklist #panel-scroll {
-  display: block;
+.channel-meta {
+  width: 100%;
+}
+
+body[data-panel-type=channel].show-nicklist #panel-scroll {
+  display: none;
 }
 body[data-panel-type=channel] #panel-scroll {
-  display: none;
+  display: block;
 }
 
 #global-controls-toggle {
