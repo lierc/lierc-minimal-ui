@@ -203,10 +203,11 @@ var UIEvents = function(liercd) {
 
     var panel = liercd.panels[input.attr('data-panel-id')];
     var connection = liercd.connections[panel.connection];
+    var send = [];
 
     if (value.substring(0,1) == "/") {
       try {
-        value = commands.handle_command(panel, value.substring(1));
+         send.push(commands.handle_command(panel, value.substring(1)));
       }
       catch (e) {
         alert(e);
@@ -217,17 +218,49 @@ var UIEvents = function(liercd) {
       throw "Can not message a status";
     }
     else {
-      value = "PRIVMSG " + panel.name + " :" + value;
+      var privmsg = "PRIVMSG " + panel.name + " :";
+      if (value.length + privmsg.length < 510) {
+        send.push(privmsg + value);
+      }
+      else {
+        var words = value.split(" ");
+        var len = 0;
+        var buf = [];
+
+        for (var i=0; i < words.length; i++) {
+          var word = words[i];
+          if (len + word.length > 512) {
+            send.push(privmsg + buf.join(" "));
+            len = 0;
+            buf = [];
+          }
+          else {
+            buf.push(word);
+            len += word.length;
+          }
+        }
+        if (buf.length) {
+          send.push(privmsg + buf.join(" "));
+        }
+      }
     }
 
-    $.ajax({
-      url: liercd.baseurl + "/connection/" + panel.connection,
-      type: "POST",
-      dataType: "json",
-      jsonp: false,
-      data: value,
-      success: function(res) {}
-    });
+    function sendlines(lines) {
+      if (!lines.length) return;
+      $.ajax({
+        url: liercd.baseurl + "/connection/" + panel.connection,
+        type: "POST",
+        dataType: "json",
+        jsonp: false,
+        data: lines.shift(),
+        success: function(res) {
+          if (lines.length)
+            sendlines(lines);
+        }
+      });
+    }
+
+    sendlines(send);
   });
 
   $('#help').on('click touchstart', function(e) {
@@ -320,7 +353,7 @@ var UIEvents = function(liercd) {
       else if (items[i].type && items[i].type == "text/plain") {
         e.preventDefault();
         liercd.focused.elem.input.focus();
-        var text = clipboard.getData("Text").replace(/[\r\n]/g, "");
+        var text = clipboard.getData("Text").replace(/[\r\n]+/g, " ");
         document.execCommand("insertText", false, text);
         return;
       }
