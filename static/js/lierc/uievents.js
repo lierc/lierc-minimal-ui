@@ -229,7 +229,7 @@ var UIEvents = function(liercd) {
 
         for (var i=0; i < words.length; i++) {
           var word = words[i];
-          if (len + word.length > 512) {
+          if (len + word.length > 510) {
             send.push(privmsg + buf.join(" "));
             len = 0;
             buf = [];
