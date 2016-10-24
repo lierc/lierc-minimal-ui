@@ -39,14 +39,14 @@ a:visited {
   text-align: center;
   color: #555;
   transition: opacity 0.5s;
+  font-family: FontAwesome;
+  -webkit-animation: fa-spin 2s infinite linear;
+  animation: fa-spin 2s infinite linear;
 }
 
 #panel ol.loading:before {
   opacity: 1;
   content: "\f110";
-  font-family: FontAwesome;
-  -webkit-animation: fa-spin 2s infinite linear;
-  animation: fa-spin 2s infinite linear;
 }
 
 #panel ol li.chat,
@@ -782,9 +782,7 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
   display: flex;
 }
 
-.hide-events .event.join,
-.hide-events .event.quit,
-.hide-events .event.part {
+.hide-events .event {
   display: none;
 }
 
