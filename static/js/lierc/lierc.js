@@ -586,6 +586,7 @@ var Liercd = function(url) {
 
   liercd.config_modal = function(e, connection) {
     if (e) e.preventDefault();
+    $('.flex-wrap').removeClass('open');
 
     var method = "POST";
     var url = liercd.baseurl + "/connection";

@@ -111,6 +111,7 @@ var UIEvents = function(liercd) {
 
   $('.join-channel').on('click', function(e) {
     e.preventDefault();
+    $('.flex-wrap').removeClass('open');
     var overlay = $('<div/>', {'class':'overlay'});
     overlay.append($('.join').clone().show());
     $('body').append(overlay);
@@ -265,11 +266,13 @@ var UIEvents = function(liercd) {
 
   $('#help').on('click touchstart', function(e) {
     e.preventDefault();
+    $('.flex-wrap').removeClass('open');
     var overlay = $('<div/>', {'class':'overlay'});
     overlay.append($('.help').clone().show());
     $('body').append(overlay);
     liercd.overlayed = true;
-    overlay.on('touchstart click', '.overlay', function(e) {
+
+    overlay.on('touchstart click', '.overlay, .close', function(e) {
       e.preventDefault();
       overlay.remove();
       liercd.overlayed = false;
