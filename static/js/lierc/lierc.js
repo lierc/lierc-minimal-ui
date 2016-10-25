@@ -461,6 +461,10 @@ var Liercd = function(url) {
       url: parts.join("/"),
       type: "GET",
       dataType: "json",
+      error: function(e) {
+        liercd.filling_backlog = false;
+        panel.set_loading(false);
+      },
       success: function(events) {
         if (events.length < 50)
           panel.backlog_empty = true;
@@ -582,6 +586,7 @@ var Liercd = function(url) {
     panel.focus();
     liercd.focused = panel;
     window.history.replaceState({}, "", panel.path);
+    liercd.check_scroll();
   };
 
   liercd.config_modal = function(e, connection) {
@@ -691,7 +696,7 @@ var Liercd = function(url) {
     }
   };
 
-  setInterval(liercd.check_scroll, 1000);
+  setInterval(liercd.check_scroll, 250);
 
   liercd.get_pref = function(name, cb) {
     $.ajax({
