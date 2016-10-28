@@ -30,6 +30,7 @@ var Stream = function(baseurl) {
 
     es.addEventListener("irc",     stream.onmessage);
     es.addEventListener("open",    stream.onopen);
+    es.addEventListener("connect", stream.onconnect);
 
     stream.eventsource = es;
     stream.timer = null;
@@ -41,6 +42,11 @@ var Stream = function(baseurl) {
     var backoff = Math.min(stream.retries++, 30);
     console.log("connecting in " + backoff + " seconds");
     stream.timer = setTimeout(connect, backoff * 1000);
+  };
+
+  stream.onconnect = function(e) {
+    var data = JSON.parse(e.data);
+    fire("connect", data);
   };
 
   stream.onopen = function() {

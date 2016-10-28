@@ -4,6 +4,7 @@ var Connection = function(config) {
   conn.id = config.id;
   conn.config = config.Config;
   conn.nick = config.Nick;
+  conn.connected = false;
   conn.channels = [];
 
   var listeners = {};

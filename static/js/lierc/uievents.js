@@ -42,16 +42,21 @@ var UIEvents = function(liercd) {
 
     if (liercd.overlayed) return;
 
-    if ((e.which == 38 || e.which == 75) && mods['meta']) {
+    if (e.which == 38 && (mods['meta'] || mods['cmd'])) {
       e.preventDefault();
       mods['shift'] ? liercd.prev_unread_panel() : liercd.prev_panel();
       return;
     }
 
-    if ((e.which == 40 || e.which == 74) && mods['meta']) {
+    if (e.which == 40 && ( mods['meta'] || mods['cmd'] )) {
       e.preventDefault();
       mods['shift'] ? liercd.next_unread_panel() : liercd.next_panel();
       return;
+    }
+
+    if ((e.which == 75 || e.which == 84) && ( mods['meta'] || mods['cmd'] )) {
+      e.preventDefault();
+      liercd.show_switcher();
     }
 
     if (liercd.focused) {

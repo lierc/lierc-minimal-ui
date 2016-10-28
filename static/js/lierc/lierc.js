@@ -195,6 +195,21 @@ var Liercd = function(url) {
       }
     });
 
+    stream.on('connect', function(e) {
+      var conn_id   = e.Id;
+      var connected = e.Connected;
+
+      if (liercd.connections[conn_id]) {
+        liercd.connections[conn_id].connected = connected;
+        for (id in liercd.panels) {
+          var panel = liercd.panels[id];
+          if (panel.connection == conn_id) {
+            panel.connected = connected;
+          }
+        }
+      }
+    });
+
     stream.on('close', function(e) {
       if (liercd.focused)
         liercd.focused.stream_status_change(false);
@@ -753,6 +768,9 @@ var Liercd = function(url) {
         }
       }
     });
+  };
+
+  liercd.show_switcher = function() {
   };
 
   var events = new UIEvents(liercd);

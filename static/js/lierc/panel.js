@@ -6,6 +6,7 @@ var Panel = function(name, id, connection) {
   panel.connection = connection;
   panel.unread = false;
   panel.missed = false;
+  panel.connected = true;
   panel.highlighted = false;
   panel.type = determine_panel_type(name);
   panel.focused = false;
@@ -87,7 +88,7 @@ var Panel = function(name, id, connection) {
 
     if (panel.focused) {
       panel.elem.nav.addClass('active');
-      panel.elem.nav.removeClass('unread missed highlighted');
+      panel.elem.nav.removeClass('unread missed highlighted disconnected');
     }
     else {
       panel.elem.nav.removeClass('active');
@@ -97,6 +98,8 @@ var Panel = function(name, id, connection) {
         panel.elem.nav.addClass('missed');
       if (panel.highlighted)
         panel.elem.nav.addClass('highlighted');
+      if (! panel.connected)
+        panel.elem.nav.addClass('disconnected');
     }
   };
 
@@ -357,7 +360,6 @@ var Panel = function(name, id, connection) {
         image.onload = (function(image, link) {
             return function(e) {
               var s = panel.scroller;
-              var start = s.scrollHeight;
               var wrap = document.createElement('DIV');
               var a = link.cloneNode(false);
 
@@ -379,8 +381,7 @@ var Panel = function(name, id, connection) {
 
               wrap.appendChild(a);
               wrap.className = "image-wrap";
-              var end = s.scrollHeight
-              panel.scroller.scrollTop += end - start;
+              panel.scroller.scrollTop += wrap.getBoundingClientRect().height;
             };
         })(image, link);
         image.src = "https://noembed.com/i/0/600/" + link.href;
@@ -403,7 +404,6 @@ var Panel = function(name, id, connection) {
         video.addEventListener('loadeddata', (function(video, link) {
           return function(e) {
             var s = panel.scroller;
-            var start = s.scrollHeight;
             var wrap = document.createElement('DIV');
 
             var toggle = document.createElement('SPAN');
@@ -422,8 +422,7 @@ var Panel = function(name, id, connection) {
             link.parentNode.appendChild(wrap);
             wrap.className = "image-wrap";
             wrap.appendChild(video);
-            var end = s.scrollHeight
-            panel.scroller.scrollTop += end - start;
+            panel.scroller.scrollTop += wrap.getBoundingClientRect().height;
           };
         })(video, link), false);
 
