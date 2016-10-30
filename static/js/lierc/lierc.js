@@ -55,6 +55,7 @@ var Liercd = function(url) {
       return;
 
     var connection = new Connection(config);
+    liercd.connections[connection.id] = connection;
 
     var panel = liercd.add_panel("status", connection.id);
     panel.change_name(connection.config.Host);
@@ -121,8 +122,6 @@ var Liercd = function(url) {
       var panel = liercd.get_panel(channel, conn);
       panel.update_topic(text);
     });
-
-    liercd.connections[connection.id] = connection;
   };
 
   liercd.is_focused = function(panel) {
@@ -205,6 +204,7 @@ var Liercd = function(url) {
           var panel = liercd.panels[id];
           if (panel.connection == conn_id) {
             panel.connected = connected;
+            panel.update_nav();
           }
         }
       }
@@ -284,6 +284,7 @@ var Liercd = function(url) {
       return liercd.panels[id];
 
     var panel = new Panel(name, id, connection);
+    panel.connected = liercd.connections[connection].connected;
     liercd.panels[id] = panel;
 
     if (panel.type == "status")

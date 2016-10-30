@@ -66,6 +66,10 @@ var Commands = function() {
     return parts.join(" ");
   });
 
+  add_command("quote",["raw"], function(panel, line) {
+    return line;
+  });
+
   commands.handle_command = function(panel, line) {
     var parts = line.split(" ", 1);
     var command = parts[0].toLowerCase();

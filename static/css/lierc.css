@@ -356,6 +356,11 @@ a:visited {
   content: "\f111";
 }
 
+.nav li.disconnected:before {
+  content: "\f1e6";
+  color: red;
+}
+
 .nav li:before {
   content: '';
   font-family: FontAwesome;
@@ -414,6 +419,10 @@ a:visited {
 .nav li a {
   color: #555;
   padding-left: 4px;
+}
+
+.nav li.disconnected a {
+  color: #999;
 }
 
 #topic {

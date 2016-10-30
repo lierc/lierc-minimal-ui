@@ -89,6 +89,8 @@ var Panel = function(name, id, connection) {
     if (panel.focused) {
       panel.elem.nav.addClass('active');
       panel.elem.nav.removeClass('unread missed highlighted disconnected');
+      if (! panel.connected)
+        panel.elem.nav.addClass('disconnected');
     }
     else {
       panel.elem.nav.removeClass('active');
@@ -98,7 +100,10 @@ var Panel = function(name, id, connection) {
         panel.elem.nav.addClass('missed');
       if (panel.highlighted)
         panel.elem.nav.addClass('highlighted');
-      if (! panel.connected)
+
+      if (panel.connected)
+        panel.elem.nav.removeClass('disconnected');
+      else
         panel.elem.nav.addClass('disconnected');
     }
   };
