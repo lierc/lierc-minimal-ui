@@ -34,7 +34,7 @@ var Liercd = function(url) {
 
   $('.sortable').each(function() {
     Sortable.create(this, {
-      delay: 250,
+      delay: "touchstart" in window ? 250 : 0,
       onSort: function(e) {
         var order = $(this.el).find('li').toArray().map(function(li) {
           return $(li).attr('data-panel-id');
@@ -205,6 +205,11 @@ var Liercd = function(url) {
           if (panel.connection == conn_id) {
             panel.connected = connected;
             panel.update_nav();
+            if (panel.type == "status") {
+              panel.append($('<li/>', {
+                'class': 'chat raw'
+              }).text(e.Message));
+            }
           }
         }
       }
