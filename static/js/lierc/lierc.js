@@ -633,7 +633,7 @@ var Liercd = function(url) {
       form.find('input[name=Channels]').val(config.Channels);
 
       overlay.find('h2').text('Edit connection');
-      overlay.find('input[type=submit]').val('Save').attr(
+      overlay.find('input[type=submit]').val('Save and Reconnect').attr(
         "title", "Saving will reconnect."
       );
       overlay.find('input[type=submit]').before($('<input/>', {
