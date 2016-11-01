@@ -13,6 +13,7 @@ var Liercd = function(url) {
   liercd.window_focused = true;
   liercd.emoji = new Emoji();
   liercd.default_panel = null;
+  liercd.default_focused = false;
 
   liercd.elem = {
     panel: $('#panel'),
@@ -330,13 +331,14 @@ var Liercd = function(url) {
     if (focus === true || !liercd.focused) {
       liercd.focus_panel(id);
     }
-    // focus the first channel added
-    else if (panel.type == "channel" && liercd.channel_panels() == 1) {
-      liercd.focus_panel(id);
-    }
     // this channel was in the URL on load
     else if (liercd.default_panel && id == liercd.default_panel) {
       liercd.default_panel = null;
+      liercd.default_focused = true;
+      liercd.focus_panel(id);
+    }
+    // focus the first channel added
+    else if (!liercd.default_focused && panel.type == "channel" && liercd.channel_panels() == 1) {
       liercd.focus_panel(id);
     }
 
@@ -633,12 +635,10 @@ var Liercd = function(url) {
       form.find('input[name=Channels]').val(config.Channels);
 
       overlay.find('h2').text('Edit connection');
-      overlay.find('input[type=submit]').val('Save and Reconnect').attr(
-        "title", "Saving will reconnect."
-      );
+      overlay.find('input[type=submit]').val('Save & Reconnect').css('font-weight', 'bold');
       overlay.find('input[type=submit]').before($('<input/>', {
         type: "submit",
-        value: "Delete",
+        value: "\uf071 Delete",
         'class': 'delete-connection'
       }));
       url += '/' + connection.id;
