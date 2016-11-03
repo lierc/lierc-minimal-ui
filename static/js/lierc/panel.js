@@ -14,6 +14,7 @@ var Panel = function(name, id, connection) {
   panel.reactions = [];
   panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
   panel.ignore_events = false;
+  panel.first_focus = true;
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -43,11 +44,13 @@ var Panel = function(name, id, connection) {
         $('<a/>', {
           'class': 'nick-list-nick',
           'title': nick,
-          'data-nick': nick
+          'data-nick': nick.replace(/^[^a-zA-Z]/, "")
         }).text(nick)
       );
     }));
-    panel.keyboard.completion.completions = sorted;
+    panel.keyboard.completion.completions = sorted.map(function(nick) {
+      return nick.replace(/^[^a-zA-Z]/, "");
+    });
   };
 
   panel.focus = function() {
@@ -56,6 +59,7 @@ var Panel = function(name, id, connection) {
     else
       $("body").removeClass('hide-events');
 
+    panel.first_focus = false;
     panel.focused = true;
     panel.resize_filler();
     if (!("ontouchstart" in document.documentElement))
@@ -512,6 +516,8 @@ var Panel = function(name, id, connection) {
     var scrolled = panel.is_scrolled();
     $('body').toggleClass('hide-events');
     panel.ignore_events = $('body').hasClass('hide-events');
+    if (panel.ignore_events)
+      panel.resize_filler();
     if (scrolled)
       panel.scroll();
   };
