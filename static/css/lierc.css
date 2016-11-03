@@ -59,10 +59,6 @@ a:visited {
   position: relative;
 }
 
-#panel ol li.chat:first-child {
-  border-top: none;
-}
-
 #panel ol li.filler {
   padding: 0;
   margin: 0;
@@ -103,10 +99,6 @@ a:visited {
 }
 
 #panel ol .status-change + li.event,
-#panel ol .backlog-block + li.event,
-#panel ol .backlog-block + li.message,
-#panel ol .backlog-block + li.raw,
-#panel ol li.event:first-child,
 #panel ol li.event + li.event {
   border-top: none;
 }
@@ -121,6 +113,33 @@ a:visited {
 
 #panel ol li.chat span.message-nick {
   font-weight: bold;
+}
+
+.nick-popup {
+  position: absolute;
+  background: #fff;
+  padding: 10px;
+  box-shadow: 0 0 4px rgba(0,0,0,0.5);
+  border-radius: 2px;
+  z-index: 999;
+  bottom: 100%;
+  color: #000;
+  font-weight: normal;
+  box-sizing: border-box;
+}
+
+.nick-popup .nick-avatar {
+  max-width: 150px;
+  max-height: 150px;
+}
+
+.nick-popup h3 {
+  margin: 0;
+  font-size: 16px;
+}
+
+.nick-popup h3, p {
+  margin: 3px 0;
 }
 
 /*
@@ -450,25 +469,13 @@ a:visited {
 }
 
 .backlog-block {
-  border-bottom: 1px dashed #ccc;
-  padding-bottom: 10px;
-  margin: 10px 0;
+  margin: 0;
   transition: opacity 0.25s ease-out;
 }
 
 .status-change {
   margin: 10px;
   padding: 5px 10px;
-}
-
-.backlog-block:first-child {
-  margin-top: 0;
-}
-
-.backlog-block:last-child {
-  margin-bottom: 0;
-  padding-bottom: 0;
-  border-bottom: none;
 }
 
 .overlay {
@@ -874,6 +881,7 @@ ul.channel-controls li a:hover {
   list-style: none;
   margin: 0;
   padding: 2px 15px;
+  position: relative;
 }
 
 #nicks ul li a {

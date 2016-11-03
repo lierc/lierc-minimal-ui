@@ -4,6 +4,10 @@ var Channel = function(name) {
   this.nicks = [];
   this.nicks_done = true;
 
+  this.contains_nick = function(nick) {
+    return this.nicks.indexOf(nick) != -1;
+  };
+
   this.remove_nick = function(nick) {
     var i = this.nicks.indexOf(nick);
     if (i != -1) {

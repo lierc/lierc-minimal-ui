@@ -106,6 +106,64 @@ var UIEvents = function(liercd) {
       mods['cmd'] = false;
   });
 
+  var show_timer, hide_timer;
+  var clear_timers = function() {
+    clearTimeout(show_timer);
+    clearTimeout(hide_timer);
+  };
+
+  $(document).on('mouseleave', '.message-nick[data-nick]', function(e) {
+    clear_timers();
+    hide_timer = setTimeout(function(){ $('.nick-popup').remove() }, 500);
+  });
+
+  $(document).on('mouseenter', '.message-nick[data-nick]', function(e) {
+    var nick = $(this).attr('data-nick');
+    var connection = liercd.focused.connection;
+    var info = liercd.connections[connection].users[nick];
+
+    if (info) {
+      clear_timers();
+      var container = $(this);
+      show_timer = setTimeout(function() {
+        $('.nick-popup').remove();
+        var popup = $('<div/>', {'class':'nick-popup'});
+        var fields = $('<table/>', {'cellspacing':'0', 'cellpadding':'0'});
+
+        if (info["real"] && info["real"].match(/^https?:.+\.(jpg|gif|png)/)) {
+          popup.append($('<img/>', {
+            'src': 'https://noembed.com/i/150/150/'+info["real"],
+            'class': 'nick-avatar',
+          }));
+        }
+
+        popup.append($('<h3/>').text(nick));
+
+        var text = "";
+
+        if (info['user']) text += info['user'];
+        if (info['host']) text += '@' + info['host'];
+
+        if (text) {
+          var prefix = $('<p/>', {'class':'nick-prefix'});
+          prefix.text(text);
+          popup.append(prefix);
+        }
+
+
+        if (info['server']) {
+          popup.append(
+            $('<p/>', {
+              'class':'nick-server'
+            }).text(info['server'])
+          );
+        }
+
+        container.append(popup);
+      }, 500);
+    }
+  });
+
   $(document).on('click', '[data-nick]', function(e) {
     e.preventDefault();
     var nick = $(this).attr('data-nick');

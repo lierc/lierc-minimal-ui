@@ -120,12 +120,6 @@ var Render = function(message, force_raw) {
       'data-server': message.Prefix.Server
     }).text(message.Prefix.Name);
 
-    if (message.Prefix.User && message.Prefix.Server) {
-      var title = message.Prefix.Name
-        + "!" + message.Prefix.User
-        + '@' + message.Prefix.Server;
-      nick.attr('title', title);
-    }
     return nick;
   }
 
