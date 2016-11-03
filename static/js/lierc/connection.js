@@ -6,6 +6,7 @@ var Connection = function(config) {
   conn.nick = config.Nick;
   conn.connected = false;
   conn.channels = [];
+  conn.users = {};
 
   var listeners = {};
 
@@ -43,6 +44,12 @@ var Connection = function(config) {
     case "NICK":
       var old = message.Prefix.Name;
       var nick = message.Params[0];
+
+      if (conn.users[old]) {
+        conn.users[nick] = conn.users[old];
+        conn.users[nick].nick = nick;
+      }
+
       if (old == conn.nick) {
         conn.nick = nick;
         conn.channels.forEach(function(channel) {
@@ -67,6 +74,18 @@ var Connection = function(config) {
       var name = message.Params[0];
       var msg = message.Params[1];
 
+      var del = true;
+      for (var i=0; i < conn.channels; i++) {
+        if (conn.channels[i].contains_nick(nick)) {
+          del = false;
+          break;
+        }
+      }
+
+      if (del) {
+        delete conn.users[message.Prefix.Nick];
+      }
+
       var channel = conn.channel(name);
 
       if (channel) {
@@ -87,6 +106,8 @@ var Connection = function(config) {
       var nick = message.Prefix.Name;
       var msg = message.Params[0];
 
+      delete conn.users[message.Prefix.Nick];
+
       conn.channels.forEach( function(channel) {
         if (channel.remove_nick(nick)) {
           fire("channel:msg", conn.id, channel.name, message);
@@ -98,6 +119,7 @@ var Connection = function(config) {
     case "JOIN":
       var name = message.Params[0];
       var nick = message.Prefix.Name;
+
       if (nick == conn.nick) {
         var channel = new Channel(name);
         conn.channels.push(channel);
@@ -110,6 +132,14 @@ var Connection = function(config) {
           channel.nicks.push(nick);
           fire("channel:msg", conn.id, name, message);
           fire("channel:nicks", conn.id, name, channel.nicks)
+
+          if (!conn.users[message.Prefix.Nick]) {
+            conn.users[message.Prefix.Nick] = {
+              nick: message.Prefix.Nick,
+              host: message.Prefix.Host,
+              user: message.Prefix.User
+            }
+          }
         }
       }
       break;
@@ -138,6 +168,16 @@ var Connection = function(config) {
       }
       break;
 
+    case "352":
+      conn.users[message.Params[5]] = {
+        user: message.Params[2],
+        host: message.Params[3],
+        server: message.Params[4],
+        nick: message.Params[5],
+        real: message.Params[7].split(" ", 2)[1]
+      };
+      break;
+
     case "353":
       var name  = message.Params[2];
       var nicks = message.Params[3].split(" ");
@@ -148,9 +188,7 @@ var Connection = function(config) {
           channel.nicks = [];
           channel.nicks_done = false;
         }
-        channel.nicks = nicks.map(function(nick) {
-          return nick.replace(/^[^a-zA-Z]/, "");
-        }).concat(channel.nicks);
+        channel.nicks = nicks.concat(channel.nicks);
       }
       break;
 
@@ -202,5 +240,18 @@ var Connection = function(config) {
 
   conn.in_channel = function(name) {
     return conn.channels.indexOf(name) != -1;
+  };
+
+  conn.send = function(line, success) {
+    $.ajax({
+      url: liercd.baseurl + '/connection/' + conn.id,
+      type: "POST",
+      dataType: "json",
+      data: line,
+      success: function() {
+        if (success)
+          success();
+      }
+    });
   };
 };
