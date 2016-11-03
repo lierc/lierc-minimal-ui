@@ -145,7 +145,7 @@ var Panel = function(name, id, connection) {
     else
       panel.elem.list.prepend(el);
 
-    el.css('opacity', '1');
+    setTimeout(function(){el.css('opacity', '1')}, 0);
     var diff = liercd.elem.scroll.scrollHeight - height;
     liercd.elem.scroll.scrollTop = scroll + diff;
     panel.resize_filler();
@@ -281,7 +281,7 @@ var Panel = function(name, id, connection) {
           panel.highlighted = true;
         panel.update_nav();
       }
-      else if (el.hasClass("event")) {
+      else if (el.hasClass("event") && ! panel.ignore_events) {
         panel.missed = true;
         panel.update_nav();
       }
