@@ -804,8 +804,6 @@ var Liercd = function(url) {
       panel.scroll();
     if (bool)
       panel.resize_filler();
-
-    liercd.update_pref(panel.id + "-ignore-events", bool);
   };
 
   liercd.show_switcher = function() {
