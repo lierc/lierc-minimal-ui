@@ -223,7 +223,7 @@ var UIEvents = function(liercd) {
   $('#toggle-hideevents a').on('click touchstart', function(e) {
     e.preventDefault();
     liercd.panel_ignore_events(liercd.focused, !liercd.focused.ignore_events);
-    liercd.update_pref(panel.id + "-ignore-events", bool);
+    liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
   });
 
   $('#toggle-nicks').on('click touchstart', function(e) {
