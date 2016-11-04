@@ -35,7 +35,7 @@ var Liercd = function(url) {
 
   $('.sortable').each(function() {
     Sortable.create(this, {
-      delay: "touchstart" in window ? 250 : 0,
+      delay: "ontouchstart" in document.documentElement ? 250 : 0,
       onSort: function(e) {
         var order = $(this.el).find('li').toArray().map(function(li) {
           return $(li).attr('data-panel-id');
@@ -606,8 +606,10 @@ var Liercd = function(url) {
 
     //liercd.scroll_to_nav(panel.elem.nav);
 
-    if (panel.first_focus && panel.type == "channel")
+    if (panel.first_focus && panel.type == "channel") {
       liercd.connections[panel.connection].send("WHO " + panel.name);
+      liercd.ignore_events_pref(panel);
+    }
 
     panel.focus();
     liercd.focused = panel;
@@ -736,6 +738,13 @@ var Liercd = function(url) {
     });
   };
 
+  liercd.ignore_events_pref = function(panel) {
+    liercd.get_pref(panel.id + "-ignore-events", function(value) {
+      if (value !== undefined)
+        liercd.panel_ignore_events(panel, value);
+    });
+  };
+
   liercd.update_pref = function(name, value) {
     $.ajax({
       url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
@@ -777,6 +786,26 @@ var Liercd = function(url) {
         }
       }
     });
+  };
+
+  liercd.panel_ignore_events = function(panel, bool) {
+    var scrolled = panel.is_scrolled();
+
+    if (bool) {
+      $('body').addClass('hide-events');
+    }
+    else {
+      $('body').removeClass('hide-events');
+    }
+
+    panel.ignore_events = bool;
+
+    if (scrolled)
+      panel.scroll();
+    if (bool)
+      panel.resize_filler();
+
+    liercd.update_pref(panel.id + "-ignore-events", bool);
   };
 
   liercd.show_switcher = function() {

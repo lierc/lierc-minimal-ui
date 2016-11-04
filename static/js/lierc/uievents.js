@@ -42,19 +42,19 @@ var UIEvents = function(liercd) {
 
     if (liercd.overlayed) return;
 
-    if (e.which == 38 && (mods['meta'] || mods['cmd'])) {
+    if (e.which == 38 && mods['meta']) {
       e.preventDefault();
       mods['shift'] ? liercd.prev_unread_panel() : liercd.prev_panel();
       return;
     }
 
-    if (e.which == 40 && ( mods['meta'] || mods['cmd'] )) {
+    if (e.which == 40 && mods['meta']) {
       e.preventDefault();
       mods['shift'] ? liercd.next_unread_panel() : liercd.next_panel();
       return;
     }
 
-    if ((e.which == 75 || e.which == 84) && ( mods['meta'] || mods['cmd'] )) {
+    if ((e.which == 75 || e.which == 84) && mods['meta']) {
       e.preventDefault();
       liercd.show_switcher();
     }
@@ -222,7 +222,7 @@ var UIEvents = function(liercd) {
 
   $('#toggle-hideevents a').on('click touchstart', function(e) {
     e.preventDefault();
-    liercd.focused.toggle_show_events();
+    liercd.panel_ignore_events(liercd.focused, !liercd.focused.ignore_events);
   });
 
   $('#toggle-nicks').on('click touchstart', function(e) {

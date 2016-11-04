@@ -18,6 +18,9 @@ var Auth = function(baseurl) {
     overlay.append($('.login').clone().show());
     $('body').append(overlay);
 
+    if (!("ontouchstart" in document.documentElement))
+      overlay.find('.login-form input[type=email]').focus();
+
     overlay.on("submit", function(e) {
       e.preventDefault();
       var form = $(e.target);

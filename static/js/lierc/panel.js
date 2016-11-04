@@ -512,16 +512,6 @@ var Panel = function(name, id, connection) {
     }
   };
 
-  panel.toggle_show_events = function() {
-    var scrolled = panel.is_scrolled();
-    $('body').toggleClass('hide-events');
-    panel.ignore_events = $('body').hasClass('hide-events');
-    if (panel.ignore_events)
-      panel.resize_filler();
-    if (scrolled)
-      panel.scroll();
-  };
-
   panel.set_loading = function(on) {
     if (on) {
       panel.elem.list.addClass("loading");
