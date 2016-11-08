@@ -302,6 +302,9 @@ var Liercd = function(url) {
 
     liercd.update_nav_counts();
 
+    if (panel.type == "channel")
+      liercd.ignore_events_pref(panel);
+
     panel.elem.nav.on('click', function(e) {
       e.preventDefault();
 
@@ -472,6 +475,7 @@ var Liercd = function(url) {
 
     panel.set_loading(true);
 
+    var limit = panel.ignore_events ? 150 : 50;
     var name = panel.type == "status" ? "status" : panel.name;
     var parts = [
       liercd.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
@@ -483,13 +487,14 @@ var Liercd = function(url) {
     $.ajax({
       url: parts.join("/"),
       type: "GET",
+      data: { limit: limit },
       dataType: "json",
       error: function(e) {
         liercd.filling_backlog = false;
         panel.set_loading(false);
       },
       success: function(events) {
-        if (events.length < 50)
+        if (events.length < limit)
           panel.backlog_empty = true;
 
         var list = [];
@@ -606,10 +611,8 @@ var Liercd = function(url) {
 
     //liercd.scroll_to_nav(panel.elem.nav);
 
-    if (panel.first_focus && panel.type == "channel") {
+    if (panel.first_focus && panel.type == "channel")
       liercd.connections[panel.connection].send("WHO " + panel.name);
-      liercd.ignore_events_pref(panel);
-    }
 
     panel.focus();
     liercd.focused = panel;
