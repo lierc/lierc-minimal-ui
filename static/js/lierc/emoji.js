@@ -9,10 +9,11 @@ var Emoji = function() {
     dataType: "json",
     success: function(res) {
       for (var i=0; i < res.length; i++) {
+        var annotations = res[i]['annotations'] || [];
         var li = $('<li/>', {
           'data-code': res[i]['code'],
-          'data-name': res[i]['name'].toLowerCase(),
           'data-chars': res[i]['chars'],
+          'data-keywords': annotations.join(" ").toLowerCase(),
           title: res[i]['name']
         }).text(res[i]['chars']);
 
@@ -35,7 +36,7 @@ var Emoji = function() {
     var hide = [];
 
     for (var i=0; i < len; i++) {
-      if (items[i].getAttribute('data-name').indexOf(t) != -1)
+      if (items[i].getAttribute('data-keywords').indexOf(t) != -1)
         show.push(items[i]);
       else
         hide.push(items[i]);
