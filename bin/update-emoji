@@ -11,7 +11,10 @@ open my $fh, "-|:encoding(utf8)", "./bin/cldr-annotations" or die $!;
 
 while (<$fh>) {
   if (/cp="([^"]+)">([^<]*)</) {
-    $annotations{$1} = [ split /\s+\|\s+/, $2 ];
+    $annotations{$1}{keywords} = [ split /\s+\|\s+/, $2 ];
+  }
+  if (/cp="([^"]+)" type="tts">([^<]*)</) {
+    $annotations{$1}{tts} = $2;
   }
 }
 
@@ -28,19 +31,12 @@ my @lines = split "\n", $res->decoded_content;
 my %current;
 
 for (@lines) {
-  if (m{<td class='code'>.+U\+([^<]+)}) {
-    $current{code} = $1;
-    next;
-  }
-  elsif (m{<td class='chars'>([^<]+)}) {
+  if (m{<td class='chars'>([^<]+)}) {
     $current{chars} = $1;
-    next;
-  }
-  elsif (m{<td class='name'>([^<]+)}) {
-    $current{name} = $1;
 
-    if ( my $keywords = $annotations{ $current{chars} } ) {
-      $current{annotations} = $keywords;
+    if ( my $a = $annotations{ $current{chars} } ) {
+      $current{annotations} = $a->{keywords};
+      $current{name} = $a->{tts};
     }
 
     push @emoji, {%current};

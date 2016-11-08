@@ -14,6 +14,7 @@ var Emoji = function() {
           'data-code': res[i]['code'],
           'data-chars': res[i]['chars'],
           'data-keywords': annotations.join(" ").toLowerCase(),
+          'data-name': res[i]['name'],
           title: res[i]['name']
         }).text(res[i]['chars']);
 
@@ -37,6 +38,8 @@ var Emoji = function() {
 
     for (var i=0; i < len; i++) {
       if (items[i].getAttribute('data-keywords').indexOf(t) != -1)
+        show.push(items[i]);
+      else if (items[i].getAttribute('data-name').indexOf(t) != -1)
         show.push(items[i]);
       else
         hide.push(items[i]);
