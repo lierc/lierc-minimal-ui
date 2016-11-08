@@ -1,7 +1,19 @@
 #!/usr/bin/env perl
 
+use strict;
+use warnings;
+
 use LWP::UserAgent;
 use JSON::XS;
+
+my %annotations;
+open my $fh, "-|:encoding(utf8)", "./bin/cldr-annotations" or die $!;
+
+while (<$fh>) {
+  if (/cp="([^"]+)">([^<]*)</) {
+    $annotations{$1} = [ split /\s+\|\s+/, $2 ];
+  }
+}
 
 my $url = "http://unicode.org/emoji/charts/full-emoji-list.html";
 my $ua  = LWP::UserAgent->new;
@@ -26,6 +38,11 @@ for (@lines) {
   }
   elsif (m{<td class='name'>([^<]+)}) {
     $current{name} = $1;
+
+    if ( my $keywords = $annotations{ $current{chars} } ) {
+      $current{annotations} = $keywords;
+    }
+
     push @emoji, {%current};
     %current = ();
     next;

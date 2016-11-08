@@ -1,0 +1,5 @@
+#!/usr/bin/env bash
+
+curl -so /tmp/core.zip http://unicode.org/Public/cldr/30.0.2/core.zip
+unzip -o -q /tmp/core.zip -d /tmp/cldr
+cat /tmp/cldr/common/annotations/en.xml
