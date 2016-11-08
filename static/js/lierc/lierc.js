@@ -68,7 +68,8 @@ var Liercd = function(url) {
 
     connection.on("private:msg", function(conn, nick, message) {
       var panel = liercd.add_panel(nick, conn, false);
-      var highlight = !liercd.is_focused(panel) && nick != conn.nick;
+      var connection = liercd.connections[conn];
+      var highlight = !liercd.is_focused(panel) && message.Prefix.Name != connection.nick;
 
       panel.append(Render(message), highlight);
 
