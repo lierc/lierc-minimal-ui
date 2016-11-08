@@ -18,6 +18,17 @@ var Render = function(message, force_raw) {
       make_nick(message),
       ' has left' + (msg ? " ("+msg+")" : ""));
 
+  case "MODE":
+    if (message.Prefix.Nick == message.Params[0]) {
+      return raw(message);
+    }
+    else {
+      var channel = message.Params[0];
+      return make("event", message).append(
+        message.Params.slice(1).join(" "),
+        " by " + message.Prefix.Name);
+    }
+
   case "QUIT":
     var nick = message.Prefix.Name;
     var msg = message.Params[0];

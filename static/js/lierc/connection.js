@@ -144,6 +144,19 @@ var Connection = function(config) {
       }
       break;
 
+    case "MODE":
+      if (message.Prefix.Nick == message.Params[0]) {
+        // user mode, ignored for now
+      }
+      else {
+        var name = message.Params[0];
+        var channel = conn.channel(name);
+        if (channel) {
+          fire("channel:msg", conn.id, name, message);
+        }
+      }
+      break;
+
     case "332":
       var name = message.Params[1];
       var topic = message.Params[2];
