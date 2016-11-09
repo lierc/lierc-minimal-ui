@@ -13,7 +13,8 @@ var Channel = function(name) {
   };
 
   this.add_nick = function(nick) {
-    this.nicks_map[nick] = nick;
+    var match = nick.match(/^([@+]?)(.+)/);
+    this.nicks_map[match[2]] = match[1];
   };
 
   this.contains_nick = function(nick) {
