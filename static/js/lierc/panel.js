@@ -14,6 +14,7 @@ var Panel = function(name, id, connection) {
   panel.reactions = [];
   panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
   panel.ignore_events = false;
+  panel.show_nicklist = false;
   panel.first_focus = true;
 
   panel.change_name = function(name) {
@@ -58,6 +59,11 @@ var Panel = function(name, id, connection) {
       $("body").addClass('hide-events');
     else
       $("body").removeClass('hide-events');
+
+    if (panel.show_nicklist)
+      $("body").addClass('show-nicklist');
+    else
+      $("body").removeClass('show-nicklist');
 
     panel.first_focus = false;
     panel.focused = true;

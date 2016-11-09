@@ -228,9 +228,8 @@ var UIEvents = function(liercd) {
 
   $('#toggle-nicks').on('click touchstart', function(e) {
     e.preventDefault();
-    scroll = liercd.focused && liercd.focused.is_scrolled();
-    liercd.elem.body.toggleClass('show-nicklist');
-    if (scroll) liercd.focused.scroll();
+    liercd.panel_show_nicklist(liercd.focused, !liercd.focused.show_nicklist);
+    liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
   });
 
   liercd.elem.emoji.on('click', function(e) {

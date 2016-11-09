@@ -612,8 +612,10 @@ var Liercd = function(url) {
 
     //liercd.scroll_to_nav(panel.elem.nav);
 
-    if (panel.first_focus && panel.type == "channel")
+    if (panel.first_focus && panel.type == "channel") {
+      liercd.show_nicklist_pref(panel);
       liercd.connections[panel.connection].send("WHO " + panel.name);
+    }
 
     panel.focus();
     liercd.focused = panel;
@@ -742,6 +744,13 @@ var Liercd = function(url) {
     });
   };
 
+  liercd.show_nicklist_pref = function(panel) {
+    liercd.get_pref(panel.id + "-show-nicklist", function(value) {
+      if (value != undefined)
+        liercd.panel_show_nicklist(panel, value);
+    });
+  };
+
   liercd.ignore_events_pref = function(panel) {
     liercd.get_pref(panel.id + "-ignore-events", function(value) {
       if (value !== undefined)
@@ -790,6 +799,24 @@ var Liercd = function(url) {
         }
       }
     });
+  };
+
+  liercd.panel_show_nicklist = function(panel, bool) {
+    var scrolled = panel.is_scrolled();
+
+    if (bool) {
+      $('body').addClass('show-nicklist');
+    }
+    else {
+      $('body').removeClass('show-nicklist');
+    }
+
+    panel.show_nicklist = bool;
+
+    if (scrolled)
+      panel.scroll();
+    if (bool)
+      panel.resize_filler();
   };
 
   liercd.panel_ignore_events = function(panel, bool) {
