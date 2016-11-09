@@ -106,7 +106,7 @@ var Connection = function(config) {
       var nick = message.Prefix.Name;
       var msg = message.Params[0];
 
-      delete conn.users[message.Prefix.Nick];
+      delete conn.users[nick];
 
       conn.channels.forEach( function(channel) {
         if (channel.remove_nick(nick)) {
@@ -193,7 +193,7 @@ var Connection = function(config) {
 
     case "353":
       var name  = message.Params[2];
-      var nicks = message.Params[3].split(" ");
+      var nicks = message.Params[3].split(/\s+/);
       var channel = conn.channel(name);
 
       if (channel) {
@@ -202,7 +202,8 @@ var Connection = function(config) {
           channel.nicks_done = false;
         }
         for (i in nicks) {
-          channel.add_nick(nicks[i]);
+          if (nicks[i])
+            channel.add_nick(nicks[i]);
         }
       }
       break;
