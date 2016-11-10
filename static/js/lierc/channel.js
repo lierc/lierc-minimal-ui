@@ -5,7 +5,7 @@ var Channel = function(name) {
   this.nicks_done = true;
 
   this.nicks = function() {
-    return Object.keys(this.nicks_map);
+    return this.nicks_map;
   };
 
   this.reset_nicks = function() {

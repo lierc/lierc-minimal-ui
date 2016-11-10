@@ -15,6 +15,7 @@ var Panel = function(name, id, connection) {
   panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
   panel.ignore_events = false;
   panel.show_nicklist = false;
+  panel.avatars = false;
   panel.first_focus = true;
 
   panel.change_name = function(name) {
@@ -30,8 +31,8 @@ var Panel = function(name, id, connection) {
   }
   
   panel.update_nicks = function(nicks) {
-    var sorted = nicks.map(function(n) {
-      return [n, n.toLowerCase()];
+    var sorted = Object.keys(nicks).map(function(n) {
+      return [n, nicks[n] + n.toLowerCase()];
     }).sort(function(a, b) {
       return a[1] < b[1]
         ? -1 : a[1] > b[1]
@@ -44,14 +45,11 @@ var Panel = function(name, id, connection) {
       return $('<li/>').append(
         $('<a/>', {
           'class': 'nick-list-nick',
-          'title': nick,
-          'data-nick': nick.replace(/^[^a-zA-Z]/, "")
-        }).text(nick)
+          'data-nick': nick
+        }).text(nicks[nick] + nick)
       );
     }));
-    panel.keyboard.completion.completions = sorted.map(function(nick) {
-      return nick.replace(/^[^a-zA-Z]/, "");
-    });
+    panel.keyboard.completion.completions = sorted;
   };
 
   panel.focus = function() {

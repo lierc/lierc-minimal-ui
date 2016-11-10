@@ -612,10 +612,8 @@ var Liercd = function(url) {
 
     //liercd.scroll_to_nav(panel.elem.nav);
 
-    if (panel.first_focus && panel.type == "channel") {
+    if (panel.first_focus && panel.type == "channel")
       liercd.show_nicklist_pref(panel);
-      liercd.connections[panel.connection].send("WHO " + panel.name);
-    }
 
     panel.focus();
     liercd.focused = panel;

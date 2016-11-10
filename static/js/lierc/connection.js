@@ -6,7 +6,6 @@ var Connection = function(config) {
   conn.nick = config.Nick;
   conn.connected = false;
   conn.channels = [];
-  conn.users = {};
 
   var listeners = {};
 
@@ -45,11 +44,6 @@ var Connection = function(config) {
       var old = message.Prefix.Name;
       var nick = message.Params[0];
 
-      if (conn.users[old]) {
-        conn.users[nick] = conn.users[old];
-        conn.users[nick].nick = nick;
-      }
-
       if (old == conn.nick) {
         conn.nick = nick;
         conn.channels.forEach(function(channel) {
@@ -82,10 +76,6 @@ var Connection = function(config) {
         }
       }
 
-      if (del) {
-        delete conn.users[message.Prefix.Nick];
-      }
-
       var channel = conn.channel(name);
 
       if (channel) {
@@ -105,8 +95,6 @@ var Connection = function(config) {
     case "QUIT":
       var nick = message.Prefix.Name;
       var msg = message.Params[0];
-
-      delete conn.users[nick];
 
       conn.channels.forEach( function(channel) {
         if (channel.remove_nick(nick)) {
@@ -132,27 +120,33 @@ var Connection = function(config) {
           channel.add_nick(nick);
           fire("channel:msg", conn.id, name, message);
           fire("channel:nicks", conn.id, name, channel.nicks())
-
-          if (!conn.users[message.Prefix.Nick]) {
-            conn.users[message.Prefix.Nick] = {
-              nick: message.Prefix.Nick,
-              host: message.Prefix.Host,
-              user: message.Prefix.User
-            }
-          }
         }
       }
       break;
 
     case "MODE":
-      if (message.Prefix.Nick == message.Params[0]) {
+        console.log(message.Params);
+      if (message.Prefix.Name == message.Params[0]) {
         // user mode, ignored for now
       }
       else {
         var name = message.Params[0];
         var channel = conn.channel(name);
         if (channel) {
+          if (message.Params[1] == "+v") {
+            channel.nicks_map[message.Params[2]] = "+";
+          }
+          if (message.Params[1] == "-v") {
+            channel.nicks_map[message.Params[2]] = "";
+          }
+          if (message.Params[1] == "+o") {
+            channel.nicks_map[message.Params[2]] = "@";
+          }
+          if (message.Params[1] == "-o") {
+            channel.nicks_map[message.Params[2]] = "";
+          }
           fire("channel:msg", conn.id, name, message);
+          fire("channel:nicks", conn.id, name, channel.nicks())
         }
       }
       break;
@@ -179,16 +173,6 @@ var Connection = function(config) {
         fire("channel:msg", conn.id, name, message);
         fire("channel:topic", conn.id, name, text);
       }
-      break;
-
-    case "352":
-      conn.users[message.Params[5]] = {
-        user: message.Params[2],
-        host: message.Params[3],
-        server: message.Params[4],
-        nick: message.Params[5],
-        real: message.Params[7].split(" ", 2)[1]
-      };
       break;
 
     case "353":
