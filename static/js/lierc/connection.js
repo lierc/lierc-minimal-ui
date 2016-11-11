@@ -125,7 +125,6 @@ var Connection = function(config) {
       break;
 
     case "MODE":
-        console.log(message.Params);
       if (message.Prefix.Name == message.Params[0]) {
         // user mode, ignored for now
       }
@@ -133,17 +132,8 @@ var Connection = function(config) {
         var name = message.Params[0];
         var channel = conn.channel(name);
         if (channel) {
-          if (message.Params[1] == "+v") {
-            channel.nicks_map[message.Params[2]] = "+";
-          }
-          if (message.Params[1] == "-v") {
-            channel.nicks_map[message.Params[2]] = "";
-          }
-          if (message.Params[1] == "+o") {
-            channel.nicks_map[message.Params[2]] = "@";
-          }
-          if (message.Params[1] == "-o") {
-            channel.nicks_map[message.Params[2]] = "";
+          if (message.Params[1].match(/[+-][vo]/)) {
+            channel.nick_mode(message.Params[2], message.Params[1]);
           }
           fire("channel:msg", conn.id, name, message);
           fire("channel:nicks", conn.id, name, channel.nicks())
