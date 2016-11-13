@@ -31,8 +31,9 @@ var Panel = function(name, id, connection) {
   }
   
   panel.update_nicks = function(nicks) {
+    var order = [ "@", "+" ];
     var sorted = Object.keys(nicks).map(function(n) {
-      return [n, nicks[n] + n.toLowerCase()];
+      return [n, n.toLowerCase()];
     }).sort(function(a, b) {
       return a[1] < b[1]
         ? -1 : a[1] > b[1]
@@ -41,7 +42,19 @@ var Panel = function(name, id, connection) {
       return n[0];
     });
 
-    panel.elem.nicks.html( sorted.map(function(nick) {
+    var display_sorted = sorted.map(function(n) {
+      var pos = order.indexOf(nicks[n]);
+      var prefix = "" + (pos != -1 ? pos : "");
+      return [n, prefix + n.toLowerCase()];
+    }).sort(function(a, b) {
+      return a[1] < b[1]
+        ? -1 : a[1] > b[1]
+          ? 1 : 0;
+    }).map(function(n) {
+      return n[0];
+    });
+
+    panel.elem.nicks.html( display_sorted.map(function(nick) {
       return $('<li/>').append(
         $('<a/>', {
           'class': 'nick-list-nick',
