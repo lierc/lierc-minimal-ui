@@ -124,11 +124,14 @@ var Render = function(message, force_raw) {
   }
 
   function make_nick(message) {
+    var prefix = message.Prefix.Name
+      + "!" + message.Prefix.User
+      + "@" + message.Prefix.Server;
+
     var nick = $('<span/>', {
       'class': 'message-nick',
       'data-nick': message.Prefix.Name,
-      'data-user': message.Prefix.User,
-      'data-server': message.Prefix.Server
+      'title' : prefix
     }).text(message.Prefix.Name);
 
     return nick;

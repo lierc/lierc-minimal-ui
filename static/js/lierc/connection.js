@@ -124,6 +124,13 @@ var Connection = function(config) {
       }
       break;
 
+    case "324":
+      var channel = conn.channel(message.Params[0])
+      if (channel) {
+        channel.mode = message.Params[1].substring(1);
+      }
+      break;
+
     case "MODE":
       if (message.Prefix.Name == message.Params[0]) {
         // user mode, ignored for now
@@ -132,8 +139,11 @@ var Connection = function(config) {
         var name = message.Params[0];
         var channel = conn.channel(name);
         if (channel) {
-          if (message.Params[1].match(/[+-][vo]/)) {
+          if (message.Params[1].match(/[+-][voh]/)) {
             channel.nick_mode(message.Params[2], message.Params[1]);
+          }
+          else {
+            channel.set_mode(message.Params[1]);
           }
           fire("channel:msg", conn.id, name, message);
           fire("channel:nicks", conn.id, name, channel.nicks())

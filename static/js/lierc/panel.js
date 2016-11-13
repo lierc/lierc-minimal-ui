@@ -370,6 +370,7 @@ var Panel = function(name, id, connection) {
         if (link.href.match(/\.gifv/)) continue;
         if (link.href.match(/#(nsfw|hide)/)) continue;
         var image = new Image();
+        image.setAttribute("title", link);
         image.onload = (function(image, link) {
             return function(e) {
               var s = panel.scroller;
