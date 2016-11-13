@@ -106,6 +106,11 @@ var Liercd = function(url) {
       panel.update_nicks(nicks);
     });
 
+    connection.on("channel:mode", function(conn, channel, mode) {
+      var panel = liercd.get_panel(channel, conn);
+      panel.update_mode(mode);
+    });
+
     connection.on("channel:close", function(conn, channel) {
       liercd.remove_panel(panel_id(channel, conn));
     });

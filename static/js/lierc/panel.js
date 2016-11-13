@@ -29,6 +29,15 @@ var Panel = function(name, id, connection) {
     if (name.match(/^[#&+!]/)) return "channel";
     return "private";
   }
+
+  panel.update_mode = function(mode) {
+    if (mode) {
+      panel.elem.prefix.attr("title", "+" + mode);
+    }
+    else {
+      panel.elem.prefix.get(0).removeAttribute("title");
+    }
+  };
   
   panel.update_nicks = function(nicks) {
     var order = [ "@", "+" ];

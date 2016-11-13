@@ -125,9 +125,11 @@ var Connection = function(config) {
       break;
 
     case "324":
-      var channel = conn.channel(message.Params[0])
+      var name = message.Params[0];
+      var channel = conn.channel(name)
       if (channel) {
         channel.mode = message.Params[1].substring(1);
+        fire("channel:mode", conn.id, name, channel.mode);
       }
       break;
 
@@ -141,12 +143,13 @@ var Connection = function(config) {
         if (channel) {
           if (message.Params[1].match(/[+-][voh]/)) {
             channel.nick_mode(message.Params[2], message.Params[1]);
+            fire("channel:nicks", conn.id, name, channel.nicks())
           }
           else {
             channel.set_mode(message.Params[1]);
+            fire("channel:mode", conn.id, name, channel.mode);
           }
           fire("channel:msg", conn.id, name, message);
-          fire("channel:nicks", conn.id, name, channel.nicks())
         }
       }
       break;
