@@ -346,6 +346,9 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('copy', function(e) {
+    if ( $('.dialog:visible').length)
+      return;
+
     e.preventDefault();
 
     var selected = window.getSelection().toString().split("\n");
@@ -378,6 +381,9 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('paste', function(e) {
+    if ( $('.dialog:visible').length)
+      return;
+
     var clipboard = (event.clipboardData || event.originalEvent.clipboardData);
     var items = clipboard.items;
     for (i in items) {
