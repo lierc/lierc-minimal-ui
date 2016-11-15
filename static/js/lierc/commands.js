@@ -78,7 +78,7 @@ var Commands = function() {
 
   add_command("me", [], function(panel, line) {
     var parts = ["PRIVMSG", panel.name];
-    parts.push(":" + "\x01" + "ACTION" + line);
+    parts.push(":" + "\x01" + "ACTION " + line);
     return parts.join(" ");
   });
 
