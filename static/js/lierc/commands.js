@@ -22,6 +22,14 @@ var Commands = function() {
     return parts.join(" ");
   });
 
+  add_command("mode", [], function(panel, line) {
+    var parts =["MODE", panel.name];
+    if (line) {
+      parts.push(line);
+    }
+    return parts.join(" ");
+  });
+
   add_command("part", ["close","wc"], function(panel, line) {
     if (panel.type != "channel") {
       throw "PART only works in channels";
@@ -32,6 +40,27 @@ var Commands = function() {
     if (line)
       parts.push(":" + line);
 
+    return parts.join(" ");
+  });
+
+  add_command("who", [], function(panel, line) {
+    var parts = ["WHO", ":" + line];
+    return parts.join(" ");
+  });
+
+  add_command("whois", [], function(panel, line) {
+    var parts = ["WHOIS", ":" + line];
+    return parts.join(" ");
+  });
+
+  add_command("names", ["n"], function(panel, line) {
+    var parts = ["NAMES"];
+    if (!line) {
+      parts.push(":" + panel.name);
+    }
+    else {
+      parts.push(":" + line);
+    }
     return parts.join(" ");
   });
 
