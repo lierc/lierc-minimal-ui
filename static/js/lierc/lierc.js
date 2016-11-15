@@ -129,6 +129,12 @@ var Liercd = function(url) {
       var panel = liercd.get_panel(channel, conn);
       panel.update_topic(text);
     });
+
+    connection.on("channel:topicinfo", function(conn, channel, info) {
+      var panel = liercd.get_panel(channel, conn);
+      var date = (new Date(info.time * 1000));
+      panel.elem.topic.attr("title", "set by " + info.user + " on " + date);
+    });
   };
 
   liercd.is_focused = function(panel) {

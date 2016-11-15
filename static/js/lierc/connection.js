@@ -165,6 +165,16 @@ var Connection = function(config) {
       }
       break;
 
+    case "333":
+      var name = message.Params[1];
+      var info = {
+        user: message.Params[2],
+        time: message.Params[3]
+      };
+
+      fire("channel:topicinfo", conn.id, name, info)
+      break;
+
     case "TOPIC":
       var nick = message.Prefix.Name;
       var name = message.Params[0];
