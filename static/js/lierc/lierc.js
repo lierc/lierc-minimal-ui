@@ -60,7 +60,7 @@ var Liercd = function(url) {
 
     var panel = liercd.add_panel("status", connection.id);
     panel.change_name(connection.config.Host);
-    panel.update_topic("status.");
+    panel.update_topic({value: "status."});
 
     connection.on("channel:new", function(conn, channel, message) {
       liercd.add_panel(channel, conn, ("Id" in message));
@@ -125,15 +125,9 @@ var Liercd = function(url) {
       panel.append(Render(message));
     });
 
-    connection.on("channel:topic", function(conn, channel, text) {
+    connection.on("channel:topic", function(conn, channel, topic) {
       var panel = liercd.get_panel(channel, conn);
-      panel.update_topic(text);
-    });
-
-    connection.on("channel:topicinfo", function(conn, channel, info) {
-      var panel = liercd.get_panel(channel, conn);
-      var date = (new Date(info.time * 1000));
-      panel.elem.topic.attr("title", "set by " + info.user + " on " + date);
+      panel.update_topic(topic);
     });
   };
 
@@ -270,8 +264,11 @@ var Liercd = function(url) {
     var focused = id == liercd.focused.id;
     liercd.panels[id].elem.input.remove();
     liercd.panels[id].elem.list.remove();
-    liercd.panels[id].elem.nav.remove();
+    liercd.panels[id].elem.nicks.remove();
     liercd.panels[id].elem.topic.remove();
+    liercd.panels[id].elem.filler.remove();
+    liercd.panels[id].elem.prefix.remove();
+    liercd.panels[id].elem.nav.remove();
     delete liercd.panels[id];
 
     if (focused && liercd.last_panel_id) {
@@ -756,14 +753,14 @@ var Liercd = function(url) {
   liercd.show_nicklist_pref = function(panel) {
     liercd.get_pref(panel.id + "-show-nicklist", function(value) {
       if (value != undefined)
-        liercd.panel_show_nicklist(panel, value);
+        panel.set_show_nicklist(value);
     });
   };
 
   liercd.ignore_events_pref = function(panel) {
     liercd.get_pref(panel.id + "-ignore-events", function(value) {
       if (value !== undefined)
-        liercd.panel_ignore_events(panel, value);
+        panel.set_ignore_events(value);
     });
   };
 
@@ -808,45 +805,6 @@ var Liercd = function(url) {
         }
       }
     });
-  };
-
-  liercd.panel_show_nicklist = function(panel, bool) {
-    var scrolled = panel.is_scrolled();
-
-    if (bool) {
-      $('body').addClass('show-nicklist');
-    }
-    else {
-      $('body').removeClass('show-nicklist');
-    }
-
-    panel.show_nicklist = bool;
-
-    if (scrolled)
-      panel.scroll();
-    if (bool)
-      panel.resize_filler();
-  };
-
-  liercd.panel_ignore_events = function(panel, bool) {
-    var scrolled = panel.is_scrolled();
-
-    if (bool) {
-      $('body').addClass('hide-events');
-    }
-    else {
-      $('body').removeClass('hide-events');
-    }
-
-    panel.ignore_events = bool;
-
-    if (scrolled)
-      panel.scroll();
-    if (bool)
-      panel.resize_filler();
-  };
-
-  liercd.show_switcher = function() {
   };
 
   var events = new UIEvents(liercd);

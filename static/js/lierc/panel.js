@@ -15,7 +15,6 @@ var Panel = function(name, id, connection) {
   panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
   panel.ignore_events = false;
   panel.show_nicklist = false;
-  panel.avatars = false;
   panel.first_focus = true;
 
   panel.change_name = function(name) {
@@ -76,14 +75,14 @@ var Panel = function(name, id, connection) {
 
   panel.focus = function() {
     if (panel.ignore_events)
-      $("body").addClass('hide-events');
+      panel.elem.body.addClass('hide-events');
     else
-      $("body").removeClass('hide-events');
+      panel.elem.body.removeClass('hide-events');
 
     if (panel.show_nicklist)
-      $("body").addClass('show-nicklist');
+      panel.elem.body.addClass('show-nicklist');
     else
-      $("body").removeClass('show-nicklist');
+      panel.elem.body.removeClass('show-nicklist');
 
     panel.first_focus = false;
     panel.focused = true;
@@ -348,9 +347,14 @@ var Panel = function(name, id, connection) {
     return panel.elem.list.find('li[data-message-id]:first').attr('data-message-id');
   };
 
-  panel.update_topic = function(text) {
-    panel.elem.topic.html(Format(text));
+  panel.update_topic = function(topic) {
+    panel.elem.topic.html(Format(topic.value));
     linkify(panel.elem.topic.get(0));
+
+    if (topic.user && topic.time) {
+      var date = (new Date(topic.time * 1000));
+      panel.elem.topic.attr("title", "set by " + topic.user + " on " + date);
+    }
   };
 
   panel.elem = {
@@ -365,6 +369,7 @@ var Panel = function(name, id, connection) {
     filler: $('<div/>', {'class':'filler'}),
     prefix: $('<span/>').text(panel.name),
     nav: panel.build_nav(),
+    body: $('body')
   };
 
   panel.scroller = $('#panel-scroll').get(0);
@@ -432,6 +437,8 @@ var Panel = function(name, id, connection) {
       if (link.href.match(panel.vid_re)) {
         if (link.href.match(/i\.imgur\.com\/[^\/\.]+\.gifv/))
           link.href = link.href.replace('.gifv', '.mp4');
+        if (link.href.match(/http:\/\/i\.imgur\.com/))
+          link.href = link.href.replace(/^http/, 'https');
 
         var video = document.createElement('VIDEO');
         video.controls = "controls";
@@ -546,5 +553,37 @@ var Panel = function(name, id, connection) {
     else {
       panel.elem.list.removeClass("loading");
     }
+  };
+
+  panel.set_ignore_events = function(bool) {
+    var scrolled = panel.is_scrolled();
+
+    if (bool)
+      panel.elem.body.addClass('hide-events');
+    else
+      panel.elem.body.removeClass('hide-events');
+
+    panel.ignore_events = bool;
+
+    if (scrolled)
+      panel.scroll();
+    if (bool)
+      panel.resize_filler();
+  };
+
+  panel.set_show_nicklist = function(bool) {
+    var scrolled = panel.is_scrolled();
+
+    if (bool)
+      panel.elem.body.addClass('show-nicklist');
+    else
+      panel.elem.body.removeClass('show-nicklist');
+
+    panel.show_nicklist = bool;
+
+    if (scrolled)
+      panel.scroll();
+    if (bool)
+      panel.resize_filler();
   };
 };

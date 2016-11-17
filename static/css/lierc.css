@@ -249,6 +249,7 @@ a:visited {
   overflow: hidden;
   outline: none;
   font-size: 14px;
+  height: 19px;
   border: 1px solid #ccc;
   padding: 5px;
   margin: 0;
@@ -915,6 +916,7 @@ ul.channel-controls li a:hover {
 
 #emoji {
   position: relative;
+  cursor: pointer;
 }
 
 #emoji.open:hover:before,
@@ -937,6 +939,53 @@ ul.channel-controls li a:hover {
   cursor: pointer;
 }
 
+.upload-popup input[type=file] {
+  width: 220px;
+}
+
+.upload-popup {
+  display: none;
+  position: absolute;
+  bottom: 100%;
+  right: 0px;
+  padding: 10px;
+  cursor: default;
+}
+
+.upload-popup input {
+  font-size: 14px;
+}
+
+.upload-popup input[type=submit] {
+  margin-top: 10px;
+  font-weight: bold;
+}
+
+#upload {
+  cursor: pointer;
+  position: relative;
+}
+
+#upload.open .upload-popup {
+  display: block;
+}
+
+#upload:before {
+  content: '\f03e';
+  color: #666;
+  display: inline-block;
+  filter: grayscale(100%);
+  font-size: 18px;
+  height: 18px;
+  line-height: 18px;
+  padding: 9px 5px 8px 0px;
+  cursor: pointer;
+}
+
+#upload:hover:before {
+  color: #000;
+}
+
 .emoji-popup {
   height: 0px;
   visibility: hidden;
@@ -948,12 +997,8 @@ ul.channel-controls li a:hover {
   visibility: visible;
 }
 
-.emoji-popup {
-  overflow: hidden;
-  position: absolute;
-  bottom: 100%;
-  right: 0px;
-  padding: 0px;
+.emoji-popup,
+.upload-popup {
   box-shadow: 0 0 3px rgba(0,0,0,0.5);
   background: #eee;
   border-bottom: none;
@@ -962,6 +1007,14 @@ ul.channel-controls li a:hover {
   border-left: 1px solid #fff;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+}
+
+.emoji-popup {
+  overflow: hidden;
+  position: absolute;
+  bottom: 100%;
+  right: 0px;
+  padding: 0px;
 }
 
 .delete-connection {

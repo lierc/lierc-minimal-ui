@@ -1,6 +1,12 @@
 var Channel = function(name) {
   this.name = name;
-  this.topic = "No topic set";
+
+  this.topic = {
+    value: "No topic set",
+    user: null,
+    time: null
+  };
+
   this.nicks_map = {};
   this.nicks_done = true;
   this.mode = "";

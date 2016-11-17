@@ -6,6 +6,7 @@ var Connection = function(config) {
   conn.nick = config.Nick;
   conn.connected = false;
   conn.channels = [];
+  conn.isupport = {};
 
   var listeners = {};
 
@@ -38,6 +39,20 @@ var Connection = function(config) {
     case "001":
       conn.nick = message.Params[0];
       fire("status:raw", conn.id, message);
+      break;
+
+    case "005":
+      var parts = message.Params[0].split(" ");
+
+      for (var i=0; i < parts.length; i++) {
+        if (parts[i].indexOf("=") != -1) {
+          var kv = parts[i].split("=", 2);
+          conn.isupport[kv[0]] = kv[1];
+        }
+        else {
+          conn.isupport[parts[i]] = true;
+        }
+      }
       break;
 
     case "NICK":
@@ -160,19 +175,20 @@ var Connection = function(config) {
 
       var channel = conn.channel(name);
       if (channel) {
-        channel.topic = topic;
-        fire("channel:topic", conn.id, name, topic);
+        channel.topic.value = topic;
+        fire("channel:topic", conn.id, name, channel.topic);
       }
       break;
 
     case "333":
       var name = message.Params[1];
-      var info = {
-        user: message.Params[2],
-        time: message.Params[3]
-      };
+      var channel = conn.channel(name);
 
-      fire("channel:topicinfo", conn.id, name, info)
+      if (channel) {
+        channel.topic.user = message.Params[2];
+        channel.topic.time = message.Params[3];
+        fire("channel:topic", conn.id, name, channel.topic)
+      }
       break;
 
     case "TOPIC":
@@ -182,9 +198,9 @@ var Connection = function(config) {
       var channel = conn.channel(name);
 
       if (channel) {
-        channel.topic = topic;
+        channel.topic.value = topic;
         fire("channel:msg", conn.id, name, message);
-        fire("channel:topic", conn.id, name, text);
+        fire("channel:topic", conn.id, name, channel.topic);
       }
       break;
 

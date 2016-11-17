@@ -206,13 +206,13 @@ var UIEvents = function(liercd) {
 
   $('#toggle-hideevents a').on('click touchstart', function(e) {
     e.preventDefault();
-    liercd.panel_ignore_events(liercd.focused, !liercd.focused.ignore_events);
+    liercd.focused.set_ignore_events(!liercd.focused.ignore_events);
     liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
   });
 
   $('#toggle-nicks').on('click touchstart', function(e) {
     e.preventDefault();
-    liercd.panel_show_nicklist(liercd.focused, !liercd.focused.show_nicklist);
+    liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
     liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
   });
 
@@ -309,6 +309,46 @@ var UIEvents = function(liercd) {
     }
 
     sendlines(send);
+  });
+
+  $('.upload-popup form').on('submit', function(e) {
+    e.preventDefault();
+    var form = $(this);
+    var submit = form.find('input[name=upload]');
+    var image = form.find('input[name=image]');
+    var files = image.get(0).files;
+
+    if (files.length == 0 || !files[0].type.match(/^image/)) {
+      alert("Must select an image file");
+      return;
+    }
+
+    var fd = new FormData();
+    fd.append("image", files[0]);
+    var xhr = new XMLHttpRequest();
+    xhr.open("POST", "//api.imgur.com/3/image");
+    xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
+
+    submit.attr('disabled','disabled').attr('value', 'Uploading');
+
+    xhr.addEventListener("load", function() {
+      var res = JSON.parse(xhr.responseText);
+      liercd.focused.elem.input.focus();
+      document.execCommand("insertText", false, res.data.link);
+      $('#upload').removeClass('open');
+      image.val(null);
+      submit.get(0).removeAttribute('disabled');
+      submit.attr('value', 'Upload');
+    });
+
+    xhr.send(fd);
+  });
+
+  $('#upload').on('click touchstart', function(e) {
+    if ($(e.target).is('#upload')) {
+      e.preventDefault();
+      $(this).toggleClass("open");
+    }
   });
 
   $('#help').on('click touchstart', function(e) {

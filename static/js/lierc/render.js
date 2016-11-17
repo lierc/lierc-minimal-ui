@@ -248,12 +248,25 @@ function linkify(elem) {
     }
     else if (node.nodeName != "#text") {
       linkify(node);
+      continue;
     }
     else if (node.nodeValue.match(url_re)) {
       var span = document.createElement("SPAN");
       var escaped = $('<div/>').text(node.nodeValue).html();
       span.innerHTML = escaped.replace(
         url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
+      node.parentNode.replaceChild(span, node);
+    }
+    else if (Emoji.regex.test(node.nodeValue)) {
+      var chars = node.nodeValue.match(Emoji.regex);
+      var span = document.createElement("SPAN");
+      var escaped = $('<div/>').text(node.nodeValue).html();
+
+      for (var j=0; j < chars.length; j++) {
+        var title = Emoji.names[chars[j]];
+        escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span title="'+title+'">' + chars[j] + '</span>');
+      }
+      span.innerHTML = escaped;
       node.parentNode.replaceChild(span, node);
     }
   }
