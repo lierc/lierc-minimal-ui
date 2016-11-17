@@ -156,7 +156,7 @@ var Panel = function(name, id, connection) {
         var time = this.querySelector('time');
         if (time) {
           if (time.innerHTML == prev)
-            time.style.visibility = 'hidden';
+            time.className = "hidden";
           prev = time.innerHTML;
         }
       }
@@ -292,7 +292,7 @@ var Panel = function(name, id, connection) {
         var time = el.find("time");
         var prev_time = prev.find("time").text();
         if (time.text() == prev_time)
-          time.css("visibility", "hidden");
+          time.addClass("hidden");
       }
     }
 

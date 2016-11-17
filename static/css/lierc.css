@@ -165,6 +165,14 @@ a:visited {
   padding-top: 5px;
 }
 
+#panel ol li.message time.hidden {
+  visibility: hidden;
+}
+
+#panel ol li.message:hover time.hidden {
+  visibility: visible;
+}
+
 #panel ol li.chat span.message-nick {
   cursor: pointer;
 }
@@ -921,21 +929,23 @@ ul.channel-controls li a:hover {
 
 #emoji.open:hover:before,
 #emoji.open:before {
-  content: '\1f601';
+  content: '\f118';
 }
 
 #emoji:hover:before {
-  content: '\1f642';
+  content: '\f11a';
+  color: #000;
 }
 
 #emoji:before {
-  content: '\1f610';
+  content: '\f11a';
   display: inline-block;
   filter: grayscale(100%);
   font-size: 18px;
+  color: #666;
   height: 18px;
   line-height: 18px;
-  padding: 9px 5px 8px 0px;
+  padding: 11px 5px;
   cursor: pointer;
 }
 
@@ -978,7 +988,7 @@ ul.channel-controls li a:hover {
   font-size: 18px;
   height: 18px;
   line-height: 18px;
-  padding: 9px 5px 8px 0px;
+  padding: 11px 5px;
   cursor: pointer;
 }
 
@@ -1134,29 +1144,31 @@ p.embed-source {
 
 .react {
   position: absolute;
-  top: 0px;
-  right: 10px;
-  padding: 4px 2px;
+  top: 4px;
+  right: 39px;
+  padding: 2px;
   font-size: 16px;
   line-height: 16px;
   background: #fff;
+  border: 1px solid #ccc;
+  border-radius: 4px;
 }
 
 .react:before {
-  content: '\1f610';
+  content: '\f11a';
   filter: grayscale(100%);
   opacity: 0.5;
   cursor: pointer;
 }
 
 .react:hover:before {
-  content: '\1f642';
+  content: '\f11a';
   opacity: 1;
 }
 
 .react.open:hover:before,
 .react.open:before {
-  content: '\1f601';
+  content: '\f118';
   opacity: 1;
 }
 
