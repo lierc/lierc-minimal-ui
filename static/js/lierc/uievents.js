@@ -67,7 +67,10 @@ var UIEvents = function(liercd) {
         e.target.nodeName != "INPUT"
         && e.target.nodeName != "TEXTAREA"
         && ! mods['meta'] && ! mods['ctrl'] && ! mods['cmd']
-        && String.fromCharCode(e.which).match(/[a-zA-Z0-9]/)
+        && (
+          String.fromCharCode(e.which).match(/[a-zA-Z0-9\/]/)
+          || e.which == 191
+        )
       ) {
         liercd.focused.elem.input.focus();
       }

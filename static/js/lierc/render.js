@@ -250,14 +250,15 @@ function linkify(elem) {
       linkify(node);
       continue;
     }
-    else if (node.nodeValue.match(url_re)) {
+    if (node.nodeValue.match(url_re)) {
       var span = document.createElement("SPAN");
       var escaped = $('<div/>').text(node.nodeValue).html();
       span.innerHTML = escaped.replace(
         url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
       node.parentNode.replaceChild(span, node);
+      node = span;
     }
-    else if (Emoji.regex.test(node.nodeValue)) {
+    if (Emoji.regex.test(node.nodeValue)) {
       var chars = node.nodeValue.match(Emoji.regex);
       var span = document.createElement("SPAN");
       var escaped = $('<div/>').text(node.nodeValue).html();

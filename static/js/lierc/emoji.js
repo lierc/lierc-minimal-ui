@@ -4,7 +4,6 @@ var Emoji = function() {
 
   for (var i=0; i < Emoji.data.length; i++) {
     var li = $('<li/>', {
-      'data-code': Emoji.data[i]['code'],
       'data-chars': Emoji.data[i]['chars'],
       'data-keywords': Emoji.data[i]['keywords'],
       'data-name': Emoji.data[i]['name'],
@@ -54,7 +53,6 @@ Emoji.regex = new RegExp();
       for (var i=0; i < res.length; i++) {
         var annotations = res[i]['annotations'] || [];
         Emoji.data.push({
-          code: res[i]['code'],
           chars: res[i]['chars'],
           keywords: annotations.join(" ").toLowerCase(),
           name: res[i]['name']
@@ -62,17 +60,29 @@ Emoji.regex = new RegExp();
 
         Emoji.names[ res[i]['chars'] ] = res[i]['name'];
 
-        if (res[i]['code'].length > 4) {
-          var C = parseInt("0x"+res[i]['code']);
-          var H = Math.floor((C - 0x10000) / 0x400) + 0xD800;
-          var L = (C - 0x10000) % 0x400 + 0xDC00;
-          codepoints.push( "\\u" + H.toString(16) + "\\u" + L.toString(16));
+        var surrogate = "";
+        for (var j=0; j < res[i]['codes'].length; j++) {
+          if (res[i]['codes'][j].length > 4) {
+            var C = parseInt("0x"+res[i]['codes'][j]);
+            var H = Math.floor((C - 0x10000) / 0x400) + 0xD800;
+            var L = (C - 0x10000) % 0x400 + 0xDC00;
+            surrogate += "\\u" + H.toString(16) + "\\u" + L.toString(16);
+          }
+          else {
+            surrogate += "\\u" + res[i]['codes'][j];
+          }
         }
-        else {
-          codepoints.push( "\\u" + res[i]['code'] );
-        }
+        codepoints.push(surrogate);
       }
-      Emoji.regex = new RegExp("(" + codepoints.join("|") + ")", "g");
+      var sorted = codepoints.sort(function(a, b) {
+        if (a.length > b.length)
+          return -1;
+        else if (a.length == b.length)
+          return 0;
+        else
+          return 1;
+      });
+      Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "g");
     }
   });
 })();

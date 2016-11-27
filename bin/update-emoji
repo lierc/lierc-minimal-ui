@@ -32,12 +32,24 @@ my %current;
 
 for (@lines) {
   if (m{<td class='chars'>([^<]+)}) {
+    my @chars = split "", $1;
     $current{chars} = $1;
+    $current{codes} = [ map { sprintf "%X", ord $_ } @chars ];
 
-    if ( my $a = $annotations{ $current{chars} } ) {
-      $current{annotations} = $a->{keywords};
-      $current{name} = $a->{tts};
+
+    $current{codes} = [];
+    $current{annotations} = [];
+    my @name;
+
+    for my $char (@chars) {
+      push @{ $current{codes} }, sprintf "%X", ord $char;
+      if ( my $a = $annotations{$char} ) {
+        push @{ $current{annotations} }, @{ $a->{keywords} };
+        push @name, $a->{tts};
+      }
     }
+
+    $current{name} = join " ", @name;
 
     push @emoji, {%current};
     %current = ();
