@@ -57,4 +57,4 @@ for (@lines) {
   }
 }
 
-print encode_json \@emoji;
+print JSON::XS->new->utf8->canonical->encode(\@emoji);
