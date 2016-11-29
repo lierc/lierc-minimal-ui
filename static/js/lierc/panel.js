@@ -329,14 +329,15 @@ var Panel = function(name, id, connection) {
     panel.scroller.scrollTop = panel.scroller.scrollHeight;
   };
 
-  panel.stream_status_change = function(connected) {
-    var li = $('<li/>', {'class':'status-change'});
-    if (connected)
-      li.text("Connected to lierc.");
-    else
-      li.text("Disconnected from lierc. Reconnecting…");
-
-    panel.append(li);
+  panel.set_disabled = function(bool) {
+    if (bool) {
+      panel.elem.input.attr('contenteditable', 'false');
+      panel.elem.input.addClass('disabled');
+    }
+    else {
+      panel.elem.input.attr('contenteditable', 'true');
+      panel.elem.input.removeClass('disabled');
+    }
   };
 
   panel.latest_message_id = function() {
@@ -569,6 +570,17 @@ var Panel = function(name, id, connection) {
       panel.scroll();
     if (bool)
       panel.resize_filler();
+  };
+
+  panel.set_connected = function(bool, message) {
+    panel.connected = bool;
+    panel.update_nav();
+
+    if (panel.type == "status") {
+      panel.append($('<li/>', {
+        'class': 'chat raw'
+      }).text(message));
+    }
   };
 
   panel.set_show_nicklist = function(bool) {

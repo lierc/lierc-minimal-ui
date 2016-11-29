@@ -210,26 +210,22 @@ var Liercd = function(url) {
         for (id in liercd.panels) {
           var panel = liercd.panels[id];
           if (panel.connection == conn_id) {
-            panel.connected = connected;
-            panel.update_nav();
-            if (panel.type == "status") {
-              panel.append($('<li/>', {
-                'class': 'chat raw'
-              }).text(e.Message));
-            }
+            panel.set_connected(connected, e.Message);
           }
         }
       }
     });
 
     stream.on('close', function(e) {
-      if (liercd.focused)
-        liercd.focused.stream_status_change(false);
+      liercd.elem.body.addClass('disconnected');
+      for (id in liercd.panels) {
+        liercd.panels[id].set_disabled(true);
+      }
     });
 
     stream.on('open', function(e) {
+      liercd.elem.body.removeClass('disconnected');
       if (liercd.focused) {
-        liercd.focused.stream_status_change(true);
         if (stream.last_id) {
           var block = $('<div/>', {'class':'backlog-block'});
           liercd.focused.append(block);
@@ -238,6 +234,7 @@ var Liercd = function(url) {
       }
 
       for (var id in liercd.panels) {
+        liercd.panels[id].set_disabled(false);
         if (!liercd.focused || id != liercd.focused.id) {
           liercd.panels[id].elem.list.html('');
         }

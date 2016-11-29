@@ -39,7 +39,7 @@ var Stream = function(baseurl) {
   stream.connect = function() {
     if (stream.eventsource)
       stream.eventsource.close();
-    var backoff = Math.min(stream.retries++, 30);
+    var backoff = Math.min(stream.retries++, 15);
     console.log("connecting in " + backoff + " seconds");
     stream.timer = setTimeout(connect, backoff * 1000);
   };

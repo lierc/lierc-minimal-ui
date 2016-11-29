@@ -269,6 +269,10 @@ a:visited {
     sans-serif;
 }
 
+#input .input.disabled {
+  background: #eee;
+}
+
 #input .input:focus {
   border: 1px solid #7a9cd3;
   box-shadow: 0 0 0 1px #9ec0f7;
@@ -457,6 +461,23 @@ a:visited {
 
 .nav li.disconnected a {
   color: #999;
+}
+
+#reconnect {
+  display: none;
+}
+
+body.disconnected #reconnect {
+  flex-shrink: 0;
+  display: block;
+  width: 100%;
+  background: orange;
+  color: #fff;
+  padding: 8px 10px;
+  font-size: 14px;
+  line-height: 14px;
+  box-sizing: border-box;
+  z-index: 99;
 }
 
 #topic {
