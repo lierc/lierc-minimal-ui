@@ -471,7 +471,7 @@ body.disconnected #reconnect {
   flex-shrink: 0;
   display: block;
   width: 100%;
-  background: orange;
+  background: #ffa130;
   color: #fff;
   padding: 8px 10px;
   font-size: 14px;

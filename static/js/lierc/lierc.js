@@ -217,10 +217,13 @@ var Liercd = function(url) {
     });
 
     stream.on('close', function(e) {
-      liercd.elem.body.addClass('disconnected');
       for (id in liercd.panels) {
         liercd.panels[id].set_disabled(true);
       }
+      var scrolled = liercd.focused && liercd.focused.is_scrolled();
+      liercd.elem.body.addClass('disconnected');
+      if (scrolled)
+        liercd.focused.scroll();
     });
 
     stream.on('open', function(e) {
