@@ -5,16 +5,17 @@ use warnings;
 
 use LWP::UserAgent;
 use JSON::XS;
+use HTML::Entities;
 
 my %annotations;
 open my $fh, "-|:encoding(utf8)", "./bin/cldr-annotations" or die $!;
 
 while (<$fh>) {
   if (/cp="([^"]+)">([^<]*)</) {
-    $annotations{$1}{keywords} = [ split /\s+\|\s+/, $2 ];
+    $annotations{$1}{keywords} = [ map decode_entities, split /\s+\|\s+/, $2 ];
   }
   if (/cp="([^"]+)" type="tts">([^<]*)</) {
-    $annotations{$1}{tts} = $2;
+    $annotations{$1}{tts} = decode_entities $2;
   }
 }
 
