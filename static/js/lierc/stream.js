@@ -39,9 +39,20 @@ var Stream = function(baseurl) {
   stream.connect = function() {
     if (stream.eventsource)
       stream.eventsource.close();
-    var backoff = Math.min(stream.retries++, 15);
-    console.log("connecting in " + backoff + " seconds");
-    stream.timer = setTimeout(connect, backoff * 1000);
+
+    var backoff = Math.max(5, Math.min(stream.retries++, 15)) + 1;
+
+    console.log("reconnecting in " + backoff + " seconds");
+
+    stream.timer = setInterval(function() {
+      if (--backoff <= 0) {
+        clearInterval(stream.timer);
+        connect();
+      }
+      else {
+        fire("timer", backoff);
+      }
+    }, 1000);
   };
 
   stream.onconnect = function(e) {
@@ -51,7 +62,6 @@ var Stream = function(baseurl) {
 
   stream.onopen = function() {
     fire("open");
-    console.log("opened");
     stream.retries = 0;
   };
 
@@ -85,6 +95,6 @@ var Stream = function(baseurl) {
     });
   };
 
-  stream.connect();
+  connect();
   setInterval(stream.check, 1000);
 };

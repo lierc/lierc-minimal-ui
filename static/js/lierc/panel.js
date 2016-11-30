@@ -595,7 +595,7 @@ var Panel = function(name, id, connection) {
 
     if (scrolled)
       panel.scroll();
-    if (bool)
-      panel.resize_filler();
+
+    panel.resize_filler();
   };
 };

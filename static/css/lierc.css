@@ -522,11 +522,12 @@ body.disconnected #reconnect {
   right: 0px;
   bottom: 0px;
   background: rgba(0,0,0,0.5);
+  text-align: center;
 }
 
 .dialog {
-  width: 220px;
   display: none;
+  text-align: left;
   margin: 20px auto;
   font-size: 14px;
   background: #eee;
@@ -537,6 +538,10 @@ body.disconnected #reconnect {
   box-shadow: 0 0 4px rgba(0,0,0,0.5);
   border-radius: 2px;
   padding: 20px;
+}
+
+.overlay .dialog {
+  display: inline-block;
 }
 
 .login hr {

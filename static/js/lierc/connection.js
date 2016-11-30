@@ -7,6 +7,7 @@ var Connection = function(config) {
   conn.connected = false;
   conn.channels = [];
   conn.isupport = {};
+  conn.nickprefix = [ ["v","+"],["o","@"],["h", "%"]];
 
   var listeners = {};
 
@@ -34,6 +35,33 @@ var Connection = function(config) {
     return false;
   };
 
+  conn.nick_mode = function(nick) {
+    var first = nick.slice(0,1);
+    for (var i=0; i < conn.nickprefix.length; i++) {
+      if (first == conn.nickprefix[i][1]) {
+        return [nick.slice(1), conn.nickprefix[i][0]];
+      }
+    }
+    return [nick, ""]
+  };
+
+  conn.nicks = function(channel) {
+    var ret = {};
+
+    for (nick in channel.nicks) {
+      var modes = channel.nicks[nick];
+      ret[nick] = "";
+
+      for (var i=0; i < conn.nickprefix.length; i++) {
+        if (modes.indexOf( conn.nickprefix[i][0]) != -1) {
+          ret[nick] = conn.nickprefix[i][1] + ret[nick];
+        }
+      }
+    }
+
+    return ret;
+  };
+
   conn.on_message = function(message) {
     switch (String(message.Command)) {
     case "001":
@@ -48,6 +76,17 @@ var Connection = function(config) {
         if (parts[i].indexOf("=") != -1) {
           var kv = parts[i].split("=", 2);
           conn.isupport[kv[0]] = kv[1];
+          if (kv[0] == "PREFIX") {
+            var match = kv[1].match(/\(([^\)]+)\)(.+)/);
+            if (match) {
+              var modes = match[1].split("");
+              var prefixes = match[2].split("");
+              conn.nickprefix = [];
+              for (var j=0; j < modes.length; j++) {
+                conn.nickprefix.push([modes[j], prefixes[j]]);
+              }
+            }
+          }
         }
         else {
           conn.isupport[parts[i]] = true;
@@ -65,14 +104,14 @@ var Connection = function(config) {
           channel.rename_nick(old, nick);
           fire("status:raw", conn.id, message);
           fire("channel:msg", conn.id, channel.name, message);
-          fire("channel:nicks", conn.id, channel.name, channel.nicks())
+          fire("channel:nicks", conn.id, channel.name, conn.nicks(channel))
         });
       }
       else {
         conn.channels.forEach( function(channel) {
           if (channel.rename_nick(old, nick)) {
             fire("channel:msg", conn.id, channel.name, message);
-            fire("channel:nicks", conn.id, channel.name, channel.nicks())
+            fire("channel:nicks", conn.id, channel.name, conn.nicks(channel))
           }
         });
       }
@@ -102,7 +141,7 @@ var Connection = function(config) {
         else {
           channel.remove_nick(nick);
           fire("channel:msg", conn.id, name, message);
-          fire("channel:nicks", conn.id, name, channel.nicks())
+          fire("channel:nicks", conn.id, name, conn.nicks(channel))
         }
       };
       break;
@@ -114,7 +153,7 @@ var Connection = function(config) {
       conn.channels.forEach( function(channel) {
         if (channel.remove_nick(nick)) {
           fire("channel:msg", conn.id, channel.name, message);
-          fire("channel:nicks", conn.id, channel.name, channel.nicks())
+          fire("channel:nicks", conn.id, channel.name, conn.nicks(channel))
         }
       });
       break;
@@ -134,7 +173,7 @@ var Connection = function(config) {
         if (channel) {
           channel.add_nick(nick);
           fire("channel:msg", conn.id, name, message);
-          fire("channel:nicks", conn.id, name, channel.nicks())
+          fire("channel:nicks", conn.id, name, conn.nicks(channel))
         }
       }
       break;
@@ -158,7 +197,7 @@ var Connection = function(config) {
         if (channel) {
           if (message.Params[1].match(/[+-][voh]/)) {
             channel.nick_mode(message.Params[2], message.Params[1]);
-            fire("channel:nicks", conn.id, name, channel.nicks())
+            fire("channel:nicks", conn.id, name, conn.nicks(channel))
           }
           else {
             channel.set_mode(message.Params[1]);
@@ -210,13 +249,14 @@ var Connection = function(config) {
       var channel = conn.channel(name);
 
       if (channel) {
-        if (channel.nicks_done) {
+        if (channel.synced) {
           channel.reset_nicks();
-          channel.nicks_done = false;
+          channel.synced = false;
         }
         for (i in nicks) {
           if (nicks[i])
-            channel.add_nick(nicks[i]);
+            var nick_mode = conn.nick_mode(nicks[i]);
+            channel.add_nick(nick_mode[0], nick_mode[1]);
         }
       }
       break;
@@ -226,8 +266,8 @@ var Connection = function(config) {
       var channel = conn.channel(name);
 
       if (channel) {
-        channel.nicks_done = true;
-        fire("channel:nicks", conn.id, name, channel.nicks())
+        channel.synced = true;
+        fire("channel:nicks", conn.id, name, conn.nicks(channel))
       }
       break;
 

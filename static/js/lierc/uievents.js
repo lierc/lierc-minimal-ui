@@ -163,7 +163,7 @@ var UIEvents = function(liercd) {
     e.preventDefault();
     $('.flex-wrap').removeClass('open');
     var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.join').clone().show());
+    overlay.append($('.join').clone());
     $('body').append(overlay);
     liercd.overlayed = true;
 
@@ -358,7 +358,7 @@ var UIEvents = function(liercd) {
     e.preventDefault();
     $('.flex-wrap').removeClass('open');
     var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.help').clone().show());
+    overlay.append($('.help').clone());
     $('body').append(overlay);
     liercd.overlayed = true;
 
@@ -386,8 +386,10 @@ var UIEvents = function(liercd) {
   });
 
   $(window).on('resize', function(e) {
-    if (liercd.focused)
+    if (liercd.focused) {
       liercd.focused.scroll();
+      liercd.focused.resize_filler();
+    }
   });
 
   document.addEventListener('copy', function(e) {

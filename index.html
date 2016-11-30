@@ -38,7 +38,13 @@
       </div>
 
       <div class="flex-wrap-right" id="chat">
-        <header id="reconnect"><strong>Disconnected</strong> from relaychat.party &ndash; Reconnecting&hellip;</header>
+        <header id="reconnect">
+          <strong>Disconnected</strong> from relaychat.party
+          <span id="reconnect-counter-wrap">
+            &ndash; Reconnecting in
+            <span id="reconnect-counter"></span> seconds&hellip;
+          </span>
+        </header>
         <header id="topic"></header>
         <div id="toggle-nicks" class="fa fa-ellipsis-v" title="Channel info"></div>
 
@@ -68,7 +74,7 @@
             <div class="upload-popup">
               <form method="POST">
                 <input type="file" name="image" id="image-upload-input" />
-                <input type="submit" name="upload" value="Upload">
+                <input type="submit" name="upload" value="Upload to Imgur &#xf0ee;">
               </form>
             </div>
           </div>

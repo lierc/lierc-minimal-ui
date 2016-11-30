@@ -226,8 +226,14 @@ var Liercd = function(url) {
         liercd.focused.scroll();
     });
 
+    stream.on('timer', function(time) {
+      $('#reconnect-counter-wrap').show();
+      $('#reconnect-counter').text(time);
+    });
+
     stream.on('open', function(e) {
       liercd.elem.body.removeClass('disconnected');
+      $('#reconnect-counter-wrap').hide();
       if (liercd.focused) {
         if (stream.last_id) {
           var block = $('<div/>', {'class':'backlog-block'});
@@ -479,6 +485,9 @@ var Liercd = function(url) {
   liercd.fill_backlog = function(panel, msgid) {
     if (panel.backlog_empty) return;
 
+    console.time("backlog-"+panel.name);
+    console.time("backlog-fetch-"+panel.name);
+
     var connection = liercd.connections[panel.connection];
     if (!connection) return;
 
@@ -501,8 +510,11 @@ var Liercd = function(url) {
       error: function(e) {
         liercd.filling_backlog = false;
         panel.set_loading(false);
+        console.timeEnd("backlog-fetch-"+panel.name);
+        console.timeEnd("backlog-"+panel.name);
       },
       success: function(events) {
+        console.timeEnd("backlog-fetch-"+panel.name);
         if (events.length < limit)
           panel.backlog_empty = true;
 
@@ -510,6 +522,7 @@ var Liercd = function(url) {
         var reactions = [];
         var block = $('<div/>', {'class':'backlog-block'});
 
+        console.time("backlog-render-"+panel.name);
         events.forEach( function (e) {
           var message = e.Message;
           message.Id = e.MessageId;
@@ -518,6 +531,7 @@ var Liercd = function(url) {
           else
             list.push(Render(message));
         });
+        console.timeEnd("backlog-render-"+panel.name);
 
         panel.prepend(block.append(list.reverse()));
         liercd.filling_backlog = false;
@@ -527,6 +541,8 @@ var Liercd = function(url) {
         });
         panel.react_backlog_check();
         panel.set_loading(false);
+
+        console.timeEnd("backlog-"+panel.name);
       }
     });
   };
@@ -637,7 +653,7 @@ var Liercd = function(url) {
     var url = liercd.baseurl + "/connection";
 
     var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.config').clone().show());
+    overlay.append($('.config').clone());
 
     if (connection) {
       var config = connection.config;
