@@ -15,7 +15,7 @@ var Auth = function(baseurl) {
 
   function modal_overlay(complete) {
     var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.login').clone().show());
+    overlay.append($('.login').clone());
     $('body').append(overlay);
 
     if (!("ontouchstart" in document.documentElement))
