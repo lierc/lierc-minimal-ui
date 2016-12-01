@@ -3,19 +3,22 @@ var Panel = function(name, id, connection) {
 
   panel.name = name;
   panel.id = id;
-  panel.connection = connection;
+  panel.connection = connection.id;
   panel.unread = false;
   panel.missed = false;
-  panel.connected = true;
+  panel.connected = connection.connected;
   panel.highlighted = false;
   panel.type = determine_panel_type(name);
   panel.focused = false;
   panel.backlog_empty = false;
   panel.reactions = [];
-  panel.path = "/#/" + connection + "/" + encodeURIComponent(name);
+  panel.path = "/#/" + connection.id + "/" + encodeURIComponent(name);
   panel.ignore_events = false;
   panel.show_nicklist = false;
   panel.first_focus = true;
+
+  panel.mode = "";
+  panel.network = connection.config.Host;
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -30,12 +33,8 @@ var Panel = function(name, id, connection) {
   }
 
   panel.update_mode = function(mode) {
-    if (mode) {
-      panel.elem.prefix.attr("title", "+" + mode);
-    }
-    else {
-      panel.elem.prefix.get(0).removeAttribute("title");
-    }
+    panel.mode = mode;
+    panel.update_nav();
   };
   
   panel.update_nicks = function(nicks) {
@@ -135,6 +134,12 @@ var Panel = function(name, id, connection) {
       else
         panel.elem.nav.addClass('disconnected');
     }
+
+    var title = panel.network;
+    if (panel.mode) title += " (+" + panel.mode + ")";
+
+    panel.elem.prefix.attr("title", title);
+    panel.elem.nav.attr("title", title);
   };
 
   panel.unfocus = function() {

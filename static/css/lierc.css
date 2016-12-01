@@ -52,6 +52,7 @@ a:visited {
 #panel ol.loading:before {
   opacity: 1;
   content: "\f110";
+  color: #ffa130;
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear;
 }
