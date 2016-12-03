@@ -249,8 +249,7 @@ var Liercd = function(url) {
         }
       }
 
-      if (stream.last_id)
-        liercd.sync_unread(stream.last_id);
+      liercd.sync_unread(stream.last_id);
     });
 
 
@@ -747,6 +746,17 @@ var Liercd = function(url) {
 
   setInterval(liercd.check_scroll, 250);
 
+  liercd.ping_server = function() {
+    $.ajax({
+      url: liercd.baseurl + "/auth",
+      type: "GET",
+      complete: function(res) {
+      }
+    });
+  };
+
+  setInterval(liercd.ping_server, 1000 * 15);
+
   liercd.get_pref = function(name, cb) {
     $.ajax({
       url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
@@ -791,8 +801,12 @@ var Liercd = function(url) {
   });
 
   liercd.sync_unread = function(last_id) {
+    var url = liercd.baseurl + "/unread";
+    if (last_id)
+      url += "/" + last_id;
+
     $.ajax({
-      url: liercd.baseurl + "/unread/" + last_id,
+      url: url,
       type: 'GET',
       dataType: 'json',
       error: function(res) {
