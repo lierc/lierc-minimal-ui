@@ -537,7 +537,6 @@ var Liercd = function(url) {
         });
         panel.react_backlog_check();
         panel.set_loading(false);
-        liercd.save_seen(panel);
       }
     });
   };
@@ -612,6 +611,7 @@ var Liercd = function(url) {
       if (liercd.focused.id == id)
         return;
       liercd.last_panel_id = liercd.focused.id;
+      liercd.save_seen(liercd.focused);
     }
 
     var panel = liercd.panels[id];
