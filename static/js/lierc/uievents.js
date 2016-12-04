@@ -531,4 +531,9 @@ var UIEvents = function(liercd) {
       });
     }
   });
+
+  window.addEventListener("beforeunload", function() {
+    if (liercd.focused)
+      liercd.save_seen(liercd.focused, true);
+  });
 }

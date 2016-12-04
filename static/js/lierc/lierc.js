@@ -813,12 +813,13 @@ var Liercd = function(url) {
     });
   };
 
-  liercd.save_seen = function(panel) {
+  liercd.save_seen = function(panel, force) {
     var diffs = 0;
     var id = panel.id;
     var last_seen = liercd.panels[id].last_seen;
+    var send = last_seen && last_seen != liercd.last_seen[id];
 
-    if (last_seen && last_seen != liercd.last_seen[id]) {
+    if (send || force) {
       var parts = [
         liercd.baseurl, "connection", panel.connection,
         "channel", encodeURIComponent(panel.name), "seen"
