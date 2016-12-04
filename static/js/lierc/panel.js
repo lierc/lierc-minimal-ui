@@ -16,6 +16,7 @@ var Panel = function(name, id, connection) {
   panel.ignore_events = false;
   panel.show_nicklist = false;
   panel.first_focus = true;
+  panel.last_seen = null;
 
   panel.mode = "";
   panel.network = connection.config.Host;
@@ -184,6 +185,8 @@ var Panel = function(name, id, connection) {
     panel.vidify(el.get(0), false);
     panel.audify(el.get(0), false);
     Embed.embed_all(el.find(".message-text"), panel);
+
+    panel.last_seen = Math.max(panel.latest_message_id(), panel.last_seen);
   };
 
   panel.embed = function(a, embed) {
@@ -277,6 +280,9 @@ var Panel = function(name, id, connection) {
     var id = el.attr('data-message-id');
     if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
       return;
+
+    if (id && panel.focused)
+      panel.last_seen = parseInt(id);
 
     var scrolled = panel.is_scrolled();
     panel.imagify(el.get(0));

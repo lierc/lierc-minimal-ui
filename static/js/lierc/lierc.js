@@ -7,6 +7,7 @@ var Liercd = function(url) {
   liercd.filling_backlog = false;
   liercd.overlayed = false;
   liercd.sorting = [];
+  liercd.last_seen = {};
   liercd.panels = {};
   liercd.focused = null;
   liercd.last_panel_id = null;
@@ -249,7 +250,7 @@ var Liercd = function(url) {
         }
       }
 
-      liercd.sync_unread(stream.last_id);
+      liercd.sync_missed();
     });
 
 
@@ -305,6 +306,8 @@ var Liercd = function(url) {
 
     var conn = liercd.connections[connection];
     var panel = new Panel(name, id, conn);
+    if (liercd.last_seen[panel.id])
+      panel.last_seen = liercd.last_seen[panel.id];
     panel.update_nav();
 
     liercd.panels[id] = panel;
@@ -510,7 +513,6 @@ var Liercd = function(url) {
         panel.set_loading(false);
       },
       success: function(events) {
-        console.timeEnd("backlog-fetch-"+panel.name);
         if (events.length < limit)
           panel.backlog_empty = true;
 
@@ -526,7 +528,6 @@ var Liercd = function(url) {
           else
             list.push(Render(message));
         });
-        console.timeEnd("backlog-render-"+panel.name);
 
         panel.prepend(block.append(list.reverse()));
         liercd.filling_backlog = false;
@@ -536,7 +537,7 @@ var Liercd = function(url) {
         });
         panel.react_backlog_check();
         panel.set_loading(false);
-
+        liercd.save_seen(panel);
       }
     });
   };
@@ -795,19 +796,55 @@ var Liercd = function(url) {
     });
   };
 
-  liercd.get_pref("sorting", function(order) {
-    liercd.sorting = order || [];
-    liercd.init();
-  });
+  liercd.load_seen = function(cb) {
+    $.ajax({
+      url: liercd.baseurl + "/seen",
+      type: "GET",
+      dataType: "json",
+      complete: function(e) {
+        cb();
+      },
+      success: function(res) {
+        for (i in res) {
+          var id = panel_id(res[i]["channel"], res[i]["connection"]);
+          liercd.last_seen[id] = res[i]["message_id"];
+        }
+      }
+    });
+  };
 
-  liercd.sync_unread = function(last_id) {
-    var url = liercd.baseurl + "/unread";
-    if (last_id)
-      url += "/" + last_id;
+  liercd.save_seen = function(panel) {
+    var diffs = 0;
+    var id = panel.id;
+    var last_seen = liercd.panels[id].last_seen;
+
+    if (last_seen && last_seen != liercd.last_seen[id]) {
+      var parts = [
+        liercd.baseurl, "connection", panel.connection,
+        "channel", encodeURIComponent(panel.name), "seen"
+      ];
+
+      $.ajax({
+        url: parts.join("/"),
+        type: "POST",
+        dataType: "json",
+        data: "" + last_seen,
+        error: function(e) {
+          console.log("error saving", e);
+        }
+      });
+
+      liercd.last_seen[id] = last_seen;
+    }
+  };
+
+  liercd.sync_missed = function() {
+    var url = liercd.baseurl + "/missed";
 
     $.ajax({
       url: url,
       type: 'GET',
+      data: liercd.last_seen,
       dataType: 'json',
       error: function(res) {
         console.log(res);
@@ -819,6 +856,8 @@ var Liercd = function(url) {
             if (!liercd.focused || panel.id != liercd.focused.id) {
               if (res[connection][channel].messages) {
                 panel.unread = true;
+                if (panel.type == "private")
+                  panel.highlighted = true;
                 panel.update_nav();
               }
               else if (res[connection][channel].events) {
@@ -831,6 +870,13 @@ var Liercd = function(url) {
       }
     });
   };
+
+  liercd.get_pref("sorting", function(order) {
+    liercd.sorting = order || [];
+    liercd.load_seen(function() {
+      liercd.init();
+    });
+  });
 
   var events = new UIEvents(liercd);
 };
