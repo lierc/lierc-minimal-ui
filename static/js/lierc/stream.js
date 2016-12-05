@@ -72,6 +72,11 @@ var Stream = function(baseurl) {
     fire("message", data);
   };
 
+  stream.close = function() {
+    if (stream.eventsource)
+      stream.eventsource.close();
+  };
+
   stream.check = function() {
     if (! stream.timer && (! stream.eventsource || stream.eventsource.readyState != 1) ) {
       if (stream.retries == 0) { 

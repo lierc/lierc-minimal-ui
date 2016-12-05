@@ -751,7 +751,23 @@ var Liercd = function(url) {
     $.ajax({
       url: liercd.baseurl + "/auth",
       type: "GET",
+      dataType: "json",
       complete: function(res) {
+        if (res.status == 200)
+          return;
+
+        console.log(res.status);
+
+        // ping failed, force a reconnect of stream...
+        if (res.status == 0) {
+          liercd.stream.close();
+          return;
+        }
+
+        var data = JSON.parse(res.responseText);
+        if (data["error"]) {
+          console.log(data["error"]);
+        }
       }
     });
   };
@@ -816,7 +832,7 @@ var Liercd = function(url) {
   liercd.save_seen = function(panel, force) {
     var diffs = 0;
     var id = panel.id;
-    var last_seen = liercd.panels[id].last_seen;
+    var last_seen = panel.last_seen;
     var send = last_seen && last_seen != liercd.last_seen[id];
 
     if (send || force) {

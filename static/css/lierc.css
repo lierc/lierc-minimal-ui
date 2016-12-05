@@ -25,6 +25,10 @@ a:visited {
   color: #7600bd;
 }
 
+a:hover {
+  color: #18df00;
+}
+
 #panel {
   flex-grow: 1;
 }
