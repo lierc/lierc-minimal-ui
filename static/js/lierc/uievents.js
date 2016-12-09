@@ -275,19 +275,19 @@ var UIEvents = function(liercd) {
       }
       else {
         var words = value.split(" ");
-        var len = 0;
+        var len = privmsg.length;
         var buf = [];
 
         for (var i=0; i < words.length; i++) {
           var word = words[i];
           if (len + word.length > 510) {
             send.push(privmsg + buf.join(" "));
-            len = 0;
-            buf = [];
+            len = privmsg.length + word.length;
+            buf = [word];
           }
           else {
             buf.push(word);
-            len += word.length;
+            len += word.length + 1;
           }
         }
         if (buf.length) {
