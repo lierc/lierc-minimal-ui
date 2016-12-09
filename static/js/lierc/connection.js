@@ -7,7 +7,8 @@ var Connection = function(config) {
   conn.connected = false;
   conn.channels = [];
   conn.isupport = {};
-  conn.nickprefix = [ ["v","+"],["o","@"],["h", "%"]];
+  conn.prefix = [ ["v","+"],["o","@"],["h", "%"]];
+  conn.chantypes = ["#","&"];
 
   var listeners = {};
 
@@ -37,9 +38,9 @@ var Connection = function(config) {
 
   conn.nick_mode = function(nick) {
     var first = nick.slice(0,1);
-    for (var i=0; i < conn.nickprefix.length; i++) {
-      if (first == conn.nickprefix[i][1]) {
-        return [nick.slice(1), conn.nickprefix[i][0]];
+    for (var i=0; i < conn.prefix.length; i++) {
+      if (first == conn.prefix[i][1]) {
+        return [nick.slice(1), conn.prefix[i][0]];
       }
     }
     return [nick, ""]
@@ -52,9 +53,9 @@ var Connection = function(config) {
       var modes = channel.nicks[nick];
       ret[nick] = "";
 
-      for (var i=0; i < conn.nickprefix.length; i++) {
-        if (modes.indexOf( conn.nickprefix[i][0]) != -1) {
-          ret[nick] = conn.nickprefix[i][1] + ret[nick];
+      for (var i=0; i < conn.prefix.length; i++) {
+        if (modes.indexOf( conn.prefix[i][0]) != -1) {
+          ret[nick] = conn.prefix[i][1] + ret[nick];
         }
       }
     }
@@ -81,11 +82,14 @@ var Connection = function(config) {
             if (match) {
               var modes = match[1].split("");
               var prefixes = match[2].split("");
-              conn.nickprefix = [];
+              conn.prefix = [];
               for (var j=0; j < modes.length; j++) {
-                conn.nickprefix.push([modes[j], prefixes[j]]);
+                conn.prefix.push([modes[j], prefixes[j]]);
               }
             }
+          }
+          else if (kv[0] == "CHANTYPES") {
+            conn.chantypes = kv[1].split("");
           }
         }
         else {
@@ -275,7 +279,7 @@ var Connection = function(config) {
       var nick = message.Prefix.Name;
       var name = message.Params[0];
       var text = message.Params[1];
-      var priv = name.match(/^[^#&!+]/);
+      var priv = conn.chantypes.indexOf(name[0]) == -1;
       var type = "msg";
 
       if (text.substring(0,5) == "\x01" + "FACE")

@@ -8,7 +8,7 @@ var Panel = function(name, id, connection) {
   panel.missed = false;
   panel.connected = connection.connected;
   panel.highlighted = false;
-  panel.type = determine_panel_type(name);
+  panel.type = determine_panel_type(name, connection.chantypes);
   panel.focused = false;
   panel.backlog_empty = false;
   panel.reactions = [];
@@ -27,9 +27,9 @@ var Panel = function(name, id, connection) {
     panel.elem.prefix.text(name);
   };
 
-  function determine_panel_type(name) {
+  function determine_panel_type(name, chantypes) {
     if (name == "status") return "status";
-    if (name.match(/^[#&+!]/)) return "channel";
+    if (chantypes.indexOf(name[0]) != -1) return "channel";
     return "private";
   }
 
