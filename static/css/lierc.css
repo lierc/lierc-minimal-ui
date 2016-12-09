@@ -151,6 +151,10 @@ a:hover {
   margin: 3px 0;
 }
 
+#panel ol li.chat.last-read + li.chat {
+  border-top: 1px solid rgba(0,0,0,0.25);
+}
+
 /*
 #panel ol li.message.consecutive {
   border-top: none;

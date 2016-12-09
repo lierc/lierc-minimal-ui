@@ -8,6 +8,7 @@ var Liercd = function(url) {
   liercd.overlayed = false;
   liercd.sorting = [];
   liercd.last_seen = {};
+  liercd.missed = {};
   liercd.panels = {};
   liercd.focused = null;
   liercd.last_panel_id = null;
@@ -364,7 +365,25 @@ var Liercd = function(url) {
       liercd.focus_panel(id);
     }
 
+    if (!panel.focused && liercd.missed[panel.id])
+      liercd.apply_missed(panel, liercd.missed[panel.id]);
+
+    delete liercd.missed[panel.id];
+
     return liercd.panels[id];
+  };
+
+  liercd.apply_missed = function(panel, missed) {
+    if (missed.messages) {
+      panel.unread = true;
+      if (panel.type == "private")
+        panel.highlighted = true;
+      panel.update_nav();
+    }
+    else if (missed.events) {
+      panel.missed = true;
+      panel.update_nav();
+    }
   };
 
   liercd.part_channel = function(name, connection) {
@@ -537,6 +556,7 @@ var Liercd = function(url) {
         });
         panel.react_backlog_check();
         panel.set_loading(false);
+        panel.last_seen_separator();
       }
     });
   };
@@ -856,10 +876,8 @@ var Liercd = function(url) {
   };
 
   liercd.sync_missed = function() {
-    var url = liercd.baseurl + "/missed";
-
     $.ajax({
-      url: url,
+      url: liercd.baseurl + "/missed",
       type: 'GET',
       data: liercd.last_seen,
       dataType: 'json',
@@ -867,20 +885,15 @@ var Liercd = function(url) {
         console.log(res);
       },
       success: function(res) {
+        liercd.missed = {};
         for (connection in res) {
           for (channel in res[connection]) {
-            var panel = liercd.add_panel(channel, connection, false);
-            if (!liercd.focused || panel.id != liercd.focused.id) {
-              if (res[connection][channel].messages) {
-                panel.unread = true;
-                if (panel.type == "private")
-                  panel.highlighted = true;
-                panel.update_nav();
-              }
-              else if (res[connection][channel].events) {
-                panel.missed = true;
-                panel.update_nav();
-              }
+            var id = panel_id(channel, connection);
+            if (liercd.panels[id]) {
+              liercd.apply_missed(liercd.panels[id], res[connection][channel]);
+            }
+            else {
+              liercd.missed[id] = res[connection][channel];
             }
           }
         }

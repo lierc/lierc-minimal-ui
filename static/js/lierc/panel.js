@@ -609,4 +609,13 @@ var Panel = function(name, id, connection) {
 
     panel.resize_filler();
   };
+
+  panel.last_seen_separator = function() {
+    if (panel.last_seen) {
+      var msg = panel.elem.list.find('li[data-message-id='+panel.last_seen+']');
+      if (msg.length) {
+        msg.addClass("last-read");
+      }
+    }
+  };
 };
