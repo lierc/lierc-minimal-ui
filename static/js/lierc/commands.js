@@ -31,8 +31,13 @@ var Commands = function() {
   });
 
   add_command("part", ["close","wc"], function(panel, line) {
-    if (panel.type != "channel") {
-      throw "PART only works in channels";
+    if (panel.type == "status") {
+      throw "Can not close status panel.";
+    }
+
+    if (panel.type == "private") {
+      liercd.remove_panel(panel.id);
+      return;
     }
 
     var parts = ["PART", panel.name];
