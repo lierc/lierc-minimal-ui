@@ -143,7 +143,12 @@ var Panel = function(name, id, connection) {
     panel.elem.nav.attr("title", title);
   };
 
+  panel.update_seen = function() {
+    panel.last_seen = panel.latest_message_id();
+  };
+
   panel.unfocus = function() {
+    panel.update_seen();
     panel.focused = false;
     panel.elem.nav.removeClass("active");
     panel.elem.list.remove();
@@ -186,7 +191,7 @@ var Panel = function(name, id, connection) {
     panel.audify(el.get(0), false);
     Embed.embed_all(el.find(".message-text"), panel);
 
-    panel.last_seen = Math.max(panel.latest_message_id(), panel.last_seen);
+    panel.last_seen_separator();
   };
 
   panel.embed = function(a, embed) {
@@ -281,9 +286,6 @@ var Panel = function(name, id, connection) {
     if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
       return;
 
-    if (id && panel.focused)
-      panel.last_seen = parseInt(id);
-
     var scrolled = panel.is_scrolled();
     panel.imagify(el.get(0));
     panel.vidify(el.get(0));
@@ -352,7 +354,7 @@ var Panel = function(name, id, connection) {
   };
 
   panel.latest_message_id = function() {
-    return panel.elem.list.find('li[data-message-id]:last').attr('data-message-id');
+    return parseInt(panel.elem.list.find('li[data-message-id]:last').attr('data-message-id'));
   };
 
   panel.oldest_message_id = function() {
@@ -614,7 +616,14 @@ var Panel = function(name, id, connection) {
     if (panel.last_seen) {
       var msg = panel.elem.list.find('li[data-message-id='+panel.last_seen+']');
       if (msg.length) {
+        panel.elem.list.find('.last-read').removeClass('last-read');
         msg.addClass("last-read");
+        if (! msg.next('li').length) {
+          var block = msg.parent('div.backlog-block');
+          if (block.length) {
+            block.addClass('last-read');
+          }
+        }
       }
     }
   };

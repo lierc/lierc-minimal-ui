@@ -556,7 +556,6 @@ var Liercd = function(url) {
         });
         panel.react_backlog_check();
         panel.set_loading(false);
-        panel.last_seen_separator();
       }
     });
   };
@@ -631,7 +630,6 @@ var Liercd = function(url) {
       if (liercd.focused.id == id)
         return;
       liercd.last_panel_id = liercd.focused.id;
-      liercd.save_seen(liercd.focused);
     }
 
     var panel = liercd.panels[id];
@@ -646,8 +644,10 @@ var Liercd = function(url) {
 
     liercd.elem.title.text(panel.name);
 
-    if (liercd.focused)
+    if (liercd.focused) {
       liercd.focused.unfocus();
+      liercd.save_seen(liercd.focused);
+    }
 
     //liercd.scroll_to_nav(panel.elem.nav);
 
