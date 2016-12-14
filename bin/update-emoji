@@ -12,14 +12,14 @@ open my $fh, "-|:encoding(utf8)", "./bin/cldr-annotations" or die $!;
 
 while (<$fh>) {
   if (/cp="([^"]+)">([^<]*)</) {
-    $annotations{$1}{keywords} = [ map decode_entities, split /\s+\|\s+/, $2 ];
+    $annotations{$1}{keywords} = [ map decode_entities($_), split /\s+\|\s+/, $2 ];
   }
-  if (/cp="([^"]+)" type="tts">([^<]*)</) {
+  elsif (/cp="([^"]+)" type="tts">([^<]*)</) {
     $annotations{$1}{tts} = decode_entities $2;
   }
 }
 
-my $url = "http://unicode.org/emoji/charts/full-emoji-list.html";
+my $url = "http://unicode.org/emoji/charts-beta/full-emoji-list.html";
 my $ua  = LWP::UserAgent->new;
 
 my @emoji;
