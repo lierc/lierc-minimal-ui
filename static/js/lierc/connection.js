@@ -296,6 +296,9 @@ var Connection = function(config) {
     case "PING":
       break;
 
+    case "PONG":
+      break;
+
     default:
       fire("status", conn.id, message);
     };
