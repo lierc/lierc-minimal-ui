@@ -156,13 +156,13 @@ var Panel = function(name, id, connection) {
     panel.backlog_empty = false;
   };
 
-  panel.prepend = function(el, target) {
+  panel.prepend = function(els, target) {
     var height = liercd.elem.scroll.scrollHeight;
     var scroll = liercd.elem.scroll.scrollTop;
-    el.css('opacity', '0');
+    els.css('opacity', '0');
 
     var prev;
-    el.find('li.chat').each(function() {
+    els.filter('li.chat').each(function() {
       if (this.className.indexOf('message') != -1) {
         var time = this.querySelector('time');
         if (time) {
@@ -177,27 +177,29 @@ var Panel = function(name, id, connection) {
     });
 
     if (target)
-      target.prepend(el);
+      target.prepend(els);
     else
-      panel.elem.list.prepend(el);
+      panel.elem.list.prepend(els);
 
-    setTimeout(function(){el.css('opacity', '1')}, 0);
+    setTimeout(function(){
+      els.css('opacity', '1')
+    }, 0);
     var diff = liercd.elem.scroll.scrollHeight - height;
     liercd.elem.scroll.scrollTop = scroll + diff;
     panel.resize_filler();
 
-    panel.imagify(el.get(0), false);
-    panel.vidify(el.get(0), false);
-    panel.audify(el.get(0), false);
-    Embed.embed_all(el.find(".message-text"), panel);
+    for (var i=0; i < els.length; i++) {
+      panel.imagify(els.get(i), false);
+      panel.vidify(els.get(i), false);
+      panel.audify(els.get(i), false);
+    }
+
+    Embed.embed_all(els.find(".message-text"), panel);
 
     panel.last_seen_separator();
   };
 
   panel.embed = function(a, embed) {
-    var height = liercd.elem.scroll.scrollHeight;
-    var scroll = liercd.elem.scroll.scrollTop;
-
     var toggle = document.createElement('SPAN');
     toggle.setAttribute("class", "embed-toggle");
     toggle.setAttribute("aria-hidden", "true");
@@ -250,12 +252,11 @@ var Panel = function(name, id, connection) {
 
     li.find('.message-text').append(wrap);
 
-    var diff = liercd.elem.scroll.scrollHeight - height;
-    liercd.elem.scroll.scrollTop = scroll + diff;
-    panel.resize_filler();
-
     var wrap_el = wrap.get(0);
     var prev = wrap_el.getBoundingClientRect().height;
+    liercd.elem.scroll.scrollTop += prev;
+
+    panel.resize_filler();
 
     var o = new MutationObserver(function(s) {
       var cur = wrap_el.getBoundingClientRect().height;
@@ -395,7 +396,6 @@ var Panel = function(name, id, connection) {
 
     if (l) {
       panel.elem.list.find('li.chat:visible:lt(' + l + ')').remove();
-      panel.elem.list.find('.backlog-block:empty').remove();
     }
   };
 
@@ -618,12 +618,6 @@ var Panel = function(name, id, connection) {
       if (msg.length) {
         panel.elem.list.find('.last-read').removeClass('last-read');
         msg.addClass("last-read");
-        if (! msg.next('li').length) {
-          var block = msg.parent('div.backlog-block');
-          if (block.length) {
-            block.addClass('last-read');
-          }
-        }
       }
     }
   };

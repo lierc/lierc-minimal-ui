@@ -490,7 +490,7 @@ var Liercd = function(url) {
               block.append(Render(insert[i]));
           }
 
-          panel.prepend(block, elem);
+          panel.prepend(block.children(), elem);
           reactions.forEach(function(reaction) {
             var parts = reaction.Params[1].split(" ");
             panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
@@ -548,7 +548,7 @@ var Liercd = function(url) {
             list.push(Render(message));
         });
 
-        panel.prepend(block.append(list.reverse()));
+      panel.prepend(block.append(list.reverse()).children());
         liercd.filling_backlog = false;
         reactions.forEach(function(reaction) {
           var parts = reaction.Params[1].split(" ");

@@ -65,6 +65,7 @@ a:hover {
   padding: 5px 10px;
   border-top: 1px solid rgba(0,0,0,0.04);
   position: relative;
+  transition: opacity 0.25s ease-out;
 }
 
 #panel ol li.filler {
@@ -150,12 +151,10 @@ a:hover {
   margin: 3px 0;
 }
 
-#panel ol .last-read + div.backlog-block li.chat:first-child,
 #panel ol .last-read + li.chat {
   border-top: 1px dashed #ffa130 !important;
 }
 
-#panel ol .last-read + div.backlog-block li.chat:first-child:before,
 #panel ol .last-read + li.chat:before {
   display: block;
   position: absolute;
@@ -524,15 +523,6 @@ body.disconnected #reconnect {
   font-size: 14px;
   color: #555;
   text-overflow: ellipsis;
-}
-
-.backlog-block:empty {
-  display: none;
-}
-
-.backlog-block {
-  margin: 0;
-  transition: opacity 0.25s ease-out;
 }
 
 .status-change {
@@ -1124,7 +1114,7 @@ ul.channel-controls li a:hover {
 }
 
 .embed-wrap {
-  margin-top: 10px;
+  margin-top: 0px;
   overflow: hidden;
   max-width: 100%;
   max-height: 100px;
