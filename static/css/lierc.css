@@ -68,11 +68,11 @@ a:hover {
 }
 
 #panel ol li.chat:hover {
-  background: rgb(246, 250, 255);
+  background: rgba(0, 0, 0, 0.02);
 }
 
 #panel ol li.chat.self {
-  background: rgb(240, 246, 255);
+  background: rgba(49, 168, 255, 0.10);
 }
 
 
@@ -1205,6 +1205,7 @@ p.embed-source {
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
+  z-index: 99;
 }
 
 .react:before {

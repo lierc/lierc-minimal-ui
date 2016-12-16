@@ -483,10 +483,7 @@ var UIEvents = function(liercd) {
     if ($('.react.open').length)
       return;
 
-    $(this).append($('<div/>', {
-      'class':'react',
-      'title': $(this).find('time').attr('title')
-    }));
+    $(this).append($('<div/>', {'class':'react'}));
   });
 
   $('#panel').on('mouseleave', 'li.message', function(e) {
