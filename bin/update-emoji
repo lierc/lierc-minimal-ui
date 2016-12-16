@@ -50,7 +50,7 @@ for (@lines) {
       }
     }
 
-    $current{name} = join " ", @name;
+    $current{name} = ucfirst join " ", @name;
 
     push @emoji, {%current};
     %current = ();
