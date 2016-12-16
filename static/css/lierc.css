@@ -11,10 +11,10 @@ body {
 }
 
 body,input {
-  font-family: FontAwesome, -apple-system, BlinkMacSystemFont,
+  font-family: -apple-system, BlinkMacSystemFont,
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
     "Fira Sans", "Droid Sans", "Helvetica Neue", 
-    sans-serif;
+    sans-serif, FontAwesome;
 }
 
 a:link {
@@ -63,10 +63,18 @@ a:hover {
 
 #panel ol li.chat {
   padding: 5px 10px;
-  border-top: 1px solid rgba(0,0,0,0.04);
   position: relative;
   transition: opacity 0.25s ease-out;
 }
+
+#panel ol li.chat:hover {
+  background: rgb(246, 250, 255);
+}
+
+#panel ol li.chat.self {
+  background: rgb(240, 246, 255);
+}
+
 
 #panel ol li.filler {
   padding: 0;
@@ -78,7 +86,6 @@ a:hover {
 #panel ol li.event {
   color: #999;
   font-style: italic;
-  border-top: 1px solid rgba(0,0,0,0.04);
   padding-left: 20px;
 }
 
@@ -107,17 +114,14 @@ a:hover {
   transition: opacity 0s;
 }
 
-#panel ol .status-change + li.event,
+#panel ol li.event + .last-read + li.event,
 #panel ol li.event + li.event {
   border-top: none;
 }
 
+#panel ol li.event + .last-read + li.event,
 #panel ol li.event + li.event {
   padding-top: 0px;
-}
-
-#panel ol li.status-change {
-  background: #eee;
 }
 
 #panel ol li.chat span.message-nick {
@@ -151,19 +155,24 @@ a:hover {
   margin: 3px 0;
 }
 
-#panel ol .last-read + li.chat {
+#panel ol .last-read {
   border-top: 1px dashed #ffa130 !important;
+  position: relative;
+  z-index: 9;
 }
 
-#panel ol .last-read + li.chat:before {
+#panel ol .last-read + li.chat {
+  border-top: none !important;
+}
+
+#panel ol .last-read:before {
   display: block;
   position: absolute;
   content: "last read";
   text-align: center;
-  width: 60px;
+  padding: 0 10px;
   top: -8px;
-  left: 50%;
-  margin-left: -30px;
+  right: 0px;
   background: #fff;
   color: #ffa130;
   font-size: 10px;
@@ -523,11 +532,6 @@ body.disconnected #reconnect {
   font-size: 14px;
   color: #555;
   text-overflow: ellipsis;
-}
-
-.status-change {
-  margin: 10px;
-  padding: 5px 10px;
 }
 
 .overlay {
@@ -1114,7 +1118,6 @@ ul.channel-controls li a:hover {
 }
 
 .embed-wrap {
-  margin-top: 0px;
   overflow: hidden;
   max-width: 100%;
   max-height: 100px;
@@ -1123,6 +1126,10 @@ ul.channel-controls li a:hover {
   border: 1px solid #eee;
   cursor: pointer;
   max-width: 500px;
+}
+
+.embed-wrap-wrap {
+  padding: 10px 0;
 }
 
 .embed-wrap.open {
@@ -1178,10 +1185,14 @@ p.embed-source {
   max-height: none;
 }
 
-.embed-wrap[data-embed-provider=twitter] {
-  max-width: 350px;
+.embed-wrap-wrap[data-embed-provider=twitter] {
+  padding: 0px;
+}
+
+.embed-wrap-wrap[data-embed-provider=twitter] .embed-wrap {
   max-height: none;
   border: none;
+  max-width: 350px;
 }
 
 .react {

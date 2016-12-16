@@ -207,9 +207,11 @@ var Panel = function(name, id, connection) {
 
     var li = $(a).parents('li');
     var wrap = $('<div/>', {
-      'class': 'embed-wrap',
+      'class': 'embed-wrap-wrap',
       'data-embed-provider': embed.provider_name.toLowerCase()
     });
+    var inner = $('<div/>', {'class': 'embed-wrap'});
+    wrap.append(inner);
 
     var temp;
 
@@ -227,7 +229,7 @@ var Panel = function(name, id, connection) {
 
     var show = ["Twitter"];
     if (show.indexOf(embed.provider_name) != -1) {
-      wrap.html(embed.html).addClass("open");
+      inner.html(embed.html).addClass("open");
     }
     else {
       if (embed.thumbnail_url) {
@@ -239,13 +241,13 @@ var Panel = function(name, id, connection) {
         img.append($('<div/>', {
           'class': 'embed-play'
         }));
-        wrap.append(img);
+        inner.append(img);
       }
       wrap.attr('data-embed', embed.html);
-      wrap.append($('<h2/>').text(embed.title));
+      inner.append($('<h2/>').text(embed.title));
       if (embed.description)
-        wrap.append($('<p/>').text(embed.description));
-      wrap.append($('<p/>', {
+        inner.append($('<p/>').text(embed.description));
+      inner.append($('<p/>', {
         'class': 'embed-source'
       }).text(embed.provider_name));
     }
@@ -616,8 +618,14 @@ var Panel = function(name, id, connection) {
     if (panel.last_seen) {
       var msg = panel.elem.list.find('li[data-message-id='+panel.last_seen+']');
       if (msg.length) {
-        panel.elem.list.find('.last-read').removeClass('last-read');
-        msg.addClass("last-read");
+        var next = msg.nextAll('li.chat:visible');
+        if (next.length) {
+          var scrolled = panel.is_scrolled();
+          panel.elem.list.find('.last-read').remove();
+          msg.after($('<div/>', {'class':'last-read'}));
+          if (scrolled)
+            panel.scroll();
+        }
       }
     }
   };

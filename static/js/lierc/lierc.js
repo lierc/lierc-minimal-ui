@@ -197,6 +197,7 @@ var Liercd = function(url) {
 
       if (e.MessageId)
         message.Id =  e.MessageId;
+      message.Self = e.Self;
 
       if (liercd.connections[conn_id]) {
         liercd.connections[conn_id].on_message(message);
@@ -238,7 +239,7 @@ var Liercd = function(url) {
       $('#reconnect-counter-wrap').hide();
       if (liercd.focused) {
         if (stream.last_id) {
-          var block = $('<div/>', {'class':'backlog-block'});
+          var block = $('<div/>');
           liercd.focused.append(block);
           liercd.fill_missed(liercd.focused, stream.last_id, block);
         }
@@ -472,6 +473,7 @@ var Liercd = function(url) {
           var e = events[i];
           var message = e.Message;
           message.Id = e.MessageId;
+          message.Self = e.Self;
 
           // done if message is older than stop
           if (message.Id <= stop)
@@ -537,11 +539,12 @@ var Liercd = function(url) {
 
         var list = [];
         var reactions = [];
-        var block = $('<div/>', {'class':'backlog-block'});
+        var block = $('<div/>');
 
         events.forEach( function (e) {
           var message = e.Message;
           message.Id = e.MessageId;
+          message.Self = e.Self;
           if (liercd.is_reaction(message))
             reactions.push(message);
           else
