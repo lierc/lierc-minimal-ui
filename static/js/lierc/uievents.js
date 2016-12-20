@@ -28,12 +28,6 @@ var UIEvents = function(liercd) {
       mods['cmd'] = true;
     }
 
-    if (e.which == 13) {
-      e.preventDefault();
-      liercd.elem.input.submit();
-      return;
-    }
-
     if (e.which == 27 && liercd.overlayed) {
       $('.overlay').remove();
       liercd.overlayed = false;
@@ -41,6 +35,12 @@ var UIEvents = function(liercd) {
     }
 
     if (liercd.overlayed) return;
+
+    if (e.which == 13) {
+      e.preventDefault();
+      liercd.elem.input.submit();
+      return;
+    }
 
     if (e.which == 38 && mods['meta']) {
       e.preventDefault();
