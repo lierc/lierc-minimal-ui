@@ -16,6 +16,7 @@ var Liercd = function(url) {
   liercd.emoji = new Emoji();
   liercd.default_panel = null;
   liercd.default_focused = false;
+  liercd.initial_prefs = {}
 
   liercd.elem = {
     panel: $('#panel'),
@@ -797,7 +798,32 @@ var Liercd = function(url) {
 
   setInterval(liercd.ping_server, 1000 * 15);
 
+  liercd.get_prefs = function(cb) {
+    $.ajax({
+      url: liercd.baseurl + "/preference",
+      type: "GET",
+      dataType: "json",
+      error: function(e) {
+        cb();
+      },
+      success: function(res) {
+        var prefs = {};
+        for (var i=0; i < res.length; i++) {
+          prefs[res[i].name] = JSON.parse(res[i].value);
+        }
+        cb(prefs);
+      }
+    });
+  };
+
   liercd.get_pref = function(name, cb) {
+    if (name in liercd.initial_prefs) {
+      var value = liercd.initial_prefs[name];
+      delete liercd.initial_prefs[name];
+      cb(value);
+      return;
+    }
+
     $.ajax({
       url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
       type: "GET",
@@ -904,8 +930,11 @@ var Liercd = function(url) {
     });
   };
 
-  liercd.get_pref("sorting", function(order) {
-    liercd.sorting = order || [];
+  liercd.get_prefs(function(prefs) {
+    liercd.initial_prefs = prefs;
+    liercd.sorting = liercd.initial_prefs['sorting'] || [];
+    delete liercd.initial_prefs['sorting'];
+
     liercd.load_seen(function() {
       liercd.init();
     });
