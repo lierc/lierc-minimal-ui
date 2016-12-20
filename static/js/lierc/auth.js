@@ -25,7 +25,7 @@ var Auth = function(baseurl) {
       e.preventDefault();
       var form = $(e.target);
       var action = form.find('input[type=submit]').attr('name');
-      var email = form.find('input[type=email]').val();
+      var email = form.find('input[name=email]').val();
       var pass = form.find('input[type=password]').val();
 
       $.ajax({

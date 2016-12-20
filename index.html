@@ -112,8 +112,8 @@
       <h2>Login</h2>
       <form method="POST" class="login-form">
         <fieldset class="input-group">
-          <label for="email">Email address</label>
-          <input name="email" type="email" value="" required>
+          <label for="email">Email address or username</label>
+          <input name="email" type="text" value="" required>
         </fieldset>
         <fieldset class="input-group">
           <label for="pass">Password</label>
@@ -129,6 +129,10 @@
 
       <h2>Register</h2>
       <form method="POST">
+        <fieldset class="input-group">
+          <label for="username">Username</label>
+          <input name="username" type="text" value="" required>
+        </fieldset>
         <fieldset class="input-group">
           <label for="email">Email address</label>
           <input name="email" type="email" value="" required>
