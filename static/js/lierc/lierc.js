@@ -1,6 +1,7 @@
-var Liercd = function(url) {
+var Liercd = function(url, user) {
   var liercd = this;
 
+  liercd.user = user;
   liercd.baseurl = url;
   liercd.stream;
   liercd.connections = {};
@@ -695,6 +696,11 @@ var Liercd = function(url) {
       }));
       url += '/' + connection.id;
       method = "PUT";
+    }
+    else {
+      var form = overlay.find('form');
+      form.find('input[name=Nick]').val(liercd.user.user);
+      form.find('input[name=User]').val(liercd.user.user);
     }
 
     $('body').append(overlay);

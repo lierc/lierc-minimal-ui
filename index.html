@@ -226,8 +226,8 @@
     <script type="text/javascript">
       $(document).ready(function() {
         var auth = new Auth("/api");
-        auth.auth(function() {
-          window.liercd = new Liercd("/api");
+        auth.auth(function(res) {
+          window.liercd = new Liercd("/api", res);
         });
       });
     </script>
