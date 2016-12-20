@@ -1,0 +1,28 @@
+#!/usr/bin/env perl
+
+use AnyEvent::Filesys::Notify;
+use Getopt::Long;
+
+$0 = "gward";
+
+my (@dirs, @ignore);
+GetOptions(
+  "dir=s"    => \@dirs,
+  "ignore=s" => \@ignore,
+  "exec=s"   => \(my $exec),
+);
+
+die "--exec option is required\n" unless $exec;
+
+@dirs   = "."           unless @dirs;
+@ignore = qw(.swp .tmp) unless @ignore;
+
+my $skip = sprintf "(?:%s)", join "|", map quotemeta, @ignore;
+
+my $notify = AnyEvent::Filesys::Notify->new(
+  dirs   => \@dirs,
+  filter => sub { shift !~ /$skip/ },
+  cb     => sub { system $exec     },
+);
+
+AE::cv->recv;

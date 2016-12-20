@@ -18,3 +18,7 @@ static/site.map.js static/site.js: $(jquery) $(vendor) $(site)
 static/site.css: $(css)
 	cat $(css) > /tmp/site.css
 	install /tmp/site.css static/site.css
+
+.PHONY: watch
+watch:
+	bin/watch --exec make --dir static --ignore .gz --ignore .map.js
