@@ -83,10 +83,10 @@ var Liercd = function(url) {
       var html = Render(message);
       if (html) {
         var panel = liercd.get_panel(channel, conn);
-        var highlight = !liercd.is_focused(panel) && liercd.is_highlight(conn, message);
+        var highlight = liercd.is_highlight(conn, message);
         panel.append(html, highlight);
 
-        if ( highlight )
+        if ( !liercd.is_focused(panel) && highlight )
           liercd.elem.audio.play();
       }
     });
@@ -138,9 +138,9 @@ var Liercd = function(url) {
   };
 
   liercd.is_highlight = function(conn, message) {
-    if (message.Prefix.Nick == conn.nick)
-      return false;
     var nick = liercd.connections[conn].nick;
+    if (message.Prefix.Name == nick)
+      return false;
     return message.Command == "PRIVMSG" && message.Params[1].indexOf(nick) != -1;
   };
 
