@@ -1006,6 +1006,7 @@ ul.channel-controls li a:hover {
   right: 0px;
   padding: 10px;
   cursor: default;
+  z-index: 999;
 }
 
 .upload-popup input {
