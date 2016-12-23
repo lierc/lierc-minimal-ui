@@ -1045,6 +1045,7 @@ ul.channel-controls li a:hover {
 .emoji-popup {
   height: 0px;
   visibility: hidden;
+  z-index: 999;
 }
 
 .react.open .emoji-popup,
