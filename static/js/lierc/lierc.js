@@ -638,6 +638,10 @@ var Liercd = function(url, user) {
     }
 
     var panel = liercd.panels[id];
+
+    if (! panel)
+      return;
+
     liercd.elem.panel.html(panel.elem.list);
     liercd.elem.input.html(panel.elem.input);
     liercd.elem.topic.html(panel.elem.topic);
@@ -701,6 +705,12 @@ var Liercd = function(url, user) {
       var form = overlay.find('form');
       form.find('input[name=Nick]').val(liercd.user.user);
       form.find('input[name=User]').val(liercd.user.user);
+      if (Object.keys(liercd.connections).length == 0) {
+        form.find('input[name=Host]').val("irc.freenode.com");
+        form.find('input[name=Port]').val("6697");
+        form.find('input[name=Ssl]').get(0).checked ="checked";
+        form.find('input[name=Channels]').val("#liercd");
+      }
     }
 
     $('body').append(overlay);

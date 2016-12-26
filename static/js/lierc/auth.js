@@ -26,16 +26,21 @@ var Auth = function(baseurl) {
       var form = $(e.target);
       var action = form.find('input[type=submit]').attr('name');
       var email = form.find('input[name=email]').val();
+      var user = form.find('input[name=username]').val();
       var pass = form.find('input[type=password]').val();
 
       $.ajax({
         url: baseurl + "/" + action,
         type: "POST",
-        data: { email: email, pass: pass },
+        data: {
+          email: email,
+          pass: pass,
+          username: user
+        },
         dataType: "json",
         success: function(res) {
           overlay.remove();
-          complete();
+          complete(res);
         },
         error: function(res) {
           alert("Sorry, that didn't work...");
