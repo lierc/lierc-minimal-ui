@@ -1,2 +1,4 @@
 static/site.css
 static/site.js
+*.gz
+*.br
