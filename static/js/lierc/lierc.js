@@ -956,5 +956,15 @@ var Liercd = function(url, user) {
     });
   });
 
+  liercd.focus_input = function() {
+    if (("ontouchstart" in document.documentElement))
+      return;
+    if (!liercd.focused)
+      return;
+    if ($('.overlay').length)
+      return;
+    liercd.focused.elem.input.focus();
+  };
+
   var events = new UIEvents(liercd);
 };

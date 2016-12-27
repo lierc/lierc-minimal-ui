@@ -31,4 +31,4 @@ static/site.css: $(css)
 
 .PHONY: watch
 watch:
-	bin/watch --exec make --dir . --dir static --ignore .gz --ignore .br --ignore .map.js
+	bin/watch --exec make --dir . --ignore .gz --ignore .br --ignore .map.js

@@ -72,7 +72,7 @@ var UIEvents = function(liercd) {
           || e.which == 191
         )
       ) {
-        liercd.focused.elem.input.focus();
+        liercd.focus_input();
       }
     }
   });
@@ -93,9 +93,7 @@ var UIEvents = function(liercd) {
     mods['cmd'] = false;
 
     liercd.window_focused = true;
-
-    if (liercd.focused && !$('.overlay').length)
-      liercd.focused.elem.input.focus();
+    liercd.focus_input();
   });
 
   document.addEventListener("keyup", function(e) {
@@ -224,7 +222,7 @@ var UIEvents = function(liercd) {
     var target = $(e.target);
 
     if (target.is('li[data-chars]')) {
-      liercd.focused.elem.input.focus();
+      liercd.focus_input();
       document.execCommand("insertText", false, target.attr('data-chars'));
 
       liercd.elem.emoji.removeClass("open");
@@ -336,7 +334,7 @@ var UIEvents = function(liercd) {
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
-      liercd.focused.elem.input.focus();
+      liercd.focus_input();
       document.execCommand("insertText", false, res.data.link);
       $('#upload').removeClass('open');
       image.val(null);
@@ -436,7 +434,7 @@ var UIEvents = function(liercd) {
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
         e.preventDefault();
-        liercd.focused.elem.input.focus();
+        liercd.focus_input();
         var blob = items[i].getAsFile();
         var fd = new FormData();
         fd.append("image", blob);
@@ -445,7 +443,7 @@ var UIEvents = function(liercd) {
         xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
         xhr.onload = function() {
           var res = JSON.parse(xhr.responseText);
-          liercd.focused.elem.input.focus();
+          liercd.focus_input();
           document.execCommand("insertText", false, res.data.link);
         };
         xhr.send(fd);
@@ -453,7 +451,7 @@ var UIEvents = function(liercd) {
       }
       else if (items[i].type && items[i].type == "text/plain") {
         e.preventDefault();
-        liercd.focused.elem.input.focus();
+        liercd.focus_input();
         var text = clipboard.getData("Text").replace(/[\r\n]+/g, " ");
         document.execCommand("insertText", false, text);
         return;
