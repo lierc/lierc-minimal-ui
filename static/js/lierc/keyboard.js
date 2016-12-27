@@ -33,7 +33,7 @@ var Keyboard = function(element) {
       }
     }
 
-    if (e.which == TAB) {
+    if (e.which == TAB && !mods['ctrl']) {
       e.preventDefault();
       keyboard.completion.complete();
       return;
