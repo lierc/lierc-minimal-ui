@@ -169,6 +169,8 @@ var Render = function(message, force_raw) {
     var classes = ["chat", type, message.Command.toLowerCase()];
     if (message.Self)
       classes.push("self");
+    if (message.Highlight)
+      classes.push("highlight")
     return $('<li/>', {
       'class': classes.join(" "),
       'data-message-id': message.Id,

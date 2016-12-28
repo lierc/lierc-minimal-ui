@@ -75,6 +75,9 @@ a:hover {
   background: rgba(49, 168, 255, 0.10);
 }
 
+#panel ol li.chat.highlight {
+  background: rgba(49, 168, 255, 0.2);
+}
 
 #panel ol li.filler {
   padding: 0;

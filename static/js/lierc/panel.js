@@ -284,7 +284,7 @@ var Panel = function(name, id, connection) {
     return Math.abs(diff) <= 1;
   };
 
-  panel.append = function(el, highlight) {
+  panel.append = function(el) {
     var id = el.attr('data-message-id');
     if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
       return;
@@ -318,7 +318,7 @@ var Panel = function(name, id, connection) {
     else {
       if (el.hasClass("message")) {
         panel.unread = true;
-        if (highlight)
+        if (el.hasClass("highlight"))
           panel.highlighted = true;
         panel.update_nav();
       }

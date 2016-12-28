@@ -73,22 +73,22 @@ var Liercd = function(url, user) {
     connection.on("private:msg", function(conn, nick, message) {
       var panel = liercd.add_panel(nick, conn, false);
       var connection = liercd.connections[conn];
-      var highlight = !liercd.is_focused(panel) && message.Prefix.Name != connection.nick;
 
-      panel.append(Render(message), highlight);
+      message.Highlight = !liercd.is_focused(panel) && message.Prefix.Name != connection.nick;
+      panel.append(Render(message));
 
-      if ( highlight )
+      if ( message.Highlight )
         liercd.elem.audio.play();
     });
 
     connection.on("channel:msg", function(conn, channel, message) {
+      message.Highlight = liercd.is_highlight(conn, message);
       var html = Render(message);
       if (html) {
         var panel = liercd.get_panel(channel, conn);
-        var highlight = liercd.is_highlight(conn, message);
-        panel.append(html, highlight);
+        panel.append(html);
 
-        if ( !liercd.is_focused(panel) && highlight )
+        if ( !liercd.is_focused(panel) && message.Highlight )
           liercd.elem.audio.play();
       }
     });
@@ -476,6 +476,7 @@ var Liercd = function(url, user) {
           var message = e.Message;
           message.Id = e.MessageId;
           message.Self = e.Self;
+          message.Highlight = liercd.is_highlight(pannel.connection, message)
 
           // done if message is older than stop
           if (message.Id <= stop)
@@ -549,8 +550,10 @@ var Liercd = function(url, user) {
           message.Self = e.Self;
           if (liercd.is_reaction(message))
             reactions.push(message);
-          else
+          else {
+            message.Highlight = liercd.is_highlight(panel.connection, message);
             list.push(Render(message));
+          }
         });
 
       panel.prepend(block.append(list.reverse()).children());
