@@ -80,6 +80,11 @@ var Panel = function(name, id, connection) {
     else
       panel.elem.body.removeClass('hide-events');
 
+    if (panel.collapse_embeds)
+      panel.elem.body.addClass('hide-embeds');
+    else
+      panel.elem.body.removeClass('hide-embeds');
+
     if (panel.show_nicklist)
       panel.elem.body.addClass('show-nicklist');
     else
@@ -593,37 +598,45 @@ var Panel = function(name, id, connection) {
   panel.set_collapse_embeds = function(bool) {
     var scrolled = panel.is_scrolled();
 
-    if (bool) {
-      panel.elem.body.addClass('hide-embeds');
-      panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
-    }
-    else {
-      panel.elem.body.removeClass('hide-embeds');
-      panel.elem.list.find(".embed-toggle.hidden").trigger("click");
+    if (panel.focused) {
+      if (bool) {
+        panel.elem.body.addClass('hide-embeds');
+        panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
+      }
+      else {
+        panel.elem.body.removeClass('hide-embeds');
+        panel.elem.list.find(".embed-toggle.hidden").trigger("click");
+      }
     }
 
     panel.collapse_embeds = bool;
 
-    if (scrolled)
-      panel.scroll();
-    if (bool)
-      panel.resize_filler();
+    if (panel.focused) {
+      if (scrolled)
+        panel.scroll();
+      if (bool)
+        panel.resize_filler();
+    }
   };
 
   panel.set_ignore_events = function(bool) {
     var scrolled = panel.is_scrolled();
 
-    if (bool)
-      panel.elem.body.addClass('hide-events');
-    else
-      panel.elem.body.removeClass('hide-events');
+    if (panel.focused) {
+      if (bool)
+        panel.elem.body.addClass('hide-events');
+      else
+        panel.elem.body.removeClass('hide-events');
+    }
 
     panel.ignore_events = bool;
 
-    if (scrolled)
-      panel.scroll();
-    if (bool)
-      panel.resize_filler();
+    if (panel.focused) {
+      if (scrolled)
+        panel.scroll();
+      if (bool)
+        panel.resize_filler();
+    }
   };
 
   panel.set_connected = function(bool, message) {
