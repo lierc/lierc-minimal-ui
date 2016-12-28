@@ -898,6 +898,7 @@ ul.channel-controls li a {
   padding: 5px 15px;
 }
 
+#toggle-hideembeds .checkbox:before,
 #toggle-hideevents .checkbox:before {
   content: "\f096";
   font-family: FontAwesome;
@@ -907,6 +908,7 @@ ul.channel-controls li a {
   padding-right: 4px;
 }
 
+.hide-embeds #toggle-hideembeds .checkbox:before,
 .hide-events #toggle-hideevents .checkbox:before {
   content: "\f046";
 }

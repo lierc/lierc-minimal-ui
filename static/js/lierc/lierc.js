@@ -329,6 +329,7 @@ var Liercd = function(url, user) {
     if (panel.type == "channel")
       liercd.ignore_events_pref(panel);
 
+    liercd.collapse_embeds_pref(panel);
     panel.elem.nav.on('click', function(e) {
       e.preventDefault();
 
@@ -868,6 +869,13 @@ var Liercd = function(url, user) {
     liercd.get_pref(panel.id + "-ignore-events", function(value) {
       if (value !== undefined)
         panel.set_ignore_events(value);
+    });
+  };
+
+  liercd.collapse_embeds_pref = function(panel) {
+    liercd.get_pref(panel.id + "-collapse-embeds", function(value) {
+      if (value !== undefined)
+        panel.set_collapse_embeds(value);
     });
   };
 

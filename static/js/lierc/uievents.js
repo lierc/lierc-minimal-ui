@@ -211,6 +211,12 @@ var UIEvents = function(liercd) {
     liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
   });
 
+  $('#toggle-hideembeds a').on('click touchstart', function(e) {
+    e.preventDefault();
+    liercd.focused.set_collapse_embeds(!liercd.focused.collapse_embeds);
+    liercd.update_pref(liercd.focused.id + "-collapse-embeds", liercd.focused.collapse_embeds);
+  });
+
   $('#toggle-nicks').on('click touchstart', function(e) {
     e.preventDefault();
     liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
