@@ -228,7 +228,7 @@ var UIEvents = function(liercd) {
     var target = $(e.target);
 
     if (target.is('li[data-chars]')) {
-      liercd.focus_input();
+      liercd.focus_input(true);
       document.execCommand("insertText", false, target.attr('data-chars'));
 
       liercd.elem.emoji.removeClass("open");
@@ -449,7 +449,7 @@ var UIEvents = function(liercd) {
         xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
         xhr.onload = function() {
           var res = JSON.parse(xhr.responseText);
-          liercd.focus_input();
+          liercd.focus_input(true);
           document.execCommand("insertText", false, res.data.link);
         };
         xhr.send(fd);

@@ -968,7 +968,12 @@ var Liercd = function(url, user) {
     });
   });
 
-  liercd.focus_input = function() {
+  liercd.focus_input = function(force) {
+    if (force) {
+      liercd.focused.elem.input.focus();
+      return;
+    }
+
     if (("ontouchstart" in document.documentElement))
       return;
     if (!liercd.focused)
