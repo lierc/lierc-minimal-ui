@@ -92,6 +92,10 @@ a:hover {
   padding-left: 20px;
 }
 
+#panel ol li.event time {
+  float: right;
+}
+
 #panel ol li.notice span.channel {
   color: #02c702;
   font-weight: bold;
@@ -194,12 +198,14 @@ a:hover {
 }
 */
 
+#panel ol li.event time,
 #panel ol li.message time {
   color: #999;
   margin-left: 5px;
   font-size: 11px;
   line-height: 11px;
   padding-top: 5px;
+  font-style: normal;
 }
 
 #panel ol li.message time.hidden {

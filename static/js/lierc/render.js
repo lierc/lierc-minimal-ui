@@ -7,7 +7,8 @@ var Render = function(message, force_raw) {
     message.Prefix.Name = nick;
     return make("event", message).append(
       make_text(old + " is now known as "),
-      make_nick(message)
+      make_nick(message),
+      timestamp(message)
     );
 
   case "PART":
@@ -16,7 +17,9 @@ var Render = function(message, force_raw) {
     var msg = message.Params[1];
     return make("event", message).append(
       make_nick(message),
-      ' has left' + (msg ? " ("+msg+")" : ""));
+      make_text(' has left' + (msg ? " ("+msg+")" : "")),
+      timestamp(message)
+    );
 
   case "MODE":
     if (message.Prefix.Nick == message.Params[0]) {
@@ -25,8 +28,10 @@ var Render = function(message, force_raw) {
     else {
       var channel = message.Params[0];
       return make("event", message).append(
-        message.Params.slice(1).join(" "),
-        " by " + message.Prefix.Name);
+        make_text(message.Params.slice(1).join(" ")),
+        make_text(" by " + message.Prefix.Name),
+        timestamp(message)
+      );
     }
 
   case "QUIT":
@@ -34,14 +39,17 @@ var Render = function(message, force_raw) {
     var msg = message.Params[0];
     return make("event", message).append(
       make_nick(message),
-      ' has quit' + (msg ? " ("+msg+")" : ""));
+      make_text(' has quit' + (msg ? " ("+msg+")" : "")),
+      timestamp(message)
+    );
 
   case "JOIN":
     var name = message.Params[0];
     var nick = message.Prefix.Name;
     return make("event", message).append(
       make_nick(message),
-      make_text(' has joined the channel')
+      make_text(' has joined the channel'),
+      timestamp(message)
     );
 
   case "332":
@@ -68,7 +76,7 @@ var Render = function(message, force_raw) {
     );
 
     linkify(span.get(0));
-    return make("event", message).append(span);
+    return make("event", message).append(span, timestamp(message));
 
   case "PRIVMSG":
     var nick = message.Prefix.Name;
