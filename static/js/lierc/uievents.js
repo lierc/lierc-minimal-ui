@@ -24,7 +24,7 @@ var UIEvents = function(liercd) {
       mods['shift'] = true;
     }
 
-    if (e.which == 91) {
+    if (e.which == 91 || e.which == 93 || e.which == 224 ) {
       mods['cmd'] = true;
     }
 
@@ -59,6 +59,16 @@ var UIEvents = function(liercd) {
       liercd.show_switcher();
     }
 
+    var c = String.fromCharCode(e.which);
+
+    if (c.match(/^[1-9]$/) && (mods['cmd'] || mods['meta'])) {
+      var panels = liercd.elem.nav.find('#channels li,#privates li');
+      if (panels[c - 1]) {
+        liercd.focus_panel($(panels[c - 1]).attr("data-panel-id"));
+        return;
+      }
+    }
+
     if (liercd.focused) {
       if (liercd.focused.keyboard.focused) {
         liercd.focused.keyboard.keydown(e, mods);
@@ -67,10 +77,7 @@ var UIEvents = function(liercd) {
         e.target.nodeName != "INPUT"
         && e.target.nodeName != "TEXTAREA"
         && ! mods['meta'] && ! mods['ctrl'] && ! mods['cmd']
-        && (
-          String.fromCharCode(e.which).match(/[a-zA-Z0-9\/]/)
-          || e.which == 191
-        )
+        && ( c.match(/[a-zA-Z0-9\/]/) || e.which == 191 )
       ) {
         liercd.focus_input();
       }
@@ -340,7 +347,7 @@ var UIEvents = function(liercd) {
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
-      liercd.focus_input();
+      liercd.focus_input(true);
       document.execCommand("insertText", false, res.data.link);
       $('#upload').removeClass('open');
       image.val(null);

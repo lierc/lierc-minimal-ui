@@ -78,7 +78,7 @@ var Liercd = function(url, user) {
       message.Highlight = from && liercd.is_highlight(panel, message)
       panel.append(Render(message));
 
-      if ( from && !liercd.is_focused(panel) )
+      if (from && (!liercd.is_focused(panel) || !panel.is_scrolled()))
         liercd.elem.audio.play();
     });
 
@@ -89,7 +89,7 @@ var Liercd = function(url, user) {
       if (html) {
         panel.append(html);
 
-        if ( !liercd.is_focused(panel) && message.Highlight )
+        if (message.Highlight && (!liercd.is_focused(panel) || !panel.is_scrolled()))
           liercd.elem.audio.play();
       }
     });
