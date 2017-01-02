@@ -120,42 +120,6 @@ var UIEvents = function(liercd) {
     clearTimeout(hide_timer);
   };
 
-  /*
-  $(document).on('mouseleave', '.message-nick[data-nick]', function(e) {
-    clear_timers();
-    hide_timer = setTimeout(function(){ $('.nick-popup').remove() }, 500);
-  });
-
-  $(document).on('mouseenter', '.message-nick[data-nick]', function(e) {
-    var container = $(this);
-
-    var nick   = container.attr('data-nick');
-    var user   = container.attr('data-user');
-    var server = container.attr('data-server');
-
-    clear_timers();
-
-    show_timer = setTimeout(function() {
-      $('.nick-popup').remove();
-      var popup = $('<div/>', {'class':'nick-popup'});
-      popup.append($('<h3/>').text(nick));
-
-      var text = "";
-
-      if (user) text += user;
-      if (server) text += '@' + server;
-
-      if (text) {
-        var prefix = $('<p/>', {'class':'nick-prefix'});
-        prefix.text(text);
-        popup.append(prefix);
-      }
-
-      container.append(popup);
-    }, 500);
-  });
-  */
-
   $(document).on('click', '[data-nick]', function(e) {
     e.preventDefault();
     var nick = $(this).attr('data-nick');
