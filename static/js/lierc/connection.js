@@ -241,7 +241,9 @@ var Connection = function(config) {
       var channel = conn.channel(name);
 
       if (channel) {
-        channel.topic.value = topic;
+        channel.topic.value = text;
+        channel.topic.time = parseInt((new Date()).getTime() / 1000);
+        channel.topic.user = nick;
         fire("channel:msg", conn.id, name, message);
         fire("channel:topic", conn.id, name, channel.topic);
       }
