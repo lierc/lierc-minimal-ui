@@ -12,12 +12,12 @@ var Panel = function(name, id, connection) {
   panel.focused = false;
   panel.backlog_empty = false;
   panel.reactions = [];
-  panel.path = "/#/" + connection.id + "/" + encodeURIComponent(name);
   panel.ignore_events = false;
   panel.collapse_embeds = false;
   panel.show_nicklist = false;
   panel.first_focus = true;
   panel.last_seen = null;
+  panel.path = window.location.pathname + "#/" + connection.id + "/" + encodeURIComponent(name);
 
   panel.mode = "";
   panel.network = connection.config.Host;
