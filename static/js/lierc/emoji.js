@@ -1,39 +1,40 @@
-var Emoji = function() {
-  var emoji = this;
-  var list = $('#emoji ul');
-
-  emoji.filter = function(list, text) {
-    var items = list.find('li');
-
-    if (!text) {
-      items.show();
-      return;
-    }
-
-    var len = items.length;
-    var t = text.toLowerCase();
-    var show = [];
-    var hide = [];
-
-    for (var i=0; i < len; i++) {
-      if (items[i].getAttribute('data-keywords').indexOf(t) != -1)
-        show.push(items[i]);
-      else if (items[i].getAttribute('data-name').indexOf(t) != -1)
-        show.push(items[i]);
-      else
-        hide.push(items[i]);
-    }
-
-    $(show).show();
-    $(hide).hide();
-  };
+var Emoji = {
+  names: {},
+  data:  [],
+  regex: new RegExp(),
+  list:  $('#emoji ul')
 };
 
-Emoji.names = {}
-Emoji.data = [];
-Emoji.regex = new RegExp();
+Emoji.filter = function(list, text) {
+  var items = list.find('li');
 
-(function() {
+  if (!text) {
+    items.show();
+    return;
+  }
+
+  var len = items.length;
+  var t = text.toLowerCase();
+  var show = [];
+  var hide = [];
+
+  for (var i=0; i < len; i++) {
+    if (items[i].getAttribute('data-keywords').indexOf(t) != -1) {
+      show.push(items[i]);
+    }
+    else if (items[i].getAttribute('data-name').indexOf(t) != -1) {
+      show.push(items[i]);
+    }
+    else {
+      hide.push(items[i]);
+    }
+  }
+
+  $(show).show();
+  $(hide).hide();
+};
+
+Emoji.load = function() {
   $.ajax({
     url: "/static/emoji-data.json",
     type: "GET",
@@ -74,7 +75,6 @@ Emoji.regex = new RegExp();
       });
       Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "g");
 
-      var list = $('#emoji ul');
       for (var i=0; i < Emoji.data.length; i++) {
         var li = $('<li/>', {
           'data-chars': Emoji.data[i]['chars'],
@@ -82,8 +82,10 @@ Emoji.regex = new RegExp();
           'data-name': Emoji.data[i]['name'].toLowerCase(),
           title: Emoji.data[i]['name']
         }).text(Emoji.data[i]['chars']);
-        list.append(li);
+        Emoji.list.append(li);
       }
     }
   });
-})();
+};
+
+Emoji.load();

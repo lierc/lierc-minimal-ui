@@ -14,7 +14,6 @@ var Liercd = function(url, user) {
   liercd.focused = null;
   liercd.last_panel_id = null;
   liercd.window_focused = true;
-  liercd.emoji = new Emoji();
   liercd.default_panel = null;
   liercd.default_focused = false;
   liercd.initial_prefs = {};

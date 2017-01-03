@@ -204,14 +204,14 @@ var UIEvents = function(liercd) {
 
       liercd.elem.emoji.removeClass("open");
       $('.emoji-search input').val('');
-      liercd.emoji.filter(liercd.elem.emoji, '');
+      Emoji.filter(liercd.elem.emoji, '');
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
       if (!liercd.touchstart) {
         if (target.hasClass('open')) {
           $('.emoji-search input').val('');
-          liercd.emoji.filter(liercd.elem.emoji, '');
+          Emoji.filter(liercd.elem.emoji, '');
           $('.emoji-search input').focus();
         }
       }
@@ -451,7 +451,7 @@ var UIEvents = function(liercd) {
 
   $(document).on('input', '.emoji-search input', function(e) {
     var list = $(e.target).parents('.emoji-popup').find('ul');
-    liercd.emoji.filter(list, $(e.target).val());
+    Emoji.filter(list, $(e.target).val());
   });
 
   $('#panel').on('mouseenter', 'li.message', function(e) {
