@@ -17,7 +17,8 @@ var Liercd = function(url, user) {
   liercd.emoji = new Emoji();
   liercd.default_panel = null;
   liercd.default_focused = false;
-  liercd.initial_prefs = {}
+  liercd.initial_prefs = {};
+  liercd.touchstart = "ontouchstart" in document.documentElement;
 
   liercd.elem = {
     panel: $('#panel'),
@@ -39,7 +40,7 @@ var Liercd = function(url, user) {
 
   $('.sortable').each(function() {
     Sortable.create(this, {
-      delay: "ontouchstart" in document.documentElement ? 250 : 0,
+      delay: liercd.touchstart ? 250 : 0,
       onSort: function(e) {
         var order = $(this.el).find('li').toArray().map(function(li) {
           return $(li).attr('data-panel-id');
@@ -801,6 +802,11 @@ var Liercd = function(url, user) {
         if (res.status == 200)
           return;
 
+        if (res.status == 401) {
+          window.location.reload();
+          return;
+        }
+
         console.log(res.status);
 
         // ping failed, force a reconnect of stream...
@@ -974,7 +980,7 @@ var Liercd = function(url, user) {
       return;
     }
 
-    if (("ontouchstart" in document.documentElement))
+    if (liercd.touchstart)
       return;
     if (!liercd.focused)
       return;

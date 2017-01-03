@@ -208,7 +208,7 @@ var UIEvents = function(liercd) {
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
-      if (!("ontouchstart" in document.documentElement)) {
+      if (!liercd.touchstart) {
         if (target.hasClass('open')) {
           $('.emoji-search input').val('');
           liercd.emoji.filter(liercd.elem.emoji, '');
