@@ -2,16 +2,6 @@ var Emoji = function() {
   var emoji = this;
   var list = $('#emoji ul');
 
-  for (var i=0; i < Emoji.data.length; i++) {
-    var li = $('<li/>', {
-      'data-chars': Emoji.data[i]['chars'],
-      'data-keywords': Emoji.data[i]['keywords'],
-      'data-name': Emoji.data[i]['name'],
-      title: Emoji.data[i]['name']
-    }).text(Emoji.data[i]['chars']);
-    list.append(li);
-  }
-
   emoji.filter = function(list, text) {
     var items = list.find('li');
 
@@ -26,9 +16,9 @@ var Emoji = function() {
     var hide = [];
 
     for (var i=0; i < len; i++) {
-      if (items[i].getAttribute('data-keywords').indexOf(t) != -1)
+      if (items[i].getAttribute('data-keywords').toLowerCase().indexOf(t) != -1)
         show.push(items[i]);
-      else if (items[i].getAttribute('data-name').indexOf(t) != -1)
+      else if (items[i].getAttribute('data-name').toLowerCase().indexOf(t) != -1)
         show.push(items[i]);
       else
         hide.push(items[i]);
@@ -83,6 +73,17 @@ Emoji.regex = new RegExp();
           return 1;
       });
       Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "g");
+
+      var list = $('#emoji ul');
+      for (var i=0; i < Emoji.data.length; i++) {
+        var li = $('<li/>', {
+          'data-chars': Emoji.data[i]['chars'],
+          'data-keywords': Emoji.data[i]['keywords'],
+          'data-name': Emoji.data[i]['name'],
+          title: Emoji.data[i]['name']
+        }).text(Emoji.data[i]['chars']);
+        list.append(li);
+      }
     }
   });
 })();
