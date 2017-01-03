@@ -1,4 +1,5 @@
-var Commands = function() {
+var Commands = function(liercd) {
+  var liercd = liercd;
   var commands = this;
   var handlers = {};
 

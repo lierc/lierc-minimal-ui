@@ -9,7 +9,7 @@ var UIEvents = function(liercd) {
     cmd: false
   };
 
-  var commands = new Commands();
+  var commands = new Commands(liercd);
 
   document.addEventListener("keydown", function(e) {
     if (e.which == 17) {
