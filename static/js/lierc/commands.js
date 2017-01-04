@@ -48,6 +48,11 @@ var Commands = function(liercd) {
     panel.elem.list.html('');
   });
 
+  add_command("bustin", ["bust"], function(panel) {
+    var url = ":https://www.youtube.com/watch?v=0tdyU_gW6WE";
+    return ["PRIVMSG", panel.name, url].join(" ");
+  });
+
   add_command("part", ["close","wc"], function(panel, line) {
     if (panel.type == "status") {
       throw "Can not close status panel.";
