@@ -31,6 +31,18 @@ var Commands = function(liercd) {
     return parts.join(" ");
   });
 
+  add_command("last", ["lastlog", "l"], function(panel, line) {
+    if (panel.type == "status") {
+      throw "Can not search on a status panel.";
+    }
+
+    if (!line) {
+      throw "Search text required";
+    }
+
+    liercd.search_panel(panel, line);
+  });
+
   add_command("part", ["close","wc"], function(panel, line) {
     if (panel.type == "status") {
       throw "Can not close status panel.";

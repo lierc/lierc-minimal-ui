@@ -963,6 +963,30 @@ var Liercd = function(url, user) {
     });
   };
 
+  liercd.search_panel = function(panel, text) {
+    var url = liercd.baseurl + "/connection/" + panel.connection
+      + "/channel/" + encodeURIComponent(panel.name) + "/last";
+
+    $.ajax({
+      url: url,
+      dataType: "json",
+      data: {
+        query: text,
+        limit: 10
+      },
+      type: "GET",
+      success: function(messages) {
+        for (var i=messages.length - 1; i >= 0; i--) {
+          var msg = messages[i].Message;
+          msg.Highlight = true;
+          msg.Id = messages[i].MessageId;
+          msg.Self = messages[i].Self;
+          panel.append(Render(msg));
+        }
+      }
+    });
+  };
+
   liercd.get_prefs(function(prefs) {
     liercd.initial_prefs = prefs;
     liercd.sorting = liercd.initial_prefs['sorting'] || [];
