@@ -206,10 +206,15 @@ var Panel = function(name, id, connection) {
   };
 
   panel.embed = function(a, embed, manual) {
+    var scrolled = panel.is_scrolled();
+
     var toggle = document.createElement('SPAN');
     toggle.setAttribute("class", "embed-toggle");
     toggle.setAttribute("aria-hidden", "true");
     a.parentNode.insertBefore(toggle, a.nextSibling);
+
+    if (scrolled)
+      panel.scroll();
 
     var li = $(a).parents('li');
     var wrap = $('<div/>', {
@@ -431,6 +436,7 @@ var Panel = function(name, id, connection) {
               var s = panel.scroller;
               var wrap = document.createElement('DIV');
               var a = link.cloneNode(false);
+              var scrolled = panel.is_scrolled();
 
               var toggle = document.createElement('SPAN');
               if (panel.collapse_embeds) {
@@ -443,6 +449,8 @@ var Panel = function(name, id, connection) {
               }
               toggle.setAttribute("aria-hidden", "true");
               link.parentNode.insertBefore(toggle, link.nextSibling);
+              if (scrolled)
+                panel.scroll();
 
               toggle.addEventListener("click", function(e) {
                 e.preventDefault();
@@ -482,6 +490,7 @@ var Panel = function(name, id, connection) {
           return function(e) {
             var s = panel.scroller;
             var wrap = document.createElement('DIV');
+            var scrolled = panel.is_scrolled();
 
             var toggle = document.createElement('SPAN');
             if (panel.collapse_embeds) {
@@ -494,6 +503,8 @@ var Panel = function(name, id, connection) {
             }
             toggle.setAttribute("aria-hidden", "true");
             link.parentNode.insertBefore(toggle, link.nextSibling);
+            if (scrolled)
+              panel.scroll();
 
             toggle.addEventListener("click", function(e) {
               e.preventDefault();
