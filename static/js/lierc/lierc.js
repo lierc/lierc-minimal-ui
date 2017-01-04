@@ -987,8 +987,6 @@ var Liercd = function(url, user) {
         for (var i=messages.length - 1; i >= 0; i--) {
           var msg = messages[i].Message;
           msg.Search = true;
-          msg.Id = messages[i].MessageId;
-          msg.Self = messages[i].Self;
           panel.append(Render(msg));
         }
       }
