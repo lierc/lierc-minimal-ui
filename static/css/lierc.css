@@ -79,6 +79,10 @@ a:hover {
   background: rgba(49, 168, 255, 0.2);
 }
 
+#panel ol li.chat.search {
+  background: rgba(255, 239, 49, 0.2);
+}
+
 #panel ol li.filler {
   padding: 0;
   margin: 0;
@@ -176,6 +180,27 @@ a:hover {
   display: block;
   position: absolute;
   content: "last read";
+  text-align: center;
+  padding: 0 10px;
+  top: -8px;
+  right: 0px;
+  background: #fff;
+  color: #ffa130;
+  font-size: 10px;
+  font-style: italic;
+  font-weight: bold;
+}
+
+#panel ol .search-start {
+  border-top: 1px dashed #ffa130 !important;
+  position: relative;
+  z-index: 9;
+}
+
+#panel ol .search-start:before {
+  display: block;
+  position: absolute;
+  content: "lastlog";
   text-align: center;
   padding: 0 10px;
   top: -8px;

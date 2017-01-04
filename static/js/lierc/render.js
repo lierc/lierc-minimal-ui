@@ -179,6 +179,8 @@ var Render = function(message, force_raw) {
       classes.push("self");
     if (message.Highlight)
       classes.push("highlight")
+    if (message.Search)
+      classes.push("search")
     return $('<li/>', {
       'class': classes.join(" "),
       'data-message-id': message.Id,

@@ -976,9 +976,17 @@ var Liercd = function(url, user) {
       },
       type: "GET",
       success: function(messages) {
+        if (messages.length > 0) {
+          var line = $('<div/>', {'class': 'search-start'});
+          var scrolled = panel.is_scrolled();
+          panel.elem.list.append(line);
+          if (scrolled)
+            panel.scroll();
+        }
+
         for (var i=messages.length - 1; i >= 0; i--) {
           var msg = messages[i].Message;
-          msg.Highlight = true;
+          msg.Search = true;
           msg.Id = messages[i].MessageId;
           msg.Self = messages[i].Self;
           panel.append(Render(msg));
