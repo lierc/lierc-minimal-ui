@@ -43,6 +43,11 @@ var Commands = function(liercd) {
     liercd.search_panel(panel, line);
   });
 
+  add_command("clear", [], function(panel) {
+    panel.backlog_empty = true;
+    panel.elem.list.html('');
+  });
+
   add_command("part", ["close","wc"], function(panel, line) {
     if (panel.type == "status") {
       throw "Can not close status panel.";
