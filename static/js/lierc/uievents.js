@@ -287,7 +287,45 @@ var UIEvents = function(liercd) {
     sendlines(send);
   });
 
-  $('.upload-popup form').on('submit', function(e) {
+  $('#gist-upload-form').on('submit', function(e) {
+    e.preventDefault();
+    var form = $(this);
+    var submit = form.find('input[name=upload]');
+    var text = form.find('textarea');
+
+    submit.attr('disabled','disabled').attr('value', 'Uploading');
+    text.attr('disabled','disabled');
+
+    var data = {
+      'public': false,
+      'files': {
+        'files1.txt': {
+          'content': text.val()
+        }
+      }
+    };
+
+    $.ajax({
+      url: "https://api.github.com/gists",
+      type: "POST",
+      dataType: "json",
+      data: JSON.stringify(data),
+      error: function(e) {
+        alert("I'm sorry");
+        submit.get(0).removeAttribute('disabled');
+        text.get(0).removeAttribute('disabled');
+      },
+      success: function(res) {
+        submit.get(0).removeAttribute('disabled');
+        text.get(0).removeAttribute('disabled');
+        text.val('');
+        liercd.focus_input(true);
+        document.execCommand("insertText", false, res.html_url);
+      }
+    });
+  });
+
+  $('#image-upload-form').on('submit', function(e) {
     e.preventDefault();
     var form = $(this);
     var submit = form.find('input[name=upload]');

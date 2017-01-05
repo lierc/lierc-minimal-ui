@@ -79,9 +79,14 @@
           </div>
           <div id="upload">
             <div class="upload-popup">
-              <form method="POST">
+              <form method="POST" id="image-upload-form">
                 <input type="file" name="image" id="image-upload-input" />
-                <input type="submit" name="upload" value="Upload to Imgur &#xf0ee;">
+                <input type="submit" name="upload" value="Upload to Imgur &#xf03e;">
+              </form>
+              <hr>
+              <form method="POST" id="gist-upload-form">
+                <textarea placeholder="Paste text snippet" name="gist" id="gist-upload-input"></textarea>
+                <input type="submit" name="upload" value="Upload Gist &#xf15c;">
               </form>
             </div>
           </div>
