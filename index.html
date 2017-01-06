@@ -86,7 +86,16 @@
               <hr>
               <form method="POST" id="gist-upload-form">
                 <textarea placeholder="Paste text snippet" name="gist" id="gist-upload-input"></textarea>
-                <input type="submit" name="upload" value="Upload Gist &#xf15c;">
+                <select name="gist-extension" id="gist-upload-extension">
+                  <option value="txt" selected>Text</option>
+                  <option value="sql">SQL</option>
+                  <option value="pl">Perl</option>
+                  <option value="rb">Ruby</option>
+                  <option value="py">Python</option>
+                  <option value="go">Golang</option>
+                  <option value="c">C</option>
+                </select>
+                <input type="submit" name="upload" value="Create Gist &#xf15c;">
               </form>
             </div>
           </div>

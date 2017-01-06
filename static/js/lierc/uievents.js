@@ -292,18 +292,18 @@ var UIEvents = function(liercd) {
     var form = $(this);
     var submit = form.find('input[name=upload]');
     var text = form.find('textarea');
+    var ext = form.find('select');
+    var filename = 'files1.' + ext.val();
 
-    submit.attr('disabled','disabled').attr('value', 'Uploading');
+    submit.attr('disabled','disabled');
     text.attr('disabled','disabled');
 
     var data = {
       'public': false,
-      'files': {
-        'files1.txt': {
-          'content': text.val()
-        }
-      }
+      'files': {}
     };
+
+    data['files'][filename] = { 'content': text.val() };
 
     $.ajax({
       url: "https://api.github.com/gists",
@@ -321,6 +321,7 @@ var UIEvents = function(liercd) {
         text.val('');
         liercd.focus_input(true);
         document.execCommand("insertText", false, res.html_url);
+        $('#upload').removeClass('open');
       }
     });
   });
@@ -343,7 +344,7 @@ var UIEvents = function(liercd) {
     xhr.open("POST", "//api.imgur.com/3/image");
     xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
 
-    submit.attr('disabled','disabled').attr('value', 'Uploading');
+    submit.attr('disabled','disabled');
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
@@ -352,7 +353,6 @@ var UIEvents = function(liercd) {
       $('#upload').removeClass('open');
       image.val(null);
       submit.get(0).removeAttribute('disabled');
-      submit.attr('value', 'Upload');
     });
 
     xhr.send(fd);
@@ -441,12 +441,15 @@ var UIEvents = function(liercd) {
   document.addEventListener('paste', function(e) {
     if ( $('.dialog:visible').length)
       return;
+    if ( $('#gist-upload-input:focus').length )
+      return;
+
+    e.preventDefault();
 
     var clipboard = (event.clipboardData || event.originalEvent.clipboardData);
     var items = clipboard.items;
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
-        e.preventDefault();
         liercd.focus_input();
         var blob = items[i].getAsFile();
         var fd = new FormData();
@@ -462,14 +465,11 @@ var UIEvents = function(liercd) {
         xhr.send(fd);
         return;
       }
-      else if (items[i].type && items[i].type == "text/plain") {
-        e.preventDefault();
-        liercd.focus_input();
-        var text = clipboard.getData("Text").replace(/[\r\n]+/g, " ");
-        document.execCommand("insertText", false, text);
-        return;
-      }
     }
+
+    liercd.focus_input();
+    var text = clipboard.getData("Text").replace(/[\r\n]+/g, " ");
+    document.execCommand("insertText", false, text);
   });
 
   liercd.elem.panel.on('click', '[data-embed]', function(e) {

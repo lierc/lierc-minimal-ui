@@ -299,6 +299,7 @@ a:hover {
   background: #eee;
   right: 0px;
   bottom: 0px;
+  position: relative;
 }
 
 #prefix {
@@ -1005,13 +1006,13 @@ ul.channel-controls li a:hover {
 }
 
 #emoji {
-  position: relative;
   cursor: pointer;
 }
 
 #emoji.open:hover:before,
 #emoji.open:before {
   content: '\f118';
+  color: #000;
 }
 
 #emoji:hover:before {
@@ -1060,7 +1061,6 @@ ul.channel-controls li a:hover {
 
 #upload {
   cursor: pointer;
-  position: relative;
 }
 
 #upload.open .upload-popup {
@@ -1074,6 +1074,13 @@ ul.channel-controls li a:hover {
   font-size: 12px;
   font-family: monospace;
   box-sizing: border-box;
+}
+
+#gist-upload-extension {
+  font-size: 14px;
+  float: right;
+  margin-top: 10px;
+  padding: 4px;
 }
 
 #upload hr {
@@ -1095,6 +1102,7 @@ ul.channel-controls li a:hover {
   cursor: pointer;
 }
 
+#upload.open:before,
 #upload:hover:before {
   color: #000;
 }
@@ -1121,6 +1129,7 @@ ul.channel-controls li a:hover {
   border-left: 1px solid #fff;
   border-right: 1px solid #ccc;
   border-bottom: 1px solid #ccc;
+  max-width: 310px;
 }
 
 .emoji-popup {
@@ -1143,7 +1152,8 @@ ul.channel-controls li a:hover {
 .emoji-search input {
   display: block;
   font-size: 14px;
-  width: 286px;
+  width: 100%;
+  box-sizing: border-box;
   padding: 5px;
   border: 1px solid #ccc;
 }
