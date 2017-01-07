@@ -163,8 +163,8 @@ var Panel = function(name, id, connection) {
   };
 
   panel.prepend = function(els, target) {
-    var height = liercd.elem.scroll.scrollHeight;
-    var scroll = liercd.elem.scroll.scrollTop;
+    var list = panel.elem.list.get(0);
+    var height = list.getBoundingClientRect().height;
     els.css('opacity', '0');
 
     var prev;
@@ -190,8 +190,8 @@ var Panel = function(name, id, connection) {
     setTimeout(function(){
       els.css('opacity', '1')
     }, 0);
-    var diff = liercd.elem.scroll.scrollHeight - height;
-    liercd.elem.scroll.scrollTop = scroll + diff;
+    var diff = list.getBoundingClientRect().height - height;
+    liercd.elem.scroll.scrollTop += diff;
     panel.resize_filler();
 
     for (var i=0; i < els.length; i++) {
