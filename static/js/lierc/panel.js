@@ -147,6 +147,7 @@ var Panel = function(name, id, connection) {
 
     panel.elem.prefix.attr("title", title);
     panel.elem.nav.attr("title", title);
+    panel.elem.nav.attr("data-name", panel.name);
   };
 
   panel.update_seen = function() {

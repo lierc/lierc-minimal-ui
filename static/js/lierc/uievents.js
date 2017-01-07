@@ -56,7 +56,7 @@ var UIEvents = function(liercd) {
 
     if ((e.which == 75 || e.which == 84) && mods['meta']) {
       e.preventDefault();
-      liercd.show_switcher();
+      liercd.toggle_switcher();
     }
 
     var c = String.fromCharCode(e.which);
@@ -81,6 +81,27 @@ var UIEvents = function(liercd) {
       ) {
         liercd.focus_input();
       }
+    }
+  });
+
+  liercd.elem.switcher.on("keyup", function(e) {
+    var val = liercd.elem.switcher.find('input').val();
+    val = val.toLowerCase();
+    if (val) {
+      var items = liercd.elem.nav.find('li[data-name]');
+      for (var i=0; i < items.length; i++) {
+        var item = items[i];
+        var text = item.getAttribute("data-name").toLowerCase();
+        if (text.indexOf(val) == -1) {
+          $(item).removeClass("match");
+        }
+        else {
+          $(item).addClass("match");
+        }
+      }
+    }
+    else {
+      liercd.elem.nav.find('li[data-name]').addClass('match');
     }
   });
 

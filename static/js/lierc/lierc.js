@@ -34,7 +34,8 @@ var Liercd = function(url, user) {
     nicks: $('#nicks'),
     body: $(document.body),
     audio: new Audio("/static/ent_communicator1.mp3"),
-    emoji: $('#emoji')
+    emoji: $('#emoji'),
+    switcher: $('#switcher-wrap')
   };
 
   $('.sortable').each(function() {
@@ -1016,6 +1017,20 @@ var Liercd = function(url, user) {
     if ($('.overlay').length)
       return;
     liercd.focused.elem.input.focus();
+  };
+
+  liercd.toggle_switcher = function() {
+    liercd.elem.switcher.toggleClass('open');
+    liercd.elem.switcher.find('input').val('');
+    if (liercd.elem.switcher.hasClass('open')) {
+      liercd.elem.nav.addClass('filtering');
+      liercd.elem.nav.find('li').addClass('match');
+      liercd.elem.switcher.find('input').focus();
+    }
+    else {
+      liercd.elem.nav.removeClass('filtering');
+      liercd.elem.nav.find('li').removeClass('match');
+    }
   };
 
   var events = new UIEvents(liercd);
