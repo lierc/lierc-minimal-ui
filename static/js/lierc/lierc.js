@@ -1034,7 +1034,7 @@ var Liercd = function(url, user) {
       liercd.elem.switcher.addClass('open');
       liercd.elem.nav.addClass('filtering');
       liercd.elem.nav.find('li[data-name]').addClass('match');
-      liercd.elem.nav.find('li[data-name]').first().addClass('selected');
+      liercd.elem.nav.find('li[data-name]:visible').first().addClass('selected');
       liercd.elem.switcher.find('input').focus();
     }
   };

@@ -125,7 +125,7 @@ var UIEvents = function(liercd) {
     }
   });
 
-  liercd.elem.switcher.on("keyup", function(e) {
+  liercd.elem.switcher.on("input", function(e) {
     var val = liercd.elem.switcher.find('input').val();
     val = val.toLowerCase();
     if (val) {
