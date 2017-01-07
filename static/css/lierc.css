@@ -1113,6 +1113,11 @@ ul.channel-controls li a:hover {
   z-index: 999;
 }
 
+.react .emoji-popup {
+  width: 310px;
+  right: -39px;
+}
+
 .react.open .emoji-popup,
 #emoji.open .emoji-popup {
   height: auto;
