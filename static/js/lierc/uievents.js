@@ -127,9 +127,10 @@ var UIEvents = function(liercd) {
 
   liercd.elem.switcher.on("input", function(e) {
     var val = liercd.elem.switcher.find('input').val();
+    var items = liercd.elem.nav.find('li[data-name]');
+
     val = val.toLowerCase();
     if (val) {
-      var items = liercd.elem.nav.find('li[data-name]');
       for (var i=0; i < items.length; i++) {
         var item = items[i];
         var text = item.getAttribute("data-name").toLowerCase();
@@ -145,18 +146,24 @@ var UIEvents = function(liercd) {
       liercd.elem.nav.find('li[data-name]').addClass('match');
     }
 
-    var selected = liercd.elem.nav.find('li.selected');
-
-    if (selected.length && !selected.is(':visible')) {
-      selected.removeClass("selected");
-      var next = selected.next('li[data-name]:visible');
-      if (!next.length)
-        next = selected.prev('li[data-name]:visible');
-      next.addClass('selected');
-    }
-    else if (! selected.length) {
-      var next = liercd.elem.nav.find('li[data-name]:visible').first();
-      next.addClass('selected');
+    for (var i=0; i < items.length; i++) {
+      if (items[i].className.indexOf("selected") != -1) {
+        if (items[i].className.indexOf("match") != -1)
+          return;
+        $(items[i]).removeClass("selected");
+        for (var j=i; j < items.length; j++) {
+          if (items[j].className.indexOf("match") != -1) {
+            $(items[j]).addClass("selected");
+            return;
+          }
+        }
+        for (var k=i; k >= 0; k--) {
+          if (items[k].className.indexOf("match") != -1) {
+            $(items[k]).addClass("selected");
+            return;
+          }
+        }
+      }
     }
   });
 
