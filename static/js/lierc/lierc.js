@@ -1019,17 +1019,23 @@ var Liercd = function(url, user) {
     liercd.focused.elem.input.focus();
   };
 
+  liercd.hide_switcher = function() {
+    liercd.elem.switcher.removeClass('open');
+    liercd.elem.nav.removeClass('filtering');
+    liercd.elem.nav.find('li').removeClass('match').removeClass('selected');
+  };
+
   liercd.toggle_switcher = function() {
-    liercd.elem.switcher.toggleClass('open');
     liercd.elem.switcher.find('input').val('');
     if (liercd.elem.switcher.hasClass('open')) {
-      liercd.elem.nav.addClass('filtering');
-      liercd.elem.nav.find('li').addClass('match');
-      liercd.elem.switcher.find('input').focus();
+      liercd.hide_switcher();
     }
     else {
-      liercd.elem.nav.removeClass('filtering');
-      liercd.elem.nav.find('li').removeClass('match');
+      liercd.elem.switcher.addClass('open');
+      liercd.elem.nav.addClass('filtering');
+      liercd.elem.nav.find('li[data-name]').addClass('match');
+      liercd.elem.nav.find('li[data-name]').first().addClass('selected');
+      liercd.elem.switcher.find('input').focus();
     }
   };
 

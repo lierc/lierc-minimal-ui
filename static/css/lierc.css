@@ -374,6 +374,10 @@ a:hover {
   display: none;
 }
 
+#nav.filtering #status li.match {
+  display: none;
+}
+
 #nav.filtering li.match {
   display: block;
 }
@@ -529,6 +533,12 @@ a:hover {
 .nav li.active {
   background: #ddd;
   color: #ddd;
+}
+
+.nav li.selected a,
+.nav li.selected {
+  background: #0093ff !important;
+  color: #fff !important;
 }
 
 .nav li.active:hover {
