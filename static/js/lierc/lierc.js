@@ -181,6 +181,10 @@ var Liercd = function(url, user) {
         if (!configs.length)
           liercd.config_modal();
 
+        for (var i=0; i < configs.length; i++) {
+          liercd.setup_connection(configs[i]);
+        }
+
         if (!liercd.stream)
           liercd.connect();
       }
