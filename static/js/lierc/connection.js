@@ -1,7 +1,7 @@
 var Connection = function(config) {
   var conn = this;
 
-  conn.id = config.id;
+  conn.id = config.Id;
   conn.config = config.Config;
   conn.nick = config.Nick;
   conn.connected = false;

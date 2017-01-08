@@ -51,11 +51,33 @@ var Liercd = function(url, user) {
     return [connection, name].join("-");
   }
 
-  liercd.setup_connection = function(config) {
-    if (liercd.connections[config.id])
+  liercd.add_connection = function(conn_id) {
+    $.ajax({
+      url: liercd.baseurl + '/connection/' + conn_id,
+      type: "GET",
+      dataType: 'json',
+      success: function(res) {
+        liercd.setup_connection(res);
+        liercd.set_connected(conn_id, res.ConnectMessage);
+      }
+    });
+  };
+
+  liercd.set_connected = function(conn_id, data) {
+    liercd.connections[conn_id].connected = data.Connected;
+    for (id in liercd.panels) {
+      var panel = liercd.panels[id];
+      if (panel.connection == conn_id) {
+        panel.set_connected(data.Connected, data.Message);
+      }
+    }
+  };
+
+  liercd.setup_connection = function(data) {
+    if (liercd.connections[data.Id])
       return;
 
-    var connection = new Connection(config);
+    var connection = new Connection(data);
     liercd.connections[connection.id] = connection;
 
     var panel = liercd.add_panel("status", connection.id);
@@ -164,10 +186,6 @@ var Liercd = function(url, user) {
         if (!configs.length)
           liercd.config_modal();
 
-        configs.forEach( function(config) {
-          liercd.setup_connection(config);
-        });
-
         if (!liercd.stream)
           liercd.connect();
       }
@@ -208,13 +226,10 @@ var Liercd = function(url, user) {
       var connected = e.Connected;
 
       if (liercd.connections[conn_id]) {
-        liercd.connections[conn_id].connected = connected;
-        for (id in liercd.panels) {
-          var panel = liercd.panels[id];
-          if (panel.connection == conn_id) {
-            panel.set_connected(connected, e.Message);
-          }
-        }
+        liercd.set_connected(conn_id, e);
+      }
+      else {
+        liercd.add_connection(conn_id);
       }
     });
 
@@ -765,7 +780,6 @@ var Liercd = function(url, user) {
           }
           overlay.remove();
           liercd.overlayed = false;
-          liercd.init();
         },
         error: function(res) {
           console.log(res);
