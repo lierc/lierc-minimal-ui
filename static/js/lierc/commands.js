@@ -53,6 +53,10 @@ var Commands = function(liercd) {
     return ["PRIVMSG", panel.name, url].join(" ");
   });
 
+  add_command("trim", ["prune"], function(panel) {
+    panel.prune();
+  });
+
   add_command("part", ["close","wc"], function(panel, line) {
     if (panel.type == "status") {
       throw "Can not close status panel.";
