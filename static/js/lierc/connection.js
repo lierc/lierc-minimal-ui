@@ -71,7 +71,7 @@ var Connection = function(config) {
       break;
 
     case "005":
-      var parts = message.Params[0].split(" ");
+      var parts = message.Params[1].split(" ");
 
       for (var i=0; i < parts.length; i++) {
         if (parts[i].indexOf("=") != -1) {
