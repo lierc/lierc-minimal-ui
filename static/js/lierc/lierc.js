@@ -51,24 +51,19 @@ var Liercd = function(url, user) {
     return [connection, name].join("-");
   }
 
-  liercd.add_connection = function(conn_id) {
-    $.ajax({
-      url: liercd.baseurl + '/connection/' + conn_id,
-      type: "GET",
-      dataType: 'json',
-      success: function(res) {
-        liercd.setup_connection(res);
-        liercd.set_connected(conn_id, res.ConnectMessage);
-      }
-    });
+  liercd.add_connection = function(connection) {
+    liercd.setup_connection(connection);
+    liercd.set_connected(connection);
   };
 
-  liercd.set_connected = function(conn_id, data) {
-    liercd.connections[conn_id].connected = data.Connected;
+  liercd.set_connected = function(connection) {
+    var message = connection.ConnectMessage;
+    var conn_id = connection.Id;
+    liercd.connections[conn_id].connected = message.Connected;
     for (id in liercd.panels) {
       var panel = liercd.panels[id];
       if (panel.connection == conn_id) {
-        panel.set_connected(data.Connected, data.Message);
+        panel.set_connected(message.Connected, message.Message);
       }
     }
   };
@@ -221,15 +216,12 @@ var Liercd = function(url, user) {
       }
     });
 
-    stream.on('connect', function(e) {
-      var conn_id   = e.Id;
-      var connected = e.Connected;
-
-      if (liercd.connections[conn_id]) {
-        liercd.set_connected(conn_id, e);
+    stream.on('connect', function(connection) {
+      if (liercd.connections[connection.Id]) {
+        liercd.set_connected(connection);
       }
       else {
-        liercd.add_connection(conn_id);
+        liercd.add_connection(connection);
       }
     });
 
