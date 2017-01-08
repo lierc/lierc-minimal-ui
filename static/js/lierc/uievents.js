@@ -150,15 +150,16 @@ var UIEvents = function(liercd) {
       if (items[i].className.indexOf("selected") != -1) {
         if (items[i].className.indexOf("match") != -1)
           return;
-        $(items[i]).removeClass("selected");
         for (var j=i; j < items.length; j++) {
           if (items[j].className.indexOf("match") != -1) {
+            $(items[i]).removeClass("selected");
             $(items[j]).addClass("selected");
             return;
           }
         }
         for (var k=i; k >= 0; k--) {
           if (items[k].className.indexOf("match") != -1) {
+            $(items[i]).removeClass("selected");
             $(items[k]).addClass("selected");
             return;
           }
