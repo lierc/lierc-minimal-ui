@@ -42,12 +42,7 @@ var Liercd = function(url, user) {
     Sortable.create(this, {
       delay: liercd.touchstart ? 250 : 0,
       onSort: function(e) {
-        var order = $(this.el).find('li').toArray().map(function(li) {
-          return $(li).attr('data-panel-id');
-        });
-
-        liercd.sorting = order;
-        liercd.update_pref("sorting", order);
+        liercd.save_channel_order();
       }
     });
   });
@@ -440,6 +435,7 @@ var Liercd = function(url, user) {
     var index = liercd.sorting.indexOf(panel.id);
     if (index == -1) {
       liercd.elem.channels.append(panel.elem.nav);
+      liercd.save_channel_order();
       return;
     }
     var items = liercd.elem.channels.find('li');
@@ -641,6 +637,10 @@ var Liercd = function(url, user) {
       if (liercd.focused.id == id)
         return;
       liercd.last_panel_id = liercd.focused.id;
+    }
+
+    if (liercd.elem.switcher.hasClass('open')) {
+      liercd.hide_switcher();
     }
 
     var panel = liercd.panels[id];
@@ -1037,6 +1037,15 @@ var Liercd = function(url, user) {
       liercd.elem.nav.find('li[data-name]:visible').first().addClass('selected');
       liercd.elem.switcher.find('input').focus();
     }
+  };
+
+  liercd.save_channel_order = function() {
+    var order = $('#channels').find('li').toArray().map(function(li) {
+      return $(li).attr('data-panel-id');
+    });
+
+    liercd.sorting = order;
+    liercd.update_pref("sorting", order);
   };
 
   var events = new UIEvents(liercd);
