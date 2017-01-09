@@ -60,10 +60,20 @@ var Liercd = function(url, user) {
     var message = connection.ConnectMessage;
     var conn_id = connection.Id;
     liercd.connections[conn_id].connected = message.Connected;
+
+    var channels = connection.Channels.map(function(c) {
+      return panel_id(c.Name, conn_id);
+    });
+
     for (id in liercd.panels) {
       var panel = liercd.panels[id];
       if (panel.connection == conn_id) {
-        panel.set_connected(message.Connected, message.Message);
+        if (panel.type == "channel" &&  channels.indexOf(panel.id) == -1) {
+          liercd.remove_panel(panel.id);
+        }
+        else {
+          panel.set_connected(message.Connected, message.Message);
+        }
       }
     }
   };
