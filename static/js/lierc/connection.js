@@ -144,7 +144,6 @@ var Connection = function(config) {
       if (channel) {
         if (nick == conn.nick) {
           conn.remove_channel(name);
-          fire("status:raw", conn.id, message);
           fire("channel:close", conn.id, name);
         }
         else {
@@ -174,7 +173,6 @@ var Connection = function(config) {
       if (nick == conn.nick) {
         var channel = new Channel(name);
         conn.channels.push(channel);
-        fire("status:raw", conn.id, message);
         fire("channel:new", conn.id, name, message);
       }
       else {
