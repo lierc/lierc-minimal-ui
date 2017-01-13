@@ -527,6 +527,17 @@ a:hover {
   color: #999;
 }
 
+#status li {
+  font-size: 12px;
+  line-height: 12px;
+  padding: 4px 0 4px 5px;
+}
+
+#status li.unread,
+#status li.missed {
+  font-weight: bold;
+}
+
 .nav li {
   cursor: pointer;
   padding: 8px 0px 8px 5px;
