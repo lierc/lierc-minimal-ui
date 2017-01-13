@@ -105,6 +105,10 @@ a:hover {
   font-weight: bold;
 }
 
+#panel ol li.notice span.host {
+  font-weight: bold;
+}
+
 #panel ol li.raw {
   font-family: "Menlo", "Inconsolata", "Consolas",
     "Droid Sans Mono", "Monaco", monospace;

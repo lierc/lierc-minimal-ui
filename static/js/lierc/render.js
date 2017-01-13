@@ -123,6 +123,16 @@ var Render = function(message, force_raw) {
 
     return make("raw notice", message).append(chan, span);
 
+  case "CONNECT":
+  case "DISCONNECT":
+    var host = message.Params[0]
+    var port = message.Params[1]
+    var text = host + ":" + port + " ";
+
+    var span = $('<span/>', {'class':'host'}).text(text);
+
+    return make("raw notice", message).append(span, message.Params[2]);
+
   default:
     return raw(message);
   };

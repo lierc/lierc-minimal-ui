@@ -654,12 +654,6 @@ var Panel = function(name, id, connection) {
   panel.set_connected = function(bool, message) {
     panel.connected = bool;
     panel.update_nav();
-
-    if (panel.type == "status") {
-      panel.append($('<li/>', {
-        'class': 'chat raw'
-      }).text(message));
-    }
   };
 
   panel.set_show_nicklist = function(bool) {

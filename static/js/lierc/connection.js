@@ -65,6 +65,11 @@ var Connection = function(config) {
 
   conn.on_message = function(message) {
     switch (String(message.Command)) {
+    case "CONNECT":
+    case "DISCONNECT":
+      fire("status", conn.id, message);
+      break;
+
     case "001":
       conn.nick = message.Params[0];
       fire("status:raw", conn.id, message);
