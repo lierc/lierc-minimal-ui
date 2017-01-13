@@ -427,10 +427,12 @@ a:hover {
   color: #999;
 }
 
-.nav-title.collapsed + .nav {
-  height: 0px;
-  overflow: hidden;
-  transition: height 0.5s;
+.nav-title.collapsed + .nav li {
+  display: none;
+}
+
+.nav-title.collapsed + #status li.disconnected {
+  display: block;
 }
 
 .nav#privates {
