@@ -93,7 +93,6 @@ var Liercd = function(url, user) {
       var connection = liercd.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
-      message.Highlight = from && liercd.is_highlight(panel, message)
       panel.append(Render(message));
 
       if (from && (!liercd.is_focused(panel) || !panel.is_scrolled()))
@@ -102,7 +101,6 @@ var Liercd = function(url, user) {
 
     connection.on("channel:msg", function(conn, channel, message) {
       var panel = liercd.get_panel(channel, conn);
-      message.Highlight = liercd.is_highlight(panel, message);
       var html = Render(message);
       if (html) {
         panel.append(html);
@@ -158,13 +156,6 @@ var Liercd = function(url, user) {
     return liercd.window_focused && liercd.focused && liercd.focused.id == panel.id;
   };
 
-  liercd.is_highlight = function(panel, message) {
-    var nick = liercd.connections[panel.connection].nick;
-    if (message.Prefix.Name == nick)
-      return false;
-    return message.Command == "PRIVMSG" && message.Params[1].indexOf(nick) != -1;
-  };
-
   liercd.find_default_panel = function() {
     var parts = window.location.hash.split("/").slice(1);
     if (parts.length == 2) {
@@ -215,6 +206,7 @@ var Liercd = function(url, user) {
       if (e.MessageId)
         message.Id =  e.MessageId;
       message.Self = e.Self;
+      message.Highlight = e.Highlight;
 
       if (liercd.connections[conn_id]) {
         liercd.connections[conn_id].on_message(message);
@@ -483,7 +475,7 @@ var Liercd = function(url, user) {
           var message = e.Message;
           message.Id = e.MessageId;
           message.Self = e.Self;
-          message.Highlight = liercd.is_highlight(panel, message)
+          message.Highlight = e.Highlight;
 
           // done if message is older than stop
           if (message.Id <= stop)
@@ -555,10 +547,11 @@ var Liercd = function(url, user) {
           var message = e.Message;
           message.Id = e.MessageId;
           message.Self = e.Self;
+          message.Highlight = e.Highlight;
+
           if (liercd.is_reaction(message))
             reactions.push(message);
           else {
-            message.Highlight = liercd.is_highlight(panel, message);
             list.push(Render(message));
           }
         });
