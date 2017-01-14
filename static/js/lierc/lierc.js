@@ -351,7 +351,6 @@ var Liercd = function(url, user) {
             alert("I'm sorry");
           },
           success: function(res) {
-            console.log(res);
             liercd.config_modal(null, res);
           }
         });
