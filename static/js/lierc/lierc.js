@@ -51,11 +51,6 @@ var Liercd = function(url, user) {
     return [connection, name].join("-");
   }
 
-  liercd.add_connection = function(connection) {
-    liercd.setup_connection(connection);
-    liercd.set_connected(connection);
-  };
-
   liercd.set_connected = function(connection) {
     var message = connection.ConnectMessage;
     var conn_id = connection.Id;
@@ -80,7 +75,7 @@ var Liercd = function(url, user) {
 
   liercd.setup_connection = function(data) {
     if (liercd.connections[data.Id])
-      return;
+      delete liercd.connections[data.Id];
 
     var connection = new Connection(data);
     liercd.connections[connection.id] = connection;
@@ -191,10 +186,6 @@ var Liercd = function(url, user) {
         if (!configs.length)
           liercd.config_modal();
 
-        for (var i=0; i < configs.length; i++) {
-          liercd.setup_connection(configs[i]);
-        }
-
         if (!liercd.stream)
           liercd.connect();
       }
@@ -231,12 +222,8 @@ var Liercd = function(url, user) {
     });
 
     stream.on('connect', function(connection) {
-      if (liercd.connections[connection.Id]) {
-        liercd.set_connected(connection);
-      }
-      else {
-        liercd.add_connection(connection);
-      }
+      liercd.setup_connection(connection);
+      liercd.set_connected(connection);
     });
 
     stream.on('close', function(e) {
@@ -716,7 +703,10 @@ var Liercd = function(url, user) {
       form.find('input[name=Nick]').val(config.Nick);
       form.find('input[name=User]').val(config.User);
       form.find('input[name=Pass]').val(config.Pass);
-      form.find('input[name=Channels]').val(config.Channels);
+      form.find('input[name=Channels]').val(config.Channels.join(", "));
+
+      if (config.Highlight)
+        form.find('input[name=Highlight]').val(config.Highlight.join(", "));
 
       overlay.find('h2').text('Edit connection');
       overlay.find('input[type=submit]').val('Save & Reconnect').css('font-weight', 'bold');
@@ -732,6 +722,7 @@ var Liercd = function(url, user) {
       var form = overlay.find('form');
       form.find('input[name=Nick]').val(liercd.user.user);
       form.find('input[name=User]').val(liercd.user.user);
+      form.find('input[name=Highlight]').val(liercd.user.user);
       if (Object.keys(liercd.connections).length == 0) {
         form.find('input[name=Host]').val("irc.freenode.com");
         form.find('input[name=Port]').val("6697");
@@ -767,7 +758,8 @@ var Liercd = function(url, user) {
         Nick: form.find('input[name=Nick]').val(),
         User: form.find('input[name=User]').val(),
         Pass: form.find('input[name=Pass]').val(),
-        Channels: form.find('input[name=Channels]').val().split(',')
+        Channels: form.find('input[name=Channels]').val().split(/\s*,\s*/),
+        Highlight: form.find('input[name=Highlight]').val().split(/\s*,\s*/),
       };
 
       $.ajax({

@@ -629,7 +629,7 @@ body.disconnected #reconnect {
   display: none;
   text-align: left;
   margin: 20px auto;
-  font-size: 14px;
+  font-size: 12px;
   background: #eee;
   border-top: 1px solid #fff;
   border-left: 1px solid #fff;
@@ -637,7 +637,12 @@ body.disconnected #reconnect {
   border-bottom: 1px solid #ccc;
   box-shadow: 0 0 4px rgba(0,0,0,0.5);
   border-radius: 2px;
-  padding: 20px;
+  padding: 15px;
+  width: 200px;
+}
+
+.dialog.config {
+  width: 250px;
 }
 
 .overlay .dialog {
@@ -660,8 +665,13 @@ body.disconnected #reconnect {
 .overlay input[type=email],
 .overlay input[type=password]
 {
-  width: 200px;
+  width: 100%;
+  box-sizing: border-box;
   display: block;
+}
+
+.overlay input[type=number] {
+  width: 4.8em;
 }
 
 .overlay select,
@@ -669,15 +679,33 @@ body.disconnected #reconnect {
 .overlay input[type=text],
 .overlay input[type=email],
 .overlay input[type=password] {
-  font-size: 14px;
+  font-size: 12px;
   padding: 5px;
 }
 
 .overlay .input-group {
   margin: 0;
   padding: 0;
-  margin-top: 10px;
+  margin-top: 8px;
   border: none;
+}
+
+.overlay .input-h-group {
+  display: flex;
+  flex-direction: row;
+}
+
+.overlay .input-h-group .input-group {
+  position: relative;
+  margin-left: 8px;
+}
+
+.overlay .input-h-group:first-child .input-group {
+  margin-top: 0;
+}
+
+.overlay .input-h-group .input-group:first-child {
+  margin-left: 0;
 }
 
 .overlay .required {
@@ -688,9 +716,11 @@ body.disconnected #reconnect {
 .overlay .submit-group {
   margin: 0;
   padding: 0;
-  margin-top: 10px;
+  margin-top: 12px;
+  padding-top: 12px;
   border: none;
-  text-align: right;
+  text-left: right;
+  border-top: 1px solid #ccc;
 }
 
 p.note {
@@ -698,19 +728,6 @@ p.note {
   margin: 0;
   padding: 0;
   text-align: right;
-}
-
-.overlay .checkbox-group {
-  margin: 0;
-  padding: 0;
-  margin-top: 10px;
-  border: none;
-}
-
-.overlay .checkbox-group input,
-.overlay .checkbox-group label {
-  display: inline-block;
-  width: auto;
 }
 
 .overlay label {
@@ -726,13 +743,14 @@ p.note {
   color: #000;
   display: inline-block;
   float: right;
-  font-size: 14px;
+  font-size: 12px;
 }
 
 .overlay h2 {
   font-size: 18px;
   margin-top: 0;
   border-bottom: 1px solid #ccc;
+  margin-bottom: 12px;
 }
 
 .flex-wrap-left header h1 {
