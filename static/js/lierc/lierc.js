@@ -343,8 +343,18 @@ var Liercd = function(url, user) {
           liercd.remove_panel(id);
       }
       else if ($(e.target).hasClass('edit-panel')) {
-        var connection = liercd.connections[panel.connection];
-        liercd.config_modal(null, connection);
+        $.ajax({
+          url: liercd.baseurl + "/connection/" + panel.connection,
+          type: "GET",
+          dataType: "json",
+          error: function(e) {
+            alert("I'm sorry");
+          },
+          success: function(res) {
+            console.log(res);
+            liercd.config_modal(null, res);
+          }
+        });
       }
       else {
         liercd.focus_panel(id);
@@ -687,7 +697,7 @@ var Liercd = function(url, user) {
     overlay.append($('.config').clone());
 
     if (connection) {
-      var config = connection.config;
+      var config = connection.Config;
       var form = overlay.find('form');
       form.find('input[name=Host]').val(config.Host);
       form.find('input[name=Port]').val(config.Port);
@@ -708,7 +718,7 @@ var Liercd = function(url, user) {
         value: "\uf071 Delete",
         'class': 'delete-connection'
       }));
-      url += '/' + connection.id;
+      url += '/' + connection.Id;
       method = "PUT";
     }
     else {
