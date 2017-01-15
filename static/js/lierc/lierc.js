@@ -177,6 +177,10 @@ var Liercd = function(url, user) {
         if (!configs.length)
           liercd.config_modal();
 
+        for (var i=0; i < configs.length; i++) {
+          liercd.setup_connection(configs[i]);
+        }
+
         if (!liercd.stream)
           liercd.connect();
       }
@@ -252,10 +256,9 @@ var Liercd = function(url, user) {
       }
 
       liercd.sync_missed();
+      liercd.add_recent_privates();
     });
 
-
-    liercd.add_recent_privates();
     liercd.stream = stream;
   };
 
