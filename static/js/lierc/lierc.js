@@ -956,6 +956,10 @@ var Liercd = function(url, user) {
   };
 
   liercd.sync_missed = function() {
+    if (liercd.focused) {
+      liercd.focused.update_seen();
+      liercd.last_seen[liercd.focused.id] = liercd.focused.last_seen;
+    }
     $.ajax({
       url: liercd.baseurl + "/missed",
       type: 'GET',
