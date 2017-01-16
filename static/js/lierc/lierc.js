@@ -181,8 +181,10 @@ var Liercd = function(url, user) {
           liercd.setup_connection(configs[i]);
         }
 
-        if (!liercd.stream)
-          liercd.connect();
+        if (liercd.stream)
+          liercd.stream.destroy();
+
+        liercd.connect();
       }
     });
   };
@@ -242,9 +244,7 @@ var Liercd = function(url, user) {
       $('#reconnect-counter-wrap').hide();
       if (liercd.focused) {
         if (stream.last_id) {
-          var block = $('<div/>');
-          liercd.focused.append(block);
-          liercd.fill_missed(liercd.focused, stream.last_id, block);
+          liercd.fill_missed(stream.last_id);
         }
       }
 
@@ -254,11 +254,10 @@ var Liercd = function(url, user) {
           liercd.panels[id].elem.list.html('');
         }
       }
-
-      liercd.sync_missed();
-      liercd.add_recent_privates();
     });
 
+    liercd.sync_missed();
+    liercd.add_recent_privates();
     liercd.stream = stream;
   };
 
@@ -462,60 +461,17 @@ var Liercd = function(url, user) {
     liercd.elem.channels.append(panel.elem.nav);
   };
 
-  liercd.fill_missed = function(panel, stop, elem, start) {
-    var connection = liercd.connections[panel.connection];
-    if (!connection) return;
-
-    var name = panel.type == "status" ? "status" : panel.name;
-    var parts = [
-      liercd.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
-    ];
-
-    if (start)
-      parts.push(start);
-
+  liercd.fill_missed = function(start) {
     $.ajax({
-      url: parts.join("/"),
+      url: liercd.baseurl + "/log/" + start,
       type: "GET",
       dataType: "json",
+      error: function(error) {
+        liercd.reset();
+      },
       success: function(events) {
-        var insert = [];
-
-        // newest to oldest
         for (var i=0; i < events.length; i++) {
-          var e = events[i];
-          var message = e.Message;
-          message.Id = e.MessageId;
-          message.Self = e.Self;
-          message.Highlight = e.Highlight;
-
-          // done if message is older than stop
-          if (message.Id <= stop)
-            break;
-
-          insert.push(message);
-        }
-
-        if (insert.length) {
-          var block = $('<div/>');
-          var reactions = [];
-          for (var i=insert.length -1; i >= 0; i--) {
-            if (liercd.is_reaction(insert[i]))
-              reactions.push(insert[i]);
-            else
-              block.append(Render(insert[i]));
-          }
-
-          panel.prepend(block.children(), elem);
-          reactions.forEach(function(reaction) {
-            var parts = reaction.Params[1].split(" ");
-            panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
-          });
-
-          if (insert.length == 100) {
-            var last = insert[ insert.length - 1];
-            liercd.fill_missed(panel, stop, elem, last.Id);
-          }
+          liercd.stream.fire('message', events[i]);
         }
       }
     });
@@ -958,7 +914,8 @@ var Liercd = function(url, user) {
   liercd.sync_missed = function() {
     if (liercd.focused) {
       liercd.focused.update_seen();
-      liercd.last_seen[liercd.focused.id] = liercd.focused.last_seen;
+      if (liercd.focused.last_seen)
+        liercd.last_seen[liercd.focused.id] = liercd.focused.last_seen;
     }
     $.ajax({
       url: liercd.baseurl + "/missed",
@@ -1068,6 +1025,14 @@ var Liercd = function(url, user) {
     liercd.sorting = order;
     liercd.update_pref("sorting", order);
   };
+
+  liercd.reset = function() {
+    liercd.remove_panel(id);
+    liercd.connections = [];
+    liercd.last_seen = {};
+    liercd.missed = {};
+    liercd.init();
+  }
 
   var events = new UIEvents(liercd);
 };

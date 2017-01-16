@@ -151,7 +151,9 @@ var Panel = function(name, id, connection) {
   };
 
   panel.update_seen = function() {
-    panel.last_seen = panel.latest_message_id();
+    var id = panel.latest_message_id();
+    if (id)
+      panel.last_seen = id;
   };
 
   panel.unfocus = function() {
@@ -375,7 +377,11 @@ var Panel = function(name, id, connection) {
   };
 
   panel.latest_message_id = function() {
-    return parseInt(panel.elem.list.find('li[data-message-id]:last').attr('data-message-id'));
+    var el = panel.elem.list.find('li[data-message-id]:last');
+    if (el.length) {
+      return parseInt(el.attr('data-message-id'));
+    }
+    return null;
   };
 
   panel.oldest_message_id = function() {

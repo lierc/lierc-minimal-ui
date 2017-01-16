@@ -14,7 +14,7 @@ var Stream = function(baseurl) {
     listeners[name].push(func);
   };
 
-  function fire (name) {
+  stream.fire = function(name) {
     if (listeners[name]) {
       var data = Array.prototype.slice.call(arguments,1);
       listeners[name].forEach(function(listener) {
@@ -50,18 +50,18 @@ var Stream = function(baseurl) {
         connect();
       }
       else {
-        fire("timer", backoff);
+        stream.fire("timer", backoff);
       }
     }, 1000);
   };
 
   stream.onconnect = function(e) {
     var data = JSON.parse(e.data);
-    fire("connect", data);
+    stream.fire("connect", data);
   };
 
   stream.onopen = function() {
-    fire("open");
+    stream.fire("open");
     stream.retries = 0;
   };
 
@@ -69,7 +69,7 @@ var Stream = function(baseurl) {
     var data = JSON.parse(e.data);
     if (data.MessageId)
       stream.last_id = data.MessageId;
-    fire("message", data);
+    stream.fire("message", data);
   };
 
   stream.close = function() {
@@ -80,7 +80,7 @@ var Stream = function(baseurl) {
   stream.check = function() {
     if (! stream.timer && (! stream.eventsource || stream.eventsource.readyState != 1) ) {
       if (stream.retries == 0) { 
-        fire("close");
+        stream.fire("close");
         console.log("closed");
       }
       stream.connect();
@@ -101,5 +101,19 @@ var Stream = function(baseurl) {
   };
 
   connect();
-  setInterval(stream.check, 1000);
+  stream.timer = setInterval(stream.check, 1000);
+
+  stream.destroy = function() {
+    clearInterval(stream.timer);
+    listeners = {};
+
+    if (stream.eventsource) {
+      stream.eventsource.removeEventListener("irc", stream.onmessage);
+      stream.eventsource.removeEventListener("open", stream.onopen);
+      stream.eventsource.removeEventListener("connection", stream.onconnect);
+      stream.eventsource.close();
+    }
+
+    stream = null;
+  };
 };
