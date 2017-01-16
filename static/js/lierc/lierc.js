@@ -810,11 +810,10 @@ var Liercd = function(url, user) {
         var prefs = {};
         for (var i=0; i < res.length; i++) {
           try {
-            var value = JSON.parse("[" + res[i].value + "]");
-            prefs[res[i].name] = value[0];
+            prefs[res[i].name] = JSON.parse(res[i].value);
           }
-          catch (e) {
-            console.log("Unable to parse JSON: ", res[i]);
+          catch(e) {
+            console.log("Unable to parse JSON: ", res[i].value);
           }
         }
         cb(prefs);
@@ -964,8 +963,8 @@ var Liercd = function(url, user) {
     liercd.sorting = liercd.prefs['sorting'] || [];
     delete liercd.prefs['sorting'];
 
-    if (liercd.prefs['email']) {
-      $('#email-notify').addClass('enabled');
+    if (liercd.prefs['email'] === false) {
+      $('#email-notify').removeClass('enabled');
     }
 
     liercd.load_seen(function() {
