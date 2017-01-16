@@ -16,7 +16,7 @@ var Liercd = function(url, user) {
   liercd.window_focused = true;
   liercd.default_panel = null;
   liercd.default_focused = false;
-  liercd.initial_prefs = {};
+  liercd.prefs = {};
   liercd.touchstart = "ontouchstart" in document.documentElement;
 
   liercd.elem = {
@@ -816,46 +816,26 @@ var Liercd = function(url, user) {
     });
   };
 
-  liercd.get_pref = function(name, cb) {
-    if (name in liercd.initial_prefs) {
-      var value = liercd.initial_prefs[name];
-      delete liercd.initial_prefs[name];
-      cb(value);
-      return;
-    }
-
-    $.ajax({
-      url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
-      type: "GET",
-      dataType: "json",
-      error: function(e) {
-        cb();
-      },
-      success: function(res) {
-        cb(JSON.parse(res.value));
-      }
-    });
+  liercd.get_pref = function(name) {
+    return liercd.prefs[name];
   };
 
   liercd.show_nicklist_pref = function(panel) {
-    liercd.get_pref(panel.id + "-show-nicklist", function(value) {
-      if (value != undefined)
-        panel.set_show_nicklist(value);
-    });
+    var value = liercd.get_pref(panel.id + "-show-nicklist");
+    if (value != undefined)
+      panel.set_show_nicklist(value);
   };
 
   liercd.ignore_events_pref = function(panel) {
-    liercd.get_pref(panel.id + "-ignore-events", function(value) {
-      if (value !== undefined)
-        panel.set_ignore_events(value);
-    });
+    var value = liercd.get_pref(panel.id + "-ignore-events");
+    if (value !== undefined)
+      panel.set_ignore_events(value);
   };
 
   liercd.collapse_embeds_pref = function(panel) {
-    liercd.get_pref(panel.id + "-collapse-embeds", function(value) {
-      if (value !== undefined)
-        panel.set_collapse_embeds(value);
-    });
+    var value = liercd.get_pref(panel.id + "-collapse-embeds");
+    if (value !== undefined)
+      panel.set_collapse_embeds(value);
   };
 
   liercd.update_pref = function(name, value) {
