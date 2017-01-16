@@ -839,6 +839,7 @@ var Liercd = function(url, user) {
   };
 
   liercd.update_pref = function(name, value) {
+    liercd.prefs[name] = value;
     $.ajax({
       url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
       type: "POST",
@@ -953,9 +954,9 @@ var Liercd = function(url, user) {
   };
 
   liercd.get_prefs(function(prefs) {
-    liercd.initial_prefs = prefs;
-    liercd.sorting = liercd.initial_prefs['sorting'] || [];
-    delete liercd.initial_prefs['sorting'];
+    liercd.prefs = prefs;
+    liercd.sorting = liercd.prefs['sorting'] || [];
+    delete liercd.prefs['sorting'];
 
     liercd.load_seen(function() {
       liercd.init();
