@@ -809,7 +809,13 @@ var Liercd = function(url, user) {
       success: function(res) {
         var prefs = {};
         for (var i=0; i < res.length; i++) {
-          prefs[res[i].name] = JSON.parse(res[i].value);
+          try {
+            var value = JSON.parse("[" + res[i].value + "]");
+            prefs[res[i].name] = value[0];
+          }
+          catch (e) {
+            console.log("Unable to parse JSON: ", res[i]);
+          }
         }
         cb(prefs);
       }
@@ -958,10 +964,18 @@ var Liercd = function(url, user) {
     liercd.sorting = liercd.prefs['sorting'] || [];
     delete liercd.prefs['sorting'];
 
+    if (liercd.prefs['email']) {
+      $('#email-notify').addClass('enabled');
+    }
+
     liercd.load_seen(function() {
       liercd.init();
     });
   });
+
+  liercd.update_email_pref = function(disabled) {
+
+  };
 
   liercd.focus_input = function(force) {
     if (force) {

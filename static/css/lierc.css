@@ -75,6 +75,11 @@ a:hover {
   background: rgba(49, 168, 255, 0.10);
 }
 
+#panel ol li.chat.disconnect,
+#panel ol li.chat.connect {
+  background: rgba(49, 168, 255, 0.10);
+}
+
 #panel ol li.chat.highlight {
   background: rgba(49, 168, 255, 0.2);
 }
@@ -784,6 +789,16 @@ p.note {
   float: right;
   margin-top: 4px;
   color: #ccc;
+}
+
+#email-notify.enabled a:before {
+  content: "\f046";
+  padding-right: 5px;
+}
+
+#email-notify a:before {
+  content: "\f096";
+  padding-right: 5px;
 }
 
 .nav-title .join-channel:hover,

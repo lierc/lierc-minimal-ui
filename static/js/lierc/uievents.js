@@ -574,6 +574,13 @@ var UIEvents = function(liercd) {
     Emoji.filter(list, $(e.target).val());
   });
 
+  $('#email-notify').on('click', function(e) {
+      e.preventDefault();
+      $(this).toggleClass('enabled');
+      var enabled = $(this).hasClass('enabled');
+      liercd.update_pref("email", enabled);
+  });
+
   $('#panel').on('mouseenter', 'li.message', function(e) {
     if ($('.react.open').length)
       return;
