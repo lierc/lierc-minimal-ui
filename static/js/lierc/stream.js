@@ -101,10 +101,10 @@ var Stream = function(baseurl) {
   };
 
   connect();
-  stream.timer = setInterval(stream.check, 1000);
+  var timer = setInterval(stream.check, 1000);
 
   stream.destroy = function() {
-    clearInterval(stream.timer);
+    clearInterval(timer);
     listeners = {};
 
     if (stream.eventsource) {
