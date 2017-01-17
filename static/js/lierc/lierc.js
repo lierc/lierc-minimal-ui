@@ -1021,10 +1021,18 @@ var Liercd = function(url, user) {
   };
 
   liercd.reset = function() {
-    liercd.remove_panel(id);
+    var path = liercd.focused ? liercd.focused.path : "";
+
+    for (id in liercd.panels) {
+      liercd.remove_panel(id);
+    }
+
+    window.history.replaceState({}, "", path);
+    liercd.default_focused = false;
     liercd.connections = [];
     liercd.last_seen = {};
     liercd.missed = {};
+    liercd.focused = null;
     liercd.init();
   }
 
