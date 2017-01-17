@@ -703,7 +703,7 @@ var Liercd = function(url, user) {
 
     overlay.find('.delete-connection').on('click', function(e) {
       e.preventDefault();
-      liercd.remove_connection(connection.id);
+      liercd.remove_connection(connection.Id);
       overlay.remove();
       liercd.overlayed = false;
     });
@@ -735,7 +735,7 @@ var Liercd = function(url, user) {
                 liercd.remove_panel(panel.id);
               }
             }
-            delete liercd.connections[connection.id];
+            delete liercd.connections[connection.Id];
           }
           overlay.remove();
           liercd.overlayed = false;
