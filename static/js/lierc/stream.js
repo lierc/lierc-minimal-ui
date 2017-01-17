@@ -40,9 +40,10 @@ var Stream = function(baseurl) {
     if (stream.eventsource)
       stream.eventsource.close();
 
-    var backoff = Math.max(5, Math.min(stream.retries++, 15)) + 1;
+    var backoff = Math.max(3, Math.min(stream.retries++, 15));
 
     console.log("reconnecting in " + backoff + " seconds");
+    stream.fire("timer", backoff);
 
     stream.timer = setInterval(function() {
       if (--backoff <= 0) {
