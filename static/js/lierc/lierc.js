@@ -729,7 +729,7 @@ var Liercd = function(url, user) {
         dataType: "json",
         data: JSON.stringify(data),
         success: function(res) {
-          if (connection) {
+          if (method == "DELETE") {
             for (panel in liercd.panels) {
               if (panel.type == "channel") {
                 liercd.remove_panel(panel.id);
