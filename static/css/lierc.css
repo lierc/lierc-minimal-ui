@@ -81,7 +81,7 @@ a:hover {
 }
 
 #panel ol li.chat.highlight {
-  background: rgba(118, 49, 255, 0.2);
+  background: rgba(118, 49, 255, 0.15);
 }
 
 #panel ol li.chat.search {
@@ -146,6 +146,7 @@ a:hover {
 
 #panel ol li.chat span.message-nick {
   font-weight: bold;
+  text-shadow: 0 0 3px #fff;
 }
 
 .nick-popup {
@@ -305,7 +306,7 @@ a:hover {
   flex-flow: row;
   margin: 0;
   padding: 0;
-  background: #eee;
+  background: #fff1f2;
   right: 0px;
   bottom: 0px;
   position: relative;
@@ -317,11 +318,10 @@ a:hover {
   padding: 11px 5px; /* to match input border */
   padding-right: 10px;
   font-size: 14px;
-  color: #aaa;
+  color: #fff;
   -webkit-user-select: none;
-  background: #eee;
+  background: rgba(223, 159, 168, 0.74);
   text-align: right;
-  border-right: 1px solid #ddd;
 }
 
 #input {
@@ -365,7 +365,7 @@ a:hover {
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-  background: rgba(0,0,0,0.03);
+  background: #df9fa8;
   overflow: auto;
 }
 
@@ -405,6 +405,7 @@ a:hover {
 
 .nav-title .count {
   font-size: 10px;
+  font-weight: normal;
 }
 
 .count:before {
@@ -417,7 +418,7 @@ a:hover {
 .nav-title:before {
   content: "\f0d7";
   font-family: FontAwesome;
-  color: #ddd;
+  color: rgba(255,255,255,0.7);
   font-size: 16px;
   line-height:15px;
   height: 15px;
@@ -429,7 +430,7 @@ a:hover {
 }
 
 .nav-title:hover:before {
-  color: #999;
+  color: #fff;
 }
 
 .nav-title.collapsed + .nav li {
@@ -447,10 +448,11 @@ a:hover {
 .nav-title {
   padding: 10px 15px 0 5px;
   font-size: 12px;
-  color: #999;
+  color: rgba(255,255,255,0.7);
   font-weight: normal;
   margin: 0;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .nav-title-text {
@@ -459,7 +461,7 @@ a:hover {
 }
 
 .nav-title:hover {
-  color: #555;
+  color: #fff;
 }
 
 .nav li a.edit-panel,
@@ -469,23 +471,25 @@ a:hover {
   margin-right: 15px;
   font-size: 14px;
   height: 14px;
+  color: rgba(255,255,255,0.7);
+}
+
+.nav li a.close-panel {
   opacity: 0;
-  color: #ccc;
 }
 
 .nav li.active a.edit-panel,
 .nav li.active a.close-panel {
-  color: #999;
+  color: rgba(255,255,255,0.7);
 }
 
-.nav li:hover a.edit-panel,
 .nav li:hover a.close-panel {
   opacity: 1;
 }
 
 .nav li a.edit-panel:hover,
 .nav li a.close-panel:hover {
-  color: #555;
+  color: #fff;
 }
 
 .nav li.missed:before {
@@ -522,20 +526,28 @@ a:hover {
 
 .nav li.missed:hover,
 .nav li.missed {
-  color: #ccc;
+  color: #fff;
 }
 
 .nav li.missed.unread:hover,
 .nav li.missed.unread,
 .nav li.unread:hover,
 .nav li.unread {
-  color: #999;
+  color: #fff;
+}
+
+.nav-title.collapsed + ul {
+  margin: 0;
+}
+
+.nav-title + ul {
+  margin: 2px 0;
 }
 
 #status li {
   font-size: 12px;
   line-height: 12px;
-  padding: 4px 0 4px 5px;
+  background: rgb(231, 184, 190);
 }
 
 #status li.unread,
@@ -546,14 +558,14 @@ a:hover {
 .nav li {
   cursor: pointer;
   padding: 8px 0px 8px 5px;
-  color: #ccc;
+  color: #fff;
   font-size: 14px;
   line-height: 14px;
   list-style: none;
 }
 
 .nav li.active {
-  background: #ddd;
+  background: #c98992;
   color: #ddd;
 }
 
@@ -565,16 +577,16 @@ a:hover {
 
 .nav li.active:hover {
   color: #ddd;
-  background: #ddd;
+  background: #c98992;
 }
 
 .nav li:hover {
   color: #555;
-  background: #efefef;
+  background: #d2959d;
 }
 
 .nav li a {
-  color: #555;
+  color: #fff;
   padding-left: 4px;
 }
 
@@ -774,12 +786,17 @@ p.note {
   flex-grow: 0;
   flex-shrink: 0;
   box-sizing: border-box;
-  background: #ffb6c0;
+  background: #df9fa8;
   font-size: 14px;
   line-height: 14px;
   color: #fff;
   position: relative;
   cursor: pointer;
+  border-bottom: 1px solid #c2878f;
+}
+
+.flex-wrap.open .flex-wrap-left header {
+  border-bottom: 1px solid #fff;
 }
 
 .nav-title .join-channel,
@@ -788,7 +805,7 @@ p.note {
   cursor: pointer;
   float: right;
   margin-top: 4px;
-  color: #ccc;
+  color: rgba(255,255,255,0.7);
 }
 
 #email-notify.enabled a:before {
@@ -803,7 +820,7 @@ p.note {
 
 .nav-title .join-channel:hover,
 .nav-title .add-connection:hover {
-  color: #555;
+  color: #fff;
 }
 
 .message-flex {
@@ -841,7 +858,7 @@ p.note {
   display: inline-block;
   float: right;
   -webkit-user-select: none;
-  color: #ffd0d6;
+  color: rgba(255,255,255,0.7);
 }
 
 header:hover #global-controls-toggle {
@@ -853,7 +870,7 @@ header:hover #global-controls-toggle {
 }
 
 #global-controls-toggle {
-  padding: 8px 15px 8px 15px;
+  padding: 8px 12px 8px 12px;
   cursor: pointer;
 }
 
