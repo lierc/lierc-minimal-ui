@@ -1,4 +1,4 @@
-var Panel = function(name, id, connection) {
+var Panel = function(name, id, connection, mobile) {
   var panel = this;
 
   panel.name = name;
@@ -21,6 +21,7 @@ var Panel = function(name, id, connection) {
 
   panel.mode = "";
   panel.network = connection.config.Host;
+  panel.mobile = mobile;
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -93,7 +94,7 @@ var Panel = function(name, id, connection) {
     panel.first_focus = false;
     panel.focused = true;
     panel.resize_filler();
-    if (!("ontouchstart" in document.documentElement))
+    if (! panel.mobile)
       panel.elem.input.focus();
     panel.unread = false;
     panel.missed = false;

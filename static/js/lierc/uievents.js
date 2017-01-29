@@ -292,7 +292,7 @@ var UIEvents = function(liercd) {
     }
     if (target.is('#emoji')) {
       target.toggleClass('open');
-      if (!liercd.touchstart) {
+      if (!liercd.mobile) {
         if (target.hasClass('open')) {
           $('.emoji-search input').val('');
           Emoji.filter(liercd.elem.emoji, '');
