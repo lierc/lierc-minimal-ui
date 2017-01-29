@@ -64,19 +64,14 @@ var Liercd = function(url, user) {
     for (id in liercd.panels) {
       var panel = liercd.panels[id];
       if (panel.connection == conn_id) {
-        if (panel.type == "channel" &&  channels.indexOf(panel.id) == -1) {
-          liercd.remove_panel(panel.id);
-        }
-        else {
-          panel.set_connected(message.Connected, message.Message);
-        }
+        panel.set_connected(message.Connected, message.Message);
       }
     }
   };
 
   liercd.setup_connection = function(data) {
     if (liercd.connections[data.Id])
-      delete liercd.connections[data.Id];
+      return;
 
     var connection = new Connection(data);
     liercd.connections[connection.id] = connection;
