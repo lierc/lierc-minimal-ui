@@ -210,15 +210,13 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.embed = function(a, embed, manual) {
-    var scrolled = panel.is_scrolled();
-
     var toggle = document.createElement('SPAN');
-    toggle.setAttribute("class", "embed-toggle");
-    toggle.setAttribute("aria-hidden", "true");
-    a.parentNode.insertBefore(toggle, a.nextSibling);
 
-    if (scrolled)
-      panel.scroll();
+    panel.scroll(function() {
+      toggle.setAttribute("class", "embed-toggle");
+      toggle.setAttribute("aria-hidden", "true");
+      a.parentNode.insertBefore(toggle, a.nextSibling);
+    });
 
     var li = $(a).parents('li');
     var wrap = $('<div/>', {
@@ -299,10 +297,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.is_scrolled = function() {
-    if (panel.scroller.scrollHeight <= panel.scroller.offsetHeight)
-      return true;
-    var diff = panel.scroller.scrollTop - (panel.scroller.scrollHeight - panel.scroller.offsetHeight);
-    return Math.abs(diff) <= 1;
+    return panel.inner.getBoundingClientRect().bottom <= panel.scroller.getBoundingClientRect().bottom;
   };
 
   panel.append = function(el) {
@@ -310,44 +305,42 @@ var Panel = function(name, id, connection, mobile) {
     if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
       return;
 
-    var scrolled = panel.is_scrolled();
-    panel.imagify(el.get(0));
-    panel.vidify(el.get(0));
-    panel.audify(el.get(0));
-    panel.elem.list.append(el);
+    panel.scroll(function(scrolled) {
+      panel.imagify(el.get(0));
+      panel.vidify(el.get(0));
+      panel.audify(el.get(0));
+      panel.elem.list.append(el);
 
-    if (el.hasClass("chat")) {
-      var prev = el.prev();
+      if (el.hasClass("chat")) {
+        var prev = el.prev();
 
-      if (prev.hasClass("chat")) {
-        var nick = el.find('span[data-nick]').attr('data-nick');
-        var prev_nick = prev.find('span[data-nick]').attr('data-nick');
+        if (prev.hasClass("chat")) {
+          var nick = el.find('span[data-nick]').attr('data-nick');
+          var prev_nick = prev.find('span[data-nick]').attr('data-nick');
 
-        if (nick == prev_nick)
-          el.addClass('consecutive');
+          if (nick == prev_nick)
+            el.addClass('consecutive');
 
-        var time = el.find("time");
-        var prev_time = prev.find("time").text();
-        if (time.text() == prev_time)
-          time.addClass("hidden");
+          var time = el.find("time");
+          var prev_time = prev.find("time").text();
+          if (time.text() == prev_time)
+            time.addClass("hidden");
+        }
       }
-    }
 
-    if (panel.focused && scrolled) {
-      panel.scroll();
-    }
-    else {
-      if (el.hasClass("message")) {
-        panel.unread = true;
-        if (el.hasClass("highlight"))
-          panel.highlighted = true;
-        panel.update_nav();
+      if (!panel.focused || !scrolled) {
+        if (el.hasClass("message")) {
+          panel.unread = true;
+          if (el.hasClass("highlight"))
+            panel.highlighted = true;
+          panel.update_nav();
+        }
+        else if (el.hasClass("event") && ! panel.ignore_events) {
+          panel.missed = true;
+          panel.update_nav();
+        }
       }
-      else if (el.hasClass("event") && ! panel.ignore_events) {
-        panel.missed = true;
-        panel.update_nav();
-      }
-    }
+    });
 
     panel.resize_filler();
     Embed.embed_all(el.find(".message-text"), panel);
@@ -362,8 +355,12 @@ var Panel = function(name, id, connection, mobile) {
     panel.elem.filler.height(Math.max(0, scroll - chat));
   };
 
-  panel.scroll = function() {
-    panel.scroller.scrollTop = panel.scroller.scrollHeight;
+  panel.scroll = function(cb) {
+    var scrolled = panel.is_scrolled();
+    if (cb)
+      cb(scrolled);
+    if (panel.focused && scrolled)
+      panel.scroller.scrollTop = panel.scroller.scrollHeight;
   };
 
   panel.set_disabled = function(bool) {
@@ -415,6 +412,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.scroller = $('#panel-scroll').get(0);
+  panel.inner = $('#panel-inner-scroll').get(0);
   panel.prune = function() {
     if (panel.focused && !panel.is_scrolled())
       return;
@@ -444,28 +442,27 @@ var Panel = function(name, id, connection, mobile) {
               var s = panel.scroller;
               var wrap = document.createElement('DIV');
               var a = link.cloneNode(false);
-              var scrolled = panel.is_scrolled();
-
               var toggle = document.createElement('SPAN');
-              if (panel.collapse_embeds) {
-                toggle.setAttribute("class", "embed-toggle hidden");
-                wrap.setAttribute("class", "image-wrap hidden");
-              }
-              else {
-                toggle.setAttribute("class", "embed-toggle");
-                wrap.setAttribute("class", "image-wrap");
-              }
-              toggle.setAttribute("aria-hidden", "true");
-              link.parentNode.insertBefore(toggle, link.nextSibling);
-              if (scrolled)
-                panel.scroll();
+
+              panel.scroll(function() {
+                if (panel.collapse_embeds) {
+                  toggle.setAttribute("class", "embed-toggle hidden");
+                  wrap.setAttribute("class", "image-wrap hidden");
+                }
+                else {
+                  toggle.setAttribute("class", "embed-toggle");
+                  wrap.setAttribute("class", "image-wrap");
+                }
+                toggle.setAttribute("aria-hidden", "true");
+                link.parentNode.insertBefore(toggle, link.nextSibling);
+              });
 
               toggle.addEventListener("click", function(e) {
                 e.preventDefault();
-                var scroll = panel.is_scrolled();
-                $(wrap).toggleClass("hidden");
-                $(toggle).toggleClass("hidden");
-                if (scroll) panel.scroll();
+                panel.scroll(function() {
+                  $(wrap).toggleClass("hidden");
+                  $(toggle).toggleClass("hidden");
+                });
               });
 
               link.parentNode.appendChild(wrap);
@@ -498,28 +495,27 @@ var Panel = function(name, id, connection, mobile) {
           return function(e) {
             var s = panel.scroller;
             var wrap = document.createElement('DIV');
-            var scrolled = panel.is_scrolled();
 
-            var toggle = document.createElement('SPAN');
-            if (panel.collapse_embeds) {
-              toggle.setAttribute("class", "embed-toggle hidden");
-              wrap.setAttribute("class", "image-wrap hidden");
-            }
-            else {
-              toggle.setAttribute("class", "embed-toggle");
-              wrap.setAttribute("class", "image-wrap");
-            }
-            toggle.setAttribute("aria-hidden", "true");
-            link.parentNode.insertBefore(toggle, link.nextSibling);
-            if (scrolled)
-              panel.scroll();
+            panel.scroll(function() {
+              var toggle = document.createElement('SPAN');
+              if (panel.collapse_embeds) {
+                toggle.setAttribute("class", "embed-toggle hidden");
+                wrap.setAttribute("class", "image-wrap hidden");
+              }
+              else {
+                toggle.setAttribute("class", "embed-toggle");
+                wrap.setAttribute("class", "image-wrap");
+              }
+              toggle.setAttribute("aria-hidden", "true");
+              link.parentNode.insertBefore(toggle, link.nextSibling);
+            });
 
             toggle.addEventListener("click", function(e) {
               e.preventDefault();
-              var scroll = panel.is_scrolled();
-              $(wrap).toggleClass("hidden");
-              $(toggle).toggleClass("hidden");
-              if (scroll) panel.scroll();
+              panel.scroll(function() {
+                $(wrap).toggleClass("hidden");
+                $(toggle).toggleClass("hidden");
+              });
             });
 
             link.parentNode.appendChild(wrap);
@@ -585,20 +581,18 @@ var Panel = function(name, id, connection, mobile) {
     var li = panel.elem.list.find('li[data-message-hash=' + hash + ']');
 
     if (li.length) {
-      var scroll = panel.is_scrolled();
+      panel.scroll(function(scroll) {
+        var reactions = li.find('.reactions');
+        if (!reactions.length) {
+          reactions = $('<div/>', {'class': 'reactions'});
+          li.append(reactions);
+        }
 
-      var reactions = li.find('.reactions');
-      if (!reactions.length) {
-        reactions = $('<div/>', {'class': 'reactions'});
-        li.append(reactions);
-      }
+        reactions.prepend($('<span/>').text(reaction).attr('title', from));
 
-      reactions.prepend($('<span/>').text(reaction).attr('title', from));
-
-      if (scroll) {
-        panel.resize_filler();
-        panel.scroll();
-      }
+        if (scroll)
+          panel.resize_filler();
+      });
     }
     else {
       panel.reactions.push([from, hash, reaction]);
@@ -615,47 +609,41 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.set_collapse_embeds = function(bool) {
-    var scrolled = panel.is_scrolled();
-
-    if (panel.focused) {
-      if (bool) {
-        panel.elem.body.addClass('hide-embeds');
-        panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
+    panel.scroll(function() {
+      if (panel.focused) {
+        if (bool) {
+          panel.elem.body.addClass('hide-embeds');
+          panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
+        }
+        else {
+          panel.elem.body.removeClass('hide-embeds');
+          panel.elem.list.find(".embed-toggle.hidden").trigger("click");
+        }
       }
-      else {
-        panel.elem.body.removeClass('hide-embeds');
-        panel.elem.list.find(".embed-toggle.hidden").trigger("click");
-      }
-    }
 
-    panel.collapse_embeds = bool;
+      panel.collapse_embeds = bool;
 
-    if (panel.focused) {
-      if (scrolled)
-        panel.scroll();
-      if (bool)
+      if (panel.focused && bool)
         panel.resize_filler();
-    }
+    });
   };
 
   panel.set_ignore_events = function(bool) {
-    var scrolled = panel.is_scrolled();
+    panel.scroll(function() {
+      var scrolled = panel.is_scrolled();
 
-    if (panel.focused) {
-      if (bool)
-        panel.elem.body.addClass('hide-events');
-      else
-        panel.elem.body.removeClass('hide-events');
-    }
+      if (panel.focused) {
+        if (bool)
+          panel.elem.body.addClass('hide-events');
+        else
+          panel.elem.body.removeClass('hide-events');
+      }
 
-    panel.ignore_events = bool;
+      panel.ignore_events = bool;
 
-    if (panel.focused) {
-      if (scrolled)
-        panel.scroll();
-      if (bool)
+      if (panel.focused && bool)
         panel.resize_filler();
-    }
+    });
   };
 
   panel.set_connected = function(bool, message) {
@@ -664,19 +652,16 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.set_show_nicklist = function(bool) {
-    var scrolled = panel.is_scrolled();
+    panel.scroll(function() {
+      if (bool)
+        panel.elem.body.addClass('show-nicklist');
+      else
+        panel.elem.body.removeClass('show-nicklist');
 
-    if (bool)
-      panel.elem.body.addClass('show-nicklist');
-    else
-      panel.elem.body.removeClass('show-nicklist');
+      panel.show_nicklist = bool;
 
-    panel.show_nicklist = bool;
-
-    if (scrolled)
-      panel.scroll();
-
-    panel.resize_filler();
+      panel.resize_filler();
+    });
   };
 
   panel.last_seen_separator = function() {
@@ -685,11 +670,10 @@ var Panel = function(name, id, connection, mobile) {
       if (msg.length) {
         var next = msg.nextAll('li.chat:visible');
         if (next.length) {
-          var scrolled = panel.is_scrolled();
-          panel.elem.list.find('.last-read').remove();
-          msg.after($('<div/>', {'class':'last-read'}));
-          if (scrolled)
-            panel.scroll();
+          panel.scroll(function() {
+            panel.elem.list.find('.last-read').remove();
+            msg.after($('<div/>', {'class':'last-read'}));
+          });
         }
       }
     }

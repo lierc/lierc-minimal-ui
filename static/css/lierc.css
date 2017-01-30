@@ -1379,12 +1379,6 @@ p.embed-source {
   padding: 0px;
 }
 
-.embed-wrap-wrap[data-embed-provider=twitter] .embed-wrap {
-  max-height: none;
-  border: none;
-  max-width: 350px;
-}
-
 .react {
   position: absolute;
   top: 4px;
