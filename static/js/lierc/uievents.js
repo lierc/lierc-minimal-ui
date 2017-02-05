@@ -530,7 +530,7 @@ var UIEvents = function(liercd) {
 
     e.preventDefault();
 
-    var clipboard = (event.clipboardData || event.originalEvent.clipboardData);
+    var clipboard = (e.clipboardData || e.originalEvent.clipboardData);
     var items = clipboard.items;
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
