@@ -45,15 +45,18 @@ var Stream = function(baseurl) {
     console.log("reconnecting in " + backoff + " seconds");
     stream.fire("timer", backoff);
 
-    stream.timer = setInterval(function() {
+    function count() {
       if (--backoff <= 0) {
-        clearInterval(stream.timer);
+        clearTimeout(stream.timer);
         connect();
       }
       else {
         stream.fire("timer", backoff);
+        stream.timer = setTimeout(count, 1000);
       }
-    }, 1000);
+    }
+
+    stream.timer = setTimeout(count, 1000);
   };
 
   stream.onconnect = function(e) {
@@ -86,6 +89,7 @@ var Stream = function(baseurl) {
       }
       stream.connect();
     }
+    timer = setTimeout(stream.check, 1000);
   };
 
   stream.send = function(line) {
@@ -102,10 +106,10 @@ var Stream = function(baseurl) {
   };
 
   connect();
-  var timer = setInterval(stream.check, 1000);
+  var timer = setTimeout(stream.check, 1000);
 
   stream.destroy = function() {
-    clearInterval(timer);
+    clearTimeout(timer);
     listeners = {};
 
     if (stream.eventsource) {

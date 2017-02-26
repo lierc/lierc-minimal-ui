@@ -231,8 +231,16 @@ var Liercd = function(url, user) {
     });
 
     stream.on('timer', function(time) {
-      $('#reconnect-counter-wrap').show();
-      $('#reconnect-counter').text(time);
+      if (liercd.focused) {
+        liercd.focused.scroll(function() {
+          $('#reconnect-counter-wrap').show();
+          $('#reconnect-counter').text(time);
+        });
+      }
+      else {
+        $('#reconnect-counter-wrap').show();
+        $('#reconnect-counter').text(time);
+      }
     });
 
     stream.on('open', function(e) {
@@ -745,6 +753,8 @@ var Liercd = function(url, user) {
   };
 
   liercd.check_scroll = function() {
+    setTimeout(liercd.check_scroll, 250);
+
     if (liercd.filling_backlog) return;
     if (!liercd.focused) return;
     if (!$(liercd.elem.scroll).is(':visible')) return;
@@ -760,7 +770,7 @@ var Liercd = function(url, user) {
     }
   };
 
-  setInterval(liercd.check_scroll, 250);
+  setTimeout(liercd.check_scroll, 250);
 
   liercd.ping_server = function() {
     $.ajax({
@@ -768,6 +778,8 @@ var Liercd = function(url, user) {
       type: "GET",
       dataType: "json",
       complete: function(res) {
+        setTimeout(liercd.ping_server, 1000 * 15);
+
         if (res.status == 200)
           return;
 
@@ -792,7 +804,7 @@ var Liercd = function(url, user) {
     });
   };
 
-  setInterval(liercd.ping_server, 1000 * 15);
+  setTimeout(liercd.ping_server, 1000 * 15);
 
   liercd.get_prefs = function(cb) {
     $.ajax({

@@ -424,6 +424,8 @@ var Panel = function(name, id, connection, mobile) {
   panel.scroller = $('#panel-scroll').get(0);
   panel.inner = $('#panel-inner-scroll').get(0);
   panel.prune = function() {
+    setTimeout(panel.prune, 1000 * 60);
+
     if (panel.focused && !panel.is_scrolled())
       return;
 
@@ -435,7 +437,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.keyboard = new Keyboard(panel.elem.input.get(0));
-  panel.pruner = setInterval(panel.prune, 1000 * 60);
+  setTimeout(panel.prune, 1000 * 60);
 
   panel.img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
   panel.imagify = function (elem) {
