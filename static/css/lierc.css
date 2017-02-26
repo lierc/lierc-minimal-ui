@@ -833,6 +833,13 @@ p.note {
   flex-shrink: 1;
   line-height: 1.4em;
 }
+
+.message-text .image-wrap,
+.message-text .embed-wrap-wrap,
+.message-text .embed-wrap {
+  white-space: normal;
+}
+
 .message-flex time {
   flex-grow:  0;
   flex-shrink: 0;
