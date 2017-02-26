@@ -448,13 +448,14 @@ var Panel = function(name, id, connection, mobile) {
         if (link.href.match(/\.gifv/)) continue;
         if (link.href.match(/#(nsfw|hide)/)) continue;
         var image = new Image();
-        image.setAttribute("title", link);
+        image.setAttribute("title", link.href);
         image.onload = (function(image, link) {
             return function(e) {
               var s = panel.scroller;
               var wrap = document.createElement('DIV');
               var a = link.cloneNode(false);
               var toggle = document.createElement('SPAN');
+              a.appendChild(image);
 
               panel.scroll(function() {
                 if (panel.collapse_embeds) {
@@ -477,17 +478,19 @@ var Panel = function(name, id, connection, mobile) {
                 });
               });
 
-              link.parentNode.appendChild(wrap);
-              a.appendChild(image);
-
+              var start = panel.scroller.scrollTop;
               wrap.appendChild(a);
-              panel.scroller.scrollTop += wrap.getBoundingClientRect().height;
+              link.parentNode.appendChild(wrap);
+
+              var diff = panel.scroller.scrollTop - start;
+              panel.scroller.scrollTop += wrap.getBoundingClientRect().height - diff;
             };
         })(image, link);
         image.src = "https://noembed.com/i/0/600/" + link.href;
       }
     }
   };
+
   panel.vid_re = /^http[^\s]*\.(?:gifv|mp4)[^\/]*$/i;
   panel.vidify = function(elem) {
     var links = elem.querySelectorAll("a");
@@ -530,9 +533,12 @@ var Panel = function(name, id, connection, mobile) {
               });
             });
 
-            link.parentNode.appendChild(wrap);
+            var start = panel.scroller.scrollTop;
             wrap.appendChild(video);
-            panel.scroller.scrollTop += wrap.getBoundingClientRect().height;
+            link.parentNode.appendChild(wrap);
+
+            var diff = panel.scroller.scrollTop - start;
+            panel.scroller.scrollTop += wrap.getBoundingClientRect().height - diff;
           };
         })(video, link), false);
 
