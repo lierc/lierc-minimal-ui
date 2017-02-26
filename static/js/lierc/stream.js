@@ -82,7 +82,7 @@ var Stream = function(baseurl) {
   };
 
   stream.check = function() {
-    if (! stream.timer && (! stream.eventsource || stream.eventsource.readyState != 1) ) {
+    if (! stream.timer && (! stream.eventsource || stream.eventsource.readyState == 2) ) {
       if (stream.retries == 0) { 
         stream.fire("close");
         console.log("closed");
