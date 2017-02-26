@@ -301,7 +301,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.is_scrolled = function() {
-    return Math.abs(panel.scroller.getBoundingClientRect().bottom - panel.inner.getBoundingClientRect().bottom) < 10;
+    return Math.abs(panel.scroller.scrollHeight - (panel.scroller.scrollTop + panel.scroller.clientHeight)) < 10;
   };
 
   panel.append = function(el) {
@@ -362,7 +362,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.scroll = function(cb) {
     if (cb === true) {
       if (panel.focused)
-        panel.scroller.scrollTop = panel.inner.getBoundingClientRect().height;
+        panel.scroller.scrollTop = panel.scroller.scrollHeight;
       return;
     }
 
@@ -370,7 +370,7 @@ var Panel = function(name, id, connection, mobile) {
     if (cb)
       cb(scrolled);
     if (panel.focused && scrolled)
-      panel.scroller.scrollTop = panel.inner.getBoundingClientRect().height;
+      panel.scroller.scrollTop = panel.scroller.scrollHeight;
   };
 
   panel.set_disabled = function(bool) {
