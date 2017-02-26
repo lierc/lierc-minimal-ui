@@ -528,7 +528,7 @@ var Liercd = function(url, user) {
           }
         });
 
-      panel.prepend(block.append(list.reverse()).children());
+        panel.prepend(block.append(list.reverse()).children());
         liercd.filling_backlog = false;
         reactions.forEach(function(reaction) {
           var parts = reaction.Params[1].split(" ");
