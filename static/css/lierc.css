@@ -64,8 +64,16 @@ a:hover {
 #panel ol li.chat {
   padding: 3px 10px;
   position: relative;
-  /* disabled because seems to cause a ton of style recalculations */
-  /*transition: opacity 0.25s ease-out;*/
+  transition: none;
+}
+
+#panel ol li.chat.loading {
+  opacity: 0;
+  transition: opacity 0.25s ease-out;
+}
+
+#panel ol li.chat.loading.loaded {
+  opacity: 1;
 }
 
 #panel ol li.chat:hover {

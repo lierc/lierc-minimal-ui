@@ -166,10 +166,10 @@ var Panel = function(name, id, connection, mobile) {
     panel.backlog_empty = false;
   };
 
-  panel.prepend = function(els, target) {
+  panel.prepend = function(els) {
     var list = panel.elem.list.get(0);
     var height = panel.inner.getBoundingClientRect().height;
-    els.css('opacity', '0');
+    els.addClass('loading');
 
     var prev;
     els.filter('li.chat').each(function() {
@@ -187,15 +187,15 @@ var Panel = function(name, id, connection, mobile) {
     });
 
     panel.scroll(function() {
-      if (target)
-        target.prepend(els);
-      else
-        panel.elem.list.prepend(els);
+      panel.elem.list.prepend(els);
     });
 
-    setTimeout(function(){
-      els.css('opacity', '1')
-    }, 0);
+      els.addClass('loaded');
+      els.on('transitionend', function() {
+        els.removeClass('loading loaded');
+        els.off('transitionend');
+      });
+
     var diff = panel.inner.getBoundingClientRect().height - height;
     panel.scroller.scrollTop += diff;
     panel.resize_filler();
