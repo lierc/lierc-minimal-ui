@@ -752,8 +752,11 @@ var Liercd = function(url, user) {
     });
   };
 
+  var scroll_timer;
+
   liercd.check_scroll = function() {
-    setTimeout(liercd.check_scroll, 250);
+    clearTimeout(scroll_timer);
+    scroll_timer = setTimeout(liercd.check_scroll, 250);
 
     if (liercd.filling_backlog) return;
     if (!liercd.focused) return;
@@ -770,7 +773,7 @@ var Liercd = function(url, user) {
     }
   };
 
-  setTimeout(liercd.check_scroll, 250);
+  scroll_timer = setTimeout(liercd.check_scroll, 250);
 
   liercd.ping_server = function() {
     $.ajax({
