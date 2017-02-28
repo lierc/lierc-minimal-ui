@@ -18,7 +18,7 @@ var Stream = function(baseurl) {
     if (listeners[name]) {
       var data = Array.prototype.slice.call(arguments,1);
       listeners[name].forEach(function(listener) {
-        data.unshift(0, listener);
+        data.unshift(listener, 0);
         setTimeout.apply(undefined, data);
       });
     }
