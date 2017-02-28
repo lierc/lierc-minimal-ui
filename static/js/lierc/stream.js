@@ -18,7 +18,8 @@ var Stream = function(baseurl) {
     if (listeners[name]) {
       var data = Array.prototype.slice.call(arguments,1);
       listeners[name].forEach(function(listener) {
-        listener.apply(undefined, data);
+        data.unshift(0, listener);
+        setTimeout.apply(undefined, data);
       });
     }
   }
