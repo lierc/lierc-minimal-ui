@@ -359,6 +359,7 @@ var UIEvents = function(liercd) {
         url: liercd.baseurl + "/connection/" + panel.connection,
         type: "POST",
         dataType: "json",
+        contentType: "application/irc",
         jsonp: false,
         data: lines.shift(),
         success: function(res) {
