@@ -35,13 +35,15 @@ Emoji.filter = function(list, text) {
 };
 
 Emoji.load = function() {
+  var safari = window.navigator.userAgent.match(/Safari/);
   $.ajax({
     url: "/static/emoji-data.json",
     type: "GET",
     dataType: "json",
     success: function(res) {
       var codepoints = [];
-      for (var i=0; i < res.length; i++) {
+      var length = safari ? Math.min(res.length, 100) : res.length;
+      for (var i=0; i < length; i++) {
         var annotations = res[i]['annotations'] || [];
         Emoji.data.push({
           chars: res[i]['chars'],
