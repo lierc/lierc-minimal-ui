@@ -96,7 +96,11 @@ var Commands = function(liercd) {
     return parts.join(" ");
   });
 
-  add_command("query", ["q","say", "msg"], function(panel, line) {
+  add_command("say", [""], function(panel, line) {
+    return ["PRIVMSG", panel.name, ":" + line].join(" ");
+  });
+
+  add_command("query", ["q","msg"], function(panel, line) {
     var args = line.split(" ", 1);
     var rest = line.substring(args[0].length).trim();
 
