@@ -35,7 +35,9 @@ Emoji.filter = function(list, text) {
 };
 
 Emoji.load = function() {
-  var safari = window.navigator.userAgent.match(/Safari/);
+  var safari = navigator.userAgent.indexOf('Safari') != -1
+    && navigator.userAgent.indexOf('Chrome') == -1;
+
   $.ajax({
     url: "/static/emoji-data.json",
     type: "GET",
