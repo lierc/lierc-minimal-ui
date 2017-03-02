@@ -686,7 +686,8 @@ var Panel = function(name, id, connection, mobile) {
         var next = msg.nextAll('li.chat:visible');
         if (next.length) {
           panel.scroll(function() {
-            msg.after(panel.elem.list.find('.last-read').remove());
+            panel.elem.list.find('.last-read').remove();
+            msg.after($('<div/>', {'class':'last-read'}));
           });
         }
       }
