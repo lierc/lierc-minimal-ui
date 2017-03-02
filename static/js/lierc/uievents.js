@@ -12,35 +12,40 @@ var UIEvents = function(liercd) {
   var commands = new Commands(liercd);
 
   document.addEventListener("keydown", function(e) {
+    /* track modifier keys */
     if (e.which == 17) {
       mods['ctrl'] = true;
+      return;
     }
-
-    if (e.which == 18) {
+    else if (e.which == 18) {
       mods['meta'] = true;
+      return;
     }
-
-    if (e.which == 16) {
+    else if (e.which == 16) {
       mods['shift'] = true;
+      return;
     }
-
-    if (e.which == 91 || e.which == 93 || e.which == 224 ) {
+    else if (e.which == 91 || e.which == 93 || e.which == 224 ) {
       mods['cmd'] = true;
+      return;
     }
-
-    if (e.which == 27 && liercd.overlayed) {
+    else if (e.which == 27 && liercd.overlayed) {
       $('.overlay').remove();
       liercd.overlayed = false;
       return;
     }
+    else if (liercd.overlayed) {
+      return;
+    }
 
+    /* task switcher is open, special keys */
     if (liercd.elem.switcher.hasClass('open')) {
       if (e.which == 27) {
         liercd.hide_switcher();
         liercd.focus_input();
         return;
       }
-      if (e.which == 40 || e.which == 9) {
+      else if (e.which == 40 || e.which == 9) {
         e.preventDefault();
         var items = liercd.elem.nav.find('li[data-name]:visible');
 
@@ -52,7 +57,7 @@ var UIEvents = function(liercd) {
           }
         }
       }
-      if (e.which == 38) {
+      else if (e.which == 38) {
         e.preventDefault();
         var items = liercd.elem.nav.find('li[data-name]:visible');
 
@@ -64,8 +69,7 @@ var UIEvents = function(liercd) {
           }
         }
       }
-      
-      if (e.which == 13) {
+      else if (e.which == 13) {
         var selected = liercd.elem.nav.find('li.selected');
         if (selected.length) {
           var id = selected.attr('data-panel-id');
@@ -75,34 +79,35 @@ var UIEvents = function(liercd) {
       }
     }
 
-    if (liercd.overlayed) return;
-
+    /* enter, send input */
     if (e.which == 13) {
       e.preventDefault();
       liercd.elem.input.submit();
       return;
     }
-
-    if (e.which == 38 && mods['meta']) {
+    /* panel up */
+    else if (e.which == 38 && mods['meta']) {
       e.preventDefault();
       mods['shift'] ? liercd.prev_unread_panel() : liercd.prev_panel();
       return;
     }
-
-    if (e.which == 40 && mods['meta']) {
+    /* panel down */
+    else if (e.which == 40 && mods['meta']) {
       e.preventDefault();
       mods['shift'] ? liercd.next_unread_panel() : liercd.next_panel();
       return;
     }
-
-    if ((e.which == 75 || e.which == 84) && mods['meta']) {
+    /* toggle task switcher */
+    else if ((e.which == 75 || e.which == 84) && mods['meta']) {
       e.preventDefault();
       liercd.toggle_switcher();
+      return;
     }
 
     var c = String.fromCharCode(e.which);
 
-    if (c.match(/^[1-9]$/) && (mods['cmd'] || mods['meta'])) {
+    /* jump to panel by number */
+    if ((mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
       var panels = liercd.elem.nav.find('#channels li,#privates li');
       if (panels[c - 1]) {
         liercd.focus_panel($(panels[c - 1]).attr("data-panel-id"));
@@ -111,9 +116,11 @@ var UIEvents = function(liercd) {
     }
 
     if (liercd.focused) {
+      /* send to keyboard (bold, italic, tab complete) */
       if (liercd.focused.keyboard.focused) {
         liercd.focused.keyboard.keydown(e, mods);
       }
+      /* focus input area on a-z 0-9 keys */
       else if (
         e.target.nodeName != "INPUT"
         && e.target.nodeName != "TEXTAREA"
@@ -197,12 +204,6 @@ var UIEvents = function(liercd) {
     if (e.which == 91)
       mods['cmd'] = false;
   });
-
-  var show_timer, hide_timer;
-  var clear_timers = function() {
-    clearTimeout(show_timer);
-    clearTimeout(hide_timer);
-  };
 
   $(document).on('click', '[data-nick]', function(e) {
     e.preventDefault();
