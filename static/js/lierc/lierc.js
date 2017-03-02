@@ -39,14 +39,16 @@ var Liercd = function(url, user) {
     switcher: $('#switcher-wrap')
   };
 
-  $('.sortable').each(function() {
-    Sortable.create(this, {
-      delay: liercd.touchstart ? 250 : 0,
-      onSort: function(e) {
-        liercd.save_channel_order();
-      }
+  if (!liercd.mobile) {
+    $('.sortable').each(function() {
+      Sortable.create(this, {
+        delay: liercd.touchstart ? 250 : 0,
+        onSort: function(e) {
+          liercd.save_channel_order();
+        }
+      });
     });
-  });
+  }
 
   function panel_id(name, connection) {
     return [connection, name].join("-");
@@ -230,22 +232,19 @@ var Liercd = function(url, user) {
         liercd.focused.scroll();
     });
 
-    stream.on('timer', function(time) {
+    stream.on('reconnect-status', function(text) {
       if (liercd.focused) {
         liercd.focused.scroll(function() {
-          $('#reconnect-counter-wrap').show();
-          $('#reconnect-counter').text(time);
+          $('#reconnect-status').text(text);
         });
       }
       else {
-        $('#reconnect-counter-wrap').show();
-        $('#reconnect-counter').text(time);
+        $('#reconnect-status').text(text);
       }
     });
 
     stream.on('open', function(e) {
       liercd.elem.body.removeClass('disconnected');
-      $('#reconnect-counter-wrap').hide();
       if (liercd.focused) {
         if (stream.last_id) {
           liercd.fill_missed(stream.last_id);

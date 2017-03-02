@@ -44,7 +44,7 @@ var Stream = function(baseurl) {
     var backoff = Math.max(3, Math.min(stream.retries++, 15));
 
     console.log("reconnecting in " + backoff + " seconds");
-    stream.fire("timer", backoff);
+    stream.fire("reconnect-status", "Reconnecting in " + backoff + " seconds");
 
     function count() {
       if (--backoff <= 0) {
@@ -52,7 +52,7 @@ var Stream = function(baseurl) {
         connect();
       }
       else {
-        stream.fire("timer", backoff);
+        stream.fire("reconnect-status", "Reconnecting in " + backoff + " seconds");
         stream.timer = setTimeout(count, 1000);
       }
     }
@@ -83,12 +83,18 @@ var Stream = function(baseurl) {
   };
 
   stream.check = function() {
-    if (! stream.timer && (! stream.eventsource || stream.eventsource.readyState == 2) ) {
-      if (stream.retries == 0) { 
-        stream.fire("close");
-        console.log("closed");
+    if (! stream.timer ) {
+      if (! stream.eventsource || stream.eventsource.readyState == 2 ) {
+        if (stream.retries == 0) {
+          stream.fire("close");
+          console.log("closed");
+        }
+        stream.connect();
       }
-      stream.connect();
+      else if (stream.eventsource.readyState == 0) {
+        console.log("reconnecting now");
+        stream.fire("reconnect-status", "Reconnecting now");
+      }
     }
     timer = setTimeout(stream.check, 1000);
   };
