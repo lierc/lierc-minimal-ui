@@ -84,14 +84,17 @@ var Stream = function(baseurl) {
 
   stream.check = function() {
     if (! stream.timer ) {
+      if (stream.retries == 0 && (! stream.eventsource || stream.eventsource.readyState != 1)) {
+        stream.fire("close");
+        console.log("closed");
+      }
       if (! stream.eventsource || stream.eventsource.readyState == 2 ) {
-        if (stream.retries == 0) {
-          stream.fire("close");
-          console.log("closed");
-        }
         stream.connect();
       }
       else if (stream.eventsource.readyState == 0) {
+        if (stream.retries == 0) {
+          stream.retries = 1;
+        }
         console.log("reconnecting now");
         stream.fire("reconnect-status", "Reconnecting now");
       }
