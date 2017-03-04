@@ -264,7 +264,7 @@ var Panel = function(name, id, connection, mobile) {
         }));
         inner.append(img);
       }
-      wrap.attr('data-embed', embed.html);
+      inner.attr('data-embed', embed.html);
       inner.append($('<h2/>').text(embed.title));
       if (embed.description)
         inner.append($('<p/>').text(embed.description));
