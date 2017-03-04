@@ -1043,7 +1043,10 @@ var Liercd = function(url, user) {
     liercd.last_seen = {};
     liercd.missed = {};
     liercd.focused = null;
-    liercd.init();
+
+    liercd.load_seen(function() {
+      liercd.init();
+    });
   }
 
   function detect_mobile () {
