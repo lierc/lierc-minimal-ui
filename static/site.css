@@ -1316,7 +1316,6 @@ ul.channel-controls li a:hover {
 .embed-wrap {
   overflow: hidden;
   max-width: 100%;
-  max-height: 100px;
   box-sizing: border-box;
   border-radius: 5px;
   border: 1px solid #eee;
