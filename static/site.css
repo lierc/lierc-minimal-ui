@@ -1381,8 +1381,9 @@ p.embed-source {
   max-height: none;
 }
 
-.embed-wrap-wrap[data-embed-provider=twitter] {
-  padding: 0px;
+.embed-wrap twitterwidget {
+  margin-top: 0px !important;
+  margin-bottom: 0px !important;
 }
 
 .react {

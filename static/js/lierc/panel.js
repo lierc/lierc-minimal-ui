@@ -248,30 +248,33 @@ var Panel = function(name, id, connection, mobile) {
       return;
     }
 
-    var show = ["Twitter"];
-    if (show.indexOf(embed.provider_name) != -1) {
-      inner.html(embed.html).addClass("open");
+    if (embed.thumbnail_url) {
+      var img = $('<div/>', {
+        'class': 'embed-thumb'
+      }).css({
+        "background-image": "url(//noembed.com/i/0/450/" + embed.thumbnail_url + ')',
+      });
+      img.append($('<div/>', {
+        'class': 'embed-play'
+      }));
+      inner.append(img);
     }
-    else {
-      if (embed.thumbnail_url) {
-        var img = $('<div/>', {
-          'class': 'embed-thumb'
-        }).css({
-          "background-image": "url(//noembed.com/i/0/450/" + embed.thumbnail_url + ')',
-        });
-        img.append($('<div/>', {
-          'class': 'embed-play'
-        }));
-        inner.append(img);
-      }
-      inner.attr('data-embed', embed.html);
-      inner.append($('<h2/>').text(embed.title));
-      if (embed.description)
-        inner.append($('<p/>').text(embed.description));
-      inner.append($('<p/>', {
-        'class': 'embed-source'
-      }).text(embed.provider_name));
+    inner.attr('data-embed', embed.html);
+    inner.append($('<h2/>').text(embed.title));
+
+    if (embed.provider_name == "Twitter") {
+      var html = embed.html.replace(/<script[^>]+>.*<\/script>/, "");;
+      var blockquote = $(html);
+      blockquote.removeClass("twitter-tweet");
+      inner.append(blockquote)
     }
+    else if (embed.description) {
+      inner.append($('<p/>').text(embed.description));
+    }
+
+    inner.append($('<p/>', {
+      'class': 'embed-source'
+    }).text(embed.provider_name));
 
     panel.scroll(function() {
       li.find('.message-text').append(wrap);
