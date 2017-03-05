@@ -973,8 +973,8 @@ var Liercd = function(url, user) {
     liercd.sorting = liercd.prefs['sorting'] || [];
     delete liercd.prefs['sorting'];
 
-    if (liercd.prefs['email'] === false) {
-      $('#email-notify').removeClass('enabled');
+    if (liercd.prefs['email'] === true) {
+      $('#email-notify').addClass('enabled');
     }
 
     liercd.load_seen(function() {
