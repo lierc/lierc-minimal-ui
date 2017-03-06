@@ -176,7 +176,7 @@ a:hover {
 }
 
 #panel ol .last-read {
-  border-top: 1px dashed #ffa130 !important;
+  border-top: 2px dotted #ffa130 !important;
   position: relative;
   z-index: 9;
 }
@@ -902,11 +902,12 @@ header:hover #global-controls-toggle {
 #global-controls li {
   display: block;
   margin: 0;
-  padding: 8px 15px;
+  padding: 8px 25px;
   font-size: 14px;
   box-sizing: border-box;
   cursor: pointer;
   list-style: none;
+  text-align: left;
 }
 
 #global-controls li:hover a {
