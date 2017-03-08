@@ -1381,6 +1381,7 @@ p.embed-source {
   max-height: none;
 }
 
+.embed-wrap .twitter-tweet-rendered,
 .embed-wrap twitterwidget {
   margin-top: 0px !important;
   margin-bottom: 0px !important;
