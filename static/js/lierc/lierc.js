@@ -19,6 +19,7 @@ var Liercd = function(url, user) {
   liercd.prefs = {};
   liercd.touchstart = "ontouchstart" in document.documentElement;
   liercd.mobile = detect_mobile();
+  liercd.post_token = null;
 
   liercd.elem = {
     panel: $('#panel'),
@@ -408,9 +409,17 @@ var Liercd = function(url, user) {
       url: liercd.baseurl + '/connection/' + connection,
       type: "POST",
       dataType: "json",
+      contentType: "application/irc",
+      headers: {'lierc-token': liercd.post_token},
       data: "PART " + name,
-      success: function() {
+      error: function(e) {
+        var res = JSON.parse(e.responseText);
+        alert("Error: " + res.error);
+        liercd.load_token();
+      },
+      success: function(res) {
         liercd.remove_panel(panel_id(name, connection));
+        liercd.post_token = res.token;
       }
     });
   };
@@ -755,21 +764,25 @@ var Liercd = function(url, user) {
 
   liercd.check_scroll = function() {
     clearTimeout(scroll_timer);
-    scroll_timer = setTimeout(liercd.check_scroll, 250);
 
-    if (liercd.filling_backlog) return;
-    if (!liercd.focused) return;
-    if (!$(liercd.elem.scroll).is(':visible')) return;
+    if (liercd.filling_backlog
+      || !liercd.focused
+      || liercd.focused.backlog_empty
+      || !liercd.connections[liercd.focused.connection]
+      || !$(liercd.elem.scroll).is(':visible'))
+    {
+      scroll_timer = setTimeout(liercd.check_scroll, 250);
+      return;
+    }
 
     if (liercd.elem.scroll.scrollTop <= 150) {
-      if (!liercd.connections[liercd.focused.connection])
-        return;
-      if (liercd.focused.backlog_empty) return;
       liercd.filling_backlog = true;
       liercd.fill_backlog(
         liercd.focused, liercd.focused.oldest_message_id()
       );
     }
+
+    scroll_timer = setTimeout(liercd.check_scroll, 250);
   };
 
   scroll_timer = setTimeout(liercd.check_scroll, 250);
@@ -861,6 +874,20 @@ var Liercd = function(url, user) {
       dataType: "json",
       data: JSON.stringify(value),
       success: function(res) { }
+    });
+  };
+
+  liercd.load_token = function(cb) {
+    $.ajax({
+      url: liercd.baseurl + "/token",
+      type: "GET",
+      dataType: "json",
+      complete: function(e) {
+        if (cb) cb();
+      },
+      success: function(res) {
+        liercd.post_token = res.token;
+      }
     });
   };
 
@@ -978,7 +1005,9 @@ var Liercd = function(url, user) {
     }
 
     liercd.load_seen(function() {
-      liercd.init();
+      liercd.load_token(function() {
+        liercd.init();
+      });
     });
   });
 

@@ -242,11 +242,19 @@ var UIEvents = function(liercd) {
       $.ajax({
         url: liercd.baseurl + '/connection/' + conn,
         type: "POST",
+        contentType: "application/irc",
+        headers: { 'lierc-token' : liercd.post_token },
         data: "JOIN " + channel,
         dataType: "json",
+        error: function(e) {
+          var res = JSON.parse(e.responseText);
+          alert("Error: " + res.error);
+          liercd.load_token();
+        },
         complete: function(res) {
           overlay.remove();
           liercd.overlayed = false;
+          liercd.post_token = res.token;
         }
       });
     });
@@ -361,9 +369,16 @@ var UIEvents = function(liercd) {
         type: "POST",
         dataType: "json",
         contentType: "application/irc",
+        headers: { 'lierc-token' : liercd.post_token },
         jsonp: false,
         data: lines.shift(),
+        error: function(e) {
+          var res = JSON.parse(e.responseText);
+          alert("Error: " + res.error);
+          liercd.load_token();
+        },
         success: function(res) {
+          liercd.post_token = res.token;
           if (lines.length)
             sendlines(lines);
         }
@@ -626,9 +641,18 @@ var UIEvents = function(liercd) {
         url: liercd.baseurl + "/connection/" + panel.connection,
         type: "POST",
         dataType: "json",
+        contentType: "application/irc",
+        headers: { 'lierc-token' : liercd.post_token },
         jsonp: false,
         data: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
-        success: function(res) {}
+        error: function(e) {
+          var res = JSON.parse(e.responseText);
+          alert("Error: " + res.error);
+          liercd.load_token();
+        },
+        success: function(res) {
+          liercd.post_token = res.token;
+        }
       });
     }
   });
