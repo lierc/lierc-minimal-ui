@@ -26,7 +26,6 @@ var Panel = function(name, id, connection, mobile) {
   panel.change_name = function(name) {
     panel.name = name;
     panel.update_nav();
-    panel.elem.prefix.text(name);
   };
 
   function determine_panel_type(name, chantypes) {
@@ -143,10 +142,16 @@ var Panel = function(name, id, connection, mobile) {
         panel.elem.nav.addClass('disconnected');
     }
 
+    var prefix = panel.name;
     var title = panel.network;
-    if (panel.mode) title += " (+" + panel.mode + ")";
 
-    panel.elem.prefix.attr("title", title);
+    if (panel.mode) {
+      prefix += " (+" + panel.mode + ")";
+      title += " (+" + panel.mode + ")";
+    }
+
+    panel.elem.prefix.text(prefix);
+    panel.elem.prefix.attr("title", panel.network);
     panel.elem.nav.attr("title", title);
     panel.elem.nav.attr("data-name", panel.name);
   };
