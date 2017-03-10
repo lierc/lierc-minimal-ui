@@ -916,6 +916,7 @@ header:hover #global-controls-toggle {
 
 #global-controls li a {
   color: #777;
+  text-decoration: none;
 }
 
 .help {
