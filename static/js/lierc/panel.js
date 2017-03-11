@@ -218,11 +218,11 @@ var Panel = function(name, id, connection, mobile) {
       panel.elem.list.prepend(els);
     });
 
-    els.addClass('loaded');
     els.on('transitionend', function() {
       els.removeClass('loading loaded');
       els.off('transitionend');
     });
+    els.addClass('loaded');
 
     var diff = panel.inner.getBoundingClientRect().height - height;
     panel.scroller.scrollTop += diff;

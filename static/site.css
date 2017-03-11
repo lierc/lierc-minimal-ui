@@ -833,6 +833,10 @@ li.message.monospace .message-flex .message-nick {
   padding-bottom: 0px;
 }
 
+li.message.monospace.consecutive .message-nick {
+  visibility: hidden;
+}
+
 #panel ol li.message:not(.monospace) + li.message.monospace,
 #panel ol li.message.monospace:first-child,
 #panel ol li.message.monospace-start {
@@ -843,7 +847,7 @@ li.message.monospace .message-flex .message-nick {
 #panel ol li.message:not(.monospace) + li.message.monospace .message-text,
 #panel ol li.message.monospace:first-child .message-nick,
 #panel ol li.message.monospace:first-child .message-text,
-#panel ol li.message.monospace-start .message-nick
+#panel ol li.message.monospace-start .message-nick,
 #panel ol li.message.monospace-start .message-text {
   line-height: 1.4em;
 }
