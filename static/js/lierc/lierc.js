@@ -332,6 +332,8 @@ var Liercd = function(url, user) {
       liercd.ignore_events_pref(panel);
 
     liercd.collapse_embeds_pref(panel);
+    liercd.monospace_nicks_pref(panel);
+
     panel.elem.nav.on('click', function(e) {
       e.preventDefault();
 
@@ -864,6 +866,22 @@ var Liercd = function(url, user) {
     var value = liercd.get_pref(panel.id + "-collapse-embeds");
     if (value !== undefined)
       panel.set_collapse_embeds(value);
+  };
+
+  liercd.monospace_nicks_pref = function(panel) {
+    var value = liercd.get_pref(panel.id + '-monospace-nicks');
+    if (value !== undefined)
+      panel.monospace_nicks = value;
+  };
+
+  liercd.add_monospace_nick = function(panel, nick) {
+    panel.add_monospace_nick(nick);
+    liercd.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+  };
+
+  liercd.remove_monospace_nick = function(panel, nick) {
+    panel.remove_monospace_nick(nick);
+    liercd.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
   };
 
   liercd.update_pref = function(name, value) {

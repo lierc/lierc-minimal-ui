@@ -598,33 +598,68 @@ var UIEvents = function(liercd) {
       liercd.update_pref("email", enabled);
   });
 
-  $('#panel').on('mouseenter', 'li.message', function(e) {
-    if ($('.react.open').length)
-      return;
+  $('#panel').on('click', '.message-menu', function(e) {
+    var toggle = $(this);
+    var target = $(e.target);
+    var controls  = toggle.parent('.message-controls');
+    var message = toggle.parents('li.message');
+    var is_monospace = message.hasClass('monospace');
+    toggle.toggleClass('open');
 
-    $(this).append($('<div/>', {'class':'react'}));
+    if (target.is('.message-menu')) {
+      if (toggle.hasClass('open')) {
+        var popup = $('<div/>', {'class':'message-menu-popup'});
+        var list = $('<ul/>');
+        var privmsg = $('<li/>', {'class':'message-privmsg'})
+        .text('Direct message');
+        var mono = $('<li/>', {'class':'message-monospace'})
+        .text('Monospace text ');
+        mono.append(is_monospace ? "off" : "on");
+        list.append(privmsg, mono);
+        controls.addClass('open');
+        popup.append(list);
+        toggle.append(popup);
+      }
+      else {
+        controls.removeClass('open');
+        toggle.html('');
+      }
+    }
+    else if (target.is('.message-privmsg')) {
+      controls.removeClass('open');
+      toggle.html('');
+      var nick = message.find('.message-nick');
+      nick.trigger('click');
+    }
+    else if (target.is('.message-monospace')) {
+      controls.removeClass('open');
+      toggle.html('');
+      var nick = message.find('.message-nick').attr('data-nick');
+      if (is_monospace) {
+        liercd.remove_monospace_nick(liercd.focused, nick);
+      }
+      else {
+        liercd.add_monospace_nick(liercd.focused, nick);
+      }
+    }
   });
 
-  $('#panel').on('mouseleave', 'li.message', function(e) {
-    var react = $(this).find('.react:not(.open)');
-
-    if (react.length)
-      react.remove(); 
-  });
-
-  $('#panel').on('click', '.react', function(e) {
+  $('#panel').on('click', '.message-react', function(e) {
     var react = $(this);
     var target = $(e.target);
+    var controls = react.parent('.message-controls');
 
-    if (target.is('.react')) {
+    if (target.is('.message-react')) {
       react.toggleClass('open');
       if (react.hasClass('open')) {
         var emoji = $('#emoji .emoji-popup').clone(true);
         react.append(emoji);
         emoji.find('.emoji-search input').focus();
+        controls.addClass('open');
       }
       else {
         react.find('.emoji-popup').remove();
+        controls.removeClass('open');
       }
     }
     if (target.is('li[data-chars]')) {
@@ -632,7 +667,9 @@ var UIEvents = function(liercd) {
       var hash = react.parents('li.message').attr('data-message-hash');
       var panel = liercd.focused;
 
-      react.remove();
+      react.removeClass('open');
+      controls.removeClass('open');
+      react.find('.emoji-popup').remove();
 
       if (! (emoji && hash && panel))
         return;

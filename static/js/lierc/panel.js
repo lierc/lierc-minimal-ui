@@ -12,6 +12,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.focused = false;
   panel.backlog_empty = false;
   panel.reactions = [];
+  panel.monospace_nicks = [];
   panel.ignore_events = false;
   panel.collapse_embeds = false;
   panel.show_nicklist = false;
@@ -185,6 +186,10 @@ var Panel = function(name, id, connection, mobile) {
             time.className = "hidden";
           prev = time.innerHTML;
         }
+        var nick = this.querySelector('.message-nick');
+        if (panel.monospace_nicks.indexOf(nick.getAttribute('data-nick')) != -1) {
+          this.className += " monospace";
+        }
       }
       else {
         prev = null;
@@ -195,11 +200,11 @@ var Panel = function(name, id, connection, mobile) {
       panel.elem.list.prepend(els);
     });
 
-      els.addClass('loaded');
-      els.on('transitionend', function() {
-        els.removeClass('loading loaded');
-        els.off('transitionend');
-      });
+    els.addClass('loaded');
+    els.on('transitionend', function() {
+      els.removeClass('loading loaded');
+      els.off('transitionend');
+    });
 
     var diff = panel.inner.getBoundingClientRect().height - height;
     panel.scroller.scrollTop += diff;
@@ -324,10 +329,10 @@ var Panel = function(name, id, connection, mobile) {
       panel.elem.list.append(el);
 
       if (el.hasClass("chat")) {
+        var nick = el.find('span[data-nick]').attr('data-nick');
         var prev = el.prev();
 
         if (prev.hasClass("chat")) {
-          var nick = el.find('span[data-nick]').attr('data-nick');
           var prev_nick = prev.find('span[data-nick]').attr('data-nick');
 
           if (nick == prev_nick)
@@ -337,6 +342,10 @@ var Panel = function(name, id, connection, mobile) {
           var prev_time = prev.find("time").text();
           if (time.text() == prev_time)
             time.addClass("hidden");
+        }
+
+        if (el.hasClass("message") && panel.monospace_nicks.indexOf(nick) != -1) {
+          el.addClass("monospace");
         }
       }
 
@@ -685,6 +694,28 @@ var Panel = function(name, id, connection, mobile) {
       panel.show_nicklist = bool;
       panel.resize_filler();
     });
+  };
+
+  panel.add_monospace_nick = function(nick) {
+    if (panel.monospace_nicks.indexOf(nick) == -1) {
+      panel.monospace_nicks.push(nick);
+    }
+    panel.elem.list
+      .find('li.message .message-nick[data-nick='+nick+']')
+      .parents('li.message')
+      .addClass('monospace');
+  };
+
+  panel.remove_monospace_nick = function(nick) {
+    var i = panel.monospace_nicks.indexOf(nick);
+    if (i != -1) {
+      panel.monospace_nicks.splice(i, 1);
+    }
+    panel.elem.list
+      .find('li.message .message-nick[data-nick='+nick+']')
+      .parents('li.message')
+      .removeClass('monospace');
+
   };
 
   panel.last_seen_separator = function() {

@@ -110,7 +110,8 @@ var Render = function(message, force_raw) {
     var hash = md5(message.Raw);
 
     return make("message", message).append(
-      flex(from, msg, timestamp(message))
+      flex(from, msg, timestamp(message)),
+      controls()
     ).attr('data-message-hash', hash);
 
   case "NOTICE":
@@ -181,6 +182,12 @@ var Render = function(message, force_raw) {
       'data-time': message.Time,
       'title': date.toString()
     }).text(h + ":" + m);
+  }
+
+  function controls () {
+    return $('<div/>', {'class':'message-controls'})
+      .append($('<div/>', {'class':'message-react'}))
+      .append($('<div/>', {'class':'message-menu'}));
   }
 
   function make (type, message) {

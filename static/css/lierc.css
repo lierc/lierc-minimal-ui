@@ -833,6 +833,11 @@ p.note {
   line-height: 1.4em;
 }
 
+li.monospace .message-text {
+  font-family: "Menlo", "Inconsolata", "Consolas",
+    "Droid Sans Mono", "Monaco", monospace;
+}
+
 .message-text .image-wrap,
 .message-text .embed-wrap-wrap,
 .message-text .embed-wrap {
@@ -1238,17 +1243,57 @@ ul.channel-controls li a:hover {
   z-index: 999;
 }
 
-.react .emoji-popup {
+.message-menu {
+  position: relative;
+}
+
+.message-menu-popup {
+  z-index: 999;
+  width: 120px;
+  overflow: hidden;
+  position: absolute;
+  bottom: 100%;
+  right: -10px;
+  padding: 0px;
+  background: #fff;
+}
+
+.message-menu-popup ul {
+  -webkit-overflow-scrolling: touch;
+  box-sizing: border-box;
+  overflow: auto;
+  padding: 0;
+  margin: 0;
+  background: #fff;
+}
+
+.message-menu-popup ul li {
+  padding: 5px;
+  font-size: 12px;
+  color: #666;
+}
+
+.message-menu-popup ul li:hover {
+  cursor: pointer;
+  color: #000;
+}
+
+.message-menu-popup ul li+li {
+  border-top: 1px solid #ccc;
+}
+
+.message-react .emoji-popup {
   width: 310px;
   right: -39px;
 }
 
-.react.open .emoji-popup,
+.message-react.open .emoji-popup,
 #emoji.open .emoji-popup {
   height: auto;
   visibility: visible;
 }
 
+.message-menu-popup,
 .emoji-popup,
 .upload-popup {
   box-shadow: 0 0 3px rgba(0,0,0,0.5);
@@ -1388,7 +1433,7 @@ p.embed-source {
   margin-bottom: 0px !important;
 }
 
-.react {
+.message-controls {
   position: absolute;
   top: 3px;
   right: 39px;
@@ -1399,24 +1444,47 @@ p.embed-source {
   border: 1px solid #ccc;
   border-radius: 4px;
   z-index: 99;
+  display: none;
+  color: #666;
 }
 
-.react:before {
-  content: '\f11a';
-  filter: grayscale(100%);
-  opacity: 0.5;
+li.message:hover .message-controls,
+.message-controls.open {
+  display: block;
+}
+
+.message-react,
+.message-menu {
+  display: inline-block;
+}
+
+.message-react.open,
+.message-react:hover,
+.message-menu.open,
+.message-menu:hover {
+  color: #000;
+}
+
+.message-react:before,
+.message-menu:before {
   cursor: pointer;
+  padding: 0 3px;
 }
 
-.react:hover:before {
+.message-menu {
+  border-left: 1px solid #ccc;
+}
+
+.message-react:before {
   content: '\f11a';
-  opacity: 1;
 }
 
-.react.open:hover:before,
-.react.open:before {
+.message-menu:before {
+  content: '\f141';
+}
+
+.message-react.open:before {
   content: '\f118';
-  opacity: 1;
 }
 
 .reactions {
