@@ -890,6 +890,7 @@ var Liercd = function(url, user) {
       url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
       type: "POST",
       dataType: "json",
+      contentType: "text/plain",
       data: JSON.stringify(value),
       success: function(res) { }
     });
