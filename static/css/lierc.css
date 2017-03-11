@@ -843,18 +843,23 @@ li.message.monospace.consecutive .message-nick {
   padding-bottom: 0px;
 }
 
-#panel ol li.message:not(.monospace) + li.message.monospace .message-nick,
-#panel ol li.message:not(.monospace) + li.message.monospace .message-text,
-#panel ol li.message.monospace:first-child .message-nick,
-#panel ol li.message.monospace:first-child .message-text,
-#panel ol li.message.monospace-start .message-nick,
-#panel ol li.message.monospace-start .message-text {
-  line-height: 1.4em;
+#panel ol li.message:not(.monospace) + li.message.monospace,
+#panel ol li.message:not(.monospace) + li.message.monospace,
+#panel ol li.message.monospace:first-child,
+#panel ol li.message.monospace:first-child,
+#panel ol li.message.monospace-start,
+#panel ol li.message.monospace-start {
+  padding-top:  4px;
 }
 
-#panel ol li.message.consecutive.monospace:last-child,
+#panel ol li.message.monospace:last-child,
 #panel ol li.message.consecutive.monospace-end {
-  padding-bottom: 2px;
+  padding-bottom: 4px;
+}
+
+#panel ol li.message.monospace-start.monospace-end {
+  padding-top: 4px !important;
+  padding-bottom: 4px !important;
 }
 
 .message-flex .message-nick {
@@ -871,6 +876,7 @@ li.message.monospace.consecutive .message-nick {
   line-height: 1.4em;
 }
 
+li.monospace .message-nick,
 li.monospace .message-text {
   font-family: "Menlo", "Inconsolata", "Consolas",
     "Droid Sans Mono", "Monaco", monospace;
