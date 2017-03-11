@@ -177,22 +177,40 @@ var Panel = function(name, id, connection, mobile) {
     var height = panel.inner.getBoundingClientRect().height;
     els.addClass('loading');
 
-    var prev;
+    var prev_time, prev_nick, prev_mono;
     els.filter('li.chat').each(function() {
       if (this.className.indexOf('message') != -1) {
         var time = this.querySelector('time');
         if (time) {
-          if (time.innerHTML == prev)
+          if (time.innerHTML == prev_time)
             time.className = "hidden";
-          prev = time.innerHTML;
+          prev_time = time.innerHTML;
         }
-        var nick = this.querySelector('.message-nick');
-        if (panel.monospace_nicks.indexOf(nick.getAttribute('data-nick')) != -1) {
+        var nick = this.querySelector('.message-nick').getAttribute('data-nick');
+        if (panel.monospace_nicks.indexOf(nick) != -1) {
           this.className += " monospace";
+          if (!prev_mono) {
+            this.className += " monospace-start";
+          }
+          prev_mono = true;
         }
+        else {
+          if (prev_mono) {
+            this.previousSibling.className += " monospace-end";
+          }
+          prev_mono = false;
+        }
+        if (nick == prev_nick) {
+          this.className += " consecutive";
+        }
+        prev_nick = nick;
       }
       else {
-        prev = null;
+        if (prev_mono)
+          this.previousSibling.className += " monospace-end";
+        prev_time = null;
+        prev_nick = null;
+        prev_mono = null;
       }
     });
 
@@ -346,6 +364,13 @@ var Panel = function(name, id, connection, mobile) {
 
         if (el.hasClass("message") && panel.monospace_nicks.indexOf(nick) != -1) {
           el.addClass("monospace");
+          if (!prev.hasClass("monospace")) {
+            el.addClass("monospace-start");
+          }
+        }
+        else {
+          if (prev.hasClass("monospace"))
+            prev.addClass("monospace-end");
         }
       }
 
@@ -700,10 +725,12 @@ var Panel = function(name, id, connection, mobile) {
     if (panel.monospace_nicks.indexOf(nick) == -1) {
       panel.monospace_nicks.push(nick);
     }
-    panel.elem.list
-      .find('li.message .message-nick[data-nick='+nick+']')
-      .parents('li.message')
-      .addClass('monospace');
+    panel.scroll(function() {
+      panel.elem.list
+        .find('li.message .message-nick[data-nick='+nick+']')
+        .parents('li.message')
+        .addClass('monospace');
+    });
   };
 
   panel.remove_monospace_nick = function(nick) {
@@ -711,11 +738,12 @@ var Panel = function(name, id, connection, mobile) {
     if (i != -1) {
       panel.monospace_nicks.splice(i, 1);
     }
-    panel.elem.list
-      .find('li.message .message-nick[data-nick='+nick+']')
-      .parents('li.message')
-      .removeClass('monospace');
-
+    panel.scroll(function() {
+      panel.elem.list
+        .find('li.message .message-nick[data-nick='+nick+']')
+        .parents('li.message')
+        .removeClass('monospace monospace-start monospace-end');
+    });
   };
 
   panel.last_seen_separator = function() {

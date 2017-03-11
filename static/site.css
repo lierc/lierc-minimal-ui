@@ -62,7 +62,7 @@ a:hover {
 }
 
 #panel ol li.chat {
-  padding: 3px 10px;
+  padding: 2px 10px;
   position: relative;
   transition: none;
 }
@@ -819,6 +819,40 @@ p.note {
   white-space: pre;
 }
 
+li.message.monospace .message-flex .message-text,
+li.message.monospace .message-flex .message-nick {
+  line-height: 1em;
+}
+
+#panel ol li.chat.monospace {
+  background: #eee;
+}
+
+#panel ol li.message.monospace.consecutive {
+  padding-top: 0px;
+  padding-bottom: 0px;
+}
+
+#panel ol li.message:not(.monospace) + li.message.monospace,
+#panel ol li.message.monospace:first-child,
+#panel ol li.message.monospace-start {
+  padding-bottom: 0px;
+}
+
+#panel ol li.message:not(.monospace) + li.message.monospace .message-nick,
+#panel ol li.message:not(.monospace) + li.message.monospace .message-text,
+#panel ol li.message.monospace:first-child .message-nick,
+#panel ol li.message.monospace:first-child .message-text,
+#panel ol li.message.monospace-start .message-nick
+#panel ol li.message.monospace-start .message-text {
+  line-height: 1.4em;
+}
+
+#panel ol li.message.consecutive.monospace:last-child,
+#panel ol li.message.consecutive.monospace-end {
+  padding-bottom: 2px;
+}
+
 .message-flex .message-nick {
   display: block;
   flex-shrink: 0;
@@ -1435,17 +1469,21 @@ p.embed-source {
 
 .message-controls {
   position: absolute;
-  top: 3px;
+  top: 2px;
   right: 39px;
   padding: 2px;
-  font-size: 16px;
-  line-height: 16px;
+  font-size: 14px;
+  line-height: 14px;
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
   z-index: 99;
   display: none;
   color: #666;
+}
+
+li.message.monospace.consecutive .message-controls {
+  top: -2px;
 }
 
 li.message:hover .message-controls,
