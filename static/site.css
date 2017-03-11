@@ -314,15 +314,21 @@ a:hover {
 #prefix {
   flex-shrink: 0;
   box-sizing: border-box;
-  padding: 11px 5px; /* to match input border */
-  padding-right: 10px;
-  font-size: 14px;
-  line-height: 1.4em;
+  padding: 5px 0;
   color: #aaa;
   -webkit-user-select: none;
   background: #eee;
   text-align: right;
   border-right: 1px solid #ddd;
+}
+
+#prefix span {
+  font-size: 14px;
+  line-height: 1.4em;
+  height: 19px;
+  border: 1px solid transparent;
+  display: block;
+  padding: 5px;
 }
 
 #input {
