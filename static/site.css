@@ -242,6 +242,10 @@ a:hover {
   font-style: normal;
 }
 
+#panel ol li.message.monospace time {
+  padding-top: 2px;
+}
+
 #panel ol li.message time.hidden {
   visibility: hidden;
 }
@@ -847,25 +851,17 @@ li.message.monospace.consecutive .message-nick {
 #panel ol li.message.monospace:first-child,
 #panel ol li.message.monospace-start {
   padding-bottom: 0px;
-}
-
-#panel ol li.message:not(.monospace) + li.message.monospace,
-#panel ol li.message:not(.monospace) + li.message.monospace,
-#panel ol li.message.monospace:first-child,
-#panel ol li.message.monospace:first-child,
-#panel ol li.message.monospace-start,
-#panel ol li.message.monospace-start {
   padding-top:  4px;
 }
 
 #panel ol li.message.monospace:last-child,
 #panel ol li.message.consecutive.monospace-end {
-  padding-bottom: 4px;
+  padding-bottom: 3px !important;
 }
 
 #panel ol li.message.monospace-start.monospace-end {
   padding-top: 4px !important;
-  padding-bottom: 4px !important;
+  padding-bottom: 3px !important;
 }
 
 .message-flex .message-nick {
