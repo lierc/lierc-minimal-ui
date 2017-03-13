@@ -350,7 +350,7 @@ var Panel = function(name, id, connection, mobile) {
         var nick = el.find('span[data-nick]').attr('data-nick');
         var prev = el.prev();
 
-        if (prev.hasClass("message")) {
+        if (el.hasClass("message") && prev.hasClass("message")) {
           var prev_nick = prev.find('span[data-nick]').attr('data-nick');
 
           if (nick == prev_nick)
