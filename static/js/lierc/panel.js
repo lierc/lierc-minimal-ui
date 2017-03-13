@@ -350,12 +350,14 @@ var Panel = function(name, id, connection, mobile) {
         var nick = el.find('span[data-nick]').attr('data-nick');
         var prev = el.prev();
 
-        if (prev.hasClass("chat")) {
+        if (prev.hasClass("message")) {
           var prev_nick = prev.find('span[data-nick]').attr('data-nick');
 
           if (nick == prev_nick)
             el.addClass('consecutive');
+        }
 
+        if (prev.hasClass("chat")) {
           var time = el.find("time");
           var prev_time = prev.find("time").text();
           if (time.text() == prev_time)
