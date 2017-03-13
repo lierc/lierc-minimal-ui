@@ -214,14 +214,15 @@ var Panel = function(name, id, connection, mobile) {
       }
     });
 
-    panel.scroll(function() {
-      panel.elem.list.prepend(els);
-    });
-
     els.on('transitionend', function() {
       els.removeClass('loading loaded');
       els.off('transitionend');
     });
+
+    panel.scroll(function() {
+      panel.elem.list.prepend(els);
+    });
+
     els.addClass('loaded');
 
     var diff = panel.inner.getBoundingClientRect().height - height;
