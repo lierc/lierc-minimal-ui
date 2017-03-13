@@ -770,6 +770,20 @@ p.note {
   margin-bottom: 12px;
 }
 
+#panel-name {
+  display: none;
+  font-size: 14px;
+  line-height: 14px;
+  text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
+  font-weight: bold;
+  margin: 0;
+  padding: 8px 0 8px 25px;
+}
+
+div.header-right {
+  float: right;
+}
+
 .flex-wrap-left header h1 {
   margin: 0;
   padding: 8px 0 8px 25px;
@@ -900,7 +914,6 @@ li.monospace .message-text {
 
 #global-controls-toggle {
   display: inline-block;
-  float: right;
   -webkit-user-select: none;
   color: #ffd0d6;
 }
@@ -1567,6 +1580,10 @@ li.message:hover .message-controls,
 
   .flex-wrap-left header h1 {
     padding-left: 10px;
+  }
+
+  #panel-name {
+    display: inline-block;
   }
 
   div.flex-wrap.open .flex-wrap-left {

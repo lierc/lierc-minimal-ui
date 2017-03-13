@@ -37,7 +37,8 @@ var Liercd = function(url, user) {
     body: $(document.body),
     audio: new Audio("/static/ent_communicator1.mp3"),
     emoji: $('#emoji'),
-    switcher: $('#switcher-wrap')
+    switcher: $('#switcher-wrap'),
+    panel_name: $('#panel-name')
   };
 
   if (!liercd.mobile) {
@@ -631,6 +632,7 @@ var Liercd = function(url, user) {
     if (! panel)
       return;
 
+    liercd.elem.panel_name.text(panel.name);
     liercd.elem.panel.html(panel.elem.list);
     liercd.elem.input.html(panel.elem.input);
     liercd.elem.topic.html(panel.elem.topic);
