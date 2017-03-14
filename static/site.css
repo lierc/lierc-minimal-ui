@@ -330,6 +330,7 @@ a:hover {
   font-size: 14px;
   line-height: 1.4em;
   border: 1px solid transparent;
+  min-height: 19px;
   display: block;
   padding: 5px;
 }
@@ -346,6 +347,7 @@ a:hover {
   outline: none;
   font-size: 14px;
   line-height: 1.4em;
+  min-height: 19px;
   border: 1px solid #ccc;
   padding: 5px;
   margin: 0;
