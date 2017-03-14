@@ -1,6 +1,9 @@
 var Unformat = function(html) {
   var parser = new DOMParser();
   var doc = parser.parseFromString(html, "text/html");
+  var block = [
+    "DIV",
+  ];
   var tags = {
     "B": "\x02",
     "U": "\x1F",
@@ -12,6 +15,8 @@ var Unformat = function(html) {
       string += node.textContent;
     }
     else if (node.nodeType == 1 || node.nodeType == 9) {
+      if (block.indexOf(node.nodeName) != -1)
+        string += "\n";
       if (tags[node.nodeName])
         string += tags[node.nodeName];
       for (var i=0; i < node.childNodes.length; i++) {

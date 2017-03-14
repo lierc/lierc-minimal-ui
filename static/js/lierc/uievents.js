@@ -335,29 +335,35 @@ var UIEvents = function(liercd) {
       throw "Can not message a status";
     }
     else {
-      var privmsg = "PRIVMSG " + panel.name + " :";
-      if (value.length + privmsg.length < 510) {
-        send.push(privmsg + value);
-      }
-      else {
-        var words = value.split(" ");
-        var len = privmsg.length;
-        var buf = [];
+      var lines = value.split(/[\r\n]/);
 
-        for (var i=0; i < words.length; i++) {
-          var word = words[i];
-          if (len + word.length > 510) {
-            send.push(privmsg + buf.join(" "));
-            len = privmsg.length + word.length;
-            buf = [word];
-          }
-          else {
-            buf.push(word);
-            len += word.length + 1;
-          }
+      for (var j=0; j < lines.length; j++) {
+        var value = lines[j];
+
+        var privmsg = "PRIVMSG " + panel.name + " :";
+        if (value.length + privmsg.length < 510) {
+          send.push(privmsg + value);
         }
-        if (buf.length) {
-          send.push(privmsg + buf.join(" "));
+        else {
+          var words = value.split(" ");
+          var len = privmsg.length;
+          var buf = [];
+
+          for (var i=0; i < words.length; i++) {
+            var word = words[i];
+            if (len + word.length > 510) {
+              send.push(privmsg + buf.join(" "));
+              len = privmsg.length + word.length;
+              buf = [word];
+            }
+            else {
+              buf.push(word);
+              len += word.length + 1;
+            }
+          }
+          if (buf.length) {
+            send.push(privmsg + buf.join(" "));
+          }
         }
       }
     }
@@ -569,7 +575,7 @@ var UIEvents = function(liercd) {
     }
 
     liercd.focus_input();
-    var text = clipboard.getData("Text").replace(/[\r\n]+/g, " ");
+    var text = clipboard.getData("Text");
     document.execCommand("insertText", false, text);
   });
 

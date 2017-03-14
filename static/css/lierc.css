@@ -329,7 +329,6 @@ a:hover {
 #prefix span {
   font-size: 14px;
   line-height: 1.4em;
-  height: 19px;
   border: 1px solid transparent;
   display: block;
   padding: 5px;
@@ -347,7 +346,6 @@ a:hover {
   outline: none;
   font-size: 14px;
   line-height: 1.4em;
-  height: 19px;
   border: 1px solid #ccc;
   padding: 5px;
   margin: 0;
