@@ -80,7 +80,7 @@ var UIEvents = function(liercd) {
     }
 
     /* enter, send input */
-    if (e.which == 13) {
+    if (e.which == 13 && !mods['shift']) {
       e.preventDefault();
       liercd.elem.input.submit();
       return;
@@ -339,6 +339,8 @@ var UIEvents = function(liercd) {
 
       for (var j=0; j < lines.length; j++) {
         var value = lines[j];
+        if (!value)
+          continue;
 
         var privmsg = "PRIVMSG " + panel.name + " :";
         if (value.length + privmsg.length < 510) {
