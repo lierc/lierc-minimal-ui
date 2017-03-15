@@ -99,7 +99,6 @@ var Stream = function(baseurl) {
         stream.fire("reconnect-status", "Reconnecting now");
       }
     }
-    timer = setTimeout(stream.check, 1000);
   };
 
   stream.send = function(line) {
@@ -116,10 +115,10 @@ var Stream = function(baseurl) {
   };
 
   connect();
-  var timer = setTimeout(stream.check, 1000);
+  var timer = setInterval(stream.check, 1000);
 
   stream.destroy = function() {
-    clearTimeout(timer);
+    clearInterval(timer);
     listeners = {};
 
     if (stream.eventsource) {

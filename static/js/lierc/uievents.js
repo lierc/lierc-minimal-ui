@@ -85,11 +85,6 @@ var UIEvents = function(liercd) {
       liercd.elem.input.submit();
       return;
     }
-    else if (e.which == 186 && mods['meta']) {
-      e.preventDefault();
-      $('#toggle-nicks').trigger('click');
-      return;
-    }
     /* panel up */
     else if (e.which == 38 && mods['meta']) {
       e.preventDefault();

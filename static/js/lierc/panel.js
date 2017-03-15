@@ -167,6 +167,7 @@ var Panel = function(name, id, connection, mobile) {
     panel.update_seen();
     panel.focused = false;
     panel.elem.nav.removeClass("active");
+    panel.elem.list.html('');
     panel.elem.list.remove();
     panel.elem.list = $('<ol/>');
     panel.backlog_empty = false;
@@ -341,58 +342,65 @@ var Panel = function(name, id, connection, mobile) {
     if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
       return;
 
-    panel.scroll(function(scrolled) {
-      panel.imagify(el.get(0));
-      panel.vidify(el.get(0));
-      panel.audify(el.get(0));
-      panel.elem.list.append(el);
+    if (panel.focused) {
+      panel.scroll(function(scrolled) {
+        panel.elem.list.append(el);
 
-      if (el.hasClass("chat")) {
-        var nick = el.find('span[data-nick]').attr('data-nick');
-        var prev = el.prev();
+        if (el.hasClass("chat")) {
+          var nick = el.find('span[data-nick]').attr('data-nick');
+          var prev = el.prev();
 
-        if (el.hasClass("message") && prev.hasClass("message")) {
-          var prev_nick = prev.find('span[data-nick]').attr('data-nick');
+          if (el.hasClass("message") && prev.hasClass("message")) {
+            var prev_nick = prev.find('span[data-nick]').attr('data-nick');
 
-          if (nick == prev_nick)
-            el.addClass('consecutive');
-        }
+            if (nick == prev_nick)
+              el.addClass('consecutive');
+          }
 
-        if (prev.hasClass("chat")) {
-          var time = el.find("time");
-          var prev_time = prev.find("time").text();
-          if (time.text() == prev_time)
-            time.addClass("hidden");
-        }
+          if (prev.hasClass("chat")) {
+            var time = el.find("time");
+            var prev_time = prev.find("time").text();
+            if (time.text() == prev_time)
+              time.addClass("hidden");
+          }
 
-        if (el.hasClass("message") && panel.monospace_nicks.indexOf(nick) != -1) {
-          el.addClass("monospace");
-          if (!prev.hasClass("monospace")) {
-            el.addClass("monospace-start");
+          if (el.hasClass("message") && panel.monospace_nicks.indexOf(nick) != -1) {
+            el.addClass("monospace");
+            if (!prev.hasClass("monospace")) {
+              el.addClass("monospace-start");
+            }
+          }
+          else {
+            if (prev.hasClass("monospace"))
+              prev.addClass("monospace-end");
+          }
+
+          if (el.hasClass('message')) {
+            panel.imagify(el.get(0));
+            panel.vidify(el.get(0));
+            panel.audify(el.get(0));
+            Embed.embed_all(el.find(".message-text"), panel);
           }
         }
-        else {
-          if (prev.hasClass("monospace"))
-            prev.addClass("monospace-end");
-        }
-      }
 
-      if (!panel.focused || !scrolled) {
-        if (el.hasClass("message")) {
-          panel.unread = true;
-          if (el.hasClass("highlight"))
-            panel.highlighted = true;
-          panel.update_nav();
-        }
-        else if (el.hasClass("event") && ! panel.ignore_events) {
-          panel.missed = true;
-          panel.update_nav();
-        }
-      }
-    });
+        panel.resize_filler();
+      });
+    }
+    else {
+      el.html('');
+      el.remove();
+    }
 
-    panel.resize_filler();
-    Embed.embed_all(el.find(".message-text"), panel);
+    if (el.hasClass("message")) {
+      panel.unread = true;
+      if (el.hasClass("highlight"))
+        panel.highlighted = true;
+      panel.update_nav();
+    }
+    else if (el.hasClass("event") && ! panel.ignore_events) {
+      panel.missed = true;
+      panel.update_nav();
+    }
   };
 
   panel.resize_filler = function() {
@@ -469,8 +477,6 @@ var Panel = function(name, id, connection, mobile) {
   panel.scroller = $('#panel-scroll').get(0);
   panel.inner = $('#panel-inner-scroll').get(0);
   panel.prune = function() {
-    setTimeout(panel.prune, 1000 * 60);
-
     if (panel.focused && !panel.is_scrolled())
       return;
 
@@ -482,7 +488,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.keyboard = new Keyboard(panel.elem.input.get(0));
-  setTimeout(panel.prune, 1000 * 60);
+  setInterval(panel.prune, 1000 * 60);
 
   panel.img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
   panel.imagify = function (elem) {
@@ -758,6 +764,9 @@ var Panel = function(name, id, connection, mobile) {
           panel.scroll(function() {
             panel.elem.list.find('.last-read').remove();
             msg.after($('<div/>', {'class':'last-read'}));
+            if (msg.hasClass('monospace')) {
+              msg.addClass('monospace-end');
+            }
           });
         }
       }
