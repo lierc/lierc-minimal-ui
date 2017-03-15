@@ -124,7 +124,8 @@ var Liercd = function(url, user) {
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
       var panel = liercd.get_panel(channel, conn);
-      panel.update_nicks(nicks);
+      if (panel.focused)
+        panel.update_nicks(nicks);
     });
 
     connection.on("channel:mode", function(conn, channel, mode) {
@@ -658,6 +659,13 @@ var Liercd = function(url, user) {
     liercd.focused = panel;
     window.history.replaceState({}, "", panel.path);
     liercd.check_scroll();
+
+    if (panel.type == "channel") {
+      var conn = liercd.connections[panel.connection];
+      panel.update_nicks(
+        conn.nicks(conn.channel(panel.name))
+      );
+    }
   };
 
   liercd.config_modal = function(e, connection) {
@@ -764,18 +772,13 @@ var Liercd = function(url, user) {
     });
   };
 
-  var scroll_timer;
-
   liercd.check_scroll = function() {
-    clearTimeout(scroll_timer);
-
     if (liercd.filling_backlog
       || !liercd.focused
       || liercd.focused.backlog_empty
       || !liercd.connections[liercd.focused.connection]
       || !$(liercd.elem.scroll).is(':visible'))
     {
-      scroll_timer = setTimeout(liercd.check_scroll, 250);
       return;
     }
 
@@ -785,11 +788,9 @@ var Liercd = function(url, user) {
         liercd.focused, liercd.focused.oldest_message_id()
       );
     }
-
-    scroll_timer = setTimeout(liercd.check_scroll, 250);
   };
 
-  scroll_timer = setTimeout(liercd.check_scroll, 250);
+  setInterval(liercd.check_scroll, 250);
 
   liercd.ping_server = function() {
     $.ajax({
@@ -797,8 +798,6 @@ var Liercd = function(url, user) {
       type: "GET",
       dataType: "json",
       complete: function(res) {
-        setTimeout(liercd.ping_server, 1000 * 15);
-
         if (res.status == 200)
           return;
 
@@ -823,7 +822,7 @@ var Liercd = function(url, user) {
     });
   };
 
-  setTimeout(liercd.ping_server, 1000 * 15);
+  setInterval(liercd.ping_server, 1000 * 15);
 
   liercd.get_prefs = function(cb) {
     $.ajax({
