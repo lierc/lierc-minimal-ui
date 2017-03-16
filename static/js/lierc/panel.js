@@ -236,13 +236,14 @@ var Panel = function(name, id, connection, mobile) {
 
     var prev_time, prev_nick, prev_mono;
     els.filter('li.chat').each(function() {
+      var time = this.querySelector('time');
+      if (time) {
+        if (time.innerHTML == prev_time)
+          time.className = "hidden";
+        prev_time = time.innerHTML;
+      }
+
       if (this.className.indexOf('message') != -1) {
-        var time = this.querySelector('time');
-        if (time) {
-          if (time.innerHTML == prev_time)
-            time.className = "hidden";
-          prev_time = time.innerHTML;
-        }
         var nick = this.querySelector('.message-nick').getAttribute('data-nick');
         if (panel.monospace_nicks.indexOf(nick) != -1) {
           this.className += " monospace";
@@ -265,15 +266,9 @@ var Panel = function(name, id, connection, mobile) {
       else {
         if (prev_mono)
           this.previousSibling.className += " monospace-end";
-        prev_time = null;
         prev_nick = null;
         prev_mono = null;
       }
-    });
-
-    els.on('transitionend', function() {
-      els.removeClass('loading loaded');
-      els.off('transitionend');
     });
 
     panel.scroll(function() {
