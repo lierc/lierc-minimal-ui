@@ -54,24 +54,80 @@ var Panel = function(name, id, connection, mobile) {
 
     var display_sorted = sorted.map(function(n) {
       var pos = order.indexOf(nicks[n]);
-      var prefix = "" + (pos != -1 ? pos : "");
+      var prefix = "" + (pos != -1 ? pos : order.length);
       return [n, prefix + n.toLowerCase()];
     }).sort(function(a, b) {
       return a[1] < b[1]
         ? -1 : a[1] > b[1]
           ? 1 : 0;
-    }).map(function(n) {
-      return n[0];
     });
 
-    panel.elem.nicks.html( display_sorted.map(function(nick) {
-      return $('<li/>').append(
-        $('<a/>', {
-          'class': 'nick-list-nick',
-          'data-nick': nick
-        }).text(nicks[nick] + nick)
-      );
-    }));
+    var list = panel.elem.nicks.get(0);
+    var items = list.childNodes;
+    var l = items.length;
+    var del = [];
+
+    for (var i=0; i < l; i++) {
+      var a = items[i].childNodes[0];
+      var nick = a.getAttribute('data-nick');
+      if (!(nick in nicks)) {
+        del.push(items[i]);
+      }
+    }
+
+    var sorted_len = display_sorted.length;
+
+    for (var i=0; i < sorted_len; i++) {
+      var nick = display_sorted[i][0];
+      var order = display_sorted[i][1];
+      var inserted = false;
+
+      for (var j=0; j < l; j++) {
+        var item = items[j];
+        var a = item.childNodes[0];
+        var n = a.getAttribute('data-nick');
+        var o = a.getAttribute('data-nick-order');
+
+        if (n == nick) {
+          var text = a.textContent;
+          var display = nicks[nick] + nick;
+          if (text != display) {
+            a.textContent = display;
+            a.setAttribute('data-nick-order', order);
+          }
+          inserted = true;
+          break;
+        }
+        else if (o > order) {
+          var li = document.createElement('LI');
+          var a = document.createElement('A');
+          a.setAttribute('class', 'nick-list-nick');
+          a.setAttribute('data-nick', nick);
+          a.setAttribute('data-nick-order', order);
+          a.textContent = nicks[nick] + nick;
+          li.appendChild(a);
+          list.insertBefore(li, item);
+          inserted = true;
+          break;
+        }
+      }
+
+      if (!inserted) {
+        var li = document.createElement('LI');
+        var a = document.createElement('A');
+        a.setAttribute('class', 'nick-list-nick');
+        a.setAttribute('data-nick', nick);
+        a.setAttribute('data-nick-order', order);
+        a.textContent = nicks[nick] + nick;
+        li.appendChild(a);
+        list.appendChild(li);
+      }
+    }
+
+    for (var i=0; i < del.length; i++) {
+      list.removeChild(del[i]);
+    }
+
     panel.keyboard.completion.completions = sorted;
   };
 

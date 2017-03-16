@@ -848,10 +848,6 @@ li.message.monospace .message-flex .message-nick {
   line-height: 1em;
 }
 
-#panel ol li.chat.monospace {
-  background: #eee;
-}
-
 #panel ol li.message.monospace.consecutive {
   padding-top: 0px;
   padding-bottom: 0px;
@@ -1615,6 +1611,10 @@ li.message:hover .message-controls,
 
   .message-flex .message-nick {
     display: inline-block;
+  }
+
+  li.message.monospace.consecutive .message-nick {
+    display: none;
   }
 
   .message-flex time {
