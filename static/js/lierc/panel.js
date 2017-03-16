@@ -313,8 +313,8 @@ var Panel = function(name, id, connection, mobile) {
 
     toggle.addEventListener("click", function(e) {
       e.preventDefault();
-      $(toggle).toggleClass('hidden');
-      if ($(toggle).hasClass('hidden')) {
+      toggle.classList.toggle('hidden');
+      if (toggle.classList.contains('hidden')) {
         wrap.remove();
       }
       else {
@@ -575,8 +575,8 @@ var Panel = function(name, id, connection, mobile) {
               toggle.addEventListener("click", function(e) {
                 e.preventDefault();
                 panel.scroll(function() {
-                  $(wrap).toggleClass("hidden");
-                  $(toggle).toggleClass("hidden");
+                  wrap.classList.toggle("hidden");
+                  toggle.classList.toggle("hidden");
                 });
               });
 
@@ -630,8 +630,8 @@ var Panel = function(name, id, connection, mobile) {
             toggle.addEventListener("click", function(e) {
               e.preventDefault();
               panel.scroll(function() {
-                $(wrap).toggleClass("hidden");
-                $(toggle).toggleClass("hidden");
+                wrap.classList.toggle("hidden");
+                toggle.classList.toggle("hidden");
               });
             });
 

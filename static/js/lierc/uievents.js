@@ -265,7 +265,7 @@ var UIEvents = function(liercd) {
   $('#nav .nav-title').on('click', function(e) { 
     if ($(e.target).is('.nav-title,.nav-title-text,.count')) {
       e.preventDefault();
-      $(this).toggleClass('collapsed');
+      this.classList.toggle('collapsed');
     }
   });
 
@@ -470,7 +470,7 @@ var UIEvents = function(liercd) {
   $('#upload').on('click touchstart', function(e) {
     if ($(e.target).is('#upload')) {
       e.preventDefault();
-      $(this).toggleClass("open");
+      this.classList.toggle("open");
     }
   });
 
@@ -601,8 +601,8 @@ var UIEvents = function(liercd) {
 
   $('#email-notify').on('click', function(e) {
       e.preventDefault();
-      $(this).toggleClass('enabled');
-      var enabled = $(this).hasClass('enabled');
+      this.classList.toggle('enabled');
+      var enabled = this.classList.contains('enabled');
       liercd.update_pref("email", enabled);
   });
 
