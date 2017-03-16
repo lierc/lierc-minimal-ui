@@ -243,29 +243,29 @@ var Panel = function(name, id, connection, mobile) {
         prev_time = time.innerHTML;
       }
 
-      if (this.className.indexOf('message') != -1) {
+      if (this.classList.contains('message')) {
         var nick = this.querySelector('.message-nick').getAttribute('data-nick');
         if (panel.monospace_nicks.indexOf(nick) != -1) {
-          this.className += " monospace";
+          this.classList.add("monospace");
           if (!prev_mono) {
-            this.className += " monospace-start";
+            this.classList.add("monospace-start");
           }
           prev_mono = true;
         }
         else {
           if (prev_mono) {
-            this.previousSibling.className += " monospace-end";
+            this.previousSibling.classList.add("monospace-end");
           }
           prev_mono = false;
         }
         if (nick == prev_nick) {
-          this.className += " consecutive";
+          this.classList.add("consecutive");
         }
         prev_nick = nick;
       }
       else {
         if (prev_mono)
-          this.previousSibling.className += " monospace-end";
+          this.previousSibling.classList.add("monospace-end");
         prev_nick = null;
         prev_mono = null;
       }

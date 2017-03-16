@@ -50,9 +50,9 @@ var UIEvents = function(liercd) {
         var items = liercd.elem.nav.find('li[data-name]:visible');
 
         for (var i=1; i < items.length; i++) {
-          if (items[i - 1].className.indexOf("selected") != -1) {
-            $(items[i - 1]).removeClass('selected');
-            $(items[i]).addClass('selected');
+          if (items[i - 1].classList.contains("selected")) {
+            items[i - 1].classList.remove('selected');
+            items[i].classList.add('selected');
             return;
           }
         }
@@ -62,9 +62,9 @@ var UIEvents = function(liercd) {
         var items = liercd.elem.nav.find('li[data-name]:visible');
 
         for (var i=0; i < items.length - 1; i++) {
-          if (items[i + 1].className.indexOf("selected") != -1) {
-            $(items[i + 1]).removeClass('selected');
-            $(items[i]).addClass('selected');
+          if (items[i + 1].classList.contains("selected")) {
+            items[i + 1].classList.remove('selected');
+            items[i].classList.add('selected');
             return;
           }
         }
@@ -142,10 +142,10 @@ var UIEvents = function(liercd) {
         var item = items[i];
         var text = item.getAttribute("data-name").toLowerCase();
         if (text.indexOf(val) == -1) {
-          $(item).removeClass("match");
+          item.classList.remove("match");
         }
         else {
-          $(item).addClass("match");
+          item.classList.add("match");
         }
       }
     }
@@ -154,20 +154,20 @@ var UIEvents = function(liercd) {
     }
 
     for (var i=0; i < items.length; i++) {
-      if (items[i].className.indexOf("selected") != -1) {
-        if (items[i].className.indexOf("match") != -1)
+      if (items[i].classList.contains("selected")) {
+        if (items[i].classList.contains("match"))
           return;
         for (var j=i; j < items.length; j++) {
-          if (items[j].className.indexOf("match") != -1) {
-            $(items[i]).removeClass("selected");
-            $(items[j]).addClass("selected");
+          if (items[j].classList.contains("match")) {
+            items[i].classList.remove("selected");
+            items[j].classList.add("selected");
             return;
           }
         }
         for (var k=i; k >= 0; k--) {
-          if (items[k].className.indexOf("match") != -1) {
-            $(items[i]).removeClass("selected");
-            $(items[k]).addClass("selected");
+          if (items[k].classList.contains("match")) {
+            items[i].classList.remove("selected");
+            items[k].classList.add("selected");
             return;
           }
         }
@@ -710,6 +710,6 @@ var UIEvents = function(liercd) {
   });
 
   liercd.elem.panel.on('transitionend', 'li.chat', function() {
-    this.className = this.className.replace(/load(ing|ed)/g, '');
+    this.classList.remove('loading', 'loaded');
   });
 }
