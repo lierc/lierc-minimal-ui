@@ -1103,10 +1103,4 @@ var Liercd = function(url, user) {
   };
 
   var events = new UIEvents(liercd);
-
-  var remove_loading = function(e) {
-    this.className = this.className.replace(/load(ing|ed)/g, '');
-  };
-
-  liercd.elem.panel.on('transitionend', 'li.chat', remove_loading);
 };

@@ -708,4 +708,8 @@ var UIEvents = function(liercd) {
       liercd.save_seen(liercd.focused, true);
     }
   });
+
+  liercd.elem.panel.on('transitionend', 'li.chat', function() {
+    this.className = this.className.replace(/load(ing|ed)/g, '');
+  });
 }
