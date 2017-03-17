@@ -44,7 +44,7 @@ var Liercd = function(url, user) {
   if (!liercd.mobile) {
     $('.sortable').each(function() {
       Sortable.create(this, {
-        delay: liercd.touchstart ? 250 : 0,
+        delay: 0,
         onSort: function(e) {
           liercd.save_channel_order();
         }
@@ -170,11 +170,11 @@ var Liercd = function(url, user) {
 
   liercd.init = function() {
     liercd.default_panel = liercd.find_default_panel();
-    $.ajax({
-      url: liercd.baseurl + '/connection',
-      type: "GET",
-      dataType: "json",
-      success: function(configs) {
+    fetch(liercd.baseurl + '/connection', {
+        credentials: 'include'
+      }).then(function(res) {
+        return res.json();
+      }).then(function(configs) {
         if (!configs.length)
           liercd.config_modal();
 
@@ -186,21 +186,19 @@ var Liercd = function(url, user) {
           liercd.stream.destroy();
 
         liercd.connect();
-      }
-    });
+      });
   };
 
   liercd.add_recent_privates = function() {
-    $.ajax({
-      url: liercd.baseurl + '/privates',
-      type: "GET",
-      dataType: "json",
-      success: function(privates) {
+    fetch(liercd.baseurl + '/privates', {
+        credentials: 'include'
+      }).then(function(res) {
+        return res.json();
+      }).then(function(privates) {
         privates.forEach(function(priv) {
           liercd.add_panel(priv.nick, priv.connection, false);
         });
-      }
-    });
+      });
   };
 
   liercd.connect = function() {
@@ -355,17 +353,17 @@ var Liercd = function(url, user) {
           liercd.remove_panel(id);
       }
       else if ($(e.target).hasClass('edit-panel')) {
-        $.ajax({
-          url: liercd.baseurl + "/connection/" + panel.connection,
-          type: "GET",
-          dataType: "json",
-          error: function(e) {
-            alert("I'm sorry");
-          },
-          success: function(res) {
+        fetch(liercd.baseurl + "/connection/" + panel.connection, {
+            credentials: 'include'
+          }).then(function(res) {
+            if (!res.ok)
+              throw Error(res.statusText);
+            return res.json();
+          }).then(function(res) {
             liercd.config_modal(null, res);
-          }
-        });
+          }).catch(function(e) {
+            alert("I'm sorry: " + e);
+          });
       }
       else {
         liercd.focus_panel(id);
@@ -411,44 +409,49 @@ var Liercd = function(url, user) {
   liercd.part_channel = function(name, connection) {
     if (!confirm("Are you sure you want to leave this channel?"))
       return;
-    $.ajax({
-      url: liercd.baseurl + '/connection/' + connection,
-      type: "POST",
-      dataType: "json",
-      contentType: "application/irc",
-      headers: {'lierc-token': liercd.post_token},
-      data: "PART " + name,
-      error: function(e) {
-        var res = JSON.parse(e.responseText);
-        alert("Error: " + res.error);
-        liercd.load_token();
-      },
-      success: function(res) {
+
+    var headers = new Headers();
+    headers.append('lierc-token', liercd.post_token);
+    headers.append('content-type', 'application/irc');
+
+    fetch(liercd.baseurl + '/connection/' + connection, {
+        credentials: 'include',
+        method: 'POST',
+        body: 'PART ' + name,
+        headers: headers
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(res) {
         liercd.remove_panel(panel_id(name, connection));
         liercd.post_token = res.token;
-      }
-    });
+      }).catch(function(e) {
+        alert("Error: " + e);
+        liercd.load_token();
+      });
   };
 
   liercd.remove_connection = function(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    $.ajax({
-      url: liercd.baseurl + '/connection/' + connection,
-      type: "DELETE",
-      dataType: "json",
-      success: function(res) {
+    fetch(liercd.baseurl + '/connection/' + connection, {
+        credentials: 'include',
+        method: 'DELETE'
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(res) {
         for (id in liercd.panels) {
           var panel = liercd.panels[id];
           if (panel.connection == connection) {
             liercd.remove_panel(id);
           }
         }
-      },
-      error: function(res) {
+      }).catch(function(e) {
         alert(res);
-      }
-    });
+      });
   };
 
   liercd.channel_panels = function() {
@@ -480,19 +483,19 @@ var Liercd = function(url, user) {
   };
 
   liercd.fill_missed = function(start) {
-    $.ajax({
-      url: liercd.baseurl + "/log/" + start,
-      type: "GET",
-      dataType: "json",
-      error: function(error) {
-        liercd.reset();
-      },
-      success: function(events) {
+    fetch(liercd.baseurl + "/log/" + start, {
+        credentials: 'include'
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(events) {
         for (var i=0; i < events.length; i++) {
           liercd.stream.fire('message', events[i]);
         }
-      }
-    });
+      }).catch(function(e) {
+        liercd.reset();
+      });
   };
 
   liercd.fill_backlog = function(panel, msgid) {
@@ -512,16 +515,13 @@ var Liercd = function(url, user) {
     if (msgid)
       parts.push(msgid);
 
-    $.ajax({
-      url: parts.join("/"),
-      type: "GET",
-      data: { limit: limit },
-      dataType: "json",
-      error: function(e) {
-        liercd.filling_backlog = false;
-        panel.set_loading(false);
-      },
-      success: function(events) {
+    fetch(parts.join("/") + '?limit=' + limit, {
+        credentials: 'include',
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(events) {
         if (events.length < limit)
           panel.backlog_empty = true;
 
@@ -550,8 +550,11 @@ var Liercd = function(url, user) {
         });
         panel.react_backlog_check();
         panel.set_loading(false);
-      }
-    });
+
+      }).catch(function(e) {
+        liercd.filling_backlog = false;
+        panel.set_loading(false);
+      });
   };
 
   liercd.is_reaction = function(message) {
@@ -749,12 +752,14 @@ var Liercd = function(url, user) {
         Highlight: form.find('input[name=Highlight]').val().split(/\s*,\s*/),
       };
 
-      $.ajax({
-        url: url,
-        type: method,
-        dataType: "json",
-        data: JSON.stringify(data),
-        success: function(res) {
+      fetch(url, {
+          method: method,
+          body: JSON.stringify(data)
+        }).then(function(res) {
+          if (!res.ok)
+            throw Error(res.statusText);
+          return res.json();
+        }).then(function(res) {
           if (method == "DELETE") {
             for (panel in liercd.panels) {
               if (panel.type == "channel") {
@@ -765,12 +770,10 @@ var Liercd = function(url, user) {
           }
           overlay.remove();
           liercd.overlayed = false;
-        },
-        error: function(res) {
+        }).catch(function(e) {
           console.log(res);
           alert("i'm sorry");
-        }
-      });
+        });
     });
   };
 
@@ -795,16 +798,15 @@ var Liercd = function(url, user) {
   setInterval(liercd.check_scroll, 250);
 
   liercd.ping_server = function() {
-    $.ajax({
-      url: liercd.baseurl + "/auth",
-      type: "GET",
-      dataType: "json",
-      complete: function(res) {
+    fetch(liercd.baseurl + "/auth", {
+        credentials: 'include'
+      })
+      .then(function(res) {
         if (res.status == 200)
           return;
 
         if (res.status == 401) {
-          window.location.reload();
+          //window.location.reload();
           return;
         }
 
@@ -816,37 +818,36 @@ var Liercd = function(url, user) {
           return;
         }
 
-        var data = JSON.parse(res.responseText);
+        var data = res.json();
         if (data["error"]) {
           console.log(data["error"]);
         }
-      }
-    });
+      });
   };
 
   setInterval(liercd.ping_server, 1000 * 15);
 
   liercd.get_prefs = function(cb) {
-    $.ajax({
-      url: liercd.baseurl + "/preference",
-      type: "GET",
-      dataType: "json",
-      error: function(e) {
-        cb();
-      },
-      success: function(res) {
+    fetch(liercd.baseurl + "/preference", {
+        credentials: 'include'
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(data) {
         var prefs = {};
-        for (var i=0; i < res.length; i++) {
+        for (var i=0; i < data.length; i++) {
           try {
-            prefs[res[i].name] = JSON.parse(res[i].value);
+            prefs[data[i].name] = JSON.parse(data[i].value);
           }
           catch(e) {
-            console.log("Unable to parse JSON: ", res[i].value);
+            console.log("Unable to parse JSON: ", data[i].value);
           }
         }
         cb(prefs);
-      }
-    });
+      }).catch(function() {
+        cb();
+      });
   };
 
   liercd.get_pref = function(name) {
@@ -889,45 +890,43 @@ var Liercd = function(url, user) {
 
   liercd.update_pref = function(name, value) {
     liercd.prefs[name] = value;
-    $.ajax({
-      url: liercd.baseurl + "/preference/" + encodeURIComponent(name),
-      type: "POST",
-      dataType: "json",
-      contentType: "text/plain",
-      data: JSON.stringify(value),
-      success: function(res) { }
+    fetch(liercd.baseurl + "/preference/" + encodeURIComponent(name), {
+      method: 'POST',
+      body: JSON.stringify(value),
+      credentials: 'include',
     });
   };
 
   liercd.load_token = function(cb) {
-    $.ajax({
-      url: liercd.baseurl + "/token",
-      type: "GET",
-      dataType: "json",
-      complete: function(e) {
+    fetch(liercd.baseurl + "/token", {
+        credentials: 'include'
+      })
+      .then(function(res) {
+        return res.json();
+      }).then(function(data) {
+        liercd.post_token = data.token;
         if (cb) cb();
-      },
-      success: function(res) {
-        liercd.post_token = res.token;
-      }
-    });
+      }).catch(function(e) {
+        if (cb) cb();
+      });
   };
 
   liercd.load_seen = function(cb) {
-    $.ajax({
-      url: liercd.baseurl + "/seen",
-      type: "GET",
-      dataType: "json",
-      complete: function(e) {
-        cb();
-      },
-      success: function(res) {
+    fetch(liercd.baseurl + "/seen", {
+        credentials: 'include'
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(res) {
         for (i in res) {
           var id = panel_id(res[i]["channel"], res[i]["connection"]);
           liercd.last_seen[id] = res[i]["message_id"];
         }
-      }
-    });
+        cb();
+      }).catch(function(e) {
+        cb();
+      });
   };
 
   liercd.save_seen = function(panel, force) {
@@ -942,15 +941,11 @@ var Liercd = function(url, user) {
         "channel", encodeURIComponent(panel.name), "seen"
       ];
 
-      $.ajax({
-        url: parts.join("/"),
-        type: "POST",
-        dataType: "json",
-        data: "" + last_seen,
-        error: function(e) {
-          console.log("error saving", e);
-        }
-      });
+      fetch(parts.join("/"), {
+          credentials: 'include',
+          method: 'POST',
+          body: "" + last_seen
+        });
 
       liercd.last_seen[id] = last_seen;
     }
@@ -962,15 +957,25 @@ var Liercd = function(url, user) {
       if (liercd.focused.last_seen)
         liercd.last_seen[liercd.focused.id] = liercd.focused.last_seen;
     }
-    $.ajax({
-      url: liercd.baseurl + "/missed",
-      type: 'GET',
-      data: liercd.last_seen,
-      dataType: 'json',
-      error: function(res) {
-        console.log(res);
-      },
-      success: function(res) {
+
+    var query = [];
+
+    for (k in liercd.last_seen) {
+      query.push([
+        encodeURIComponent(k),
+        encodeURIComponent(liercd.last_seen[k])
+      ].join('='));
+    }
+
+    var url = liercd.baseurl + "/missed?" + query.join('&');
+
+    fetch(url, {
+        credentials: 'include',
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(res) {
         liercd.missed = {};
         for (connection in res) {
           for (channel in res[connection]) {
@@ -983,23 +988,23 @@ var Liercd = function(url, user) {
             }
           }
         }
-      }
-    });
+      }).catch(function(e) {
+        console.log(res);
+      });
   };
 
   liercd.search_panel = function(panel, text) {
     var url = liercd.baseurl + "/connection/" + panel.connection
-      + "/channel/" + encodeURIComponent(panel.name) + "/last";
+      + "/channel/" + encodeURIComponent(panel.name) + "/last?"
+      + "query=" + encodeURIComponent(text) + "&limit=10";
 
-    $.ajax({
-      url: url,
-      dataType: "json",
-      data: {
-        query: text,
-        limit: 10
-      },
-      type: "GET",
-      success: function(messages) {
+    fetch(url, {
+        credentials: 'include'
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(messages) {
         if (messages.length > 0) {
           var line = $('<div/>', {'class': 'search-start'});
           var scrolled = panel.is_scrolled();
@@ -1013,8 +1018,7 @@ var Liercd = function(url, user) {
           msg.Search = true;
           panel.append(Render(msg));
         }
-      }
-    });
+      });
   };
 
   liercd.get_prefs(function(prefs) {

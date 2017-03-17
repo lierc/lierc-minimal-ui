@@ -305,8 +305,7 @@ var Panel = function(name, id, connection, mobile) {
     wrap.append(inner);
 
     if (!manual && panel.collapse_embeds) {
-      $(toggle).addClass('hidden');
-      wrap.remove();
+      $(a).next('.embed-toggle').addClass('hidden');
       return;
     }
 
