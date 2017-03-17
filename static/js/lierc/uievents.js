@@ -581,14 +581,6 @@ var UIEvents = function(liercd) {
     document.execCommand("insertText", false, text);
   });
 
-  liercd.elem.panel.on('click', '[data-embed]', function(e) {
-      e.preventDefault();
-      var wrap = $(this);
-      wrap.html(wrap.attr('data-embed'));
-      wrap.addClass('open');
-      wrap.removeAttr('data-embed');
-  });
-
   $('.flex-wrap-left header').on('touchstart click', function(e) {
     e.preventDefault();
     $('.flex-wrap').toggleClass("open");
@@ -650,6 +642,30 @@ var UIEvents = function(liercd) {
         liercd.add_monospace_nick(liercd.focused, nick);
       }
     }
+  });
+
+  $('#panel').on('click', '.embed-toggle', function(e) {
+    e.preventDefault();
+    var toggle = this;
+    var embed = JSON.parse(toggle.getAttribute('data-embed'));
+
+    toggle.classList.toggle('hidden');
+    if (toggle.classList.contains('hidden')) {
+      var wrap = document.querySelector(".embed-wrap[data-embed-id='"+embed.id+"']");
+      wrap.parentNode.parentNode.removeChild(wrap.parentNode);
+    }
+    else {
+      var a = toggle.previousSibling;
+      liercd.focused.embed(a, embed, true);
+    }
+  });
+
+  $('#panel').on('click', '.embed-wrap[data-embed-id]', function() {
+    var id = this.getAttribute('data-embed-id');
+    var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
+    var embed = JSON.parse(a.getAttribute('data-embed'));
+    this.classList.add('open');
+    this.innerHTML = embed.html;
   });
 
   $('#panel').on('click', '.message-react', function(e) {

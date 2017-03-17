@@ -19,6 +19,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.first_focus = true;
   panel.last_seen = null;
   panel.path = window.location.pathname + "#/" + connection.id + "/" + encodeURIComponent(name);
+  panel.observers = {};
 
   panel.mode = "";
   panel.network = connection.config.Host;
@@ -223,9 +224,9 @@ var Panel = function(name, id, connection, mobile) {
     panel.update_seen();
     panel.focused = false;
     panel.elem.nav.removeClass("active");
-    panel.elem.list.html('');
-    panel.elem.list.remove();
-    panel.elem.list = $('<ol/>');
+    panel.remove_observers(panel.elem.list);
+    panel.elem.list.get(0).innerHTML = '';
+    panel.elem.nicks.get(0).innerHTML = '';
     panel.backlog_empty = false;
   };
 
@@ -293,35 +294,15 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.embed = function(a, embed, manual) {
-    var toggle = document.createElement('SPAN');
-
-    panel.scroll(function() {
-      toggle.setAttribute("class", "embed-toggle");
-      toggle.setAttribute("aria-hidden", "true");
-      a.parentNode.insertBefore(toggle, a.nextSibling);
-    });
-
     var li = $(a).parents('li');
-    var wrap = $('<div/>', {
-      'class': 'embed-wrap-wrap',
-      'data-embed-provider': embed.provider_name.toLowerCase()
+    var wrap = $('<div/>', {'class': 'embed-wrap-wrap'});
+    var inner = $('<div/>', {
+      'class': 'embed-wrap',
+      'data-embed-provider': embed.provider_name.toLowerCase(),
+      'data-embed-id': embed.id
     });
-    var inner = $('<div/>', {'class': 'embed-wrap'});
+
     wrap.append(inner);
-
-    var temp;
-
-    toggle.addEventListener("click", function(e) {
-      e.preventDefault();
-      toggle.classList.toggle('hidden');
-      if (toggle.classList.contains('hidden')) {
-        wrap.remove();
-      }
-      else {
-        $(toggle).remove();
-        panel.embed(a, embed, true);
-      }
-    });
 
     if (!manual && panel.collapse_embeds) {
       $(toggle).addClass('hidden');
@@ -340,7 +321,6 @@ var Panel = function(name, id, connection, mobile) {
       }));
       inner.append(img);
     }
-    inner.attr('data-embed', embed.html);
     inner.append($('<h2/>').text(embed.title));
 
     if (embed.provider_name == "Twitter") {
@@ -382,6 +362,7 @@ var Panel = function(name, id, connection, mobile) {
     };
 
     o.observe(wrap.get(0), config);
+    panel.observers[embed.id] = o;
   };
 
   panel.is_scrolled = function() {
@@ -438,8 +419,7 @@ var Panel = function(name, id, connection, mobile) {
       });
     }
     else {
-      el.html('');
-      el.remove();
+      el.innerHTML = '';
     }
 
     if (el.hasClass("message")) {
@@ -531,11 +511,21 @@ var Panel = function(name, id, connection, mobile) {
     if (panel.focused && !panel.is_scrolled())
       return;
 
-    var l = panel.elem.list.find('li.chat:visible:gt(' + 200 + ')').length;
+    var els = panel.elem.list.find('li.chat:visible:lt(-' + 200 + ')')
+      .last().prevAll();
 
-    if (l) {
-      panel.elem.list.find('li.chat:visible:lt(' + l + ')').remove();
-    }
+    panel.remove_observers(els);
+    els.remove();
+  };
+
+  panel.remove_observers = function(els) {
+    els.find('[data-embed-id]').each(function() {
+      var id = this.getAttribute('data-embed-id');
+      if (panel.observers[id]) {
+        panel.observers[id].disconnect();
+        delete panel.observers[id];
+      }
+    });
   };
 
   panel.keyboard = new Keyboard(panel.elem.input.get(0));
@@ -561,11 +551,11 @@ var Panel = function(name, id, connection, mobile) {
 
               panel.scroll(function() {
                 if (panel.collapse_embeds) {
-                  toggle.setAttribute("class", "embed-toggle hidden");
+                  toggle.setAttribute("class", "image-toggle hidden");
                   wrap.setAttribute("class", "image-wrap hidden");
                 }
                 else {
-                  toggle.setAttribute("class", "embed-toggle");
+                  toggle.setAttribute("class", "image-toggle");
                   wrap.setAttribute("class", "image-wrap");
                 }
                 toggle.setAttribute("aria-hidden", "true");
@@ -616,11 +606,11 @@ var Panel = function(name, id, connection, mobile) {
 
             panel.scroll(function() {
               if (panel.collapse_embeds) {
-                toggle.setAttribute("class", "embed-toggle hidden");
+                toggle.setAttribute("class", "image-toggle hidden");
                 wrap.setAttribute("class", "image-wrap hidden");
               }
               else {
-                toggle.setAttribute("class", "embed-toggle");
+                toggle.setAttribute("class", "image-toggle");
                 wrap.setAttribute("class", "image-wrap");
               }
               toggle.setAttribute("aria-hidden", "true");
@@ -734,10 +724,12 @@ var Panel = function(name, id, connection, mobile) {
         if (bool) {
           panel.elem.body.addClass('hide-embeds');
           panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
+          panel.elem.list.find(".image-toggle:not(.hidden)").trigger("click");
         }
         else {
           panel.elem.body.removeClass('hide-embeds');
           panel.elem.list.find(".embed-toggle.hidden").trigger("click");
+          panel.elem.list.find(".image-toggle.hidden").trigger("click");
         }
       }
 

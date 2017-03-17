@@ -191,11 +191,12 @@ a:hover {
   content: "last read";
   text-align: center;
   padding: 0 10px;
-  top: -8px;
+  top: -6px;
   right: 0px;
   background: #fff;
   color: #ffa130;
   font-size: 10px;
+  line-height: 10px;
   font-style: italic;
   font-weight: bold;
 }
@@ -271,16 +272,19 @@ a:hover {
   display: none;
 }
 
+.image-toggle.hidden:after,
 .embed-toggle.hidden:after {
   content: "\f0da";
 }
 
+.image-toggle,
 .embed-toggle {
   margin-left: 4px;
   cursor: pointer;
   font-family: FontAwesome;
 }
 
+.image-toggle:after,
 .embed-toggle:after {
   content: "\f0d7";
   width: 10px;
@@ -843,9 +847,14 @@ div.header-right {
   white-space: pre;
 }
 
+#panel ol li.message.monospace:hover,
+#panel ol li.message.monospace {
+  background: #eee;
+}
+
 li.message.monospace .message-flex .message-text,
 li.message.monospace .message-flex .message-nick {
-  line-height: 1em;
+  line-height: 1.2em;
 }
 
 #panel ol li.message.monospace.consecutive {
@@ -861,17 +870,17 @@ li.message.monospace.consecutive .message-nick {
 #panel ol li.message.monospace:first-child,
 #panel ol li.message.monospace-start {
   padding-bottom: 0px;
-  padding-top:  4px;
+  padding-top:  3px;
 }
 
 #panel ol li.message.monospace:last-child,
 #panel ol li.message.consecutive.monospace-end {
-  padding-bottom: 3px !important;
+  padding-bottom: 2px !important;
 }
 
 #panel ol li.message.monospace-start.monospace-end {
-  padding-top: 4px !important;
-  padding-bottom: 3px !important;
+  padding-top: 3px !important;
+  padding-bottom: 2px !important;
 }
 
 .message-flex .message-nick {

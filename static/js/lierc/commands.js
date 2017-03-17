@@ -45,7 +45,8 @@ var Commands = function(liercd) {
 
   add_command("clear", [], function(panel) {
     panel.backlog_empty = true;
-    panel.elem.list.html('');
+    panel.remove_observers(panel.elem.list);
+    panel.elem.list.get(0).innerHTML = '';
   });
 
   add_command("bustin", ["bust"], function(panel) {
