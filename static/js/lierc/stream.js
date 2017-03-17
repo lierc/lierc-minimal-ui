@@ -101,19 +101,6 @@ var Stream = function(baseurl) {
     }
   };
 
-  stream.send = function(line) {
-    var url = stream.baseurl + "/" + stream.id
-    $.ajax({
-      url: stream.baseurl + "/" + stream.id,
-      type: "POST",
-      headers: { "Content-type": "application/irc" },
-      data: line,
-      complete: function(res) {
-        console.log(res);
-      }
-    });
-  };
-
   connect();
   var timer = setInterval(stream.check, 1000);
 

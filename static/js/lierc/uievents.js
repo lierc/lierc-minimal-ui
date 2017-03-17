@@ -665,7 +665,7 @@ var UIEvents = function(liercd) {
     var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
     var embed = JSON.parse(a.getAttribute('data-embed'));
     this.classList.add('open');
-    this.innerHTML = embed.html;
+    $(this).html(embed.html);
   });
 
   $('#panel').on('click', '.message-react', function(e) {
