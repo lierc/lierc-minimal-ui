@@ -145,7 +145,6 @@ a:hover {
 
 #panel ol li.chat span.message-nick {
   font-weight: bold;
-  text-shadow: 0 0 3px #fff;
 }
 
 .nick-popup {
@@ -863,7 +862,7 @@ li.message.monospace .message-flex .message-nick {
 }
 
 li.message.monospace.consecutive .message-nick {
-  visibility: hidden;
+  opacity: 0;
 }
 
 #panel ol li.message:not(.monospace) + li.message.monospace,
@@ -909,6 +908,7 @@ li.monospace .message-text {
   white-space: normal;
 }
 
+li.event time,
 .message-flex time {
   flex-grow:  0;
   flex-shrink: 0;
