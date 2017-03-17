@@ -923,12 +923,19 @@ li.monospace .message-text {
   color: #ffd0d6;
 }
 
+header:hover #panel-name,
 header:hover #global-controls-toggle {
   color: #fff;
 }
 
 #global-controls li {
   border-bottom: 1px solid rgba(0,0,0,0.05);
+}
+
+#panel-name {
+  text-shadow: none;
+  padding: 8px 0px 8px 15px;
+  cursor: pointer;
 }
 
 #global-controls-toggle {
@@ -940,6 +947,7 @@ header:hover #global-controls-toggle {
   text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
 }
 
+.flex-wrap.open #panel-name:hover,
 .flex-wrap.open #global-controls-toggle:hover {
   text-shadow: none;
 }
@@ -958,6 +966,8 @@ header:hover #global-controls-toggle {
   box-sizing: border-box;
 }
 
+.flex-wrap.open .header-right,
+.flex-wrap.open #panel-name,
 .flex-wrap.open #global-controls-toggle {
   background: #fff;
   color: #ffb6c0;

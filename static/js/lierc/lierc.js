@@ -171,7 +171,7 @@ var Liercd = function(url, user) {
   liercd.init = function() {
     liercd.default_panel = liercd.find_default_panel();
     fetch(liercd.baseurl + '/connection', {
-        credentials: 'include'
+        credentials: 'same-origin'
       }).then(function(res) {
         return res.json();
       }).then(function(configs) {
@@ -191,7 +191,7 @@ var Liercd = function(url, user) {
 
   liercd.add_recent_privates = function() {
     fetch(liercd.baseurl + '/privates', {
-        credentials: 'include'
+        credentials: 'same-origin'
       }).then(function(res) {
         return res.json();
       }).then(function(privates) {
@@ -354,7 +354,7 @@ var Liercd = function(url, user) {
       }
       else if ($(e.target).hasClass('edit-panel')) {
         fetch(liercd.baseurl + "/connection/" + panel.connection, {
-            credentials: 'include'
+            credentials: 'same-origin'
           }).then(function(res) {
             if (!res.ok)
               throw Error(res.statusText);
@@ -415,7 +415,7 @@ var Liercd = function(url, user) {
     headers.append('content-type', 'application/irc');
 
     fetch(liercd.baseurl + '/connection/' + connection, {
-        credentials: 'include',
+        credentials: 'same-origin',
         method: 'POST',
         body: 'PART ' + name,
         headers: headers
@@ -436,7 +436,7 @@ var Liercd = function(url, user) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
     fetch(liercd.baseurl + '/connection/' + connection, {
-        credentials: 'include',
+        credentials: 'same-origin',
         method: 'DELETE'
       }).then(function(res) {
         if (!res.ok)
@@ -484,7 +484,7 @@ var Liercd = function(url, user) {
 
   liercd.fill_missed = function(start) {
     fetch(liercd.baseurl + "/log/" + start, {
-        credentials: 'include'
+        credentials: 'same-origin'
       }).then(function(res) {
         if (!res.ok)
           throw Error(res.statusText);
@@ -516,7 +516,7 @@ var Liercd = function(url, user) {
       parts.push(msgid);
 
     fetch(parts.join("/") + '?limit=' + limit, {
-        credentials: 'include',
+        credentials: 'same-origin',
       }).then(function(res) {
         if (!res.ok)
           throw Error(res.statusText);
@@ -754,7 +754,8 @@ var Liercd = function(url, user) {
 
       fetch(url, {
           method: method,
-          body: JSON.stringify(data)
+          body: JSON.stringify(data),
+          credentials: 'same-origin'
         }).then(function(res) {
           if (!res.ok)
             throw Error(res.statusText);
@@ -771,7 +772,7 @@ var Liercd = function(url, user) {
           overlay.remove();
           liercd.overlayed = false;
         }).catch(function(e) {
-          console.log(res);
+          console.log(e);
           alert("i'm sorry");
         });
     });
@@ -799,7 +800,7 @@ var Liercd = function(url, user) {
 
   liercd.ping_server = function() {
     fetch(liercd.baseurl + "/auth", {
-        credentials: 'include'
+        credentials: 'same-origin'
       })
       .then(function(res) {
         if (res.status == 200)
@@ -829,7 +830,7 @@ var Liercd = function(url, user) {
 
   liercd.get_prefs = function(cb) {
     fetch(liercd.baseurl + "/preference", {
-        credentials: 'include'
+        credentials: 'same-origin'
       }).then(function(res) {
         if (!res.ok)
           throw Error(res.statusText);
@@ -893,13 +894,13 @@ var Liercd = function(url, user) {
     fetch(liercd.baseurl + "/preference/" + encodeURIComponent(name), {
       method: 'POST',
       body: JSON.stringify(value),
-      credentials: 'include',
+      credentials: 'same-origin',
     });
   };
 
   liercd.load_token = function(cb) {
     fetch(liercd.baseurl + "/token", {
-        credentials: 'include'
+        credentials: 'same-origin'
       })
       .then(function(res) {
         return res.json();
@@ -913,7 +914,7 @@ var Liercd = function(url, user) {
 
   liercd.load_seen = function(cb) {
     fetch(liercd.baseurl + "/seen", {
-        credentials: 'include'
+        credentials: 'same-origin'
       }).then(function(res) {
         if (!res.ok)
           throw Error(res.statusText);
@@ -942,7 +943,7 @@ var Liercd = function(url, user) {
       ];
 
       fetch(parts.join("/"), {
-          credentials: 'include',
+          credentials: 'same-origin',
           method: 'POST',
           body: "" + last_seen
         });
@@ -970,7 +971,7 @@ var Liercd = function(url, user) {
     var url = liercd.baseurl + "/missed?" + query.join('&');
 
     fetch(url, {
-        credentials: 'include',
+        credentials: 'same-origin',
       }).then(function(res) {
         if (!res.ok)
           throw Error(res.statusText);
@@ -999,7 +1000,7 @@ var Liercd = function(url, user) {
       + "query=" + encodeURIComponent(text) + "&limit=10";
 
     fetch(url, {
-        credentials: 'include'
+        credentials: 'same-origin'
       }).then(function(res) {
         if (!res.ok)
           throw Error(res.statusText);
