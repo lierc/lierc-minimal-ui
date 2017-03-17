@@ -19,7 +19,7 @@ var Liercd = function(url, user) {
   liercd.prefs = {};
   liercd.touchstart = "ontouchstart" in document.documentElement;
   liercd.mobile = detect_mobile();
-  liercd.post_token = null;
+  liercd.post_tokens = [];
 
   liercd.elem = {
     panel: $('#panel'),
@@ -406,12 +406,20 @@ var Liercd = function(url, user) {
     }
   };
 
+  liercd.post_token = function() {
+    var token = liercd.post_tokens.pop();
+    if (!token) {
+      alert("No post tokens, tell Lee!");
+      throw Error("No tokens");
+    }
+    return token;
+  };
   liercd.part_channel = function(name, connection) {
     if (!confirm("Are you sure you want to leave this channel?"))
       return;
 
     var headers = new Headers();
-    headers.append('lierc-token', liercd.post_token);
+    headers.append('lierc-token', liercd.post_token());
     headers.append('content-type', 'application/irc');
 
     fetch(liercd.baseurl + '/connection/' + connection, {
@@ -425,7 +433,7 @@ var Liercd = function(url, user) {
         return res.json();
       }).then(function(res) {
         liercd.remove_panel(panel_id(name, connection));
-        liercd.post_token = res.token;
+        liercd.post_token.push(res.token);
       }).catch(function(e) {
         alert("Error: " + e);
         liercd.load_token();
@@ -903,11 +911,17 @@ var Liercd = function(url, user) {
         credentials: 'same-origin'
       })
       .then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
         return res.json();
       }).then(function(data) {
-        liercd.post_token = data.token;
+        liercd.post_tokens.push(data.token);
+        if (data.extra) {
+          liercd.post_tokens = liercd.post_tokens.concat(data.extra);
+        }
         if (cb) cb();
       }).catch(function(e) {
+        alert("Error fetching token: " + e);
         if (cb) cb();
       });
   };
@@ -1101,7 +1115,9 @@ var Liercd = function(url, user) {
     liercd.focused = null;
 
     liercd.load_seen(function() {
-      liercd.init();
+      liercd.load_token(function() {
+        liercd.init();
+      });
     });
   }
 

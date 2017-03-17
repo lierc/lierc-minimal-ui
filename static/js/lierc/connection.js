@@ -322,17 +322,4 @@ var Connection = function(config) {
   conn.in_channel = function(name) {
     return conn.channels.indexOf(name) != -1;
   };
-
-  conn.send = function(line, success) {
-    $.ajax({
-      url: liercd.baseurl + '/connection/' + conn.id,
-      type: "POST",
-      dataType: "json",
-      data: line,
-      success: function() {
-        if (success)
-          success();
-      }
-    });
-  };
 };
