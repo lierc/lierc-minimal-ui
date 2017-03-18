@@ -255,9 +255,7 @@ var Liercd = function(url, user) {
       for (var id in liercd.panels) {
         liercd.panels[id].set_disabled(false);
         if (!liercd.focused || id != liercd.focused.id) {
-          liercd.panels[id].remove_observers(liercd.panels[id].elem.list);
-          liercd.panels[id].elem.list.get(0).innerHTML = ''
-          liercd.panels[id].elem.nicks.get(0).innerHTML = '';
+          liercd.panels[id].clear_lists();
         }
       }
     });

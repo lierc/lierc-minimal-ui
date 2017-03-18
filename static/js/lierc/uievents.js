@@ -660,7 +660,7 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#panel').on('click', '.embed-wrap[data-embed-id]', function() {
+  $('#panel').on('click', '.embed-wrap[data-embed-id]:not(.open)', function() {
     var id = this.getAttribute('data-embed-id');
     var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
     var embed = JSON.parse(a.getAttribute('data-embed'));

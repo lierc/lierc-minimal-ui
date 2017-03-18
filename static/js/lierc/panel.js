@@ -224,11 +224,21 @@ var Panel = function(name, id, connection, mobile) {
     panel.update_seen();
     panel.focused = false;
     panel.elem.nav.removeClass("active");
-    panel.remove_observers(panel.elem.list);
-    panel.elem.list.get(0).innerHTML = '';
-    panel.elem.nicks.get(0).innerHTML = '';
+    panel.clear_lists();
     panel.backlog_empty = false;
   };
+
+  panel.clear_lists = function() {
+    panel.remove_observers(panel.elem.list);
+    var list = panel.elem.list.get(0);
+    while (list.firstChild) {
+      list.removeChild(list.firstChild);
+    }
+    var nicks = panel.elem.nicks.get(0);
+    while (nicks.firstChild) {
+      nicks.removeChild(nicks.firstChild);
+    }
+  }
 
   panel.prepend = function(els) {
     var list = panel.elem.list.get(0);
