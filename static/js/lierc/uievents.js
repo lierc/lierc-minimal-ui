@@ -372,25 +372,26 @@ var UIEvents = function(liercd) {
 
     function sendlines(lines) {
       if (!lines.length) return;
-      $.ajax({
-        url: liercd.baseurl + "/connection/" + panel.connection,
-        type: "POST",
-        dataType: "json",
-        contentType: "application/irc",
-        headers: { 'lierc-token' : liercd.post_token() },
-        jsonp: false,
-        data: lines.shift(),
-        error: function(e) {
-          var res = JSON.parse(e.responseText);
-          alert("Error: " + res.error);
-          liercd.load_token();
-        },
-        success: function(res) {
+      fetch(liercd.baseurl + "/connection/" + panel.connection, {
+          credentials: 'same-origin',
+          method: "POST",
+          headers:{
+            'content-type': 'application/irc',
+            'lierc-token' : liercd.post_token()
+          },
+          body: lines.shift(),
+        }).then(function(res) {
+          if (!res.ok)
+            throw Error(res.statusText);
+          return res.json();
+        }).then(function(res) {
           liercd.post_tokens.push(res.token);
           if (lines.length)
             sendlines(lines);
-        }
-      });
+        }).catch(function(e) {;
+          alert("Error: " + e);
+          liercd.load_token();
+        });
     }
 
     sendlines(send);

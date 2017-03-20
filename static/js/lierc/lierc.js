@@ -413,7 +413,7 @@ var Liercd = function(url, user) {
     return token;
   };
   liercd.part_channel = function(name, connection) {
-    if (!confirm("Are you sure you want to leave this channel?"))
+    if (!confirm("Are you sure you want to leave " + name + "?"))
       return;
 
     var headers = new Headers();
