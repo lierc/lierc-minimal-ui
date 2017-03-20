@@ -451,6 +451,7 @@ a:hover {
   display: none;
 }
 
+.nav-title.collapsed + #status li.active,
 .nav-title.collapsed + #status li.disconnected {
   display: block;
 }
@@ -560,7 +561,7 @@ a:hover {
 
 .nav li {
   cursor: pointer;
-  padding: 8px 0px 8px 5px;
+  padding: 7px 0px 7px 5px;
   color: #ccc;
   font-size: 14px;
   line-height: 14px;
