@@ -623,12 +623,16 @@ body.disconnected #reconnect {
   background: #fff1f2;
   white-space: pre;
   min-height: 14px;
+  display: flex;
+}
+
+#topic.expanded {
+  white-space: pre-wrap;
 }
 
 #topic p {
   margin: 0;
   padding: 0;
-  height: 14px;
   line-height: 14px;
   font-size: 14px;
   color: #555;

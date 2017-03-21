@@ -217,7 +217,7 @@ var UIEvents = function(liercd) {
     e.preventDefault();
     $('.flex-wrap').removeClass('open');
     var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.join').clone());
+    overlay.append($('.dialog.join').clone());
     $('body').append(overlay);
     liercd.overlayed = true;
 
@@ -658,6 +658,17 @@ var UIEvents = function(liercd) {
     else {
       var a = toggle.previousSibling;
       liercd.focused.embed(a, embed, true);
+    }
+  });
+
+  $('#topic').on('click', function(e) {
+    if (liercd.focused) {
+      if (e.target.nodeName != 'A') {
+        var elem = this;
+        liercd.focused.scroll(function() {
+          elem.classList.toggle('expanded');
+        });
+      }
     }
   });
 

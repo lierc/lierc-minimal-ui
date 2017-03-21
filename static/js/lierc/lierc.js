@@ -193,12 +193,16 @@ var Liercd = function(url, user) {
     fetch(liercd.baseurl + '/privates', {
         credentials: 'same-origin'
       }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
         return res.json();
       }).then(function(privates) {
         privates.forEach(function(priv) {
           liercd.add_panel(priv.nick, priv.connection, false);
         });
-      });
+      }).catch(function(e) {
+        console.log(e);
+      });;
   };
 
   liercd.connect = function() {
@@ -227,10 +231,14 @@ var Liercd = function(url, user) {
       for (id in liercd.panels) {
         liercd.panels[id].set_disabled(true);
       }
-      var scrolled = liercd.focused && liercd.focused.is_scrolled();
-      liercd.elem.body.addClass('disconnected');
-      if (scrolled)
-        liercd.focused.scroll();
+      if (liercd.focused) {
+        liercd.focused.scroll(function() {
+          liercd.elem.body.addClass('disconnected');
+        });
+      }
+      else {
+        liercd.elem.body.addClass('disconnected');
+      }
     });
 
     stream.on('reconnect-status', function(text) {
@@ -560,6 +568,7 @@ var Liercd = function(url, user) {
       }).catch(function(e) {
         liercd.filling_backlog = false;
         panel.set_loading(false);
+        console.log(e);
       });
   };
 
