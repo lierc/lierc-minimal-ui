@@ -16,25 +16,30 @@ var Auth = function(baseurl) {
   };
 
   function modal_overlay(complete) {
-    var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.login').clone());
-    $('body').append(overlay);
+    var overlay = document.createElement('DIV');
+    overlay.setAttribute('class', 'overlay');
+    var login = document.querySelector('.login').cloneNode(true);
+    overlay.appendChild(login);
+    document.body.appendChild(overlay);
 
-    if (!("ontouchstart" in document.documentElement))
-      overlay.find('.login-form input[name=email]').focus();
+    if (!("ontouchstart" in document.documentElement)) {
+      overlay.querySelector('.login-form input[name="email"]').focus();
+    }
 
-    overlay.on("submit", function(e) {
+    overlay.addEventListener("submit", function(e) {
       e.preventDefault();
-      var form = $(e.target);
-      var action = form.find('input[type=submit]').attr('name');
-      var email = form.find('input[name=email]').val();
-      var user = form.find('input[name=username]').val();
-      var pass = form.find('input[type=password]').val();
+      var action = e.target.querySelector('input[type="submit"]').getAttribute('name');
+      var email = e.target.querySelector('input[name="email"]').value;
+      var pass = e.target.querySelector('input[type="password"]').value;
 
       var body = "";
       body += "email=" + encodeURIComponent(email);
-      body += "&username=" + encodeURIComponent(user);
       body += "&pass=" + encodeURIComponent(pass);
+
+      if (action == "register") {
+        var user = e.target.querySelector('input[name="username"]').value;
+        body += "&username=" + encodeURIComponent(user);
+      }
 
       fetch(baseurl + "/" + action, {
           'credentials': 'same-origin',
@@ -55,16 +60,19 @@ var Auth = function(baseurl) {
         });
     });
 
-    overlay.find('.login-toggle').on('click', function(e) {
+    overlay.querySelector('.login-toggle').addEventListener('click', function(e) {
       e.preventDefault();
-      overlay.find('.login-wrap').show();
-      overlay.find('.reset-wrap').hide();
+      overlay.querySelector('.login-wrap').style.display = 'block';
+      overlay.querySelector('.reset-wrap').style.display = 'none';
+      overlay.querySelector('.login-form input[name="email"]').focus();
     });
 
-    overlay.find('.reset-toggle').on('click', function(e) {
+    overlay.querySelector('.reset-toggle').addEventListener('click', function(e) {
       e.preventDefault();
-      overlay.find('.login-wrap').hide();
-      overlay.find('.reset-wrap').show();
+      console.log(e);
+      overlay.querySelector('.login-wrap').style.display = 'none';
+      overlay.querySelector('.reset-wrap').style.display = 'block';
+      overlay.querySelector('.reset-wrap input[name="email"]').focus();
     });
 
   };
