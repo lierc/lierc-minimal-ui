@@ -439,7 +439,7 @@ var Liercd = function(url, user) {
         return res.json();
       }).then(function(res) {
         liercd.remove_panel(panel_id(name, connection));
-        liercd.post_token.push(res.token);
+        liercd.post_tokens.push(res.token);
       }).catch(function(e) {
         alert("Error: " + e);
         liercd.load_token();

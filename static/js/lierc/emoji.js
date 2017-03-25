@@ -38,11 +38,11 @@ Emoji.load = function() {
   var safari = navigator.userAgent.indexOf('Safari') != -1
     && navigator.userAgent.indexOf('Chrome') == -1;
 
-  $.ajax({
-    url: "/static/emoji-data.json",
-    type: "GET",
-    dataType: "json",
-    success: function(res) {
+  fetch("/static/emoji-data.json").then(function(res) {
+      if (!res.ok)
+        throw Error(res.statusText);
+      return res.json();
+    }).then(function(res) {
       var codepoints = [];
       var length = safari ? Math.min(res.length, 100) : res.length;
       for (var i=0; i < length; i++) {
@@ -88,8 +88,7 @@ Emoji.load = function() {
         }).text(Emoji.data[i]['chars']);
         Emoji.list.append(li);
       }
-    }
-  });
+    });
 };
 
 Emoji.load();

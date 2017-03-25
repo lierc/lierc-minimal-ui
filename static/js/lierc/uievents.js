@@ -239,24 +239,28 @@ var UIEvents = function(liercd) {
       e.preventDefault();
       var channel = $(this).find('input[name=channel]').val();
       var conn = $(this).find('select[name=connection]').val();
-      $.ajax({
-        url: liercd.baseurl + '/connection/' + conn,
-        type: "POST",
-        contentType: "application/irc",
-        headers: { 'lierc-token' : liercd.post_token() },
-        data: "JOIN " + channel,
-        dataType: "json",
-        error: function(e) {
+      fetch(liercd.baseurl + '/connection/' + conn, {
+          'method': "POST",
+          'body': "JOIN " + channel,
+          'credentials': 'same-origin',
+          'headers': {
+            'content-type': "application/irc",
+            'lierc-token' : liercd.post_token()
+          },
+        }).then(function(res) {
+          overlay.remove();
+          liercd.overlayed = false;
+
+          if (!res.ok)
+            throw Error(res.statusText);
+          return res.json();
+        }).then(function(res) {
+          liercd.post_tokens.push(res.token);
+        }).catch(function(e) {
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
           liercd.load_token();
-        },
-        complete: function(res) {
-          overlay.remove();
-          liercd.overlayed = false;
-          liercd.post_tokens.push(res.token);
-        }
-      });
+        });
     });
   });
 
@@ -415,25 +419,25 @@ var UIEvents = function(liercd) {
 
     data['files'][filename] = { 'content': text.val() };
 
-    $.ajax({
-      url: "https://api.github.com/gists",
-      type: "POST",
-      dataType: "json",
-      data: JSON.stringify(data),
-      error: function(e) {
-        alert("I'm sorry");
-        submit.get(0).removeAttribute('disabled');
-        text.get(0).removeAttribute('disabled');
-      },
-      success: function(res) {
+    fetch("https://api.github.com/gists", {
+        'method': 'POST',
+        'body': JSON.stringify(data)
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(res) {
         submit.get(0).removeAttribute('disabled');
         text.get(0).removeAttribute('disabled');
         text.val('');
         liercd.focus_input(true);
         document.execCommand("insertText", false, res.html_url);
         $('#upload').removeClass('open');
-      }
-    });
+      }).catch(function(e) {
+        alert("I'm sorry");
+        submit.get(0).removeAttribute('disabled');
+        text.get(0).removeAttribute('disabled');
+      });
   });
 
   $('#image-upload-form').on('submit', function(e) {
@@ -496,14 +500,15 @@ var UIEvents = function(liercd) {
     if (!confirm("Are you sure you want to log out?"))
       return;
 
-    $.ajax({
-      url: liercd.baseurl + "/logout",
-      type: "POST",
-      dataType: "json",
-      complete: function() {
-        window.location.reload();
-      }
-    });
+    fetch(liercd.baseurl + "/logout", {
+        'method': 'POST',
+        'credentials': 'same-origin',
+      }).then(function(res) {
+        if (!res.ok)
+          alert('Error!');
+        else
+          window.location.reload();
+      });
   });
 
   $(window).on('resize', function(e) {
@@ -710,23 +715,25 @@ var UIEvents = function(liercd) {
       if (! (emoji && hash && panel))
         return;
 
-      $.ajax({
-        url: liercd.baseurl + "/connection/" + panel.connection,
-        type: "POST",
-        dataType: "json",
-        contentType: "application/irc",
-        headers: { 'lierc-token' : liercd.post_token() },
-        jsonp: false,
-        data: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
-        error: function(e) {
+      fetch(liercd.baseurl + "/connection/" + panel.connection, {
+          'method': "POST",
+          'credentials': 'same-origin',
+          'content-type': "application/irc",
+          'body': "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
+          'headers': {
+            'lierc-token' : liercd.post_token()
+          }
+        }).then(function(res) {
+          if (!res.ok)
+            throw Error(res.statusText);
+          return res.json();
+        }).then(function(res) {
+          liercd.post_tokens.push(res.token);
+        }).catch(function(e) {
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
           liercd.load_token();
-        },
-        success: function(res) {
-          liercd.post_tokens.push(res.token);
-        }
-      });
+        });
     }
   });
 

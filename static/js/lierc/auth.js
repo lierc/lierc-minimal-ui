@@ -2,14 +2,16 @@ var Auth = function(baseurl) {
   var baseurl = baseurl;
 
   this.auth = function(complete) {
-    $.ajax({
-      url: baseurl + "/auth",
-      type: "GET",
-      dataType: "json",
-      error: function() {
-        modal_overlay(complete);
-      },
-      success: complete
+    fetch(baseurl + "/auth", {
+      'credentials': 'same-origin'
+    }).then(function(res) {
+      if (!res.ok)
+        throw Error(res.statusText);
+      return res.json();
+    }).then(function(res) {
+      complete(res);
+    }).catch(function(e) {
+      modal_overlay(complete);
     });
   };
 
@@ -19,7 +21,7 @@ var Auth = function(baseurl) {
     $('body').append(overlay);
 
     if (!("ontouchstart" in document.documentElement))
-      overlay.find('.login-form input[type=email]').focus();
+      overlay.find('.login-form input[name=email]').focus();
 
     overlay.on("submit", function(e) {
       e.preventDefault();
@@ -29,23 +31,28 @@ var Auth = function(baseurl) {
       var user = form.find('input[name=username]').val();
       var pass = form.find('input[type=password]').val();
 
-      $.ajax({
-        url: baseurl + "/" + action,
-        type: "POST",
-        data: {
-          email: email,
-          pass: pass,
-          username: user
-        },
-        dataType: "json",
-        success: function(res) {
+      var body = "";
+      body += "email=" + encodeURIComponent(email);
+      body += "&username=" + encodeURIComponent(user);
+      body += "&pass=" + encodeURIComponent(pass);
+
+      fetch(baseurl + "/" + action, {
+          'credentials': 'same-origin',
+          'method': "POST",
+          'body': body,
+          'headers': {
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          }
+        }).then(function(res) {
+          if (!res.ok)
+            throw Error(res.statusText);
+          return res.json();
+        }).then(function(res) {
           overlay.remove();
           complete(res);
-        },
-        error: function(res) {
+        }).catch(function(e) {
           alert("Sorry, that didn't work...");
-        }
-      });
+        });
     });
 
     overlay.find('.login-toggle').on('click', function(e) {
