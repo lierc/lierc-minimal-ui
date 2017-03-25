@@ -243,62 +243,80 @@ var Panel = function(name, id, connection, mobile) {
   panel.prepend = function(els) {
     var list = panel.elem.list.get(0);
     var height = panel.inner.getBoundingClientRect().height;
-    els.addClass('loading');
 
     var prev_time, prev_nick, prev_mono;
-    els.filter('li.chat').each(function() {
-      var time = this.querySelector('time');
+
+    for (var i=0; i < els.length; i++) {
+      els[i].classList.add('loading');
+      if (!els[i].matches('li.chat'))
+        continue;
+
+      var el = els[i];
+
+      var time = el.querySelector('time');
       if (time) {
         if (time.innerHTML == prev_time)
           time.className = "hidden";
         prev_time = time.innerHTML;
       }
 
-      if (this.classList.contains('message')) {
-        var nick = this.querySelector('.message-nick').getAttribute('data-nick');
+      if (el.classList.contains('message')) {
+        var nick = el.querySelector('.message-nick').getAttribute('data-nick');
         if (panel.monospace_nicks.indexOf(nick) != -1) {
-          this.classList.add("monospace");
+          el.classList.add("monospace");
           if (!prev_mono) {
-            this.classList.add("monospace-start");
+            el.classList.add("monospace-start");
           }
           prev_mono = true;
         }
         else {
-          if (prev_mono) {
-            this.previousSibling.classList.add("monospace-end");
+          if (prev_mono && el.previousSibling) {
+            el.previousSibling.classList.add("monospace-end");
           }
           prev_mono = false;
         }
         if (nick == prev_nick) {
-          this.classList.add("consecutive");
+          el.classList.add("consecutive");
         }
         prev_nick = nick;
       }
       else {
-        if (prev_mono)
-          this.previousSibling.classList.add("monospace-end");
+        if (prev_mono && el.previousSibling)
+          el.previousSibling.classList.add("monospace-end");
         prev_nick = null;
         prev_mono = null;
       }
-    });
+    }
 
     panel.scroll(function() {
-      panel.elem.list.prepend(els);
+      var ul = panel.elem.list.get(0);
+      for (var i=0; i < els.length; i++) {
+        if (ul.childNodes.length) {
+          ul.insertBefore(els[i], ul.childNodes[0]);
+        }
+        else {
+          ul.appendChild(els[i]);
+        }
+      }
     });
 
-    els.addClass('loaded');
+    requestAnimationFrame(function() {
+      for(var i=0; i < els.length; i++) {
+        els[i].classList.add('loaded');
+      }
+    });
 
     var diff = panel.inner.getBoundingClientRect().height - height;
     panel.scroller.scrollTop += diff;
     panel.resize_filler();
 
     for (var i=0; i < els.length; i++) {
-      panel.imagify(els.get(i), false);
-      panel.vidify(els.get(i), false);
-      panel.audify(els.get(i), false);
+      panel.imagify(els[i], false);
+      panel.vidify(els[i], false);
+      panel.audify(els[i], false);
     }
 
-    Embed.embed_all(els.find(".message-text"), panel);
+    Embed.embed_all($(els).find(".message-text"), panel);
 
     panel.last_seen_separator();
   };
@@ -379,7 +397,10 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.append = function(el) {
-    var id = el.attr('data-message-id');
+    if (el === undefined)
+      return;
+
+    var id = el.getAttribute('data-message-id');
     if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
       return;
 
@@ -387,40 +408,42 @@ var Panel = function(name, id, connection, mobile) {
       panel.scroll(function(scrolled) {
         panel.elem.list.append(el);
 
-        if (el.hasClass("chat")) {
-          var nick = el.find('span[data-nick]').attr('data-nick');
-          var prev = el.prev();
+        if (el.classList.contains("chat")) {
+          var nick_el = el.querySelector('span[data-nick]');
+          var nick = nick_el ? nick_el.getAttribute('data-nick') : "";
+          var prev = el.previousSibling;
 
-          if (el.hasClass("message") && prev.hasClass("message")) {
-            var prev_nick = prev.find('span[data-nick]').attr('data-nick');
+          if (el.classList.contains("message") && prev.classList.contains("message")) {
+            var prev_nick_el = prev.querySelector('span[data-nick]');
+            var prev_nick = prev_nick_el ? prev_nick_el.getAttribute('data-nick') : "";
 
             if (nick == prev_nick)
-              el.addClass('consecutive');
+              el.classList.add('consecutive');
           }
 
-          if (prev.hasClass("chat")) {
-            var time = el.find("time");
-            var prev_time = prev.find("time").text();
-            if (time.text() == prev_time)
-              time.addClass("hidden");
+          if (prev.classList.contains("chat")) {
+            var time = el.querySelector("time");
+            var prev_time = prev.querySelector("time");
+            if (time && prev_time && time.textContent == prev_time.textContent)
+              time.classList.add("hidden");
           }
 
-          if (el.hasClass("message") && panel.monospace_nicks.indexOf(nick) != -1) {
-            el.addClass("monospace");
-            if (!prev.hasClass("monospace")) {
-              el.addClass("monospace-start");
+          if (el.classList.contains("message") && panel.monospace_nicks.indexOf(nick) != -1) {
+            el.classList.add("monospace");
+            if (!prev.classList.contains("monospace")) {
+              el.classList.add("monospace-start");
             }
           }
           else {
-            if (prev.hasClass("monospace"))
-              prev.addClass("monospace-end");
+            if (prev.classList.contains("monospace"))
+              prev.classList.add("monospace-end");
           }
 
-          if (el.hasClass('message')) {
-            panel.imagify(el.get(0));
-            panel.vidify(el.get(0));
-            panel.audify(el.get(0));
-            Embed.embed_all(el.find(".message-text"), panel);
+          if (el.classList.contains('message')) {
+            panel.imagify(el);
+            panel.vidify(el);
+            panel.audify(el);
+            Embed.embed_all($(el).find(".message-text"), panel);
           }
         }
 
@@ -431,13 +454,13 @@ var Panel = function(name, id, connection, mobile) {
       el.innerHTML = '';
     }
 
-    if (el.hasClass("message")) {
+    if (el.classList.contains("message")) {
       panel.unread = true;
-      if (el.hasClass("highlight"))
+      if (el.classList.contains("highlight"))
         panel.highlighted = true;
       panel.update_nav();
     }
-    else if (el.hasClass("event") && ! panel.ignore_events) {
+    else if (el.classList.contains("event") && ! panel.ignore_events) {
       panel.missed = true;
       panel.update_nav();
     }

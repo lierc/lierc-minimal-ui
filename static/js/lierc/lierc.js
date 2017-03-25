@@ -541,7 +541,6 @@ var Liercd = function(url, user) {
 
         var list = [];
         var reactions = [];
-        var block = $('<div/>');
 
         events.forEach( function (e) {
           var message = e.Message;
@@ -556,12 +555,14 @@ var Liercd = function(url, user) {
           }
         });
 
-        panel.prepend(block.append(list.reverse()).children());
+        panel.prepend(list);
         liercd.filling_backlog = false;
+
         reactions.forEach(function(reaction) {
           var parts = reaction.Params[1].split(" ");
           panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
         });
+
         panel.react_backlog_check();
         panel.set_loading(false);
 

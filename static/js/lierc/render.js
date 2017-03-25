@@ -5,20 +5,26 @@ var Render = function(message, force_raw) {
     var old = message.Prefix.Name;
     var nick = message.Params[0];
     message.Prefix.Name = nick;
-    return make("event", message).append(
-      make_text(old + " is now known as "),
-      make_nick(message),
-      timestamp(message)
+    return append(
+      make("event", message),
+      [
+        make_text(old + " is now known as "),
+        make_nick(message),
+        timestamp(message)
+      ]
     );
 
   case "PART":
     var nick = message.Prefix.Name;
     var name = message.Params[0];
     var msg = message.Params[1];
-    return make("event", message).append(
-      make_nick(message),
-      make_text(' has left' + (msg ? " ("+msg+")" : "")),
-      timestamp(message)
+    return append(
+      make("event", message),
+      [
+        make_nick(message),
+        make_text(' has left' + (msg ? " ("+msg+")" : "")),
+        timestamp(message)
+      ]
     );
 
   case "MODE":
@@ -27,56 +33,78 @@ var Render = function(message, force_raw) {
     }
     else {
       var channel = message.Params[0];
-      return make("event", message).append(
-        make_text(message.Params.slice(1).join(" ")),
-        make_text(" by " + message.Prefix.Name),
-        timestamp(message)
+      return append(
+        make("event", message),
+        [
+          make_text(message.Params.slice(1).join(" ")),
+          make_text(" by " + message.Prefix.Name),
+          timestamp(message)
+        ]
       );
     }
 
   case "QUIT":
     var nick = message.Prefix.Name;
     var msg = message.Params[0];
-    return make("event", message).append(
-      make_nick(message),
-      make_text(' has quit' + (msg ? " ("+msg+")" : "")),
-      timestamp(message)
+    return append(
+      make("event", message),
+      [
+        make_nick(message),
+        make_text(' has quit' + (msg ? " ("+msg+")" : "")),
+        timestamp(message)
+      ]
     );
 
   case "JOIN":
     var name = message.Params[0];
     var nick = message.Prefix.Name;
-    return make("event", message).append(
-      make_nick(message),
-      make_text(' has joined the channel'),
-      timestamp(message)
+    return append(
+      make("event", message),
+      [
+        make_nick(message),
+        make_text(' has joined the channel'),
+        timestamp(message)
+      ]
     );
 
   case "332":
     var name = message.Params[1];
     var text = message.Params[2];
 
-    var span = $('<span/>').append(
-      make_text("Topic: "),
-      Format(text)
+    var span = append(
+      make_text(),
+      [
+        make_text("Topic: "),
+      ].concat(Format(text))
     );
 
-    linkify(span.get(0));
-    return make("event", message).append(span);
+    linkify(span);
+    return append(
+      make("event", message),
+      [ span ]
+    );
 
   case "TOPIC":
     var nick = message.Prefix.Name;
     var name = message.Params[0];
     var text = message.Params[1];
 
-    var span = $('<span/>').append(
-      make_nick(message),
-      make_text(" changed the topic: "),
-      Format(text)
+    var span = append(
+      make_text(),
+      [
+        make_nick(message),
+        make_text(" changed the topic: "),
+      ].concat(Format(text))
     );
 
-    linkify(span.get(0));
-    return make("event", message).append(span, timestamp(message));
+    linkify(span);
+    return append(
+      make("event", message),
+      [
+        span,
+        timestamp(message)
+      ]
+    );
 
   case "PRIVMSG":
     var nick = message.Prefix.Name;
@@ -88,41 +116,55 @@ var Render = function(message, force_raw) {
 
     var from = make_nick(message);
     var color = string_to_color(message.Prefix.User || nick);
-    var msg = $('<span/>', {'class':'message-text'});
-    from.css({'color': color});
+    var msg = make_text();
+    msg.setAttribute('class', 'message-text');
+    from.style.color = color;
 
     if (text.substring(0, 1) == "\x01") {
       if (text.substring(1,7) == "ACTION") {
-        from.text('* ' + nick + ' ');
-        msg.append(Format(text.substring(7)));
+        from.textContent = '* ' + nick + ' ';
+        append(msg, Format(text.substring(7)));
       }
       else {
         return;
       }
     }
     else {
-      from.text('< '+nick+'> ');
-      msg.append(Format(text));
+      from.textContent = '< '+nick+'> ';
+      append(msg, Format(text));
     }
 
-    linkify(msg.get(0));
+    linkify(msg);
 
     var hash = md5(message.Raw);
+    var li = make("message", message);
+    li.setAttribute('data-message-hash', hash);
 
-    return make("message", message).append(
-      flex(from, msg, timestamp(message)),
-      controls()
-    ).attr('data-message-hash', hash);
+    return append(
+      li,
+      [
+        flex(from, msg, timestamp(message)),
+        controls()
+      ]
+    );
 
   case "NOTICE":
     var name = message.Prefix.Name;
     var text = message.Params[1];
 
-    var chan = $('<span/>', {'class':'channel'}).text(name);
-    var span = $('<span/>').text(' ').append(Format(text));
-    linkify(span.get(0));
+    var chan = make_text(name);
+    chan.setAttribute('class', 'channel');
+    var span = append(
+      make_text(' '),
+      Format(text)
+    );
 
-    return make("raw notice", message).append(chan, span);
+    linkify(span);
+
+    return append(
+      make("raw notice", message),
+      [chan, span]
+    );
 
   case "CONNECT":
   case "DISCONNECT":
@@ -130,16 +172,39 @@ var Render = function(message, force_raw) {
     var port = message.Params[1]
     var text = host + ":" + port + " ";
 
-    var span = $('<span/>', {'class':'host'}).text(text);
+    var span = make_text(text);
+    span.setAttribute('class', 'host');
 
-    return make("raw notice", message).append(span, message.Params[2]);
+    return append(
+      make("raw notice", message),
+      [ span, message.Params[2] ]
+    );
 
   default:
     return raw(message);
   };
 
+  function append(node, children) {
+    for (var i=0; i < children.length; i++) {
+      if (typeof(children[i]) === "string") {
+        node.appendChild(document.createTextNode(children[i]));
+      }
+      else {
+        try {
+          node.appendChild(children[i]);
+        } catch (e) {
+          console.log(e, children[i]);
+        }
+      }
+    }
+    return node;
+  };
+
   function make_text(text) {
-    return $('<span/>').text(text);
+    var el = document.createElement('SPAN');
+    if (text)
+      el.textContent = text;
+    return el;
   }
 
   function make_nick(message) {
@@ -147,13 +212,13 @@ var Render = function(message, force_raw) {
       + "!" + message.Prefix.User
       + "@" + message.Prefix.Server;
 
-    var nick = $('<span/>', {
-      'class': 'message-nick',
-      'data-nick': message.Prefix.Name,
-      'title' : prefix
-    }).text(message.Prefix.Name);
+    var el = document.createElement('SPAN');
+    el.setAttribute('data-nick', message.Prefix.Name);
+    el.setAttribute('title', prefix);
+    el.classList.add('message-nick');
+    el.textContent = message.Prefix.Name;
 
-    return nick;
+    return el;
   }
 
   function raw (message) {
@@ -166,7 +231,9 @@ var Render = function(message, force_raw) {
     else
       text = [message.Prefix.Name, message.Command].concat(message.Params).join(" ");
 
-    return make("raw", message).text(text);
+    var raw = make("raw", message);
+    raw.textContent = text;
+    return raw;
   }
 
   function timestamp (message) {
@@ -178,36 +245,53 @@ var Render = function(message, force_raw) {
     if (m.length < 2)
       m = "0" + m;
 
-    return $('<time/>', {
-      'data-time': message.Time,
-      'title': date.toString()
-    }).text(h + ":" + m);
+    var time = document.createElement('TIME');
+    time.setAttribute('data-time', message.Time);
+    time.setAttribute('title', date.toString());
+    time.textContent = h + ":" + m;
+
+    return time;
   }
 
   function controls () {
-    return $('<div/>', {'class':'message-controls'})
-      .append($('<div/>', {'class':'message-react'}))
-      .append($('<div/>', {'class':'message-menu'}));
+    var controls = document.createElement('DIV');
+    controls.classList.add('message-controls');
+
+    var react = document.createElement('DIV');
+    react.classList.add('message-react');
+
+    var menu = document.createElement('DIV');
+    menu.classList.add('message-menu');
+
+    controls.appendChild(react);
+    controls.appendChild(menu);
+
+    return controls;
   }
 
   function make (type, message) {
-    var classes = ["chat", type, message.Command.toLowerCase()];
+    var li = document.createElement("LI");
+    li.classList.add("chat", message.Command.toLowerCase());
+    var classes = type.split(" ");
+    for (var i=0; i < classes.length; i++) {
+      li.classList.add(classes[i]);
+    }
     if (message.Self)
-      classes.push("self");
+      li.classList.add("self");
     if (message.Highlight)
-      classes.push("highlight")
+      li.classList.add("highlight")
     if (message.Search)
-      classes.push("search")
-    return $('<li/>', {
-      'class': classes.join(" "),
-      'data-message-id': message.Id,
-    });
+      li.classList.add("search")
+
+    li.setAttribute('data-message-id', message.Id);
+    return li;
   }
 
   function flex () {
-    var wrap = $('<div/>',{'class':'message-flex'});
+    var wrap = document.createElement('DIV');
+    wrap.setAttribute('class', 'message-flex');
     for (var i=0; i < arguments.length; i++) {
-      wrap.append(arguments[i]);
+      wrap.appendChild(arguments[i]);
     }
     return wrap;
   }

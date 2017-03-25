@@ -121,23 +121,24 @@ var Format = function(text) {
   var split = /(\x03\d*(?:,\d+)?|\x0F|\x1D|\x1F|\x16|\x02)/;
   var tokens = text.split(split);
   if (tokens.length == 1)
-    return document.createTextNode(text);
+    return [document.createTextNode(text)];
 
   return parse([], tokens).filter(function(item) {
     return item.text != "";
   }).map(function(item) {
-    var span = $('<span/>').text(item.text);
+    var span = document.createElement('SPAN');
+    span.textContent = item.text;
 
     if (item.background != null)
-      span.css("background-color", color_map[item.background]);
+      span.style.backgroundColor = color_map[item.background];
     if (item.color != null)
-      span.css("color", color_map[item.color]);
+      span.style.color = color_map[item.color];
     if (item.bold)
-      span.css("font-weight", "bold");
+      span.style.fontWeight = "bold";
     if (item.italic)
-      span.css("font-style", "italic");
+      span.style.fontStyle = "italic";
     if (item.underline)
-      span.css("text-decoration", "underline");
+      span.style.textDecoration = "underline";
 
     return span;
   });
