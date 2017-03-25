@@ -245,13 +245,14 @@ var Panel = function(name, id, connection, mobile) {
     var height = panel.inner.getBoundingClientRect().height;
 
     var prev_time, prev_nick, prev_mono;
+    var length = els.length;
 
-    for (var i=0; i < els.length; i++) {
-      els[i].classList.add('loading');
-      if (!els[i].matches('li.chat'))
-        continue;
-
+    for (var i=length - 1; i >= 0; i--) {
       var el = els[i];
+      el.classList.add('loading');
+
+      if (!el.matches('li.chat'))
+        continue;
 
       var time = el.querySelector('time');
       if (time) {
@@ -270,8 +271,8 @@ var Panel = function(name, id, connection, mobile) {
           prev_mono = true;
         }
         else {
-          if (prev_mono && el.previousSibling) {
-            el.previousSibling.classList.add("monospace-end");
+          if (prev_mono && els[i + 1]) {
+            els[i + 1].classList.add("monospace-end");
           }
           prev_mono = false;
         }
@@ -281,21 +282,20 @@ var Panel = function(name, id, connection, mobile) {
         prev_nick = nick;
       }
       else {
-        if (prev_mono && el.previousSibling)
-          el.previousSibling.classList.add("monospace-end");
+        if (prev_mono && els[i + 1])
+          els[i + 1].classList.add("monospace-end");
         prev_nick = null;
         prev_mono = null;
       }
     }
 
     panel.scroll(function() {
-      var ul = panel.elem.list.get(0);
       for (var i=0; i < els.length; i++) {
-        if (ul.childNodes.length) {
-          ul.insertBefore(els[i], ul.childNodes[0]);
+        if (list.childNodes.length) {
+          list.insertBefore(els[i], list.childNodes[0]);
         }
         else {
-          ul.appendChild(els[i]);
+          list.appendChild(els[i]);
         }
       }
     });
