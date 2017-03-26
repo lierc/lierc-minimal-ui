@@ -31,7 +31,7 @@ var Liercd = function(url, user) {
     topic: $('#topic'),
     filler: $('#filler'),
     prefix: $('#prefix'),
-    scroll: $('#panel-scroll').get(0),
+    scroll: document.getElementById('panel-scroll'),
     title: $('title'),
     nicks: $('#nicks'),
     body: $(document.body),

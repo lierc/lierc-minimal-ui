@@ -406,23 +406,23 @@ var UIEvents = function(liercd) {
     sendlines(send);
   });
 
-  $('#gist-upload-form').on('submit', function(e) {
+  document.getElementById('gist-upload-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    var form = $(this);
-    var submit = form.find('input[name=upload]');
-    var text = form.find('textarea');
-    var ext = form.find('select');
-    var filename = 'files1.' + ext.val();
+    var form = e.target;
+    var submit = form.querySelector('input[name=upload]');
+    var text = form.querySelector('textarea');
+    var ext = form.querySelector('select');
+    var filename = 'files1.' + ext.options[ext.selectedIndex].value;
 
-    submit.attr('disabled','disabled');
-    text.attr('disabled','disabled');
+    submit.setAttribute('disabled','disabled');
+    text.setAttribute('disabled','disabled');
 
     var data = {
       'public': false,
       'files': {}
     };
 
-    data['files'][filename] = { 'content': text.val() };
+    data['files'][filename] = { 'content': text.value };
 
     fetch("https://api.github.com/gists", {
         'method': 'POST',
@@ -432,16 +432,16 @@ var UIEvents = function(liercd) {
           throw Error(res.statusText);
         return res.json();
       }).then(function(res) {
-        submit.get(0).removeAttribute('disabled');
-        text.get(0).removeAttribute('disabled');
-        text.val('');
+        submit.removeAttribute('disabled');
+        text.removeAttribute('disabled');
+        text.value = '';
         liercd.focus_input(true);
         document.execCommand("insertText", false, res.html_url);
-        $('#upload').removeClass('open');
+        document.getElementById('upload').classList.remove('open');
       }).catch(function(e) {
         alert("I'm sorry");
-        submit.get(0).removeAttribute('disabled');
-        text.get(0).removeAttribute('disabled');
+        submit.removeAttribute('disabled');
+        text.removeAttribute('disabled');
       });
   });
 
