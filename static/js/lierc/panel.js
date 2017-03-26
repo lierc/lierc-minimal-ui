@@ -316,7 +316,7 @@ var Panel = function(name, id, connection, mobile) {
       panel.audify(els[i], false);
     }
 
-    Embed.embed_all($(els).find(".message-text"), panel);
+    Embed.embed_all(els, panel);
 
     panel.last_seen_separator();
   };
@@ -413,7 +413,7 @@ var Panel = function(name, id, connection, mobile) {
           var nick = nick_el ? nick_el.getAttribute('data-nick') : "";
           var prev = el.previousSibling;
 
-          if (el.classList.contains("message") && prev.classList.contains("message")) {
+          if (el.classList.contains("message") && prev && prev.classList.contains("message")) {
             var prev_nick_el = prev.querySelector('span[data-nick]');
             var prev_nick = prev_nick_el ? prev_nick_el.getAttribute('data-nick') : "";
 
@@ -421,7 +421,7 @@ var Panel = function(name, id, connection, mobile) {
               el.classList.add('consecutive');
           }
 
-          if (prev.classList.contains("chat")) {
+          if (prev && prev.classList.contains("chat")) {
             var time = el.querySelector("time");
             var prev_time = prev.querySelector("time");
             if (time && prev_time && time.textContent == prev_time.textContent)
@@ -430,12 +430,12 @@ var Panel = function(name, id, connection, mobile) {
 
           if (el.classList.contains("message") && panel.monospace_nicks.indexOf(nick) != -1) {
             el.classList.add("monospace");
-            if (!prev.classList.contains("monospace")) {
+            if (prev && !prev.classList.contains("monospace")) {
               el.classList.add("monospace-start");
             }
           }
           else {
-            if (prev.classList.contains("monospace"))
+            if (prev && prev.classList.contains("monospace"))
               prev.classList.add("monospace-end");
           }
 
@@ -443,7 +443,7 @@ var Panel = function(name, id, connection, mobile) {
             panel.imagify(el);
             panel.vidify(el);
             panel.audify(el);
-            Embed.embed_all($(el).find(".message-text"), panel);
+            Embed.embed_all([el], panel);
           }
         }
 

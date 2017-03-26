@@ -291,22 +291,21 @@ var UIEvents = function(liercd) {
     liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
   });
 
-  liercd.elem.emoji.on('click', function(e) {
+  liercd.elem.emoji.addEventListener('click', function(e) {
     e.preventDefault();
-    var target = $(e.target);
 
-    if (target.is('li[data-chars]')) {
+    if (e.target.matches('li[data-chars]')) {
       liercd.focus_input(true);
-      document.execCommand("insertText", false, target.attr('data-chars'));
+      document.execCommand("insertText", false, e.target.getAttribute('data-chars'));
 
-      liercd.elem.emoji.removeClass("open");
+      liercd.elem.emoji.classList.remove("open");
       $('.emoji-search input').val('');
       Emoji.filter(liercd.elem.emoji, '');
     }
-    if (target.is('#emoji')) {
-      target.toggleClass('open');
+    if (e.target.matches('#emoji')) {
+      e.target.classList.toggle('open');
       if (!liercd.mobile) {
-        if (target.hasClass('open')) {
+        if (e.target.classList.contains('open')) {
           $('.emoji-search input').val('');
           Emoji.filter(liercd.elem.emoji, '');
           $('.emoji-search input').focus();
@@ -592,9 +591,11 @@ var UIEvents = function(liercd) {
     $('.flex-wrap').toggleClass("open");
   });
 
-  $(document).on('input', '.emoji-search input', function(e) {
-    var list = $(e.target).parents('.emoji-popup').find('ul');
-    Emoji.filter(list, $(e.target).val());
+  document.addEventListener('input', function(e) {
+    if (e.target.matches('.emoji-search input')) {
+      var list = e.target.parentNode.previousSibling;
+      Emoji.filter(list, e.target.value);
+    }
   });
 
   $('#email-notify').on('click', function(e) {

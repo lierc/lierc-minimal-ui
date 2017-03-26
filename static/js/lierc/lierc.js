@@ -36,7 +36,7 @@ var Liercd = function(url, user) {
     nicks: $('#nicks'),
     body: $(document.body),
     audio: new Audio("/static/ent_communicator1.mp3"),
-    emoji: $('#emoji'),
+    emoji: document.getElementById('emoji'),
     switcher: $('#switcher-wrap'),
     panel_name: $('#panel-name')
   };

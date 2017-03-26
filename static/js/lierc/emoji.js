@@ -2,36 +2,33 @@ var Emoji = {
   names: {},
   data:  [],
   regex: new RegExp(),
-  list:  $('#emoji ul')
+  list:  document.querySelector('#emoji ul'),
 };
 
 Emoji.filter = function(list, text) {
-  var items = list.find('li');
+  var items = list.querySelectorAll('li');
+  var len = items.length;
 
   if (!text) {
-    items.show();
+    for (var i=0; i < len; i++) {
+      items[i].style.display = 'inline-block';
+    }
     return;
   }
 
-  var len = items.length;
   var t = text.toLowerCase();
-  var show = [];
-  var hide = [];
 
   for (var i=0; i < len; i++) {
     if (items[i].getAttribute('data-keywords').indexOf(t) != -1) {
-      show.push(items[i]);
+      items[i].style.display = 'inline-block';
     }
     else if (items[i].getAttribute('data-name').indexOf(t) != -1) {
-      show.push(items[i]);
+      items[i].style.display = 'inline-block';
     }
     else {
-      hide.push(items[i]);
+      items[i].style.display = 'none';
     }
   }
-
-  $(show).show();
-  $(hide).hide();
 };
 
 Emoji.load = function() {
@@ -80,13 +77,14 @@ Emoji.load = function() {
       Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "g");
 
       for (var i=0; i < Emoji.data.length; i++) {
-        var li = $('<li/>', {
-          'data-chars': Emoji.data[i]['chars'],
-          'data-keywords': Emoji.data[i]['keywords'].toLowerCase(),
-          'data-name': Emoji.data[i]['name'].toLowerCase(),
-          title: Emoji.data[i]['name']
-        }).text(Emoji.data[i]['chars']);
-        Emoji.list.append(li);
+        var li = document.createElement('LI');
+        li.setAttribute('data-chars', Emoji.data[i]['chars']);
+        li.setAttribute('data-keywords', Emoji.data[i]['keywords'].toLowerCase());
+        li.setAttribute('data-name', Emoji.data[i]['name'].toLowerCase());
+        li.setAttribute('title', Emoji.data[i]['name']);
+        li.textContent = Emoji.data[i]['chars'];
+
+        Emoji.list.appendChild(li);
       }
     });
 };

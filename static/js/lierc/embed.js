@@ -4,9 +4,11 @@ var Embed = {
 
 var embed_id = 0;
 
-Embed.embed_all = function(el, panel) {
-  el.find('a[href]').each(function() {
-    Embed.embed(this, panel);
+Embed.embed_all = function(els, panel) {
+  els.forEach(function(el) {
+    el.querySelectorAll('.message-text a[href]').forEach(function(link) {
+      Embed.embed(link, panel);
+    });
   });
 };
 
