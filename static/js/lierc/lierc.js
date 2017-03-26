@@ -627,7 +627,7 @@ var Liercd = function(url, user) {
       if (item.classList.contains("active")) {
         for (var j=i; j < items.length; j++) {
           var item = items[j + 1];
-          if (item.classLis.contains("unread")) {
+          if (item.classList.contains("unread")) {
             var id = item.getAttribute('data-panel-id');
             liercd.focus_panel(id);
             return;
