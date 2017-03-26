@@ -537,8 +537,8 @@ var Panel = function(name, id, connection, mobile) {
     body: $('body')
   };
 
-  panel.scroller = $('#panel-scroll').get(0);
-  panel.inner = $('#panel-inner-scroll').get(0);
+  panel.scroller = document.getElementById('panel-scroll');
+  panel.inner = document.getElementById('panel-inner-scroll');
   panel.prune = function() {
     if (panel.focused && !panel.is_scrolled())
       return;

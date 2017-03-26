@@ -39,15 +39,17 @@ var UIEvents = function(liercd) {
     }
 
     /* task switcher is open, special keys */
-    if (liercd.elem.switcher.hasClass('open')) {
+    if (liercd.elem.switcher.classList.contains('open')) {
+      //escape
       if (e.which == 27) {
         liercd.hide_switcher();
         liercd.focus_input();
         return;
       }
+      // down or tab
       else if (e.which == 40 || e.which == 9) {
         e.preventDefault();
-        var items = liercd.elem.nav.find('li[data-name]:visible');
+        var items = liercd.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
         for (var i=1; i < items.length; i++) {
           if (items[i - 1].classList.contains("selected")) {
@@ -57,9 +59,10 @@ var UIEvents = function(liercd) {
           }
         }
       }
+      // up
       else if (e.which == 38) {
         e.preventDefault();
-        var items = liercd.elem.nav.find('li[data-name]:visible');
+        var items = liercd.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
         for (var i=0; i < items.length - 1; i++) {
           if (items[i + 1].classList.contains("selected")) {
@@ -69,10 +72,11 @@ var UIEvents = function(liercd) {
           }
         }
       }
+      // enter
       else if (e.which == 13) {
-        var selected = liercd.elem.nav.find('li.selected');
-        if (selected.length) {
-          var id = selected.attr('data-panel-id');
+        var selected = liercd.elem.nav.querySelector('li.selected');
+        if (selected) {
+          var id = selected.getAttribute('data-panel-id');
           liercd.focus_panel(id);
           liercd.hide_switcher();
         }
@@ -108,9 +112,9 @@ var UIEvents = function(liercd) {
 
     /* jump to panel by number */
     if ((mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
-      var panels = liercd.elem.nav.find('#channels li,#privates li');
+      var panels = liercd.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
-        liercd.focus_panel($(panels[c - 1]).attr("data-panel-id"));
+        liercd.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
         return;
       }
     }
@@ -132,9 +136,9 @@ var UIEvents = function(liercd) {
     }
   });
 
-  liercd.elem.switcher.on("input", function(e) {
-    var val = liercd.elem.switcher.find('input').val();
-    var items = liercd.elem.nav.find('li[data-name]');
+  liercd.elem.switcher.addEventListener("input", function(e) {
+    var val = liercd.elem.switcher.querySelector('input').value;
+    var items = liercd.elem.nav.querySelectorAll('li[data-name]');
 
     val = val.toLowerCase();
     if (val) {
@@ -150,7 +154,9 @@ var UIEvents = function(liercd) {
       }
     }
     else {
-      liercd.elem.nav.find('li[data-name]').addClass('match');
+      liercd.elem.nav.querySelectorAll('li[data-name]').forEach(function(el) {
+        el.classList.add('match');
+      });
     }
 
     for (var i=0; i < items.length; i++) {
