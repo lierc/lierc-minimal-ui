@@ -445,12 +445,11 @@ var UIEvents = function(liercd) {
       });
   });
 
-  $('#image-upload-form').on('submit', function(e) {
+  document.getElementById('image-upload-form').addEventListener('submit', function(e) {
     e.preventDefault();
-    var form = $(this);
-    var submit = form.find('input[name=upload]');
-    var image = form.find('input[name=image]');
-    var files = image.get(0).files;
+    var submit = e.target.querySelector('input[name="upload"]');
+    var image = e.target.querySelector('input[name="image"]');
+    var files = image.files;
 
     if (files.length == 0 || !files[0].type.match(/^image/)) {
       alert("Must select an image file");
@@ -463,15 +462,15 @@ var UIEvents = function(liercd) {
     xhr.open("POST", "//api.imgur.com/3/image");
     xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
 
-    submit.attr('disabled','disabled');
+    submit.setAttribute('disabled','disabled');
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
       liercd.focus_input(true);
       document.execCommand("insertText", false, res.data.link);
-      $('#upload').removeClass('open');
-      image.val(null);
-      submit.get(0).removeAttribute('disabled');
+      document.getElementById('upload').classList.remove('open');
+      image.value = null;
+      submit.removeAttribute('disabled');
     });
 
     xhr.send(fd);
@@ -516,7 +515,7 @@ var UIEvents = function(liercd) {
       });
   });
 
-  $(window).on('resize', function(e) {
+  window.addEventListener('resize', function(e) {
     if (liercd.focused) {
       liercd.focused.scroll();
       liercd.focused.resize_filler();
@@ -604,10 +603,10 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#email-notify').on('click', function(e) {
+  document.getElementById('email-notify').addEventListener('click', function(e) {
       e.preventDefault();
       this.classList.toggle('enabled');
-      var enabled = this.classList.contains('enabled');
+      var enabled = e.target.classList.contains('enabled');
       liercd.update_pref("email", enabled);
   });
 
