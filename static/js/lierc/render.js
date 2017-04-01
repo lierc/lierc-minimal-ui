@@ -268,7 +268,7 @@ var Render = function(message, force_raw) {
     var controls = document.createElement('DIV');
     controls.classList.add('message-controls');
 
-    if (!message.Self) {
+    if (!message.Prefix.Self) {
       var react = document.createElement('DIV');
       react.classList.add('message-react');
       controls.appendChild(react);
