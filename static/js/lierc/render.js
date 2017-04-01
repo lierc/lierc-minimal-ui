@@ -144,7 +144,7 @@ var Render = function(message, force_raw) {
       li,
       [
         flex(from, msg, timestamp(message)),
-        controls()
+        controls(message)
       ]
     );
 
@@ -264,17 +264,19 @@ var Render = function(message, force_raw) {
     return time;
   }
 
-  function controls () {
+  function controls (message) {
     var controls = document.createElement('DIV');
     controls.classList.add('message-controls');
 
-    var react = document.createElement('DIV');
-    react.classList.add('message-react');
+    if (!message.Self) {
+      var react = document.createElement('DIV');
+      react.classList.add('message-react');
+      controls.appendChild(react);
+    }
 
     var menu = document.createElement('DIV');
     menu.classList.add('message-menu');
 
-    controls.appendChild(react);
     controls.appendChild(menu);
 
     return controls;

@@ -858,7 +858,7 @@ div.header-right {
 
 li.message.monospace .message-flex .message-text,
 li.message.monospace .message-flex .message-nick {
-  line-height: 1.2em;
+  line-height: 1.1em;
 }
 
 #panel ol li.message.monospace.consecutive {
@@ -1554,7 +1554,7 @@ li.message:hover .message-controls,
   padding: 0 3px;
 }
 
-.message-menu {
+.message-react + .message-menu {
   border-left: 1px solid #ccc;
 }
 
