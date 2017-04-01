@@ -56,32 +56,27 @@ var Liercd = function(url, user) {
     return [connection, name].join("-");
   }
 
-  liercd.set_connected = function(connection) {
-    var message = connection.ConnectMessage;
-    var conn_id = connection.Id;
-    liercd.connections[conn_id].connected = message.Connected;
-
-    var channels = connection.Channels.map(function(c) {
-      return panel_id(c.Name, conn_id);
-    });
+  liercd.set_connected = function(conn_id, status, message) {
+    var connection = liercd.connections[conn_id];
+    connection.connected = status;
 
     for (id in liercd.panels) {
       var panel = liercd.panels[id];
       if (panel.connection == conn_id) {
-        panel.set_connected(message.Connected, message.Message);
+        panel.set_connected(status, message);
       }
     }
   };
 
-  liercd.setup_connection = function(data) {
-    if (liercd.connections[data.Id])
+  liercd.setup_connection = function(id, host, nick) {
+    if (liercd.connections[id])
       return;
 
-    var connection = new Connection(data);
-    liercd.connections[connection.id] = connection;
+    var connection = new Connection(id, host);
+    liercd.connections[id] = connection;
 
     var panel = liercd.add_panel("status", connection.id);
-    panel.change_name(connection.config.Host);
+    panel.change_name(host);
     panel.update_topic({value: "status."});
 
     connection.on("channel:new", function(conn, channel, message) {
@@ -147,6 +142,14 @@ var Liercd = function(url, user) {
       panel.append(Render(message));
     });
 
+    connection.on("connect", function(conn, message) {
+      liercd.set_connected(conn, true, message.Params[0]);
+    });
+
+    connection.on("disconnect", function(conn, message) {
+      liercd.set_connected(conn, false, message.Params[0]);
+    });
+
     connection.on("channel:topic", function(conn, channel, topic) {
       var panel = liercd.get_panel(channel, conn);
       panel.update_topic(topic);
@@ -177,10 +180,6 @@ var Liercd = function(url, user) {
       }).then(function(configs) {
         if (!configs.length)
           liercd.config_modal();
-
-        for (var i=0; i < configs.length; i++) {
-          liercd.setup_connection(configs[i]);
-        }
 
         if (liercd.stream)
           liercd.stream.destroy();
@@ -214,7 +213,6 @@ var Liercd = function(url, user) {
 
       if (e.MessageId)
         message.Id =  e.MessageId;
-      message.Self = e.Self;
       message.Highlight = e.Highlight;
 
       if (liercd.connections[conn_id]) {
@@ -222,9 +220,25 @@ var Liercd = function(url, user) {
       }
     });
 
-    stream.on('connect', function(connection) {
-      liercd.setup_connection(connection);
-      liercd.set_connected(connection);
+    stream.on('create_connection', function(e) {
+      var conn_id = e.ConnectionId;
+      var message = e.Message;
+      var nick    = message.Params[0];
+      var host    = message.Params[1];
+      liercd.setup_connection(conn_id, host, nick);
+    });
+
+    stream.on('delete_connection', function(e) {
+      var conn_id = e.ConnectionId;
+
+      for (id in liercd.panels) {
+        var panel = liercd.panels[id];
+        if (panel.connection == conn_id) {
+          liercd.remove_panel(id);
+        }
+      }
+
+      delete liercd.connections[conn_id];
     });
 
     stream.on('close', function(e) {
@@ -456,13 +470,6 @@ var Liercd = function(url, user) {
         if (!res.ok)
           throw Error(res.statusText);
         return res.json();
-      }).then(function(res) {
-        for (id in liercd.panels) {
-          var panel = liercd.panels[id];
-          if (panel.connection == connection) {
-            liercd.remove_panel(id);
-          }
-        }
       }).catch(function(e) {
         alert(res);
       });
@@ -545,7 +552,6 @@ var Liercd = function(url, user) {
         events.forEach( function (e) {
           var message = e.Message;
           message.Id = e.MessageId;
-          message.Self = e.Self;
           message.Highlight = e.Highlight;
 
           if (liercd.is_reaction(message))

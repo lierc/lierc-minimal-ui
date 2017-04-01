@@ -167,17 +167,28 @@ var Render = function(message, force_raw) {
     );
 
   case "CONNECT":
-  case "DISCONNECT":
-    var host = message.Params[0]
-    var port = message.Params[1]
-    var text = host + ":" + port + " ";
+    var host = message.Params[0];
 
-    var span = make_text(text);
+    if (!host)
+      return;
+
+    var host = message.Prefix.Name;
+    var span = make_text(host + ' ');
     span.setAttribute('class', 'host');
 
     return append(
       make("raw notice", message),
-      [ span, message.Params[2] ]
+      [ span, message.Params[0] ]
+    );
+
+  case "DISCONNECT":
+    var host = message.Prefix.Name;
+    var span = make_text(host + ' ');
+    span.setAttribute('class', 'host');
+
+    return append(
+      make("raw notice", message),
+      [ span, message.Params[0] ]
     );
 
   default:
@@ -276,14 +287,15 @@ var Render = function(message, force_raw) {
     for (var i=0; i < classes.length; i++) {
       li.classList.add(classes[i]);
     }
-    if (message.Self)
+    if (message.Prefix.Self)
       li.classList.add("self");
     if (message.Highlight)
       li.classList.add("highlight")
     if (message.Search)
       li.classList.add("search")
 
-    li.setAttribute('data-message-id', message.Id);
+    if (message.Id)
+      li.setAttribute('data-message-id', message.Id);
     return li;
   }
 
