@@ -167,9 +167,7 @@ var Render = function(message, force_raw) {
     );
 
   case "CONNECT":
-    var host = message.Params[0];
-
-    if (!host)
+    if (message.Params.length != 1)
       return;
 
     var host = message.Prefix.Name;
@@ -182,6 +180,9 @@ var Render = function(message, force_raw) {
     );
 
   case "DISCONNECT":
+    if (message.Params.length != 1)
+      return;
+
     var host = message.Prefix.Name;
     var span = make_text(host + ' ');
     span.setAttribute('class', 'host');

@@ -569,7 +569,9 @@ var Liercd = function(url, user) {
           if (liercd.is_reaction(message))
             reactions.push(message);
           else {
-            list.push(Render(message));
+            var el = Render(message);
+            if (el)
+              list.push(el);
           }
         });
 
