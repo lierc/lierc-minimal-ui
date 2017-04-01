@@ -181,6 +181,13 @@ var Liercd = function(url, user) {
         if (!configs.length)
           liercd.config_modal();
 
+        configs.forEach(function(conn) {
+          var conn_id   = conn.Id;
+          var host = conn.Config.Host;
+          var nick = conn.Nick;
+          liercd.setup_connection(conn_id, host, nick);
+        });
+
         if (liercd.stream)
           liercd.stream.destroy();
 
@@ -333,6 +340,11 @@ var Liercd = function(url, user) {
     if (liercd.panels[id])
       return liercd.panels[id];
 
+    if (!liercd.connections[connection]) {
+      console.log("Connection does not exist", connection);
+      throw "Connection does not exist";
+    }
+
     var conn = liercd.connections[connection];
     var panel = new Panel(name, id, conn, liercd.mobile);
     if (liercd.last_seen[panel.id])
@@ -368,7 +380,7 @@ var Liercd = function(url, user) {
         if (panel.type == "channel")
           liercd.part_channel(panel.name, panel.connection);
         else if (panel.type == "status")
-          liercd.remove_connection(panel.connection);
+          liercd.delete_connection(panel.connection);
         else
           liercd.remove_panel(id);
       }
@@ -460,7 +472,7 @@ var Liercd = function(url, user) {
       });
   };
 
-  liercd.remove_connection = function(connection) {
+  liercd.delete_connection = function(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
     fetch(liercd.baseurl + '/connection/' + connection, {
@@ -754,7 +766,7 @@ var Liercd = function(url, user) {
 
     overlay.find('.delete-connection').on('click', function(e) {
       e.preventDefault();
-      liercd.remove_connection(connection.Id);
+      liercd.delete_connection(connection.Id);
       overlay.remove();
       liercd.overlayed = false;
     });
