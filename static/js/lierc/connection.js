@@ -1,9 +1,9 @@
-var Connection = function(config) {
+var Connection = function(id, host, nick) {
   var conn = this;
 
-  conn.id = config.Id;
-  conn.config = config.Config;
-  conn.nick = config.Nick;
+  conn.id = id;
+  conn.host = host;
+  conn.nick = nick;
   conn.connected = false;
   conn.channels = [];
   conn.isupport = {};
@@ -66,7 +66,12 @@ var Connection = function(config) {
   conn.on_message = function(message) {
     switch (String(message.Command)) {
     case "CONNECT":
+      fire("connect", conn.id, message);
+      fire("status", conn.id, message);
+      break;
+
     case "DISCONNECT":
+      fire("disconnect", conn.id, message);
       fire("status", conn.id, message);
       break;
 

@@ -22,7 +22,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.observers = {};
 
   panel.mode = "";
-  panel.network = connection.config.Host;
+  panel.network = connection.host;
   panel.mobile = mobile;
 
   panel.change_name = function(name) {

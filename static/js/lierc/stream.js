@@ -31,7 +31,6 @@ var Stream = function(baseurl) {
 
     es.addEventListener("irc",     stream.onmessage);
     es.addEventListener("open",    stream.onopen);
-    es.addEventListener("connection", stream.onconnect);
 
     stream.eventsource = es;
     stream.timer = null;
@@ -72,9 +71,18 @@ var Stream = function(baseurl) {
 
   stream.onmessage = function(e) {
     var data = JSON.parse(e.data);
-    if (data.MessageId)
-      stream.last_id = data.MessageId;
-    stream.fire("message", data);
+
+    if (data.Message.Command == "CREATE") {
+      stream.fire("create_connection", data)
+    }
+    else if (data.Message.Command == "DELETE") {
+      stream.fire("delete_connection", data);
+    }
+    else {
+      if (data.MessageId)
+        stream.last_id = data.MessageId;
+      stream.fire("message", data);
+    }
   };
 
   stream.close = function() {
@@ -111,7 +119,6 @@ var Stream = function(baseurl) {
     if (stream.eventsource) {
       stream.eventsource.removeEventListener("irc", stream.onmessage);
       stream.eventsource.removeEventListener("open", stream.onopen);
-      stream.eventsource.removeEventListener("connection", stream.onconnect);
       stream.eventsource.close();
     }
 
