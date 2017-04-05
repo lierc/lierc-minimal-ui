@@ -400,11 +400,11 @@ var Panel = function(name, id, connection, mobile) {
     if (el === undefined)
       return;
 
-    var id = el.getAttribute('data-message-id');
-    if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
-      return;
-
     if (panel.focused) {
+      var id = el.getAttribute('data-message-id');
+      if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
+        return;
+
       panel.scroll(function(scrolled) {
         panel.elem.list.append(el);
 
@@ -452,17 +452,17 @@ var Panel = function(name, id, connection, mobile) {
     }
     else {
       el.innerHTML = '';
-    }
 
-    if (el.classList.contains("message")) {
-      panel.unread = true;
-      if (el.classList.contains("highlight"))
-        panel.highlighted = true;
-      panel.update_nav();
-    }
-    else if (el.classList.contains("event") && ! panel.ignore_events) {
-      panel.missed = true;
-      panel.update_nav();
+      if (el.classList.contains("message")) {
+        panel.unread = true;
+        if (el.classList.contains("highlight"))
+          panel.highlighted = true;
+        panel.update_nav();
+      }
+      else if (el.classList.contains("event") && ! panel.ignore_events) {
+        panel.missed = true;
+        panel.update_nav();
+      }
     }
   };
 
