@@ -14,8 +14,7 @@ var Keyboard = function(element) {
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
   keyboard.keydown = function(e, mods) {
-    var style = osx ? mods['cmd'] : mods['ctrl'];
-    if (style) {
+    if (!osx && modes['ctrl']) {
       if (e.which == BOLD) {
         e.preventDefault();
         document.execCommand('bold');
