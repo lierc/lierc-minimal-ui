@@ -108,6 +108,10 @@ var Render = function(message, force_raw) {
 
   case "PRIVMSG":
     var nick = message.Prefix.Name;
+
+    if (message.Params.length < 2)
+      return;
+
     var name = message.Params[0];
     var text = message.Params[1];
 
