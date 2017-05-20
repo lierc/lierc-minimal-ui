@@ -53,7 +53,7 @@ var Liercd = function(url, user) {
   }
 
   function panel_id(name, connection) {
-    return [connection, name].join("-");
+    return [connection, name.toLowerCase()].join("-");
   }
 
   liercd.set_connected = function(conn_id, status, message) {

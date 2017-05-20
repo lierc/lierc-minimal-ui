@@ -315,16 +315,12 @@ var Connection = function(id, host, nick) {
   };
 
   conn.channel = function(name) {
-    var i = conn.channels.indexOf(name);
+    name = name.toLowerCase();
     for (var i=0; i < conn.channels.length; i++) {
-      if (conn.channels[i].name == name) {
+      if (conn.channels[i].name.toLowerCase() == name) {
         return conn.channels[i];
       }
     }
     return false;
-  };
-
-  conn.in_channel = function(name) {
-    return conn.channels.indexOf(name) != -1;
   };
 };
