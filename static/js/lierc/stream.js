@@ -31,6 +31,7 @@ var Stream = function(baseurl) {
 
     es.addEventListener("irc",     stream.onmessage);
     es.addEventListener("open",    stream.onopen);
+    es.addEventListener("error",   stream.close);
 
     stream.eventsource = es;
     stream.timer = null;
