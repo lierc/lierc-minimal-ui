@@ -385,6 +385,9 @@ function linkify(elem) {
       linkify(node);
       continue;
     }
+    if (node.nodeValue === null) {
+      continue;
+    }
     if (node.nodeValue.match(url_re)) {
       var span = document.createElement("SPAN");
       var escaped = $('<div/>').text(node.nodeValue).html();
