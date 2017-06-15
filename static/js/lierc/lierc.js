@@ -304,13 +304,8 @@ var Liercd = function(url, user) {
       return;
 
     var focused = id == liercd.focused.id;
-    liercd.panels[id].elem.input.remove();
     liercd.panels[id].elem.list.remove();
-    liercd.panels[id].elem.nicks.remove();
-    liercd.panels[id].elem.topic.remove();
-    liercd.panels[id].elem.filler.remove();
-    liercd.panels[id].elem.prefix.remove();
-    liercd.panels[id].elem.nav.remove();
+    liercd.panels[id].remove_elems();
     delete liercd.panels[id];
 
     if (focused && liercd.last_panel_id) {
@@ -368,7 +363,7 @@ var Liercd = function(url, user) {
     liercd.collapse_embeds_pref(panel);
     liercd.monospace_nicks_pref(panel);
 
-    panel.elem.nav.on('click', function(e) {
+    panel.elem.nav.addEventListener('click', function(e) {
       e.preventDefault();
 
       $('.flex-wrap').removeClass("open");
@@ -507,7 +502,7 @@ var Liercd = function(url, user) {
     for (var i=0; i < items.length; i++) {
       var id = $(items[i]).attr('data-panel-id');
       if (index < liercd.sorting.indexOf(id)) {
-        panel.elem.nav.insertBefore(items[i]);
+        $(panel.elem.nav).insertBefore(items[i]);
         return;
       }
     }

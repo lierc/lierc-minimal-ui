@@ -63,7 +63,7 @@ var Panel = function(name, id, connection, mobile) {
           ? 1 : 0;
     });
 
-    var list = panel.elem.nicks.get(0);
+    var list = panel.elem.nicks;
     var items = list.childNodes;
     var l = items.length;
     var del = [];
@@ -134,19 +134,19 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.focus = function() {
     if (panel.ignore_events)
-      panel.elem.body.addClass('hide-events');
+      panel.elem.body.classList.add('hide-events');
     else
-      panel.elem.body.removeClass('hide-events');
+      panel.elem.body.classList.remove('hide-events');
 
     if (panel.collapse_embeds)
-      panel.elem.body.addClass('hide-embeds');
+      panel.elem.body.classList.add('hide-embeds');
     else
-      panel.elem.body.removeClass('hide-embeds');
+      panel.elem.body.classList.remove('hide-embeds');
 
     if (panel.show_nicklist)
-      panel.elem.body.addClass('show-nicklist');
+      panel.elem.body.classList.add('show-nicklist');
     else
-      panel.elem.body.removeClass('show-nicklist');
+      panel.elem.body.classList.remove('show-nicklist');
 
     panel.first_focus = false;
     panel.focused = true;
@@ -162,42 +162,47 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.build_nav = function() {
-    var el = $('<li/>', {'data-panel-id': id});
-    var name = $('<a/>', {'class':'panel-name'}).text(panel.name);
-    el.append(name);
+    var el = document.createElement('LI');
+    el.setAttribute('data-panel-id', id);
+    var name = document.createElement('A');
+    name.classList.add('panel-name');
+    name.textContent = panel.name;
+    el.appendChild(name);
     if (panel.type == "status") {
-      var edit = $('<a/>', {'class':'fa fa-pencil edit-panel'});
-      el.append(edit);
+      var edit = document.createElement('A');
+      edit.classList.add('fa', 'fa-pencil', 'edit', 'edit-panel');
+      el.appendChild(edit);
     }
     else {
-      var close = $('<a/>', {'class':'fa fa-times close-panel'});
-      el.append(close);
+      var close = document.createElement('A');
+      close.classList.add('fa', 'fa-times', 'close-panel');
+      el.appendChild(close);
     }
     return el;
   };
 
   panel.update_nav = function() {
-    panel.elem.nav.find('.panel-name').text(panel.name);
+    panel.elem.nav.querySelector('.panel-name').textContent = panel.name;
 
     if (panel.focused) {
-      panel.elem.nav.addClass('active');
-      panel.elem.nav.removeClass('unread missed highlighted disconnected');
+      panel.elem.nav.classList.add('active');
+      panel.elem.nav.classList.remove('unread', 'missed', 'highlighted', 'disconnected');
       if (! panel.connected)
-        panel.elem.nav.addClass('disconnected');
+        panel.elem.nav.classList.add('disconnected');
     }
     else {
-      panel.elem.nav.removeClass('active');
+      panel.elem.nav.classList.remove('active');
       if (panel.unread)
-        panel.elem.nav.addClass('unread');
+        panel.elem.nav.classList.add('unread');
       if (panel.missed)
-        panel.elem.nav.addClass('missed');
+        panel.elem.nav.classList.add('missed');
       if (panel.highlighted)
-        panel.elem.nav.addClass('highlighted');
+        panel.elem.nav.classList.add('highlighted');
 
       if (panel.connected)
-        panel.elem.nav.removeClass('disconnected');
+        panel.elem.nav.classList.remove('disconnected');
       else
-        panel.elem.nav.addClass('disconnected');
+        panel.elem.nav.classList.add('disconnected');
     }
 
     var prefix = panel.name;
@@ -208,10 +213,10 @@ var Panel = function(name, id, connection, mobile) {
       title += " (+" + panel.mode + ")";
     }
 
-    panel.elem.prefix.text(prefix);
-    panel.elem.prefix.attr("title", panel.network);
-    panel.elem.nav.attr("title", title);
-    panel.elem.nav.attr("data-name", panel.name);
+    panel.elem.prefix.textContent = prefix;
+    panel.elem.prefix.setAttribute("title", panel.network);
+    panel.elem.nav.setAttribute("title", title);
+    panel.elem.nav.setAttribute("data-name", panel.name);
   };
 
   panel.update_seen = function() {
@@ -223,9 +228,18 @@ var Panel = function(name, id, connection, mobile) {
   panel.unfocus = function() {
     panel.update_seen();
     panel.focused = false;
-    panel.elem.nav.removeClass("active");
+    panel.elem.nav.classList.remove("active");
     panel.clear_lists();
     panel.backlog_empty = false;
+  };
+
+  panel.remove_elems = function() {
+    panel.elem.nav.parentNode.removeChild( panel.elem.nav );
+    panel.elem.prefix.parentNode.removeChild( panel.elem.prefix );
+    panel.elem.filler.parentNode.removeChild( panel.elem.filler );
+    panel.elem.topic.parentNode.removeChild( panel.elem.topic );
+    panel.elem.nicks.parentNode.removeChild( panel.elem.nicks );
+    panel.elem.input.parentNode.removeChild( panel.elem.input );
   };
 
   panel.clear_lists = function() {
@@ -234,7 +248,7 @@ var Panel = function(name, id, connection, mobile) {
     while (list.firstChild) {
       list.removeChild(list.firstChild);
     }
-    var nicks = panel.elem.nicks.get(0);
+    var nicks = panel.elem.nicks;
     while (nicks.firstChild) {
       nicks.removeChild(nicks.firstChild);
     }
@@ -472,7 +486,7 @@ var Panel = function(name, id, connection, mobile) {
     var scroll = panel.scroller.getBoundingClientRect().height;
     var chat   = panel.elem.list.get(0).getBoundingClientRect().height;
 
-    panel.elem.filler.height(Math.max(0, scroll - chat));
+    panel.elem.filler.style.height = Math.max(0, scroll - chat) + "px";
   };
 
   panel.scroll = function(cb) {
@@ -491,12 +505,12 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.set_disabled = function(bool) {
     if (bool) {
-      panel.elem.input.attr('contenteditable', 'false');
-      panel.elem.input.addClass('disabled');
+      panel.elem.input.setAttribute('contenteditable', 'false');
+      panel.elem.input.classList.add('disabled');
     }
     else {
-      panel.elem.input.attr('contenteditable', 'true');
-      panel.elem.input.removeClass('disabled');
+      panel.elem.input.setAttribute('contenteditable', 'true');
+      panel.elem.input.classList.remove('disabled');
     }
   };
 
@@ -513,29 +527,37 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.update_topic = function(topic) {
-    panel.elem.topic.html(Format(topic.value));
-    linkify(panel.elem.topic.get(0));
+    panel.elem.topic.childNodes.forEach(function(el) {
+      panel.elem.topic.removeChild(el);
+    });
+    Format(topic.value).forEach(function(el) {
+      panel.elem.topic.appendChild(el);
+    });
+    linkify(panel.elem.topic);
 
     if (topic.user && topic.time) {
       var date = (new Date(topic.time * 1000));
-      panel.elem.topic.attr("title", "set by " + topic.user + " on " + date);
+      panel.elem.topic.setAttribute("title", "set by " + topic.user + " on " + date);
     }
   };
 
   panel.elem = {
-    input: $('<div/>', {
-      'contenteditable': 'true',
-      'class': 'input',
-      'data-panel-id': id
-    }),
+    input: document.createElement('DIV'),
     list: $('<ol/>'),
-    nicks: $('<ul/>'),
-    topic: $('<p>No topic set</p>'),
-    filler: $('<div/>', {'class':'filler'}),
-    prefix: $('<span/>').text(panel.name),
+    nicks: document.createElement('UL'),
+    topic: document.createElement('P'),
+    filler: document.createElement('DIV'),
+    prefix: document.createElement('SPAN'),
     nav: panel.build_nav(),
-    body: $('body')
+    body: document.body
   };
+
+  panel.elem.input.setAttribute('contenteditable', 'true');
+  panel.elem.input.setAttribute('data-panel-id', id);
+  panel.elem.input.classList.add('input');
+  panel.elem.filler.classList.add('filler');
+  panel.elem.prefix.textContent = panel.name;
+  panel.elem.topic.textContent = 'No topic set';
 
   panel.scroller = document.getElementById('panel-scroll');
   panel.inner = document.getElementById('panel-inner-scroll');
@@ -560,7 +582,7 @@ var Panel = function(name, id, connection, mobile) {
     });
   };
 
-  panel.keyboard = new Keyboard(panel.elem.input.get(0));
+  panel.keyboard = new Keyboard(panel.elem.input);
   setInterval(panel.prune, 1000 * 60);
 
   panel.img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
@@ -754,12 +776,12 @@ var Panel = function(name, id, connection, mobile) {
     panel.scroll(function() {
       if (panel.focused) {
         if (bool) {
-          panel.elem.body.addClass('hide-embeds');
+          panel.elem.body.classList.add('hide-embeds');
           panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
           panel.elem.list.find(".image-toggle:not(.hidden)").trigger("click");
         }
         else {
-          panel.elem.body.removeClass('hide-embeds');
+          panel.elem.body.classList.remove('hide-embeds');
           panel.elem.list.find(".embed-toggle.hidden").trigger("click");
           panel.elem.list.find(".image-toggle.hidden").trigger("click");
         }
@@ -776,9 +798,9 @@ var Panel = function(name, id, connection, mobile) {
     panel.scroll(function() {
       if (panel.focused) {
         if (bool)
-          panel.elem.body.addClass('hide-events');
+          panel.elem.body.classList.add('hide-events');
         else
-          panel.elem.body.removeClass('hide-events');
+          panel.elem.body.classList.remove('hide-events');
       }
 
       panel.ignore_events = bool;
@@ -796,9 +818,9 @@ var Panel = function(name, id, connection, mobile) {
   panel.set_show_nicklist = function(bool) {
     panel.scroll(function() {
       if (bool)
-        panel.elem.body.addClass('show-nicklist');
+        panel.elem.body.classList.add('show-nicklist');
       else
-        panel.elem.body.removeClass('show-nicklist');
+        panel.elem.body.classList.remove('show-nicklist');
 
       panel.show_nicklist = bool;
       panel.resize_filler();
