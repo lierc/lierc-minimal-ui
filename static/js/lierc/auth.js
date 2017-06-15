@@ -11,6 +11,7 @@ var Auth = function(baseurl) {
     }).then(function(res) {
       complete(res);
     }).catch(function(e) {
+        console.log(e);
       modal_overlay(complete);
     });
   };

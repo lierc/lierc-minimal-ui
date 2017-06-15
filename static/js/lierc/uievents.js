@@ -749,7 +749,7 @@ var UIEvents = function(liercd) {
     }
   });
 
-  liercd.elem.panel.addEventListener('transitionend', 'li.chat', function() {
+  $(liercd.elem.panel).on('transitionend', 'li.chat', function() {
     this.classList.remove('loading', 'loaded');
   });
 }
