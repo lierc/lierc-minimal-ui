@@ -38,7 +38,9 @@ var Liercd = function(url, user) {
     audio: new Audio("/static/ent_communicator1.mp3"),
     emoji: document.getElementById('emoji'),
     switcher: document.getElementById('switcher-wrap'),
-    panel_name: document.getElementById('panel-name')
+    panel_name: document.getElementById('panel-name'),
+    flex_wrap: document.querySelector('.flex-wrap'),
+    reconnect: document.getElementById('reconnect-status')
   };
 
   if (!liercd.mobile) {
@@ -265,11 +267,11 @@ var Liercd = function(url, user) {
     stream.on('reconnect-status', function(text) {
       if (liercd.focused) {
         liercd.focused.scroll(function() {
-          $('#reconnect-status').text(text);
+          liercd.elem.reconnect.textContent = text;
         });
       }
       else {
-        $('#reconnect-status').text(text);
+        liercd.elem.reconnect.textContent = text;
       }
     });
 
@@ -368,12 +370,12 @@ var Liercd = function(url, user) {
     panel.elem.nav.addEventListener('click', function(e) {
       e.preventDefault();
 
-      $('.flex-wrap').removeClass("open");
+      liercd.elem.flex_wrap.classList.remove("open");
 
-      var id = $(this).attr('data-panel-id');
+      var id = this.getAttribute('data-panel-id');
       var panel = liercd.panels[id];
 
-      if ($(e.target).hasClass('close-panel')) {
+      if (e.target.classList.contains('close-panel')) {
         if (panel.type == "channel")
           liercd.part_channel(panel.name, panel.connection);
         else if (panel.type == "status")
@@ -381,7 +383,7 @@ var Liercd = function(url, user) {
         else
           liercd.remove_panel(id);
       }
-      else if ($(e.target).hasClass('edit-panel')) {
+      else if (e.target.classList.contains('edit-panel')) {
         fetch(liercd.baseurl + "/connection/" + panel.connection, {
             credentials: 'same-origin'
           }).then(function(res) {
@@ -716,7 +718,7 @@ var Liercd = function(url, user) {
 
   liercd.config_modal = function(e, connection) {
     if (e) e.preventDefault();
-    $('.flex-wrap').removeClass('open');
+    liercd.elem.flex_wrap.classList.remove('open');
 
     var method = "POST";
     var url = liercd.baseurl + "/connection";
@@ -824,7 +826,7 @@ var Liercd = function(url, user) {
       || !liercd.focused
       || liercd.focused.backlog_empty
       || !liercd.connections[liercd.focused.connection]
-      || !$(liercd.elem.scroll).is(':visible'))
+      || getComputedStyle(liercd.elem.scroll).display == "none")
     {
       return;
     }
@@ -1076,7 +1078,8 @@ var Liercd = function(url, user) {
     delete liercd.prefs['sorting'];
 
     if (liercd.prefs['email'] === true) {
-      $('#email-notify').addClass('enabled');
+      document.getElementById('email-notify')
+        .classList.add('enabled');
     }
 
     liercd.load_seen(function() {
@@ -1100,7 +1103,7 @@ var Liercd = function(url, user) {
       return;
     if (!liercd.focused)
       return;
-    if ($('.overlay').length)
+    if (document.querySelectorAll('.overlay').length)
       return;
     liercd.focused.elem.input.focus();
   };
@@ -1133,9 +1136,11 @@ var Liercd = function(url, user) {
   };
 
   liercd.save_channel_order = function() {
-    var order = $('#channels').find('li').toArray().map(function(li) {
-      return $(li).attr('data-panel-id');
-    });
+    var order = Array.prototype.map.call(
+      liercd.elem.channels.querySelectorAll('li'),
+      function(li) {
+        return li.getAttribute('data-panel-id');
+      });
 
     liercd.sorting = order;
     liercd.update_pref("sorting", order);

@@ -213,7 +213,7 @@ var UIEvents = function(liercd) {
 
   $(document).on('click', '[data-nick]', function(e) {
     e.preventDefault();
-    var nick = $(this).attr('data-nick');
+    var nick = this.getAttribute('data-nick');
     var connection = liercd.focused.connection;
     var panel = liercd.add_panel(nick, connection, true);
     liercd.focus_panel(panel.id);
