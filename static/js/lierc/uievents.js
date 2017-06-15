@@ -237,7 +237,7 @@ var UIEvents = function(liercd) {
     for (connection in liercd.connections) {
       var option = $('<option/>', {
         value: connection
-      }).text(liercd.connections[connection].config.Host);
+      }).text(liercd.connections[connection].host);
       select.append(option);
     }
 
