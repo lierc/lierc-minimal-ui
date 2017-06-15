@@ -22,28 +22,28 @@ var Liercd = function(url, user) {
   liercd.post_tokens = [];
 
   liercd.elem = {
-    panel: $('#panel'),
+    panel: document.getElementById('panel'),
     nav: document.getElementById('nav'),
-    'status': $('#status'),
-    privates: $('#privates'),
-    channels: $('#channels'),
-    input: $('#input'),
-    topic: $('#topic'),
-    filler: $('#filler'),
-    prefix: $('#prefix'),
+    'status': document.getElementById('status'),
+    privates: document.getElementById('privates'),
+    channels: document.getElementById('channels'),
+    input: document.getElementById('input'),
+    topic: document.getElementById('topic'),
+    filler: document.getElementById('filler'),
+    prefix: document.getElementById('prefix'),
     scroll: document.getElementById('panel-scroll'),
-    title: $('title'),
-    nicks: $('#nicks'),
-    body: $(document.body),
+    title: document.getElementsByTagName('title')[0],
+    nicks: document.getElementById('nicks'),
+    body: document.body,
     audio: new Audio("/static/ent_communicator1.mp3"),
     emoji: document.getElementById('emoji'),
     switcher: document.getElementById('switcher-wrap'),
-    panel_name: $('#panel-name')
+    panel_name: document.getElementById('panel-name')
   };
 
   if (!liercd.mobile) {
-    $('.sortable').each(function() {
-      Sortable.create(this, {
+    document.querySelectorAll('.sortable').forEach(function(el) {
+      Sortable.create(el, {
         delay: 0,
         onSort: function(e) {
           liercd.save_channel_order();
@@ -254,11 +254,11 @@ var Liercd = function(url, user) {
       }
       if (liercd.focused) {
         liercd.focused.scroll(function() {
-          liercd.elem.body.addClass('disconnected');
+          liercd.elem.body.classList.add('disconnected');
         });
       }
       else {
-        liercd.elem.body.addClass('disconnected');
+        liercd.elem.body.classList.add('disconnected');
       }
     });
 
@@ -274,7 +274,7 @@ var Liercd = function(url, user) {
     });
 
     stream.on('open', function(e) {
-      liercd.elem.body.removeClass('disconnected');
+      liercd.elem.body.classList.remove('disconnected');
       if (liercd.focused) {
         if (stream.last_id) {
           liercd.fill_missed(stream.last_id);
@@ -304,7 +304,6 @@ var Liercd = function(url, user) {
       return;
 
     var focused = id == liercd.focused.id;
-    liercd.panels[id].elem.list.remove();
     liercd.panels[id].remove_elems();
     delete liercd.panels[id];
 
@@ -316,17 +315,20 @@ var Liercd = function(url, user) {
   };
 
   liercd.update_nav_counts = function() {
-    liercd.elem.status.prev(".nav-title").find(".count").text(
-      liercd.elem.status.find("li").length
-    );
+    liercd.elem.status
+      .previousSibling.previousSibling
+      .querySelector('.count')
+      .textContent = liercd.elem.status.querySelectorAll("li").length
 
-    liercd.elem.privates.prev(".nav-title").find(".count").text(
-      liercd.elem.privates.find("li").length
-    );
+    liercd.elem.privates
+      .previousSibling.previousSibling
+      .querySelector(".count")
+      .textContent = liercd.elem.privates.querySelectorAll("li").length;
 
-    liercd.elem.channels.prev(".nav-title").find(".count").text(
-      liercd.elem.channels.find("li").length
-    );
+    liercd.elem.channels
+      .previousSibling.previousSibling
+      .querySelector(".count")
+      .textContent = liercd.elem.channels.querySelectorAll("li").length;
   };
 
   liercd.add_panel = function(name, connection, focus) {
@@ -494,20 +496,20 @@ var Liercd = function(url, user) {
   liercd.insert_sorted_nav = function(panel) {
     var index = liercd.sorting.indexOf(panel.id);
     if (index == -1) {
-      liercd.elem.channels.append(panel.elem.nav);
+      liercd.elem.channels.appendChild(panel.elem.nav);
       liercd.save_channel_order();
       return;
     }
-    var items = liercd.elem.channels.find('li');
+    var items = liercd.elem.channels.childNodes;
     for (var i=0; i < items.length; i++) {
-      var id = $(items[i]).attr('data-panel-id');
+      var id = items[i].getAttribute('data-panel-id');
       if (index < liercd.sorting.indexOf(id)) {
-        $(panel.elem.nav).insertBefore(items[i]);
+        liercd.elem.channels.insertBefore(panel.elem.nav, items[i]);
         return;
       }
     }
 
-    liercd.elem.channels.append(panel.elem.nav);
+    liercd.elem.channels.appendChild(panel.elem.nav);
   };
 
   liercd.fill_missed = function(start) {
@@ -669,17 +671,17 @@ var Liercd = function(url, user) {
     if (! panel)
       return;
 
-    liercd.elem.panel_name.text(panel.name);
-    liercd.elem.panel.html(panel.elem.list);
-    liercd.elem.input.html(panel.elem.input);
-    liercd.elem.topic.html(panel.elem.topic);
-    liercd.elem.filler.html(panel.elem.filler);
-    liercd.elem.prefix.html(panel.elem.prefix);
+    liercd.elem.panel_name.textContent = panel.name;
+    liercd.replace_child("panel", panel.elem.list);
+    liercd.replace_child("input", panel.elem.input);
+    liercd.replace_child("topic", panel.elem.topic);
+    liercd.replace_child("filler", panel.elem.filler);
+    liercd.replace_child("prefix", panel.elem.prefix);
 
-    liercd.elem.body.attr("data-panel-type", panel.type);
-    liercd.elem.nicks.html(panel.elem.nicks);
+    liercd.elem.body.setAttribute("data-panel-type", panel.type);
+    liercd.replace_child("nicks", panel.elem.nicks);
 
-    liercd.elem.title.text(panel.name);
+    liercd.elem.title.textContent = panel.name;
 
     if (liercd.focused) {
       liercd.focused.unfocus();
@@ -702,6 +704,14 @@ var Liercd = function(url, user) {
         conn.nicks(conn.channel(panel.name))
       );
     }
+  };
+
+  liercd.replace_child = function(p, c) {
+    p = liercd.elem[p];
+    while (p.firstChild) {
+      p.removeChild(p.firstChild);
+    }
+    p.appendChild(c);
   };
 
   liercd.config_modal = function(e, connection) {
@@ -1044,9 +1054,10 @@ var Liercd = function(url, user) {
         return res.json();
       }).then(function(messages) {
         if (messages.length > 0) {
-          var line = $('<div/>', {'class': 'search-start'});
+          var line = document.createElement('DIV');
+          line.classList.add('search-start');
           var scrolled = panel.is_scrolled();
-          panel.elem.list.append(line);
+          panel.elem.list.appendChild(line);
           if (scrolled)
             panel.scroll();
         }

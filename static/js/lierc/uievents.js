@@ -86,7 +86,7 @@ var UIEvents = function(liercd) {
     /* enter, send input */
     if (e.which == 13 && !mods['shift']) {
       e.preventDefault();
-      liercd.elem.input.submit();
+      send_submit();
       return;
     }
     /* panel up */
@@ -320,14 +320,13 @@ var UIEvents = function(liercd) {
     }
   });
 
-  liercd.elem.input.on("submit", function(e) {
-    e.preventDefault();
-    var input = $(e.target).find(".input");
-    var value = Unformat(input.get(0).innerHTML);
+  function send_submit() {
+    var input = liercd.elem.input.querySelector(".input");
+    var value = Unformat(input.innerHTML);
     if (value == "") return;
-    input.get(0).innerHTML = "";
+    input.innerHTML = "";
 
-    var panel = liercd.panels[input.attr('data-panel-id')];
+    var panel = liercd.panels[input.getAttribute('data-panel-id')];
     var connection = liercd.connections[panel.connection];
     var send = [];
 
@@ -404,7 +403,7 @@ var UIEvents = function(liercd) {
     }
 
     sendlines(send);
-  });
+  }
 
   document.getElementById('gist-upload-form').addEventListener('submit', function(e) {
     e.preventDefault();
@@ -750,7 +749,7 @@ var UIEvents = function(liercd) {
     }
   });
 
-  liercd.elem.panel.on('transitionend', 'li.chat', function() {
+  liercd.elem.panel.addEventListener('transitionend', 'li.chat', function() {
     this.classList.remove('loading', 'loaded');
   });
 }

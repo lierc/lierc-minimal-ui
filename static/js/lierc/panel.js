@@ -240,11 +240,12 @@ var Panel = function(name, id, connection, mobile) {
     panel.elem.topic.parentNode.removeChild( panel.elem.topic );
     panel.elem.nicks.parentNode.removeChild( panel.elem.nicks );
     panel.elem.input.parentNode.removeChild( panel.elem.input );
+    panel.elem.list.parentNode.removeChild( panel.elem.list );
   };
 
   panel.clear_lists = function() {
     panel.remove_observers(panel.elem.list);
-    var list = panel.elem.list.get(0);
+    var list = panel.elem.list;
     while (list.firstChild) {
       list.removeChild(list.firstChild);
     }
@@ -255,7 +256,7 @@ var Panel = function(name, id, connection, mobile) {
   }
 
   panel.prepend = function(els) {
-    var list = panel.elem.list.get(0);
+    var list = panel.elem.list;
     var height = panel.inner.getBoundingClientRect().height;
 
     var prev_time, prev_nick, prev_mono;
@@ -336,54 +337,67 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.embed = function(a, embed, manual) {
-    var li = $(a).parents('li');
-    var wrap = $('<div/>', {'class': 'embed-wrap-wrap'});
-    var inner = $('<div/>', {
-      'class': 'embed-wrap',
-      'data-embed-provider': embed.provider_name.toLowerCase(),
-      'data-embed-id': embed.id
-    });
+    var li = a.parentNode;
+    while (li.nodeName != 'LI') {
+      li = li.parentNode;
+    }
+    var wrap = document.createElement('DIV');
+    wrap.classList.add('embed-wrap-wrap');
+    var inner = document.createElement('DIV');
+    inner.classList.add('embed-wrap');
+    inner.setAttribute('data-embed-provider', embed.provider_name.toLowerCase());
+    inner.setAttribute('data-embed-id', embed.id);
 
-    wrap.append(inner);
+    wrap.appendChild(inner);
 
     if (!manual && panel.collapse_embeds) {
-      $(a).next('.embed-toggle').addClass('hidden');
+      var toggle = a.nextSibling;
+      while (toggle && !toggle.classList.contains("embed-toggle")) {
+        toggle = toggle.nextSibling;
+      }
+      if (toggle && toggle.classList.contains("embed-toggle")) {
+        toggle.classList.add("hidden");
+      }
       return;
     }
 
     if (embed.thumbnail_url) {
-      var img = $('<div/>', {
-        'class': 'embed-thumb'
-      }).css({
-        "background-image": "url(//noembed.com/i/0/450/" + embed.thumbnail_url + ')',
-      });
-      img.append($('<div/>', {
-        'class': 'embed-play'
-      }));
-      inner.append(img);
+      var img = document.createElement('DIV');
+      img.classList.add('embed-thumb');
+      img.style.backgroundImage = "url(//noembed.com/i/0/450/" + embed.thumbnail_url + ')';
+      var play = document.createElement('DIV');
+      play.classList.add('embed-play');
+      img.appendChild(play);
     }
-    inner.append($('<h2/>').text(embed.title));
+
+    var h2 = document.createElement('H2');
+    h2.textContent = embed.title;
+    inner.appendChild(h2);
 
     if (embed.provider_name == "Twitter") {
       var html = embed.html.replace(/<script[^>]+>.*<\/script>/, "");;
-      var blockquote = $(html);
-      blockquote.removeClass("twitter-tweet");
-      inner.append(blockquote)
+      var div = document.createElement('DIV');
+      div.innerHTML = html;
+      div.querySelector('.twitter-tweet').classList.remove('twitter-tweet');
+      inner.appendChild(div)
     }
     else if (embed.description) {
-      inner.append($('<p/>').text(embed.description));
+      var p = document.createElement('P');
+      p.textContent = embed.description;
+      inner.appendChild(p);
     }
 
-    inner.append($('<p/>', {
-      'class': 'embed-source'
-    }).text(embed.provider_name));
+    var p = document.createElement('P');
+    p.classList.add('embed-source');
+    p.textContent = embed.provider_name;
+    inner.appendChild(p);
 
     panel.scroll(function() {
-      li.find('.message-text').append(wrap);
+      li.querySelector('.message-text').appendChild(wrap);
       panel.resize_filler();
     });
 
-    var wrap_el = wrap.get(0);
+    var wrap_el = wrap;
     var prev = wrap_el.getBoundingClientRect().height;
     panel.scroller.scrollTop += prev;
 
@@ -402,7 +416,7 @@ var Panel = function(name, id, connection, mobile) {
       attributeFilter: ['class', 'style']
     };
 
-    o.observe(wrap.get(0), config);
+    o.observe(wrap, config);
     panel.observers[embed.id] = o;
   };
 
@@ -416,11 +430,11 @@ var Panel = function(name, id, connection, mobile) {
 
     if (panel.focused) {
       var id = el.getAttribute('data-message-id');
-      if (id && panel.elem.list.find('li[data-message-id='+id+']').length)
+      if (id && panel.elem.list.querySelectorAll('li[data-message-id="'+id+'"]').length)
         return;
 
       panel.scroll(function(scrolled) {
-        panel.elem.list.append(el);
+        panel.elem.list.appendChild(el);
 
         if (el.classList.contains("chat")) {
           var nick_el = el.querySelector('span[data-nick]');
@@ -484,7 +498,7 @@ var Panel = function(name, id, connection, mobile) {
     if (!panel.focused) return;
 
     var scroll = panel.scroller.getBoundingClientRect().height;
-    var chat   = panel.elem.list.get(0).getBoundingClientRect().height;
+    var chat   = panel.elem.list.getBoundingClientRect().height;
 
     panel.elem.filler.style.height = Math.max(0, scroll - chat) + "px";
   };
@@ -515,15 +529,19 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.latest_message_id = function() {
-    var el = panel.elem.list.find('li[data-message-id]:last');
-    if (el.length) {
-      return parseInt(el.attr('data-message-id'));
+    var els = panel.elem.list.querySelectorAll('li[data-message-id]');
+    if (els.length) {
+      return parseInt(els[ els.length - 1 ].getAttribute('data-message-id'));
     }
     return null;
   };
 
   panel.oldest_message_id = function() {
-    return panel.elem.list.find('li[data-message-id]:first').attr('data-message-id');
+    var els = panel.elem.list.querySelectorAll('li[data-message-id]');
+    if (els.length) {
+      return parseInt(els[0].getAttribute('data-message-id'));
+    }
+    return null;
   };
 
   panel.update_topic = function(topic) {
@@ -543,7 +561,7 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.elem = {
     input: document.createElement('DIV'),
-    list: $('<ol/>'),
+    list: document.createElement('OL'),
     nicks: document.createElement('UL'),
     topic: document.createElement('P'),
     filler: document.createElement('DIV'),
@@ -565,16 +583,21 @@ var Panel = function(name, id, connection, mobile) {
     if (panel.focused && !panel.is_scrolled())
       return;
 
-    var els = panel.elem.list.find('li.chat:visible:lt(-' + 200 + ')')
-      .last().prevAll();
+    var els = Array.prototype.filter.call(panel.elem.list.querySelectorAll('li.chat'), function(el) {
+      return getComputedStyle(el).display != "none";
+    });
 
-    panel.remove_observers(els);
-    els.remove();
+    if (els.length > 200) {
+      els.slice(0, 200).forEach(function(el) {
+        panel.remove_observers(el);
+        el.parentNode.removeChild(el);
+      });
+    }
   };
 
   panel.remove_observers = function(els) {
-    els.find('[data-embed-id]').each(function() {
-      var id = this.getAttribute('data-embed-id');
+    els.querySelectorAll('[data-embed-id]').forEach(function(el) {
+      var id = el.getAttribute('data-embed-id');
       if (panel.observers[id]) {
         panel.observers[id].disconnect();
         delete panel.observers[id];
@@ -728,7 +751,7 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.react_backlog_check = function() {
     panel.reactions.forEach(function(reaction, i) {
-      var li = panel.elem.list.find('li[data-message-hash='+reaction[1]+']');
+      var li = panel.elem.list.querySelector('li[data-message-hash="'+reaction[1]+'"]');
       if (li.length) {
         panel.handle_reaction.apply(panel, reaction);
         panel.reactions.slice(i, 1);
@@ -742,14 +765,15 @@ var Panel = function(name, id, connection, mobile) {
       return;
     }
 
-    var li = panel.elem.list.find('li[data-message-hash=' + hash + ']');
+    var li = panel.elem.list.querySelector('li[data-message-hash="' + hash + '"]');
 
     if (li.length) {
       panel.scroll(function(scroll) {
-        var reactions = li.find('.reactions');
-        if (!reactions.length) {
-          reactions = $('<div/>', {'class': 'reactions'});
-          li.append(reactions);
+        var reactions = li.querySelectorAll('.reactions');
+        if (!reactions) {
+          reactions = document.createElement('DIV');
+          reactions.classList.add('reactions');
+          li.appendChild(reactions);
         }
 
         reactions.prepend($('<span/>').text(reaction).attr('title', from));
@@ -765,10 +789,10 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.set_loading = function(on) {
     if (on) {
-      panel.elem.list.addClass("loading");
+      panel.elem.list.classList.add("loading");
     }
     else {
-      panel.elem.list.removeClass("loading");
+      panel.elem.list.classList.remove("loading");
     }
   };
 
@@ -777,13 +801,13 @@ var Panel = function(name, id, connection, mobile) {
       if (panel.focused) {
         if (bool) {
           panel.elem.body.classList.add('hide-embeds');
-          panel.elem.list.find(".embed-toggle:not(.hidden)").trigger("click");
-          panel.elem.list.find(".image-toggle:not(.hidden)").trigger("click");
+          $(panel.elem.list).find(".embed-toggle:not(.hidden)").trigger("click");
+          $(panel.elem.list).find(".image-toggle:not(.hidden)").trigger("click");
         }
         else {
           panel.elem.body.classList.remove('hide-embeds');
-          panel.elem.list.find(".embed-toggle.hidden").trigger("click");
-          panel.elem.list.find(".image-toggle.hidden").trigger("click");
+          $(panel.elem.list).find(".embed-toggle.hidden").trigger("click");
+          $(panel.elem.list).find(".image-toggle.hidden").trigger("click");
         }
       }
 
@@ -832,10 +856,10 @@ var Panel = function(name, id, connection, mobile) {
       panel.monospace_nicks.push(nick);
     }
     panel.scroll(function() {
-      panel.elem.list
-        .find('li.message .message-nick[data-nick='+nick+']')
-        .parents('li.message')
-        .addClass('monospace');
+      panel.elem.list.querySelectorAll('li.message .message-nick[data-nick="'+nick+'"]')
+        .forEach(function(line) {
+          line.parentNode.parentNode.classList.add('monospace');
+        });
     });
   };
 
@@ -845,27 +869,44 @@ var Panel = function(name, id, connection, mobile) {
       panel.monospace_nicks.splice(i, 1);
     }
     panel.scroll(function() {
-      panel.elem.list
-        .find('li.message .message-nick[data-nick='+nick+']')
-        .parents('li.message')
-        .removeClass('monospace monospace-start monospace-end');
+      panel.elem.list.querySelectorAll('li.message .message-nick[data-nick="'+nick+'"]')
+        .forEach(function(line) {
+            line.parentNode.parentNode.classList
+              .remove('monospace', 'monospace-start', 'monospace-end');
+         });
     });
   };
 
   panel.last_seen_separator = function() {
     if (panel.last_seen) {
-      var msg = panel.elem.list.find('li[data-message-id='+panel.last_seen+']');
-      if (msg.length) {
-        var next = msg.nextAll('li.chat:visible');
-        if (next.length) {
-          panel.scroll(function() {
-            panel.elem.list.find('.last-read').remove();
-            msg.after($('<div/>', {'class':'last-read'}));
-            if (msg.hasClass('monospace')) {
-              msg.addClass('monospace-end');
-            }
-          });
+      var msg = panel.elem.list.querySelector('li[data-message-id="'+panel.last_seen+'"]');
+      if (!msg) return;
+
+      var next_visible;
+      while (msg.nextSibling) {
+        if (getComputedStyle(msg.nextSibling).display != "none") {
+          next_visible = msg.nextSibling;
+          break;
         }
+        msg = msg.nextSibling;
+      }
+
+      if (next_visible) {
+        panel.scroll(function() {
+          var sep = panel.elem.list.querySelector('.last-read');
+          if (sep) {
+            sep.parentNode.removeChild(sep);
+          }
+
+          sep = document.createElement('DIV');
+          sep.classList.add('last-read');
+
+          msg.parentNode.insertBefore(sep, msg.nextSibling);
+
+          if (msg.classList.contains('monospace')) {
+            msg.classList.add('monospace-end');
+          }
+        });
       }
     }
   };
