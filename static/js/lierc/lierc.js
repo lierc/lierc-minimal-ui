@@ -1,3 +1,7 @@
+if (!("forEach" in NodeList)) {
+  NodeList.prototype.forEach = Array.prototype.forEach;
+}
+
 var Liercd = function(url, user) {
   var liercd = this;
 
@@ -194,6 +198,8 @@ var Liercd = function(url, user) {
           liercd.stream.destroy();
 
         liercd.connect();
+      }).catch(function(e) {
+        console.log(e);
       });
   };
 
