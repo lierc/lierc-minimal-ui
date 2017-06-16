@@ -211,12 +211,14 @@ var UIEvents = function(liercd) {
       mods['cmd'] = false;
   });
 
-  $(document).on('click', '[data-nick]', function(e) {
-    e.preventDefault();
-    var nick = this.getAttribute('data-nick');
-    var connection = liercd.focused.connection;
-    var panel = liercd.add_panel(nick, connection, true);
-    liercd.focus_panel(panel.id);
+  document.addEventListener('click', function(e) {
+    if (e.target.hasAttribute('data-nick')) {
+      e.preventDefault();
+      var nick = e.target.getAttribute('data-nick');
+      var connection = liercd.focused.connection;
+      var panel = liercd.add_panel(nick, connection, true);
+      liercd.focus_panel(panel.id);
+    }
   });
 
   $('.join-channel').on('click', function(e) {
@@ -270,14 +272,22 @@ var UIEvents = function(liercd) {
     });
   });
 
-  $('.add-connection').on('click', liercd.config_modal);
+  document.querySelector('.add-connection')
+    .addEventListener('click', liercd.config_modal);
 
-  $('#nav .nav-title').on('click', function(e) { 
-    if ($(e.target).is('.nav-title,.nav-title-text,.count')) {
-      e.preventDefault();
-      this.classList.toggle('collapsed');
-    }
-  });
+  document.querySelectorAll('#nav .nav-title')
+    .forEach(function(el) {
+      el.addEventListener('click', function(e) {
+        if (
+          e.target.classList.contains('nav-title')
+          || e.target.classList.contains('nav-title-text')
+          || e.target.classList.contains('count')
+        ) {
+          e.preventDefault();
+          el.classList.toggle('collapsed');
+        }
+      });
+    });
 
   $('#toggle-hideevents a').on('click touchstart', function(e) {
     e.preventDefault();
@@ -749,7 +759,9 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $(liercd.elem.panel).on('transitionend', 'li.chat', function() {
-    this.classList.remove('loading', 'loaded');
+  liercd.elem.panel.addEventListener('transitionend', function(e) {
+    if (e.target.nodeName == 'LI' && e.target.classList.contains('chat')) {
+      e.target.classList.remove('loading', 'loaded');
+    }
   });
 }
