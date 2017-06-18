@@ -234,13 +234,13 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.remove_elems = function() {
-    panel.elem.nav.parentNode.removeChild( panel.elem.nav );
-    panel.elem.prefix.parentNode.removeChild( panel.elem.prefix );
-    panel.elem.filler.parentNode.removeChild( panel.elem.filler );
-    panel.elem.topic.parentNode.removeChild( panel.elem.topic );
-    panel.elem.nicks.parentNode.removeChild( panel.elem.nicks );
-    panel.elem.input.parentNode.removeChild( panel.elem.input );
-    panel.elem.list.parentNode.removeChild( panel.elem.list );
+    ['nav','prefix','filler','topic','nicks','input','list']
+      .forEach(function(el) {
+        if (panel.elem[el].parentNode)
+          panel.elem[el].parentNode.removeChild(
+            panel.elem[el]
+          );
+      });
   };
 
   panel.clear_lists = function() {
