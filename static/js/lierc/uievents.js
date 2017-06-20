@@ -221,32 +221,38 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('.join-channel').on('click', function(e) {
+  function join_click(e) {
     e.preventDefault();
-    $('.flex-wrap').removeClass('open');
-    var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.dialog.join').clone());
-    $('body').append(overlay);
+    liercd.elem.flex_wrap.classList.remove('open');
+    var overlay = document.createElement('DIV');
+    overlay.classList.add('overlay');
+    var join = document.querySelector('.dialog.join').cloneNode(true);
+    overlay.appendChild(join);
+    liercd.elem.body.appendChild(overlay);
     liercd.overlayed = true;
 
-    overlay.on('touchstart click', '.overlay, .close', function(e) {
-      e.preventDefault();
-      overlay.remove();
-      liercd.overlayed = false;
+    ['touchstart','click'].forEach(function(t) {
+      overlay.addEventListener(t, function(e) {
+        if (e.target.matches('.overlay .close')) {
+          e.preventDefault();
+          overlay.parentNode.removeChild(overlay);
+          liercd.overlayed = false;
+        }
+      });
     });
 
-    var select = overlay.find("select[name=connection]");
+    var select = overlay.querySelector("select[name=connection]");
     for (connection in liercd.connections) {
-      var option = $('<option/>', {
-        value: connection
-      }).text(liercd.connections[connection].host);
-      select.append(option);
+      var option = document.createElement('OPTION');
+      option.setAttribute('value', connection);
+      option.textContent = liercd.connections[connection].host;
+      select.appendChild(option);
     }
 
-    overlay.on('submit', function(e) {
+    overlay.addEventListener('submit', function(e) {
       e.preventDefault();
-      var channel = $(this).find('input[name=channel]').val();
-      var conn = $(this).find('select[name=connection]').val();
+      var channel = overlay.querySelector('input[name=channel]').value;
+      var conn = select.options[select.selectedIndex].value;
       fetch(liercd.baseurl + '/connection/' + conn, {
           'method': "POST",
           'body': "JOIN " + channel,
@@ -256,7 +262,7 @@ var UIEvents = function(liercd) {
             'lierc-token' : liercd.post_token()
           },
         }).then(function(res) {
-          overlay.remove();
+          overlay.parentNode.removeChild(overlay);
           liercd.overlayed = false;
 
           if (!res.ok)
@@ -270,6 +276,10 @@ var UIEvents = function(liercd) {
           liercd.load_token();
         });
     });
+  }
+
+  document.querySelectorAll('.join-channel').forEach(function(el) {
+    el.addEventListener('click', join_click);
   });
 
   document.querySelector('.add-connection')
@@ -600,9 +610,12 @@ var UIEvents = function(liercd) {
     document.execCommand("insertText", false, text);
   });
 
-  $('.flex-wrap-left header').on('touchstart click', function(e) {
-    e.preventDefault();
-    $('.flex-wrap').toggleClass("open");
+  ['touchstart', 'click'].forEach(function(type) {
+    document.querySelector('.flex-wrap-left header')
+      .addEventListener(type, function(e) {
+        e.preventDefault();
+        liercd.elem.flex_wrap.toggleClass('open');
+      });
   });
 
   document.addEventListener('input', function(e) {
@@ -665,7 +678,10 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#panel').on('click', '.embed-toggle', function(e) {
+  liercd.elem.panel.addEventListener('click', function(e) {
+    if (e.target.matches('.embed-toggle'))
+      return;
+
     e.preventDefault();
     var toggle = this;
     var embed = JSON.parse(toggle.getAttribute('data-embed'));
@@ -681,7 +697,7 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#topic').on('click', function(e) {
+  liercd.elem.topic.addEventListener('click', function(e) {
     if (liercd.focused) {
       if (e.target.nodeName != 'A') {
         var elem = this;
@@ -692,12 +708,15 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#panel').on('click', '.embed-wrap[data-embed-id]:not(.open)', function() {
+  liercd.elem.panel.addEventListener('click', function(e) {
+    if (!e.target.matches('.embed-wrap[data-embed-id]:not(.open)'))
+      return;
+
     var id = this.getAttribute('data-embed-id');
     var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
     var embed = JSON.parse(a.getAttribute('data-embed'));
-    this.classList.add('open');
-    $(this).html(embed.html);
+    e.target.classList.add('open');
+    e.target.innerHTML = embed.html;
   });
 
   $('#panel').on('click', '.message-react', function(e) {
@@ -760,8 +779,7 @@ var UIEvents = function(liercd) {
   });
 
   liercd.elem.panel.addEventListener('transitionend', function(e) {
-    if (e.target.nodeName == 'LI' && e.target.classList.contains('chat')) {
+    if (e.target.matches('li.chat'))
       e.target.classList.remove('loading', 'loaded');
-    }
   });
 }
