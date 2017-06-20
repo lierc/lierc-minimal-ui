@@ -776,7 +776,15 @@ var Panel = function(name, id, connection, mobile) {
           li.appendChild(reactions);
         }
 
-        reactions.prepend($('<span/>').text(reaction).attr('title', from));
+        var span = document.createElement('SPAN');
+        span.textContent = reaction;
+        span.setAttribute('title', from);
+        if (reactions.firstChild) {
+          reactions.insertBefore(span, reactions.firstChild);
+        }
+        else {
+          reactions.appendChild(span);
+        }
 
         if (scroll)
           panel.resize_filler();

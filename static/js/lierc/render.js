@@ -375,6 +375,7 @@ var url_re = /(https?:\/\/[^\s<"]*)/ig;
 function linkify(elem) {
   var children = elem.childNodes;
   var length = children.length;
+  var tmp = document.createElement('SPAN');
 
   for (var i=0; i < length; i++) {
     var node = children[i];
@@ -390,7 +391,8 @@ function linkify(elem) {
     }
     if (node.nodeValue.match(url_re)) {
       var span = document.createElement("SPAN");
-      var escaped = $('<div/>').text(node.nodeValue).html();
+      tmp.textContent = node.nodeValue;
+      var escaped = tmp.innerHTML;
       span.innerHTML = escaped.replace(
         url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
       node.parentNode.replaceChild(span, node);
@@ -399,7 +401,8 @@ function linkify(elem) {
     if (Emoji.regex.test(node.nodeValue)) {
       var chars = node.nodeValue.match(Emoji.regex);
       var span = document.createElement("SPAN");
-      var escaped = $('<div/>').text(node.nodeValue).html();
+      tmp.textContent = node.nodeValue;
+      var escaped = tmp.innerHTML;
 
       for (var j=0; j < chars.length; j++) {
         var title = Emoji.names[chars[j]];
