@@ -562,7 +562,7 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('copy', function(e) {
-    if ( $('.dialog:visible').length)
+    if ( liercd.overlayed )
       return;
 
     e.preventDefault();
@@ -597,9 +597,9 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('paste', function(e) {
-    if ( $('.dialog:visible').length)
+    if (liercd.overlayed)
       return;
-    if ( $('#gist-upload-input:focus').length )
+    if (document.activeElement.matches('#gist-upload-input'))
       return;
 
     e.preventDefault();
@@ -652,43 +652,63 @@ var UIEvents = function(liercd) {
       liercd.update_pref("email", enabled);
   });
 
-  $('#panel').on('click', '.message-menu', function(e) {
-    var toggle = $(this);
-    var target = $(e.target);
-    var controls  = toggle.parent('.message-controls');
-    var message = toggle.parents('li.message');
-    var is_monospace = message.hasClass('monospace');
-    toggle.toggleClass('open');
+  liercd.elem.panel.addEventListener('click', function(e) {
+    if (!e.target.matches('.message-menu, .message-menu *'))
+      return;
 
-    if (target.is('.message-menu')) {
-      if (toggle.hasClass('open')) {
-        var popup = $('<div/>', {'class':'message-menu-popup'});
-        var list = $('<ul/>');
-        var privmsg = $('<li/>', {'class':'message-privmsg'})
-        .text('Direct message');
-        var mono = $('<li/>', {'class':'message-monospace'})
-        .text('Monospace text ');
-        mono.append(is_monospace ? "off" : "on");
-        list.append(privmsg, mono);
-        controls.addClass('open');
-        popup.append(list);
-        toggle.append(popup);
+    var target = e.target;
+    var toggle = target;
+    var controls = target;
+    var message = target;
+
+    while (toggle && !toggle.matches('.message-menu')) {
+      toggle = toggle.parentNode;
+    }
+
+    while (controls && !controls.matches('.message-controls')) {
+      controls = controls.parentNode;
+    }
+
+    while (message && !message.matches('li.message')) {
+      message = message.parentNode;
+    }
+
+    var is_monospace = message.classList.contains('monospace');
+    toggle.classList.toggle('open');
+
+    if (target.matches('.message-menu')) {
+      if (toggle.classList.contains('open')) {
+        var popup = document.createElement('DIV');
+        popup.classList.add('message-menu-popup');
+        var list = document.createElement('UL');
+        var privmsg = document.createElement('LI');
+        privmsg.classList.add('message-privmsg');
+        privmsg.textContent = 'Direct message';
+        var mono = document.createElement('LI');
+        mono.classList.add('message-monospace');
+        mono.textContent = 'Monospace text ';
+        var text = document.createTextNode(is_monospace ? "off" : "on");
+        mono.appendChild(text);
+        list.appendChild(privmsg);
+        list.appendChild(mono);
+        controls.classList.add('open');
+        popup.appendChild(list);
+        toggle.appendChild(popup);
       }
       else {
-        controls.removeClass('open');
-        toggle.html('');
+        controls.classList.remove('open');
+        toggle.innerHTML = '';
       }
     }
-    else if (target.is('.message-privmsg')) {
-      controls.removeClass('open');
-      toggle.html('');
-      var nick = message.find('.message-nick');
-      nick.trigger('click');
+    else if (target.matches('.message-privmsg')) {
+      controls.classList.remove('open');
+      toggle.innerHTML = '';
+      message.querySelector('.message-nick').click();
     }
-    else if (target.is('.message-monospace')) {
-      controls.removeClass('open');
-      toggle.html('');
-      var nick = message.find('.message-nick').attr('data-nick');
+    else if (target.matches('.message-monospace')) {
+      controls.classList.remove('open');
+      toggle.innerHTML = '';
+      var nick = message.querySelector('.message-nick').getAttribute('data-nick');
       if (is_monospace) {
         liercd.remove_monospace_nick(liercd.focused, nick);
       }
@@ -755,6 +775,9 @@ var UIEvents = function(liercd) {
   });
 
   liercd.elem.panel.addEventListener('click', function(e) {
+    if (!e.target.matches('.message-react, .message-react *'))
+      return;
+
     var target = e.target;
     var react = target;
     var controls = target;

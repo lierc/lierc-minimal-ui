@@ -809,13 +809,21 @@ var Panel = function(name, id, connection, mobile) {
       if (panel.focused) {
         if (bool) {
           panel.elem.body.classList.add('hide-embeds');
-          $(panel.elem.list).find(".embed-toggle:not(.hidden)").trigger("click");
-          $(panel.elem.list).find(".image-toggle:not(.hidden)").trigger("click");
+          panel.elem.list.querySelectorAll(".embed-toggle:not(.hidden)").forEach(function(el) {
+            el.click();
+          });
+          panel.elem.list.querySelectorAll(".image-toggle:not(.hidden)").forEach(function(el) {
+            el.click();
+          });
         }
         else {
           panel.elem.body.classList.remove('hide-embeds');
-          $(panel.elem.list).find(".embed-toggle.hidden").trigger("click");
-          $(panel.elem.list).find(".image-toggle.hidden").trigger("click");
+          panel.elem.list.querySelectorAll(".embed-toggle.hidden").forEach(function(el) {
+            el.click();
+          });
+          panel.elem.list.querySelectorAll(".image-toggle.hidden").forEach(function(el) {
+            el.click();
+          });
         }
       }
 

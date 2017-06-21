@@ -1,4 +1,3 @@
-jquery = static/js/jquery.js
 vendor = $(wildcard static/js/vendor/*)
 site = $(wildcard static/js/lierc/*)
 css = $(wildcard static/css/*)
@@ -10,12 +9,12 @@ index.html.br index.html.gz: index.html
 	cat index.html | bro > index.html.br
 	gzip -c -k index.html > index.html.gz
 
-static/site.map.js static/site.js: $(jquery) $(vendor) $(site)
+static/site.map.js static/site.js: $(vendor) $(site)
 	uglifyjs \
 		--source-map /tmp/site.map.js \
 		--source-map-url /$(map) \
 		--prefix 1 \
-		$(jquery) $(vendor) $(site) > /tmp/site.js
+		$(vendor) $(site) > /tmp/site.js
 	install /tmp/site.js static/site.js
 	cat static/site.js | bro > static/site.js.br
 	gzip -c -k static/site.js > static/site.js.gz
