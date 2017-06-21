@@ -30,7 +30,9 @@ var UIEvents = function(liercd) {
       return;
     }
     else if (e.which == 27 && liercd.overlayed) {
-      $('.overlay').remove();
+      document.querySelectorAll('.overlay').forEach(function(el) {
+        el.parentNode.removeChild(el);
+      });
       liercd.overlayed = false;
       return;
     }
@@ -233,7 +235,7 @@ var UIEvents = function(liercd) {
 
     ['touchstart','click'].forEach(function(t) {
       overlay.addEventListener(t, function(e) {
-        if (e.target.matches('.overlay .close')) {
+        if (e.target.matches('.overlay, .close')) {
           e.preventDefault();
           overlay.parentNode.removeChild(overlay);
           liercd.overlayed = false;
@@ -495,11 +497,13 @@ var UIEvents = function(liercd) {
     xhr.send(fd);
   });
 
-  $('#upload').on('click touchstart', function(e) {
-    if ($(e.target).is('#upload')) {
-      e.preventDefault();
-      this.classList.toggle("open");
-    }
+  ['touchstart', 'click'].forEach(function(type) {
+    document.getElementById('upload').addEventListener(type, function(e) {
+      if (e.target.matches('#upload')) {
+        e.preventDefault();
+        e.target.classList.toggle("open");
+      }
+    });
   });
 
   ['click', 'touchstart'].forEach(function(type) {
