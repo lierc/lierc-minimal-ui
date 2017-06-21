@@ -729,76 +729,87 @@ var Liercd = function(url, user) {
     var method = "POST";
     var url = liercd.baseurl + "/connection";
 
-    var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.config').clone());
+    var overlay = document.createElement('DIV');
+    overlay.classList.add('overlay');
+    var o = document.querySelector('.config').cloneNode(true);
+    overlay.appendChild(o);
 
     if (connection) {
       var config = connection.Config;
-      var form = overlay.find('form');
-      form.find('input[name=Host]').val(config.Host);
-      form.find('input[name=Port]').val(config.Port);
+      var form = overlay.querySelector('form');
+      form.querySelector('input[name="Host"]').value = config.Host;
+      form.querySelector('input[name="Port"]').value = config.Port;
       if (config.Ssl)
-        form.find('input[name=Ssl]').get(0).checked ="checked";
-      form.find('input[name=Nick]').val(config.Nick);
-      form.find('input[name=User]').val(config.User);
-      form.find('input[name=Pass]').val(config.Pass);
-      form.find('input[name=Channels]').val(config.Channels.join(", "));
+        form.querySelector('input[name="Ssl"]').checked ="checked";
+      form.querySelector('input[name="Nick"]').value = config.Nick;
+      form.querySelector('input[name="User"]').value = config.User;
+      form.querySelector('input[name="Pass"]').value = config.Pass;
+      form.querySelector('input[name="Channels"]').value = config.Channels.join(", ");
 
       if (config.Highlight)
-        form.find('input[name=Highlight]').val(config.Highlight.join(", "));
+        form.querySelector('input[name="Highlight"]').value = config.Highlight.join(", ");
 
-      overlay.find('h2').text('Edit connection');
-      overlay.find('input[type=submit]').val('Save & Reconnect').css('font-weight', 'bold');
-      overlay.find('input[type=submit]').before($('<input/>', {
-        type: "submit",
-        value: "\uf071 Delete",
-        'class': 'delete-connection'
-      }));
+      overlay.querySelector('h2').textContent = 'Edit connection';
+
+      var submit = overlay.querySelector('input[type="submit"]');
+      submit.value = 'Save & Reconnect';
+      submit.fontWeight = 'bold';
+
+      var del = document.createElement('INPUT');
+      del.setAttribute('type', 'submit');
+      del.value = "\uf071 Delete";
+      del.classList.add('delete-connection');
+
+      del.addEventListener('click', function(e) {
+        e.preventDefault();
+        liercd.delete_connection(connection.Id);
+        overlay.parentNode.removeChild(overlay);
+        liercd.overlayed = false;
+      });
+
+      submit.parentNode.insertBefore(del, submit);
       url += '/' + connection.Id;
       method = "PUT";
     }
     else {
-      var form = overlay.find('form');
-      form.find('input[name=Nick]').val(liercd.user.user);
-      form.find('input[name=User]').val(liercd.user.user);
-      form.find('input[name=Highlight]').val(liercd.user.user);
+      var form = overlay.querySelector('form');
+      form.querySelector('input[name="Nick"]').value = liercd.user.user;
+      form.querySelector('input[name="User"]').value = liercd.user.user;
+      form.querySelector('input[name="Highlight"]').value = liercd.user.user;
       if (Object.keys(liercd.connections).length == 0) {
-        form.find('input[name=Host]').val("irc.freenode.com");
-        form.find('input[name=Port]').val("6697");
-        form.find('input[name=Ssl]').get(0).checked ="checked";
-        form.find('input[name=Channels]').val("#liercd");
+        form.querySelector('input[name="Host"]').value = "irc.freenode.com";
+        form.querySelector('input[name="Port"]').value = "6697";
+        form.querySelector('input[name="Ssl"]').checked ="checked";
+        form.querySelector('input[name="Channels"]').value = "#liercd";
       }
     }
 
-    $('body').append(overlay);
+    liercd.elem.body.appendChild(overlay);
     liercd.overlayed = true;
 
-    overlay.on("click touchstart", '.overlay, .close', function(e) {
-      e.preventDefault();
-      liercd.overlayed = false;
-      overlay.remove();
+    ['click', 'touchstart'].forEach(function(type) {
+      overlay.addEventListener(type, function(e) {
+        if (!e.target.matches('.overlay, .close'))
+          return;
+        e.preventDefault();
+        liercd.overlayed = false;
+        overlay.parentNode.removeChild(overlay);
+      });
     });
 
-    overlay.find('.delete-connection').on('click', function(e) {
+    overlay.addEventListener("submit", function(e) {
       e.preventDefault();
-      liercd.delete_connection(connection.Id);
-      overlay.remove();
-      liercd.overlayed = false;
-    });
-
-    overlay.on("submit", function(e) {
-      e.preventDefault();
-      var form = $(e.target);
+      var form = e.target;
 
       var data = {
-        Host: form.find('input[name=Host]').val(),
-        Port: parseInt(form.find('input[name=Port]').val()),
-        Ssl:  form.find('input[name=Ssl]').get(0).checked,
-        Nick: form.find('input[name=Nick]').val(),
-        User: form.find('input[name=User]').val(),
-        Pass: form.find('input[name=Pass]').val(),
-        Channels: form.find('input[name=Channels]').val().split(/\s*,\s*/),
-        Highlight: form.find('input[name=Highlight]').val().split(/\s*,\s*/),
+        Host: form.querySelector('input[name="Host"]').value,
+        Port: parseInt(form.querySelector('input[name="Port"]').value),
+        Ssl:  form.querySelector('input[name="Ssl"]').checked,
+        Nick: form.querySelector('input[name="Nick"]').value,
+        User: form.querySelector('input[name="User"]').value,
+        Pass: form.querySelector('input[name="Pass"]').value,
+        Channels: form.querySelector('input[name="Channels"]').value.split(/\s*,\s*/),
+        Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
       fetch(url, {
@@ -818,7 +829,7 @@ var Liercd = function(url, user) {
             }
             delete liercd.connections[connection.Id];
           }
-          overlay.remove();
+          overlay.parentNode.removeChild(overlay);
           liercd.overlayed = false;
         }).catch(function(e) {
           console.log(e);
