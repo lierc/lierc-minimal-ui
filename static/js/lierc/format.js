@@ -118,7 +118,7 @@ var Format = function(text) {
     };
   }
 
-  var split = /(\x03\d*(?:,\d+)?|\x0F|\x1D|\x1F|\x16|\x02)/;
+  var split = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
   var tokens = text.split(split);
   if (tokens.length == 1)
     return [document.createTextNode(text)];
