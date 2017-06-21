@@ -502,28 +502,40 @@ var UIEvents = function(liercd) {
     }
   });
 
-  $('#help').on('click touchstart', function(e) {
-    e.preventDefault();
-    $('.flex-wrap').removeClass('open');
-    var overlay = $('<div/>', {'class':'overlay'});
-    overlay.append($('.help').clone());
-    $('body').append(overlay);
-    liercd.overlayed = true;
-
-    overlay.on('touchstart click', '.overlay, .close', function(e) {
+  ['click', 'touchstart'].forEach(function(type) {
+    document.getElementById("help").addEventListener(type, function(e) {
       e.preventDefault();
-      overlay.remove();
-      liercd.overlayed = false;
+      liercd.elem.flex_wrap.classList.remove('open');
+
+      var overlay = document.createElement('DIV');
+      overlay.classList.add('overlay');
+
+      var help = document.querySelector('.help').cloneNode(true);
+      overlay.appendChild(help);
+
+      liercd.elem.body.appendChild(overlay);
+      liercd.overlayed = true;
+
+      ['click', 'touchstart'].forEach(function(type) {
+        overlay.addEventListener(type, function(e) {
+          if (!e.target.matches(".overlay, .close"))
+            return;
+          e.preventDefault();
+          overlay.parentNode.removeChild(overlay);
+          liercd.overlayed = false;
+        });
+      });
     });
   });
 
-  $('#logout').on('click touchstart', function(e) {
-    e.preventDefault();
+  ['click', 'touchstart'].forEach(function(type) {
+    document.getElementById('logout').addEventListener(type, function(e) {
+      e.preventDefault();
 
-    if (!confirm("Are you sure you want to log out?"))
-      return;
+      if (!confirm("Are you sure you want to log out?"))
+        return;
 
-    fetch(liercd.baseurl + "/logout", {
+      fetch(liercd.baseurl + "/logout", {
         'method': 'POST',
         'credentials': 'same-origin',
       }).then(function(res) {
@@ -532,6 +544,7 @@ var UIEvents = function(liercd) {
         else
           window.location.reload();
       });
+    });
   });
 
   window.addEventListener('resize', function(e) {
@@ -614,7 +627,7 @@ var UIEvents = function(liercd) {
     document.querySelector('.flex-wrap-left header')
       .addEventListener(type, function(e) {
         e.preventDefault();
-        liercd.elem.flex_wrap.toggleClass('open');
+        liercd.elem.flex_wrap.classList.toggle('open');
       });
   });
 
@@ -679,11 +692,11 @@ var UIEvents = function(liercd) {
   });
 
   liercd.elem.panel.addEventListener('click', function(e) {
-    if (e.target.matches('.embed-toggle'))
+    if (!e.target.matches('.embed-toggle'))
       return;
 
     e.preventDefault();
-    var toggle = this;
+    var toggle = e.target;
     var embed = JSON.parse(toggle.getAttribute('data-embed'));
 
     toggle.classList.toggle('hidden');
@@ -709,14 +722,29 @@ var UIEvents = function(liercd) {
   });
 
   liercd.elem.panel.addEventListener('click', function(e) {
-    if (!e.target.matches('.embed-wrap[data-embed-id]:not(.open)'))
+    if (!e.target.matches('.embed-wrap[data-embed-id]:not(.open) *'))
       return;
 
-    var id = this.getAttribute('data-embed-id');
+    var p = e.target;
+    while (p && !p.matches('.embed-wrap[data-embed-id]')) {
+      p = p.parentNode;
+    }
+    var id = p.getAttribute('data-embed-id');
     var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
     var embed = JSON.parse(a.getAttribute('data-embed'));
-    e.target.classList.add('open');
-    e.target.innerHTML = embed.html;
+    p.classList.add('open');
+    p.innerHTML = embed.html;
+
+    var head = document.querySelector('head');
+    p.querySelectorAll('script').forEach(function(el) {
+      var s = el.parentNode.removeChild(el);
+      var script = document.createElement('SCRIPT');
+      var attrs = s.attributes;
+      for (var i=0; i < attrs.length; i ++) {
+        script.setAttribute(attrs[i].name, attrs[i].value);
+      }
+      head.appendChild(script);
+    });
   });
 
   $('#panel').on('click', '.message-react', function(e) {
