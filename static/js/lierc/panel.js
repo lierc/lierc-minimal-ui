@@ -767,9 +767,9 @@ var Panel = function(name, id, connection, mobile) {
 
     var li = panel.elem.list.querySelector('li[data-message-hash="' + hash + '"]');
 
-    if (li.length) {
+    if (li) {
       panel.scroll(function(scroll) {
-        var reactions = li.querySelectorAll('.reactions');
+        var reactions = li.querySelector('.reactions');
         if (!reactions) {
           reactions = document.createElement('DIV');
           reactions.classList.add('reactions');

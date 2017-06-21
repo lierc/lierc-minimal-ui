@@ -301,42 +301,45 @@ var UIEvents = function(liercd) {
       });
     });
 
-  $('#toggle-hideevents a').on('click touchstart', function(e) {
-    e.preventDefault();
-    liercd.focused.set_ignore_events(!liercd.focused.ignore_events);
-    liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
-  });
+  ['click', 'touchstart'].forEach(function(type) {
+    document.querySelector('#toggle-hideevents a').addEventListener(type, function(e) {
+      e.preventDefault();
+      liercd.focused.set_ignore_events(!liercd.focused.ignore_events);
+      liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
+    });
 
-  $('#toggle-hideembeds a').on('click touchstart', function(e) {
-    e.preventDefault();
-    liercd.focused.set_collapse_embeds(!liercd.focused.collapse_embeds);
-    liercd.update_pref(liercd.focused.id + "-collapse-embeds", liercd.focused.collapse_embeds);
-  });
+    document.querySelector('#toggle-hideembeds a').addEventListener(type, function(e) {
+      e.preventDefault();
+      liercd.focused.set_collapse_embeds(!liercd.focused.collapse_embeds);
+      liercd.update_pref(liercd.focused.id + "-collapse-embeds", liercd.focused.collapse_embeds);
+    });
 
-  $('#toggle-nicks').on('click touchstart', function(e) {
-    e.preventDefault();
-    liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
-    liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
+    document.querySelector('#toggle-nicks').addEventListener(type, function(e) {
+      e.preventDefault();
+      liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
+      liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
+    });
   });
 
   liercd.elem.emoji.addEventListener('click', function(e) {
     e.preventDefault();
+    var emoji_search = document.querySelector('.emoji-search input');
 
     if (e.target.matches('li[data-chars]')) {
       liercd.focus_input(true);
       document.execCommand("insertText", false, e.target.getAttribute('data-chars'));
 
       liercd.elem.emoji.classList.remove("open");
-      $('.emoji-search input').val('');
+      emoji_search.value = '';
       Emoji.filter(liercd.elem.emoji, '');
     }
     if (e.target.matches('#emoji')) {
       e.target.classList.toggle('open');
       if (!liercd.mobile) {
         if (e.target.classList.contains('open')) {
-          $('.emoji-search input').val('');
+          emoji_search.value = '';
           Emoji.filter(liercd.elem.emoji, '');
-          $('.emoji-search input').focus();
+          emoji_search.focus();
         }
       }
     }
@@ -751,32 +754,46 @@ var UIEvents = function(liercd) {
     });
   });
 
-  $('#panel').on('click', '.message-react', function(e) {
-    var react = $(this);
-    var target = $(e.target);
-    var controls = react.parent('.message-controls');
+  liercd.elem.panel.addEventListener('click', function(e) {
+    var target = e.target;
+    var react = target;
+    var controls = target;
 
-    if (target.is('.message-react')) {
-      react.toggleClass('open');
-      if (react.hasClass('open')) {
-        var emoji = $('#emoji .emoji-popup').clone(true);
-        react.append(emoji);
-        emoji.find('.emoji-search input').focus();
-        controls.addClass('open');
+    while (react && !react.matches('.message-react')) {
+      react = react.parentNode;
+    }
+
+    while (controls && !controls.matches('.message-controls')) {
+      controls = controls.parentNode;
+    }
+
+    if (target.matches('.message-react')) {
+      react.classList.toggle('open');
+      if (react.classList.contains('open')) {
+        var emoji = document.querySelector('#emoji .emoji-popup').cloneNode(true);
+        react.appendChild(emoji);
+        emoji.querySelector('.emoji-search input').focus();
+        controls.classList.add('open');
       }
       else {
-        react.find('.emoji-popup').remove();
-        controls.removeClass('open');
+        var popup = react.querySelector('.emoji-popup');
+        popup.parentNode.removeChild(popup);
+        controls.classList.remove('open');
       }
     }
-    if (target.is('li[data-chars]')) {
-      var emoji = target.attr('data-chars');
-      var hash = react.parents('li.message').attr('data-message-hash');
+    if (target.matches('li[data-chars]')) {
+      var emoji = target.getAttribute('data-chars');
+      var message = react;
+      while (message && !message.matches("li.message")) {
+        message = message.parentNode;
+      }
+      var hash = message.getAttribute('data-message-hash');
       var panel = liercd.focused;
 
-      react.removeClass('open');
-      controls.removeClass('open');
-      react.find('.emoji-popup').remove();
+      react.classList.remove('open');
+      controls.classList.remove('open');
+      var popup = react.querySelector('.emoji-popup');
+      popup.parentNode.removeChild(popup);
 
       if (! (emoji && hash && panel))
         return;
