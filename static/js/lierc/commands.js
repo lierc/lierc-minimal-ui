@@ -136,6 +136,16 @@ var Commands = function(liercd) {
     return line;
   });
 
+  add_command("collapse", [], function(panel, line) {
+      panel.set_collapse_embeds(true);
+      return;
+  });
+
+  add_command("expand", [], function(panel, line) {
+      panel.set_collapse_embeds(false);
+      return;
+  });
+
   commands.handle_command = function(panel, line) {
     var parts = line.split(" ", 1);
     var command = parts[0].toLowerCase();
