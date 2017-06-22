@@ -81,6 +81,7 @@ var UIEvents = function(liercd) {
           var id = selected.getAttribute('data-panel-id');
           liercd.focus_panel(id);
           liercd.hide_switcher();
+          return;
         }
       }
     }
@@ -228,10 +229,16 @@ var UIEvents = function(liercd) {
     liercd.elem.flex_wrap.classList.remove('open');
     var overlay = document.createElement('DIV');
     overlay.classList.add('overlay');
-    var join = document.querySelector('.dialog.join').cloneNode(true);
-    overlay.appendChild(join);
+    var html = Handlebars.templates.join({
+      connections: Object.values(liercd.connections)
+    });
+    overlay.innerHTML = html;
     liercd.elem.body.appendChild(overlay);
     liercd.overlayed = true;
+
+    if (!liercd.mobile) {
+      overlay.querySelector('input[name=channel]').focus();
+    }
 
     ['touchstart','click'].forEach(function(t) {
       overlay.addEventListener(t, function(e) {
@@ -243,17 +250,10 @@ var UIEvents = function(liercd) {
       });
     });
 
-    var select = overlay.querySelector("select[name=connection]");
-    for (connection in liercd.connections) {
-      var option = document.createElement('OPTION');
-      option.setAttribute('value', connection);
-      option.textContent = liercd.connections[connection].host;
-      select.appendChild(option);
-    }
-
     overlay.addEventListener('submit', function(e) {
       e.preventDefault();
       var channel = overlay.querySelector('input[name=channel]').value;
+      var select = overlay.querySelector('select');
       var conn = select.options[select.selectedIndex].value;
       fetch(liercd.baseurl + '/connection/' + conn, {
           'method': "POST",
@@ -517,8 +517,8 @@ var UIEvents = function(liercd) {
       var overlay = document.createElement('DIV');
       overlay.classList.add('overlay');
 
-      var help = document.querySelector('.help').cloneNode(true);
-      overlay.appendChild(help);
+      var html = Handlebars.templates.help();
+      overlay.innerHTML = html;
 
       liercd.elem.body.appendChild(overlay);
       liercd.overlayed = true;

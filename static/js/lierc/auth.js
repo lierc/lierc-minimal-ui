@@ -19,8 +19,8 @@ var Auth = function(baseurl) {
   function modal_overlay(complete) {
     var overlay = document.createElement('DIV');
     overlay.setAttribute('class', 'overlay');
-    var login = document.querySelector('.login').cloneNode(true);
-    overlay.appendChild(login);
+    var html = Handlebars.templates.login();
+    overlay.innerHTML = html;
     document.body.appendChild(overlay);
 
     if (!("ontouchstart" in document.documentElement)) {

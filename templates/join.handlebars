@@ -1,0 +1,22 @@
+    <section  class="dialog join">
+      <a href="#" class="close login-toggle">close</a>
+      <h2>Join a channel</h2>
+      <form method="POST">
+        <fieldset class="input-group">
+          <label for="channel">Channel name</label>
+          <input type="text" name="channel" required>
+        </fieldset>
+        <fieldset class="input-group">
+          <label for="connection">IRC Network</label>
+          <select name="connection">
+{{#each connections}}
+            <option value="{{this.id}}">{{this.host}}</option>
+{{/each}}
+          </select>
+        </fieldset>
+        <fieldset class="submit-group">
+          <input type="submit" name="join" value="Join">
+        </fieldset>
+      </form>
+    </section>
+

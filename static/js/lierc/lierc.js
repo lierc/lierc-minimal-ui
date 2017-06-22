@@ -315,8 +315,13 @@ var Liercd = function(url, user) {
     liercd.panels[id].remove_elems();
     delete liercd.panels[id];
 
-    if (focused && liercd.last_panel_id) {
-      liercd.focus_panel(liercd.last_panel_id);
+    if (focused) {
+      if (liercd.last_panel_id && liercd.panels[liercd.last_panel_id])
+        liercd.focus_panel(liercd.last_panel_id);
+      else if (Object.keys(liercd.panels).length)
+        liercd.focus_panel(Object.keys(liercd.panels)[0]);
+      else
+        liercd.focused = null;
     }
 
     liercd.update_nav_counts();
@@ -724,67 +729,51 @@ var Liercd = function(url, user) {
 
   liercd.config_modal = function(e, connection) {
     if (e) e.preventDefault();
-    liercd.elem.flex_wrap.classList.remove('open');
 
-    var method = "POST";
-    var url = liercd.baseurl + "/connection";
-
-    var overlay = document.createElement('DIV');
-    overlay.classList.add('overlay');
-    var o = document.querySelector('.config').cloneNode(true);
-    overlay.appendChild(o);
+    var vars = {};
 
     if (connection) {
       var config = connection.Config;
-      var form = overlay.querySelector('form');
-      form.querySelector('input[name="Host"]').value = config.Host;
-      form.querySelector('input[name="Port"]').value = config.Port;
-      if (config.Ssl)
-        form.querySelector('input[name="Ssl"]').checked ="checked";
-      form.querySelector('input[name="Nick"]').value = config.Nick;
-      form.querySelector('input[name="User"]').value = config.User;
-      form.querySelector('input[name="Pass"]').value = config.Pass;
-      form.querySelector('input[name="Channels"]').value = config.Channels.join(", ");
+      vars.Host = config.Host;
+      vars.Port = config.Port;
+      vars.Ssl = config.Ssl;
+      vars.Nick = config.Nick;
+      vars.User = config.User;
+      vars.Pass = config.Pass;
+      vars.Channels = config.Channels.join(", ");
+      vars.Highlight = config.Highlight.join(", ");
 
-      if (config.Highlight)
-        form.querySelector('input[name="Highlight"]').value = config.Highlight.join(", ");
-
-      overlay.querySelector('h2').textContent = 'Edit connection';
-
-      var submit = overlay.querySelector('input[type="submit"]');
-      submit.value = 'Save & Reconnect';
-      submit.fontWeight = 'bold';
-
-      var del = document.createElement('INPUT');
-      del.setAttribute('type', 'submit');
-      del.value = "\uf071 Delete";
-      del.classList.add('delete-connection');
-
-      del.addEventListener('click', function(e) {
-        e.preventDefault();
-        liercd.delete_connection(connection.Id);
-        overlay.parentNode.removeChild(overlay);
-        liercd.overlayed = false;
-      });
-
-      submit.parentNode.insertBefore(del, submit);
-      url += '/' + connection.Id;
-      method = "PUT";
+      vars.action = "/connection/" + connection.Id;
+      vars.method = "PUT";
+      vars.edit = true;
     }
     else {
-      var form = overlay.querySelector('form');
-      form.querySelector('input[name="Nick"]').value = liercd.user.user;
-      form.querySelector('input[name="User"]').value = liercd.user.user;
-      form.querySelector('input[name="Highlight"]').value = liercd.user.user;
+      vars.Nick = liercd.user.user;
+      vars.User = liercd.user.user;
+      vars.Highlight = liercd.user.user;
+
       if (Object.keys(liercd.connections).length == 0) {
-        form.querySelector('input[name="Host"]').value = "irc.freenode.com";
-        form.querySelector('input[name="Port"]').value = "6697";
-        form.querySelector('input[name="Ssl"]').checked ="checked";
-        form.querySelector('input[name="Channels"]').value = "#liercd";
+        vars.Host = "irc.freenode.com";
+        vars.Port = "6697";
+        vars.Ssl = true;
+        vars.Channels = "#liercd";
       }
+
+      vars.action = "/connection";
+      vars.method = "POST";
+      vars.edit = false;
     }
 
+    liercd.elem.flex_wrap.classList.remove('open');
+    var overlay = document.createElement('DIV');
+    overlay.classList.add('overlay');
+
+    var html = Handlebars.templates.connection(vars);
+    overlay.innerHTML = html;
     liercd.elem.body.appendChild(overlay);
+
+    overlay.querySelector('input[name="Host"]').focus();
+    overlay.querySelector('input[name="Host"]').select();
     liercd.overlayed = true;
 
     ['click', 'touchstart'].forEach(function(type) {
@@ -797,9 +786,21 @@ var Liercd = function(url, user) {
       });
     });
 
+    var del = overlay.querySelector('.delete-connection');
+    if (del && connection) {
+      del.addEventListener('click', function(e) {
+        e.preventDefault();
+        liercd.delete_connection(connection.Id);
+        overlay.parentNode.removeChild(overlay);
+        liercd.overlayed = false;
+      });
+    }
+
     overlay.addEventListener("submit", function(e) {
       e.preventDefault();
       var form = e.target;
+      var method = form.getAttribute('method');
+      var action = form.getAttribute('action');
 
       var data = {
         Host: form.querySelector('input[name="Host"]').value,
@@ -812,7 +813,7 @@ var Liercd = function(url, user) {
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
-      fetch(url, {
+      fetch(liercd.baseurl + action, {
           method: method,
           body: JSON.stringify(data),
           credentials: 'same-origin'
