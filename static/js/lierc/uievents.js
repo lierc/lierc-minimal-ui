@@ -29,14 +29,11 @@ var UIEvents = function(liercd) {
       mods['cmd'] = true;
       return;
     }
-    else if (e.which == 27 && liercd.overlayed) {
-      document.querySelectorAll('.overlay').forEach(function(el) {
-        el.parentNode.removeChild(el);
-      });
-      liercd.overlayed = false;
+    else if (e.which == 27 && liercd.overlayed()) {
+      liercd.close_dialog();
       return;
     }
-    else if (liercd.overlayed) {
+    else if (liercd.overlayed()) {
       return;
     }
 
@@ -227,33 +224,14 @@ var UIEvents = function(liercd) {
   function join_click(e) {
     e.preventDefault();
     liercd.elem.flex_wrap.classList.remove('open');
-    var overlay = document.createElement('DIV');
-    overlay.classList.add('overlay');
-    var html = Handlebars.templates.join({
+    var dialog = liercd.new_dialog("join", {
       connections: Object.values(liercd.connections)
     });
-    overlay.innerHTML = html;
-    liercd.elem.body.appendChild(overlay);
-    liercd.overlayed = true;
 
-    if (!liercd.mobile) {
-      overlay.querySelector('input[name=channel]').focus();
-    }
-
-    ['touchstart','click'].forEach(function(t) {
-      overlay.addEventListener(t, function(e) {
-        if (e.target.matches('.overlay, .close')) {
-          e.preventDefault();
-          overlay.parentNode.removeChild(overlay);
-          liercd.overlayed = false;
-        }
-      });
-    });
-
-    overlay.addEventListener('submit', function(e) {
+    dialog.el.addEventListener('submit', function(e) {
       e.preventDefault();
-      var channel = overlay.querySelector('input[name=channel]').value;
-      var select = overlay.querySelector('select');
+      var channel = dialog.el.querySelector('input[name=channel]').value;
+      var select = dialog.el.querySelector('select');
       var conn = select.options[select.selectedIndex].value;
       fetch(liercd.baseurl + '/connection/' + conn, {
           'method': "POST",
@@ -264,8 +242,7 @@ var UIEvents = function(liercd) {
             'lierc-token' : liercd.post_token()
           },
         }).then(function(res) {
-          overlay.parentNode.removeChild(overlay);
-          liercd.overlayed = false;
+          liercd.close_dialog();
 
           if (!res.ok)
             throw Error(res.statusText);
@@ -512,26 +489,7 @@ var UIEvents = function(liercd) {
   ['click', 'touchstart'].forEach(function(type) {
     document.getElementById("help").addEventListener(type, function(e) {
       e.preventDefault();
-      liercd.elem.flex_wrap.classList.remove('open');
-
-      var overlay = document.createElement('DIV');
-      overlay.classList.add('overlay');
-
-      var html = Handlebars.templates.help();
-      overlay.innerHTML = html;
-
-      liercd.elem.body.appendChild(overlay);
-      liercd.overlayed = true;
-
-      ['click', 'touchstart'].forEach(function(type) {
-        overlay.addEventListener(type, function(e) {
-          if (!e.target.matches(".overlay, .close"))
-            return;
-          e.preventDefault();
-          overlay.parentNode.removeChild(overlay);
-          liercd.overlayed = false;
-        });
-      });
+      liercd.new_dialog("help");
     });
   });
 
@@ -562,7 +520,7 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('copy', function(e) {
-    if ( liercd.overlayed )
+    if ( liercd.overlayed() )
       return;
 
     e.preventDefault();
@@ -597,7 +555,7 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('paste', function(e) {
-    if (liercd.overlayed)
+    if (liercd.overlayed())
       return;
     if (document.activeElement.matches('#gist-upload-input'))
       return;

@@ -17,11 +17,9 @@ var Auth = function(baseurl) {
   };
 
   function modal_overlay(complete) {
-    var overlay = document.createElement('DIV');
-    overlay.setAttribute('class', 'overlay');
-    var html = Handlebars.templates.login();
-    overlay.innerHTML = html;
-    document.body.appendChild(overlay);
+    var dialog = new Dialog('login');
+    var overlay = dialog.el;
+    dialog.append(document.body);
 
     if (!("ontouchstart" in document.documentElement)) {
       overlay.querySelector('.login-form input[name="email"]').focus();
@@ -54,10 +52,10 @@ var Auth = function(baseurl) {
             throw Error(res.statusText);
           return res.json();
         }).then(function(res) {
-          overlay.remove();
+          dialog.close();
           complete(res);
         }).catch(function(e) {
-          alert("Sorry, that didn't work...");
+          alert("Sorry: " + e);
         });
     });
 
@@ -70,7 +68,6 @@ var Auth = function(baseurl) {
 
     overlay.querySelector('.reset-toggle').addEventListener('click', function(e) {
       e.preventDefault();
-      console.log(e);
       overlay.querySelector('.login-wrap').style.display = 'none';
       overlay.querySelector('.reset-wrap').style.display = 'block';
       overlay.querySelector('.reset-wrap input[name="email"]').focus();

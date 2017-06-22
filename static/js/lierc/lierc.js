@@ -10,7 +10,7 @@ var Liercd = function(url, user) {
   liercd.stream;
   liercd.connections = {};
   liercd.filling_backlog = false;
-  liercd.overlayed = false;
+  liercd.dialog = null;
   liercd.sorting = [];
   liercd.last_seen = {};
   liercd.missed = {};
@@ -765,38 +765,19 @@ var Liercd = function(url, user) {
     }
 
     liercd.elem.flex_wrap.classList.remove('open');
-    var overlay = document.createElement('DIV');
-    overlay.classList.add('overlay');
 
-    var html = Handlebars.templates.connection(vars);
-    overlay.innerHTML = html;
-    liercd.elem.body.appendChild(overlay);
+    var dialog = liercd.new_dialog("connection", vars);
 
-    overlay.querySelector('input[name="Host"]').focus();
-    overlay.querySelector('input[name="Host"]').select();
-    liercd.overlayed = true;
-
-    ['click', 'touchstart'].forEach(function(type) {
-      overlay.addEventListener(type, function(e) {
-        if (!e.target.matches('.overlay, .close'))
-          return;
-        e.preventDefault();
-        liercd.overlayed = false;
-        overlay.parentNode.removeChild(overlay);
-      });
-    });
-
-    var del = overlay.querySelector('.delete-connection');
+    var del = dialog.el.querySelector('.delete-connection');
     if (del && connection) {
       del.addEventListener('click', function(e) {
         e.preventDefault();
         liercd.delete_connection(connection.Id);
-        overlay.parentNode.removeChild(overlay);
-        liercd.overlayed = false;
+        liercd.close_dialog();
       });
     }
 
-    overlay.addEventListener("submit", function(e) {
+    dialog.el.addEventListener("submit", function(e) {
       e.preventDefault();
       var form = e.target;
       var method = form.getAttribute('method');
@@ -822,16 +803,7 @@ var Liercd = function(url, user) {
             throw Error(res.statusText);
           return res.json();
         }).then(function(res) {
-          if (method == "DELETE") {
-            for (panel in liercd.panels) {
-              if (panel.type == "channel") {
-                liercd.remove_panel(panel.id);
-              }
-            }
-            delete liercd.connections[connection.Id];
-          }
-          overlay.parentNode.removeChild(overlay);
-          liercd.overlayed = false;
+          liercd.close_dialog();
         }).catch(function(e) {
           console.log(e);
           alert("i'm sorry");
@@ -1121,7 +1093,7 @@ var Liercd = function(url, user) {
       return;
     if (!liercd.focused)
       return;
-    if (document.querySelectorAll('.overlay').length)
+    if (liercd.overlayed())
       return;
     liercd.focused.elem.input.focus();
   };
@@ -1162,6 +1134,32 @@ var Liercd = function(url, user) {
 
     liercd.sorting = order;
     liercd.update_pref("sorting", order);
+  };
+
+  liercd.overlayed = function() {
+    return liercd.dialog && liercd.dialog.open;
+  };
+
+  liercd.close_dialog = function() {
+    if (liercd.dialog)
+      liercd.dialog.close();
+    liercd.dialog = null;
+  };
+
+  liercd.new_dialog = function(name, vars) {
+    if (liercd.dialog)
+      liercd.dialog.close();
+
+    var dialog = new Dialog(name, vars);
+    liercd.elem.flex_wrap.classList.remove('open');
+    dialog.append(liercd.elem.body);
+    var input = dialog.el.querySelector('input[type=text]')
+    if (!liercd.mobile && input) {
+      input.focus();
+      input.select();
+    }
+    liercd.dialog = dialog;
+    return dialog;
   };
 
   liercd.reset = function() {
