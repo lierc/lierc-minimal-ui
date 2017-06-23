@@ -62,7 +62,7 @@ Emoji.load = function() {
             surrogate += "\\u" + H.toString(16) + "\\u" + L.toString(16);
           }
           else {
-            surrogate += "\\u" + C;
+            surrogate += "\\u" + C.toString(16);
           }
         }
         codepoints.push(surrogate);
