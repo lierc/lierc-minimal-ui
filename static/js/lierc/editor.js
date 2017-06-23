@@ -17,7 +17,7 @@ var Editor = function(element) {
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
   editor.keydown = function(e, mods) {
-    if (!osx && mods['ctrl'] && !mods['shift'] && !mods['alt']) {
+    if (mods['ctrl'] && !mods['shift'] && !mods['alt']) {
       if (e.which == BOLD) {
         e.preventDefault();
         document.execCommand('bold');

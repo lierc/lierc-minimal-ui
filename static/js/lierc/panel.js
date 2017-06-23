@@ -64,12 +64,12 @@ var Panel = function(name, id, connection, mobile) {
     });
 
     var list = panel.elem.nicks;
-    var items = list.childNodes;
+    var items = list.querySelectorAll('li');
     var l = items.length;
     var del = [];
 
     for (var i=0; i < l; i++) {
-      var a = items[i].childNodes[0];
+      var a = items[i].querySelector('a');
       var nick = a.getAttribute('data-nick');
       if (!(nick in nicks)) {
         del.push(items[i]);
@@ -85,7 +85,7 @@ var Panel = function(name, id, connection, mobile) {
 
       for (var j=0; j < l; j++) {
         var item = items[j];
-        var a = item.childNodes[0];
+        var a = item.querySelector('a');
         var n = a.getAttribute('data-nick');
         var o = a.getAttribute('data-nick-order');
 
