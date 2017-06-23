@@ -389,7 +389,10 @@ function linkify(elem) {
     if (node.nodeValue === null) {
       continue;
     }
-    if (node.nodeValue.match(url_re)) {
+    if (!node.nodeValue) {
+      console.log(node);
+    }
+    if (node.nodeValue && node.nodeValue.match(url_re)) {
       var span = document.createElement("SPAN");
       tmp.textContent = node.nodeValue;
       var escaped = tmp.innerHTML;
@@ -398,7 +401,7 @@ function linkify(elem) {
       node.parentNode.replaceChild(span, node);
       node = span;
     }
-    if (Emoji.regex.test(node.nodeValue)) {
+    if (node.nodeValue && Emoji.regex.test(node.nodeValue)) {
       var chars = node.nodeValue.match(Emoji.regex);
       var span = document.createElement("SPAN");
       tmp.textContent = node.nodeValue;

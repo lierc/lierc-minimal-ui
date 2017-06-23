@@ -338,6 +338,12 @@ a:hover {
   padding: 5px;
 }
 
+.invert {
+  filter: invert(100%);
+  background: #fff;
+  color: #000;
+}
+
 #input {
   flex-grow: 1;
   padding: 5px;

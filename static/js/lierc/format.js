@@ -9,6 +9,7 @@ var Unformat = function(html) {
     "U": "\x1F",
     "I": "\x1D"
   };
+  var invert = "\x16";
 
   function descend(node, string) {
     if (node.nodeType == 3) {
@@ -19,6 +20,8 @@ var Unformat = function(html) {
         string += "\n";
       if (tags[node.nodeName])
         string += tags[node.nodeName];
+      if (node.classList && node.classList.contains('invert'))
+        string += invert;
       for (var i=0; i < node.childNodes.length; i++) {
         string = descend(node.childNodes[i], string);
       }

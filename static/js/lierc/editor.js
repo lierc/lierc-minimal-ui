@@ -4,20 +4,49 @@ var Editor = function(element) {
   var BOLD = 66;
   var ITALIC = 73;
   var UNDERLINE = 85;
+  var INVERT = 69;
 
   var TAB = 9;
 
   editor.el = element;
   editor.completion = new Completion(element);
   editor.focused = false;
+  editor.foreground = null;
+  editor.background = null;
 
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
   editor.keydown = function(e, mods) {
-    if (!osx && mods['ctrl']) {
+    if (!osx && mods['ctrl'] && !mods['shift'] && !mods['alt']) {
       if (e.which == BOLD) {
         e.preventDefault();
         document.execCommand('bold');
+        return;
+      }
+      if (e.which == INVERT) {
+        e.preventDefault();
+        var sel = window.getSelection();
+        var node = sel.focusNode;
+        var range = sel.getRangeAt(0);
+        var contents = range.extractContents();
+        var span = document.createElement('SPAN');
+        span.classList.add('invert');
+
+        var empty = contents.textContent == "";
+        if (empty)
+          span.textContent = "\u200b";
+        else
+          span.appendChild(contents);
+
+        range.insertNode(span);
+        range = range.cloneRange();
+        range.setStart(span, 0);
+        if (empty)
+          range.collapse(true);
+        else
+          range.setEnd(span, span.textContent.length);
+        sel.removeAllRanges();
+        sel.addRange(range);
         return;
       }
       if (e.which == ITALIC) {
