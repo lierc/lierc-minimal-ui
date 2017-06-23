@@ -39,14 +39,25 @@ var Editor = function(element) {
           span.appendChild(contents);
 
         range.insertNode(span);
-        range = range.cloneRange();
-        range.setStart(span, 0);
-        if (empty)
-          range.collapse(true);
-        else
-          range.setEnd(span, span.textContent.length);
+
+        var new_range = range.cloneRange();
+
+        if (empty) {
+          new_range.setStart(span, 0);
+          new_range.collapse();
+        }
+        else {
+          var start = range.startOffset;
+          var end = range.endOffset;
+          if (range.collapsed)
+            range.collapse();
+          new_range.setStart(span, start);
+          new_range.setEnd(span, end);
+        }
+
         sel.removeAllRanges();
-        sel.addRange(range);
+        sel.addRange(new_range);
+
         return;
       }
       if (e.which == ITALIC) {
