@@ -3,20 +3,35 @@
 templates['help'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "    <aside class=\"dialog help\">\n      <a href=\"#\" class=\"close\">close</a>\n      <p>Example commands:</p>\n\n      <ul>\n        <li><code>/join #channel</code></li>\n        <li><code>/part reason</code></li>\n        <li><code>/query user message</code></li>\n        <li><code>/say /hello</code></li>\n        <li><code>/topic new topic message</code></li>\n        <li><code>/last query</code></li>\n      </ul>\n\n      <dl>\n        <dt>Alt + arrow</dt>\n        <dd>Next/Prev panel</dd>\n        <dt>Shift + Alt + arrow</dt>\n        <dd>Next/Prev unread panel</dd>\n        <dt>Alt + [1-9]</dt>\n        <dd>Focus panel</dd>\n        <dt>Alt + t</dt>\n        <dd>Quick panel switch</dd>\n        <dt>Alt + k</dt>\n        <dd>Quick panel switch</dd>\n        <dt>Alt + ;</dt>\n        <dd>Toggle nicklist</dd>\n      </dl>\n\n      <p>\n        <a target=\"_blank\" href=\"https://github.com/lierc/lierc-basicui/blob/master/static/js/lierc/commands.js\">Help Lee add more commands?</a>\n      </p>\n    </aside>\n";
 },"useData":true});
-templates['join'] = template({"1":function(container,depth0,helpers,partials,data) {
-    var alias1=container.lambda, alias2=container.escapeExpression;
+templates['login'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    return "    <section class=\"dialog login\">\n      <div class=\"login-wrap\">\n      <a href=\"#\" class=\"close reset-toggle\">Reset password</a>\n      <h2>Login</h2>\n      <form method=\"POST\" class=\"login-form\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address or username</label>\n          <input name=\"email\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"Log In\">\n        </fieldset>\n      </form>\n\n\n      <hr/>\n\n      <h2>Register</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"username\">Username</label>\n          <input name=\"username\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"register\" value=\"Register\">\n        </fieldset>\n      </form>\n      </div>\n\n      <div class=\"reset-wrap\">\n      <a href=\"#\" class=\"close login-toggle\">Login</a>\n      <h2>Reset password</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"This doesn't work\" disabled>\n        </fieldset>\n      </form>\n      </div>\n\n    </section>\n";
+},"useData":true});
+templates['nick'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "            <option value=\""
-    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+  return "<li><a class=\"nick-list-nick\" data-nick=\""
+    + alias4(((helper = (helper = helpers.nick || (depth0 != null ? depth0.nick : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nick","hash":{},"data":data}) : helper)))
+    + "\" data-nick-order=\""
+    + alias4(((helper = (helper = helpers.order || (depth0 != null ? depth0.order : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"order","hash":{},"data":data}) : helper)))
     + "\">"
-    + alias2(alias1((depth0 != null ? depth0.host : depth0), depth0))
-    + "</option>\n";
+    + alias4(((helper = (helper = helpers.sigil || (depth0 != null ? depth0.sigil : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"sigil","hash":{},"data":data}) : helper)))
+    + alias4(((helper = (helper = helpers.nick || (depth0 != null ? depth0.nick : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"nick","hash":{},"data":data}) : helper)))
+    + "</a></li>\n";
+},"useData":true});
+templates['nav_item'] = template({"1":function(container,depth0,helpers,partials,data) {
+    return "  <a class=\"fa fa-pencil edit edit-panel\"></a>\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "  <a class=\"fa fa-times close-panel\"></a>\n";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1;
+    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
-  return "    <section  class=\"dialog join\">\n      <a href=\"#\" class=\"close login-toggle\">close</a>\n      <h2>Join a channel</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"channel\">Channel name</label>\n          <input type=\"text\" name=\"channel\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"connection\">IRC Network</label>\n          <select name=\"connection\">\n"
-    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.connections : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
-    + "          </select>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"join\" value=\"Join\">\n        </fieldset>\n      </form>\n    </section>\n\n";
+  return "<li data-panel-id=\""
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n  <a class=\"panel-name\">"
+    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
+    + "</a>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.status : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</li>\n";
 },"useData":true});
 templates['connection'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "      <h2>Edit connection</h2>\n";
@@ -57,7 +72,19 @@ templates['connection'] = template({"1":function(container,depth0,helpers,partia
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "")
     + "          <p style=\"float:right\" class=\"note\"><span class=\"required\">*</span> required</p>\n        </fieldset>\n      </form>\n    </section>\n\n";
 },"useData":true});
-templates['login'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    return "    <section class=\"dialog login\">\n      <div class=\"login-wrap\">\n      <a href=\"#\" class=\"close reset-toggle\">Reset password</a>\n      <h2>Login</h2>\n      <form method=\"POST\" class=\"login-form\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address or username</label>\n          <input name=\"email\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"Log In\">\n        </fieldset>\n      </form>\n\n\n      <hr/>\n\n      <h2>Register</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"username\">Username</label>\n          <input name=\"username\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"register\" value=\"Register\">\n        </fieldset>\n      </form>\n      </div>\n\n      <div class=\"reset-wrap\">\n      <a href=\"#\" class=\"close login-toggle\">Login</a>\n      <h2>Reset password</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"This doesn't work\" disabled>\n        </fieldset>\n      </form>\n      </div>\n\n    </section>\n";
+templates['join'] = template({"1":function(container,depth0,helpers,partials,data) {
+    var alias1=container.lambda, alias2=container.escapeExpression;
+
+  return "            <option value=\""
+    + alias2(alias1((depth0 != null ? depth0.id : depth0), depth0))
+    + "\">"
+    + alias2(alias1((depth0 != null ? depth0.host : depth0), depth0))
+    + "</option>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "    <section  class=\"dialog join\">\n      <a href=\"#\" class=\"close login-toggle\">close</a>\n      <h2>Join a channel</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"channel\">Channel name</label>\n          <input type=\"text\" name=\"channel\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"connection\">IRC Network</label>\n          <select name=\"connection\">\n"
+    + ((stack1 = helpers.each.call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.connections : depth0),{"name":"each","hash":{},"fn":container.program(1, data, 0),"inverse":container.noop,"data":data})) != null ? stack1 : "")
+    + "          </select>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"join\" value=\"Join\">\n        </fieldset>\n      </form>\n    </section>\n\n";
 },"useData":true});
 })();

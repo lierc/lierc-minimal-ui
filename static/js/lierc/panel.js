@@ -100,28 +100,24 @@ var Panel = function(name, id, connection, mobile) {
           break;
         }
         else if (o > order) {
-          var li = document.createElement('LI');
-          var a = document.createElement('A');
-          a.setAttribute('class', 'nick-list-nick');
-          a.setAttribute('data-nick', nick);
-          a.setAttribute('data-nick-order', order);
-          a.textContent = nicks[nick] + nick;
-          li.appendChild(a);
-          list.insertBefore(li, item);
+          var html = Handlebars.templates.nick({
+            nick: nick,
+            order: order,
+            sigil: nicks[nick],
+          });
+          item.insertAdjacentHTML('beforebegin', html);
           inserted = true;
           break;
         }
       }
 
       if (!inserted) {
-        var li = document.createElement('LI');
-        var a = document.createElement('A');
-        a.setAttribute('class', 'nick-list-nick');
-        a.setAttribute('data-nick', nick);
-        a.setAttribute('data-nick-order', order);
-        a.textContent = nicks[nick] + nick;
-        li.appendChild(a);
-        list.appendChild(li);
+        var html = Handlebars.templates.nick({
+          nick: nick,
+          order: order,
+          sigil: nicks[nick],
+        });
+        list.insertAdjacentHTML('beforeend', html);
       }
     }
 
@@ -162,23 +158,14 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.build_nav = function() {
-    var el = document.createElement('LI');
-    el.setAttribute('data-panel-id', id);
-    var name = document.createElement('A');
-    name.classList.add('panel-name');
-    name.textContent = panel.name;
-    el.appendChild(name);
-    if (panel.type == "status") {
-      var edit = document.createElement('A');
-      edit.classList.add('fa', 'fa-pencil', 'edit', 'edit-panel');
-      el.appendChild(edit);
-    }
-    else {
-      var close = document.createElement('A');
-      close.classList.add('fa', 'fa-times', 'close-panel');
-      el.appendChild(close);
-    }
-    return el;
+    var html = Handlebars.templates.nav_item({
+      name: panel.name,
+      status: panel.type == "status",
+      id: panel.id
+    });
+    var el = document.createElement('DIV');
+    el.innerHTML = html;
+    return el.firstChild;
   };
 
   panel.update_nav = function() {
