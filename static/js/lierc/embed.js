@@ -28,13 +28,12 @@ Embed.embed = function(a, panel) {
       }).then(function(res) {
         if (! res.error) {
           panel.scroll(function() {
-            var toggle = document.createElement('SPAN');
             res['id'] = id;
-            toggle.setAttribute('data-embed', JSON.stringify(res));
-            toggle.setAttribute('data-embed-id', id);
-            toggle.setAttribute("class", "embed-toggle");
-            toggle.setAttribute("aria-hidden", "true");
-            a.parentNode.insertBefore(toggle, a.nextSibling);
+            var html = Handlebars.templates.embed_toggle({
+              embed: JSON.stringify(res),
+              id: id
+            });
+            a.insertAdjacentHTML('afterend', html);
             panel.embed(a, res);
           });
         }
