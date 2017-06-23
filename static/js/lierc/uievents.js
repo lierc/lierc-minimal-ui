@@ -1,6 +1,7 @@
 var UIEvents = function(lierc) {
   var lierc = lierc;
   var events = this;
+  var max_userhost_len = 63 + 10 + 1;
 
   var mods = {
     meta: false,
@@ -357,29 +358,31 @@ var UIEvents = function(lierc) {
         if (!value)
           continue;
 
+        // https://github.com/irssi/irssi/blob/fcd3ec467ff0e5943f34bb3a906bbe07ba6963ff/src/irc/core/irc-servers.c#L207
         var privmsg = "PRIVMSG " + panel.name + " :";
-        if (value.length + privmsg.length < 510) {
+        var max = 510 - "!: PRIVMSG :".length - panel.name.length - connection.nick.length - max_userhost_len;
+        if (value.length < max) {
           send.push(privmsg + value);
         }
         else {
-          var words = value.split(" ");
-          var len = privmsg.length;
+          var words = value.split(/(\b)/);
+          var len = 0;
           var buf = [];
 
           for (var i=0; i < words.length; i++) {
             var word = words[i];
-            if (len + word.length > 510) {
-              send.push(privmsg + buf.join(" "));
-              len = privmsg.length + word.length;
+            if (len + word.length > max) {
+              send.push(privmsg + buf.join(""));
+              len = word.length;
               buf = [word];
             }
             else {
               buf.push(word);
-              len += word.length + 1;
+              len += word.length;
             }
           }
           if (buf.length) {
-            send.push(privmsg + buf.join(" "));
+            send.push(privmsg + buf.join(""));
           }
         }
       }
