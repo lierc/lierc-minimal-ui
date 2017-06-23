@@ -38,21 +38,6 @@ templates['embed'] = template({"1":function(container,depth0,helpers,partials,da
     + alias4(((helper = (helper = helpers.provider_name || (depth0 != null ? depth0.provider_name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"provider_name","hash":{},"data":data}) : helper)))
     + "</p>\n\n  </div>\n</div>\n";
 },"useData":true});
-templates['nav_item'] = template({"1":function(container,depth0,helpers,partials,data) {
-    return "  <a class=\"fa fa-pencil edit edit-panel\"></a>\n";
-},"3":function(container,depth0,helpers,partials,data) {
-    return "  <a class=\"fa fa-times close-panel\"></a>\n";
-},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<li data-panel-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\">\n  <a class=\"panel-name\">"
-    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
-    + "</a>\n"
-    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.status : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
-    + "</li>\n";
-},"useData":true});
 templates['message_menu'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "off";
 },"3":function(container,depth0,helpers,partials,data) {
@@ -67,17 +52,23 @@ templates['message_menu'] = template({"1":function(container,depth0,helpers,part
 templates['login'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "    <section class=\"dialog login\">\n      <div class=\"login-wrap\">\n      <a href=\"#\" class=\"close reset-toggle\">Reset password</a>\n      <h2>Login</h2>\n      <form method=\"POST\" class=\"login-form\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address or username</label>\n          <input name=\"email\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"Log In\">\n        </fieldset>\n      </form>\n\n\n      <hr/>\n\n      <h2>Register</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"username\">Username</label>\n          <input name=\"username\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"register\" value=\"Register\">\n        </fieldset>\n      </form>\n      </div>\n\n      <div class=\"reset-wrap\">\n      <a href=\"#\" class=\"close login-toggle\">Login</a>\n      <h2>Reset password</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"This doesn't work\" disabled>\n        </fieldset>\n      </form>\n      </div>\n\n    </section>\n";
 },"useData":true});
-templates['embed_toggle'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
-    var helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
-
-  return "<span data-embed=\""
-    + alias4(((helper = (helper = helpers.embed || (depth0 != null ? depth0.embed : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"embed","hash":{},"data":data}) : helper)))
-    + "\" data-embed-id=\""
-    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
-    + "\" class=\"embed-toggle\" aria-hidden=\"true\"></span>\n";
-},"useData":true});
 templates['help'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "    <aside class=\"dialog help\">\n      <a href=\"#\" class=\"close\">close</a>\n      <p>Example commands:</p>\n\n      <ul>\n        <li><code>/join #channel</code></li>\n        <li><code>/part reason</code></li>\n        <li><code>/query user message</code></li>\n        <li><code>/say /hello</code></li>\n        <li><code>/topic new topic message</code></li>\n        <li><code>/last query</code></li>\n      </ul>\n\n      <dl>\n        <dt>Alt + [Up,Down]</dt>\n        <dd>Next/Prev panel</dd>\n        <dt>Shift + Alt + [Up,Down]</dt>\n        <dd>Next/Prev unread panel</dd>\n        <dt>Alt + [1-9]</dt>\n        <dd>Focus panel</dd>\n        <dt>Alt + t</dt>\n        <dd>Quick panel switch</dd>\n        <dt>Alt + k</dt>\n        <dd>Quick panel switch</dd>\n        <dt>Alt + ;</dt>\n        <dd>Toggle nicklist</dd>\n        <dt>Ctrl + b</dt>\n        <dd>Bold</dd>\n        <dt>Ctrl + i</dt>\n        <dd>Italic</dd>\n        <dt>Ctrl + u</dt>\n        <dd>Underline</dd>\n        <dt>Ctrl + /</dt>\n        <dd>Invert</dd>\n      </dl>\n\n      <p>\n        <a target=\"_blank\" href=\"https://github.com/lierc/lierc-basicui/blob/master/static/js/lierc/commands.js\">Help Lee add more commands?</a>\n      </p>\n    </aside>\n";
+},"useData":true});
+templates['nav_item'] = template({"1":function(container,depth0,helpers,partials,data) {
+    return "  <a class=\"fa fa-pencil edit edit-panel\"></a>\n";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "  <a class=\"fa fa-times close-panel\"></a>\n";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
+
+  return "<li data-panel-id=\""
+    + alias4(((helper = (helper = helpers.id || (depth0 != null ? depth0.id : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"id","hash":{},"data":data}) : helper)))
+    + "\">\n  <a class=\"panel-name\">"
+    + alias4(((helper = (helper = helpers.name || (depth0 != null ? depth0.name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"name","hash":{},"data":data}) : helper)))
+    + "</a>\n"
+    + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.status : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</li>\n";
 },"useData":true});
 templates['connection'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "      <h2>Edit connection</h2>\n";
