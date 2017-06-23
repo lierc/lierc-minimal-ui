@@ -120,9 +120,12 @@ var Render = function(message, force_raw) {
 
     var from = make_nick(message);
     var color = string_to_color(message.Prefix.User || nick);
-    var msg = make_text();
-    msg.setAttribute('class', 'message-text');
+    var wrap = make_text();
+    wrap.setAttribute('class', 'message-text');
     from.style.color = color;
+    var msg = make_text();
+    msg.setAttribute('class', 'message-text-pre');
+    wrap.appendChild(msg);
 
     if (text.substring(0, 1) == "\x01") {
       if (text.substring(1,7) == "ACTION") {
@@ -147,7 +150,7 @@ var Render = function(message, force_raw) {
     return append(
       li,
       [
-        flex(from, msg, timestamp(message)),
+        flex(from, wrap, timestamp(message)),
         controls(message)
       ]
     );

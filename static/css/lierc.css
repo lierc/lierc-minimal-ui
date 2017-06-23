@@ -905,10 +905,13 @@ li.message.monospace.consecutive .message-nick {
   line-height: 1.4em;
 }
 .message-text {
-  white-space: pre-wrap;
   display: block;
   flex-grow: 1;
   flex-shrink: 1;
+}
+
+.message-text-pre {
+  white-space: pre-wrap;
   line-height: 1.4em;
 }
 
