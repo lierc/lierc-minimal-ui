@@ -28,35 +28,15 @@ var Editor = function(element) {
         var sel = window.getSelection();
         var node = sel.focusNode;
         var range = sel.getRangeAt(0);
-        var contents = range.extractContents();
         var span = document.createElement('SPAN');
+        span.appendChild(range.extractContents());
         span.classList.add('invert');
-
-        var empty = contents.textContent == "";
-        if (empty)
-          span.textContent = "\u200b";
-        else
-          span.appendChild(contents);
-
         range.insertNode(span);
 
-        var new_range = range.cloneRange();
-
-        if (empty) {
-          new_range.setStart(span, 0);
-          new_range.collapse();
+        if (span.textContent == "") {
+          span.textContent = "\u200b";
+          range.setStart(span, 0);
         }
-        else {
-          var start = range.startOffset;
-          var end = range.endOffset;
-          if (range.collapsed)
-            range.collapse();
-          new_range.setStart(span, start);
-          new_range.setEnd(span, end);
-        }
-
-        sel.removeAllRanges();
-        sel.addRange(new_range);
 
         return;
       }
