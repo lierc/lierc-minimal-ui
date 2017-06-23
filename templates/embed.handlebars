@@ -1,0 +1,21 @@
+<div class="embed-wrap-wrap">
+  <div class="embed-wrap" data-embed-provider="{{provider_name_lc}}" data-embed-id="{{id}}">
+
+{{#if thumbnail_url}}
+    <div class="embed-thumb" style="background-image:url(//noembed.com/i/0/450/{{thumbnail_url}})">
+      <div class="embed-play"></div>
+    </div>
+{{/if}}
+
+    <h2>{{title}}</h2>
+
+{{#if use_html}}
+{{html}}
+{{else if description}}
+<p>{{description}}</p>
+{{/if}}
+
+    <p class="embed-source">{{provider_name}}</p>
+
+  </div>
+</div>

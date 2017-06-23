@@ -324,19 +324,6 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.embed = function(a, embed, manual) {
-    var li = a.parentNode;
-    while (li.nodeName != 'LI') {
-      li = li.parentNode;
-    }
-    var wrap = document.createElement('DIV');
-    wrap.classList.add('embed-wrap-wrap');
-    var inner = document.createElement('DIV');
-    inner.classList.add('embed-wrap');
-    inner.setAttribute('data-embed-provider', embed.provider_name.toLowerCase());
-    inner.setAttribute('data-embed-id', embed.id);
-
-    wrap.appendChild(inner);
-
     if (!manual && panel.collapse_embeds) {
       var toggle = a.nextSibling;
       while (toggle && !toggle.classList.contains("embed-toggle")) {
@@ -348,48 +335,41 @@ var Panel = function(name, id, connection, mobile) {
       return;
     }
 
-    if (embed.thumbnail_url) {
-      var img = document.createElement('DIV');
-      img.classList.add('embed-thumb');
-      img.style.backgroundImage = "url(//noembed.com/i/0/450/" + embed.thumbnail_url + ')';
-      var play = document.createElement('DIV');
-      play.classList.add('embed-play');
-      img.appendChild(play);
+    var li = a.parentNode;
+    while (li.nodeName != 'LI') {
+      li = li.parentNode;
     }
-
-    var h2 = document.createElement('H2');
-    h2.textContent = embed.title;
-    inner.appendChild(h2);
 
     if (embed.provider_name == "Twitter") {
-      var html = embed.html.replace(/<script[^>]+>.*<\/script>/, "");;
-      var div = document.createElement('DIV');
-      div.innerHTML = html;
-      div.querySelector('.twitter-tweet').classList.remove('twitter-tweet');
-      inner.appendChild(div)
-    }
-    else if (embed.description) {
-      var p = document.createElement('P');
-      p.textContent = embed.description;
-      inner.appendChild(p);
+      embed.html = new Handlebars.SafeString(
+        embed.html
+          .replace(/<script[^>]+>.*<\/script>/, "")
+          .replace(/twitter-tweet/, "")
+        );
     }
 
-    var p = document.createElement('P');
-    p.classList.add('embed-source');
-    p.textContent = embed.provider_name;
-    inner.appendChild(p);
+    var html = Handlebars.templates.embed({
+      provider_name_lc: embed.provider_name.toLowerCase(),
+      provider_name: embed.provider_name,
+      id: embed.id,
+      thumbnail_url: embed.thumbnail_url,
+      title: embed.title,
+      description: embed.desciption,
+      html: embed.html,
+      use_html: embed.provider_name == "Twitter",
+    });
 
     panel.scroll(function() {
-      li.querySelector('.message-text').appendChild(wrap);
+      li.querySelector('.message-text').insertAdjacentHTML('beforeend', html);
       panel.resize_filler();
     });
 
-    var wrap_el = wrap;
-    var prev = wrap_el.getBoundingClientRect().height;
+    var wrap = li.querySelector('div[data-embed-id="' + embed.id + '"]');
+    var prev = wrap.getBoundingClientRect().height;
     panel.scroller.scrollTop += prev;
 
     var o = new MutationObserver(function(s) {
-      var cur = wrap_el.getBoundingClientRect().height;
+      var cur = wrap.getBoundingClientRect().height;
       if (! panel.is_scrolled()) {
         panel.scroller.scrollTop += cur - prev;
       }
