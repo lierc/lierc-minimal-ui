@@ -125,7 +125,7 @@ var Panel = function(name, id, connection, mobile) {
       list.removeChild(del[i]);
     }
 
-    panel.keyboard.completion.completions = sorted;
+    panel.editor.completion.completions = sorted;
   };
 
   panel.focus = function() {
@@ -572,7 +572,7 @@ var Panel = function(name, id, connection, mobile) {
     });
   };
 
-  panel.keyboard = new Keyboard(panel.elem.input);
+  panel.editor = new Editor(panel.elem.input);
   setInterval(panel.prune, 1000 * 60);
 
   panel.img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;

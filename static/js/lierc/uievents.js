@@ -126,9 +126,9 @@ var UIEvents = function(liercd) {
     }
 
     if (liercd.focused) {
-      /* send to keyboard (bold, italic, tab complete) */
-      if (liercd.focused.keyboard.focused) {
-        liercd.focused.keyboard.keydown(e, mods);
+      /* send to editor (bold, italic, tab complete) */
+      if (liercd.focused.editor.focused) {
+        liercd.focused.editor.keydown(e, mods);
       }
       /* focus input area on a-z 0-9 keys */
       else if (

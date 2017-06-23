@@ -1,5 +1,5 @@
-var Keyboard = function(element) {
-  var keyboard = this;
+var Editor = function(element) {
+  var editor = this;
 
   var BOLD = 66;
   var ITALIC = 73;
@@ -7,13 +7,13 @@ var Keyboard = function(element) {
 
   var TAB = 9;
 
-  keyboard.el = element;
-  keyboard.completion = new Completion(element);
-  keyboard.focused = false;
+  editor.el = element;
+  editor.completion = new Completion(element);
+  editor.focused = false;
 
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
-  keyboard.keydown = function(e, mods) {
+  editor.keydown = function(e, mods) {
     if (!osx && mods['ctrl']) {
       if (e.which == BOLD) {
         e.preventDefault();
@@ -34,21 +34,21 @@ var Keyboard = function(element) {
 
     if (e.which == TAB && !mods['ctrl']) {
       e.preventDefault();
-      keyboard.completion.complete();
+      editor.completion.complete();
       return;
     }
 
-    keyboard.completion.stop();
+    editor.completion.stop();
   };
 
-  keyboard.blur = function() {
-    keyboard.focused = false;
+  editor.blur = function() {
+    editor.focused = false;
   };
 
-  keyboard.focus = function() {
-    keyboard.focused = true;
+  editor.focus = function() {
+    editor.focused = true;
   };
   
-  keyboard.el.addEventListener("blur", keyboard.blur);
-  keyboard.el.addEventListener("focus", keyboard.focus);
+  editor.el.addEventListener("blur", editor.blur);
+  editor.el.addEventListener("focus", editor.focus);
 };
