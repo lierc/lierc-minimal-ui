@@ -11,6 +11,12 @@ var UIEvents = function(liercd) {
 
   var commands = new Commands(liercd);
 
+  function clickTouchEvent(el, f) {
+    ['click', 'touch'].forEach(function(type) {
+      el.addEventListener(type, f);
+    });
+  }
+
   document.addEventListener("keydown", function(e) {
     /* track modifier keys */
     if (e.which == 17) {
@@ -261,8 +267,9 @@ var UIEvents = function(liercd) {
     el.addEventListener('click', join_click);
   });
 
-  document.querySelector('.add-connection')
-    .addEventListener('click', liercd.config_modal);
+  document.querySelectorAll('.add-connection').forEach(function(el) {
+    el.addEventListener('click', liercd.config_modal);
+  });
 
   document.querySelectorAll('#nav .nav-title')
     .forEach(function(el) {
@@ -278,24 +285,22 @@ var UIEvents = function(liercd) {
       });
     });
 
-  ['click', 'touchstart'].forEach(function(type) {
-    document.querySelector('#toggle-hideevents a').addEventListener(type, function(e) {
-      e.preventDefault();
-      liercd.focused.set_ignore_events(!liercd.focused.ignore_events);
-      liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
-    });
+  clickTouchEvent(document.querySelector('#toggle-hideevents a'), function(e) {
+    e.preventDefault();
+    liercd.focused.set_ignore_events(!liercd.focused.ignore_events);
+    liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
+  });
 
-    document.querySelector('#toggle-hideembeds a').addEventListener(type, function(e) {
-      e.preventDefault();
-      liercd.focused.set_collapse_embeds(!liercd.focused.collapse_embeds);
-      liercd.update_pref(liercd.focused.id + "-collapse-embeds", liercd.focused.collapse_embeds);
-    });
+  clickTouchEvent(document.querySelector('#toggle-hideembeds a'), function(e) {
+    e.preventDefault();
+    liercd.focused.set_collapse_embeds(!liercd.focused.collapse_embeds);
+    liercd.update_pref(liercd.focused.id + "-collapse-embeds", liercd.focused.collapse_embeds);
+  });
 
-    document.querySelector('#toggle-nicks').addEventListener(type, function(e) {
-      e.preventDefault();
-      liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
-      liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
-    });
+  clickTouchEvent(document.querySelector('#toggle-nicks'), function(e) {
+    e.preventDefault();
+    liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
+    liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
   });
 
   liercd.elem.emoji.addEventListener('click', function(e) {
@@ -477,38 +482,32 @@ var UIEvents = function(liercd) {
     xhr.send(fd);
   });
 
-  ['touchstart', 'click'].forEach(function(type) {
-    document.getElementById('upload').addEventListener(type, function(e) {
-      if (e.target.matches('#upload')) {
-        e.preventDefault();
-        e.target.classList.toggle("open");
-      }
-    });
+  clickTouchEvent(document.getElementById('upload'), function(e) {
+    if (e.target.matches('#upload')) {
+      e.preventDefault();
+      e.target.classList.toggle("open");
+    }
   });
 
-  ['click', 'touchstart'].forEach(function(type) {
-    document.getElementById("help").addEventListener(type, function(e) {
-      e.preventDefault();
-      liercd.new_dialog("help");
-    });
+  clickTouchEvent(document.getElementById("help"), function(e) {
+    e.preventDefault();
+    liercd.new_dialog("help");
   });
 
-  ['click', 'touchstart'].forEach(function(type) {
-    document.getElementById('logout').addEventListener(type, function(e) {
-      e.preventDefault();
+  clickTouchEvent(document.getElementById('logout'), function(e) {
+    e.preventDefault();
 
-      if (!confirm("Are you sure you want to log out?"))
-        return;
+    if (!confirm("Are you sure you want to log out?"))
+      return;
 
-      fetch(liercd.baseurl + "/logout", {
-        'method': 'POST',
-        'credentials': 'same-origin',
-      }).then(function(res) {
-        if (!res.ok)
-          alert('Error!');
-        else
-          window.location.reload();
-      });
+    fetch(liercd.baseurl + "/logout", {
+      'method': 'POST',
+      'credentials': 'same-origin',
+    }).then(function(res) {
+      if (!res.ok)
+        alert('Error!');
+      else
+        window.location.reload();
     });
   });
 
@@ -588,12 +587,9 @@ var UIEvents = function(liercd) {
     document.execCommand("insertText", false, text);
   });
 
-  ['touchstart', 'click'].forEach(function(type) {
-    document.querySelector('.flex-wrap-left header')
-      .addEventListener(type, function(e) {
-        e.preventDefault();
-        liercd.elem.flex_wrap.classList.toggle('open');
-      });
+  clickTouchEvent(document.querySelector('.flex-wrap-left header'), function(e) {
+    e.preventDefault();
+    liercd.elem.flex_wrap.classList.toggle('open');
   });
 
   document.addEventListener('input', function(e) {
