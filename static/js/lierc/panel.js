@@ -719,7 +719,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.react_backlog_check = function() {
     panel.reactions.forEach(function(reaction, i) {
       var li = panel.elem.list.querySelector('li[data-message-hash="'+reaction[1]+'"]');
-      if (li.length) {
+      if (li) {
         panel.handle_reaction.apply(panel, reaction);
         panel.reactions.slice(i, 1);
       }

@@ -4,7 +4,7 @@ var Editor = function(element) {
   var BOLD = 66;
   var ITALIC = 73;
   var UNDERLINE = 85;
-  var INVERT = 69;
+  var INVERT = 191;
 
   var TAB = 9;
 
