@@ -38,6 +38,17 @@ templates['embed'] = template({"1":function(container,depth0,helpers,partials,da
     + alias4(((helper = (helper = helpers.provider_name || (depth0 != null ? depth0.provider_name : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"provider_name","hash":{},"data":data}) : helper)))
     + "</p>\n\n  </div>\n</div>\n";
 },"useData":true});
+templates['message_menu'] = template({"1":function(container,depth0,helpers,partials,data) {
+    return "off";
+},"3":function(container,depth0,helpers,partials,data) {
+    return "on";
+},"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
+    var stack1;
+
+  return "<div class=\"message-menu-popup\">\n  <ul>\n    <li class=\"message-privmsg\">Direct message</li>\n    <li class=\"message-monospace\">Monospace text "
+    + ((stack1 = helpers["if"].call(depth0 != null ? depth0 : (container.nullContext || {}),(depth0 != null ? depth0.is_monospace : depth0),{"name":"if","hash":{},"fn":container.program(1, data, 0),"inverse":container.program(3, data, 0),"data":data})) != null ? stack1 : "")
+    + "</li>\n  </ul>\n</div>\n";
+},"useData":true});
 templates['login'] = template({"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     return "    <section class=\"dialog login\">\n      <div class=\"login-wrap\">\n      <a href=\"#\" class=\"close reset-toggle\">Reset password</a>\n      <h2>Login</h2>\n      <form method=\"POST\" class=\"login-form\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address or username</label>\n          <input name=\"email\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"Log In\">\n        </fieldset>\n      </form>\n\n\n      <hr/>\n\n      <h2>Register</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"username\">Username</label>\n          <input name=\"username\" type=\"text\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"pass\">Password</label>\n          <input name=\"pass\" type=\"password\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"register\" value=\"Register\">\n        </fieldset>\n      </form>\n      </div>\n\n      <div class=\"reset-wrap\">\n      <a href=\"#\" class=\"close login-toggle\">Login</a>\n      <h2>Reset password</h2>\n      <form method=\"POST\">\n        <fieldset class=\"input-group\">\n          <label for=\"email\">Email address</label>\n          <input name=\"email\" type=\"email\" value=\"\" required>\n        </fieldset>\n        <fieldset class=\"submit-group\">\n          <input type=\"submit\" name=\"auth\" value=\"This doesn't work\" disabled>\n        </fieldset>\n      </form>\n      </div>\n\n    </section>\n";
 },"useData":true});

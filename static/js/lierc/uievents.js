@@ -636,22 +636,11 @@ var UIEvents = function(liercd) {
 
     if (target.matches('.message-menu')) {
       if (toggle.classList.contains('open')) {
-        var popup = document.createElement('DIV');
-        popup.classList.add('message-menu-popup');
-        var list = document.createElement('UL');
-        var privmsg = document.createElement('LI');
-        privmsg.classList.add('message-privmsg');
-        privmsg.textContent = 'Direct message';
-        var mono = document.createElement('LI');
-        mono.classList.add('message-monospace');
-        mono.textContent = 'Monospace text ';
-        var text = document.createTextNode(is_monospace ? "off" : "on");
-        mono.appendChild(text);
-        list.appendChild(privmsg);
-        list.appendChild(mono);
+        var html = Handlebars.templates.message_menu({
+          is_monospace: is_monospace
+        });
         controls.classList.add('open');
-        popup.appendChild(list);
-        toggle.appendChild(popup);
+        toggle.insertAdjacentHTML('beforeend', html);
       }
       else {
         controls.classList.remove('open');
