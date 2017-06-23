@@ -54,14 +54,15 @@ Emoji.load = function() {
 
         var surrogate = "";
         for (var j=0; j < res[i]['codes'].length; j++) {
-          if (res[i]['codes'][j].length > 4) {
-            var C = parseInt("0x"+res[i]['codes'][j]);
+          // https://mathiasbynens.be/notes/javascript-encoding
+          var C = parseInt(res[i]['codes'][j], 16);
+          if (C > 0xFFFF) {
             var H = Math.floor((C - 0x10000) / 0x400) + 0xD800;
             var L = (C - 0x10000) % 0x400 + 0xDC00;
             surrogate += "\\u" + H.toString(16) + "\\u" + L.toString(16);
           }
           else {
-            surrogate += "\\u" + res[i]['codes'][j];
+            surrogate += "\\u" + C;
           }
         }
         codepoints.push(surrogate);
