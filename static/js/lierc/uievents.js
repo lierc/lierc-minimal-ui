@@ -1,5 +1,5 @@
-var UIEvents = function(liercd) {
-  var liercd = liercd;
+var UIEvents = function(lierc) {
+  var lierc = lierc;
   var events = this;
 
   var mods = {
@@ -9,7 +9,7 @@ var UIEvents = function(liercd) {
     cmd: false
   };
 
-  var commands = new Commands(liercd);
+  var commands = new Commands(lierc);
 
   function clickTouchEvent(el, f) {
     ['click', 'touch'].forEach(function(type) {
@@ -35,26 +35,26 @@ var UIEvents = function(liercd) {
       mods['cmd'] = true;
       return;
     }
-    else if (e.which == 27 && liercd.overlayed()) {
-      liercd.close_dialog();
+    else if (e.which == 27 && lierc.overlayed()) {
+      lierc.close_dialog();
       return;
     }
-    else if (liercd.overlayed()) {
+    else if (lierc.overlayed()) {
       return;
     }
 
     /* task switcher is open, special keys */
-    if (liercd.elem.switcher.classList.contains('open')) {
+    if (lierc.elem.switcher.classList.contains('open')) {
       //escape
       if (e.which == 27) {
-        liercd.hide_switcher();
-        liercd.focus_input();
+        lierc.hide_switcher();
+        lierc.focus_input();
         return;
       }
       // down or tab
       else if (e.which == 40 || e.which == 9) {
         e.preventDefault();
-        var items = liercd.elem.nav.querySelectorAll('li[data-name].candidate.match');
+        var items = lierc.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
         for (var i=1; i < items.length; i++) {
           if (items[i - 1].classList.contains("selected")) {
@@ -67,7 +67,7 @@ var UIEvents = function(liercd) {
       // up
       else if (e.which == 38) {
         e.preventDefault();
-        var items = liercd.elem.nav.querySelectorAll('li[data-name].candidate.match');
+        var items = lierc.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
         for (var i=0; i < items.length - 1; i++) {
           if (items[i + 1].classList.contains("selected")) {
@@ -79,11 +79,11 @@ var UIEvents = function(liercd) {
       }
       // enter
       else if (e.which == 13) {
-        var selected = liercd.elem.nav.querySelector('li.selected');
+        var selected = lierc.elem.nav.querySelector('li.selected');
         if (selected) {
           var id = selected.getAttribute('data-panel-id');
-          liercd.focus_panel(id);
-          liercd.hide_switcher();
+          lierc.focus_panel(id);
+          lierc.hide_switcher();
           return;
         }
       }
@@ -98,19 +98,19 @@ var UIEvents = function(liercd) {
     /* panel up */
     else if (e.which == 38 && mods['meta']) {
       e.preventDefault();
-      mods['shift'] ? liercd.prev_unread_panel() : liercd.prev_panel();
+      mods['shift'] ? lierc.prev_unread_panel() : lierc.prev_panel();
       return;
     }
     /* panel down */
     else if (e.which == 40 && mods['meta']) {
       e.preventDefault();
-      mods['shift'] ? liercd.next_unread_panel() : liercd.next_panel();
+      mods['shift'] ? lierc.next_unread_panel() : lierc.next_panel();
       return;
     }
     /* toggle task switcher */
     else if ((e.which == 75 || e.which == 84) && mods['meta']) {
       e.preventDefault();
-      liercd.toggle_switcher();
+      lierc.toggle_switcher();
       return;
     }
 
@@ -118,17 +118,17 @@ var UIEvents = function(liercd) {
 
     /* jump to panel by number */
     if ((mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
-      var panels = liercd.elem.nav.querySelectorAll('#channels li,#privates li');
+      var panels = lierc.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
-        liercd.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
+        lierc.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
         return;
       }
     }
 
-    if (liercd.focused) {
+    if (lierc.focused) {
       /* send to editor (bold, italic, tab complete) */
-      if (liercd.focused.editor.focused) {
-        liercd.focused.editor.keydown(e, mods);
+      if (lierc.focused.editor.focused) {
+        lierc.focused.editor.keydown(e, mods);
       }
       /* focus input area on a-z 0-9 keys */
       else if (
@@ -137,14 +137,14 @@ var UIEvents = function(liercd) {
         && ! mods['meta'] && ! mods['ctrl'] && ! mods['cmd']
         && ( c.match(/[a-zA-Z0-9\/]/) || e.which == 191 )
       ) {
-        liercd.focus_input();
+        lierc.focus_input();
       }
     }
   });
 
-  liercd.elem.switcher.addEventListener("input", function(e) {
-    var val = liercd.elem.switcher.querySelector('input').value;
-    var items = liercd.elem.nav.querySelectorAll('li[data-name]');
+  lierc.elem.switcher.addEventListener("input", function(e) {
+    var val = lierc.elem.switcher.querySelector('input').value;
+    var items = lierc.elem.nav.querySelectorAll('li[data-name]');
 
     val = val.toLowerCase();
     if (val) {
@@ -160,7 +160,7 @@ var UIEvents = function(liercd) {
       }
     }
     else {
-      liercd.elem.nav.querySelectorAll('li[data-name]').forEach(function(el) {
+      lierc.elem.nav.querySelectorAll('li[data-name]').forEach(function(el) {
         el.classList.add('match');
       });
     }
@@ -193,7 +193,7 @@ var UIEvents = function(liercd) {
     mods['ctrl'] = false;
     mods['cmd'] = false;
 
-    liercd.window_focused = false;
+    lierc.window_focused = false;
   });
 
   window.addEventListener("focus", function(e) {
@@ -202,8 +202,8 @@ var UIEvents = function(liercd) {
     mods['ctrl'] = false;
     mods['cmd'] = false;
 
-    liercd.window_focused = true;
-    liercd.focus_input();
+    lierc.window_focused = true;
+    lierc.focus_input();
   });
 
   document.addEventListener("keyup", function(e) {
@@ -221,17 +221,17 @@ var UIEvents = function(liercd) {
     if (e.target.hasAttribute('data-nick')) {
       e.preventDefault();
       var nick = e.target.getAttribute('data-nick');
-      var connection = liercd.focused.connection;
-      var panel = liercd.add_panel(nick, connection, true);
-      liercd.focus_panel(panel.id);
+      var connection = lierc.focused.connection;
+      var panel = lierc.add_panel(nick, connection, true);
+      lierc.focus_panel(panel.id);
     }
   });
 
   function join_click(e) {
     e.preventDefault();
-    liercd.elem.flex_wrap.classList.remove('open');
-    var dialog = liercd.new_dialog("join", {
-      connections: Object.values(liercd.connections)
+    lierc.elem.flex_wrap.classList.remove('open');
+    var dialog = lierc.new_dialog("join", {
+      connections: Object.values(lierc.connections)
     });
 
     dialog.el.addEventListener('submit', function(e) {
@@ -239,26 +239,26 @@ var UIEvents = function(liercd) {
       var channel = dialog.el.querySelector('input[name=channel]').value;
       var select = dialog.el.querySelector('select');
       var conn = select.options[select.selectedIndex].value;
-      fetch(liercd.baseurl + '/connection/' + conn, {
+      fetch(lierc.baseurl + '/connection/' + conn, {
           'method': "POST",
           'body': "JOIN " + channel,
           'credentials': 'same-origin',
           'headers': {
             'content-type': "application/irc",
-            'lierc-token' : liercd.post_token()
+            'lierc-token' : lierc.post_token()
           },
         }).then(function(res) {
-          liercd.close_dialog();
+          lierc.close_dialog();
 
           if (!res.ok)
             throw Error(res.statusText);
           return res.json();
         }).then(function(res) {
-          liercd.post_tokens.push(res.token);
+          lierc.post_tokens.push(res.token);
         }).catch(function(e) {
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
-          liercd.load_token();
+          lierc.load_token();
         });
     });
   }
@@ -268,7 +268,7 @@ var UIEvents = function(liercd) {
   });
 
   document.querySelectorAll('.add-connection').forEach(function(el) {
-    el.addEventListener('click', liercd.config_modal);
+    el.addEventListener('click', lierc.config_modal);
   });
 
   document.querySelectorAll('#nav .nav-title')
@@ -287,40 +287,40 @@ var UIEvents = function(liercd) {
 
   clickTouchEvent(document.querySelector('#toggle-hideevents a'), function(e) {
     e.preventDefault();
-    liercd.focused.set_ignore_events(!liercd.focused.ignore_events);
-    liercd.update_pref(liercd.focused.id + "-ignore-events", liercd.focused.ignore_events);
+    lierc.focused.set_ignore_events(!lierc.focused.ignore_events);
+    lierc.update_pref(lierc.focused.id + "-ignore-events", lierc.focused.ignore_events);
   });
 
   clickTouchEvent(document.querySelector('#toggle-hideembeds a'), function(e) {
     e.preventDefault();
-    liercd.focused.set_collapse_embeds(!liercd.focused.collapse_embeds);
-    liercd.update_pref(liercd.focused.id + "-collapse-embeds", liercd.focused.collapse_embeds);
+    lierc.focused.set_collapse_embeds(!lierc.focused.collapse_embeds);
+    lierc.update_pref(lierc.focused.id + "-collapse-embeds", lierc.focused.collapse_embeds);
   });
 
   clickTouchEvent(document.querySelector('#toggle-nicks'), function(e) {
     e.preventDefault();
-    liercd.focused.set_show_nicklist(!liercd.focused.show_nicklist);
-    liercd.update_pref(liercd.focused.id + "-show-nicklist", liercd.focused.show_nicklist);
+    lierc.focused.set_show_nicklist(!lierc.focused.show_nicklist);
+    lierc.update_pref(lierc.focused.id + "-show-nicklist", lierc.focused.show_nicklist);
   });
 
-  liercd.elem.emoji.addEventListener('click', function(e) {
+  lierc.elem.emoji.addEventListener('click', function(e) {
     e.preventDefault();
     var emoji_search = document.querySelector('.emoji-search input');
 
     if (e.target.matches('li[data-chars]')) {
-      liercd.focus_input(true);
+      lierc.focus_input(true);
       document.execCommand("insertText", false, e.target.getAttribute('data-chars'));
 
-      liercd.elem.emoji.classList.remove("open");
+      lierc.elem.emoji.classList.remove("open");
       emoji_search.value = '';
-      Emoji.filter(liercd.elem.emoji, '');
+      Emoji.filter(lierc.elem.emoji, '');
     }
     if (e.target.matches('#emoji')) {
       e.target.classList.toggle('open');
-      if (!liercd.mobile) {
+      if (!lierc.mobile) {
         if (e.target.classList.contains('open')) {
           emoji_search.value = '';
-          Emoji.filter(liercd.elem.emoji, '');
+          Emoji.filter(lierc.elem.emoji, '');
           emoji_search.focus();
         }
       }
@@ -328,13 +328,13 @@ var UIEvents = function(liercd) {
   });
 
   function send_submit() {
-    var input = liercd.elem.input.querySelector(".input");
+    var input = lierc.elem.input.querySelector(".input");
     var value = Unformat(input.innerHTML);
     if (value == "") return;
     input.innerHTML = "";
 
-    var panel = liercd.panels[input.getAttribute('data-panel-id')];
-    var connection = liercd.connections[panel.connection];
+    var panel = lierc.panels[input.getAttribute('data-panel-id')];
+    var connection = lierc.connections[panel.connection];
     var send = [];
 
     if (value.substring(0,1) == "/") {
@@ -387,12 +387,12 @@ var UIEvents = function(liercd) {
 
     function sendlines(lines) {
       if (!lines.length) return;
-      fetch(liercd.baseurl + "/connection/" + panel.connection, {
+      fetch(lierc.baseurl + "/connection/" + panel.connection, {
           credentials: 'same-origin',
           method: "POST",
           headers:{
             'content-type': 'application/irc',
-            'lierc-token' : liercd.post_token()
+            'lierc-token' : lierc.post_token()
           },
           body: lines.shift(),
         }).then(function(res) {
@@ -400,12 +400,12 @@ var UIEvents = function(liercd) {
             throw Error(res.statusText);
           return res.json();
         }).then(function(res) {
-          liercd.post_tokens.push(res.token);
+          lierc.post_tokens.push(res.token);
           if (lines.length)
             sendlines(lines);
         }).catch(function(e) {;
           alert("Error: " + e);
-          liercd.load_token();
+          lierc.load_token();
         });
     }
 
@@ -441,7 +441,7 @@ var UIEvents = function(liercd) {
         submit.removeAttribute('disabled');
         text.removeAttribute('disabled');
         text.value = '';
-        liercd.focus_input(true);
+        lierc.focus_input(true);
         document.execCommand("insertText", false, res.html_url);
         document.getElementById('upload').classList.remove('open');
       }).catch(function(e) {
@@ -472,7 +472,7 @@ var UIEvents = function(liercd) {
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
-      liercd.focus_input(true);
+      lierc.focus_input(true);
       document.execCommand("insertText", false, res.data.link);
       document.getElementById('upload').classList.remove('open');
       image.value = null;
@@ -491,7 +491,7 @@ var UIEvents = function(liercd) {
 
   clickTouchEvent(document.getElementById("help"), function(e) {
     e.preventDefault();
-    liercd.new_dialog("help");
+    lierc.new_dialog("help");
   });
 
   clickTouchEvent(document.getElementById('logout'), function(e) {
@@ -500,7 +500,7 @@ var UIEvents = function(liercd) {
     if (!confirm("Are you sure you want to log out?"))
       return;
 
-    fetch(liercd.baseurl + "/logout", {
+    fetch(lierc.baseurl + "/logout", {
       'method': 'POST',
       'credentials': 'same-origin',
     }).then(function(res) {
@@ -512,14 +512,14 @@ var UIEvents = function(liercd) {
   });
 
   window.addEventListener('resize', function(e) {
-    if (liercd.focused) {
-      liercd.focused.scroll();
-      liercd.focused.resize_filler();
+    if (lierc.focused) {
+      lierc.focused.scroll();
+      lierc.focused.resize_filler();
     }
   });
 
   document.addEventListener('copy', function(e) {
-    if ( liercd.overlayed() )
+    if ( lierc.overlayed() )
       return;
 
     e.preventDefault();
@@ -554,7 +554,7 @@ var UIEvents = function(liercd) {
   });
 
   document.addEventListener('paste', function(e) {
-    if (liercd.overlayed())
+    if (lierc.overlayed())
       return;
     if (document.activeElement.matches('#gist-upload-input'))
       return;
@@ -565,7 +565,7 @@ var UIEvents = function(liercd) {
     var items = clipboard.items;
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
-        liercd.focus_input();
+        lierc.focus_input();
         var blob = items[i].getAsFile();
         var fd = new FormData();
         fd.append("image", blob);
@@ -574,7 +574,7 @@ var UIEvents = function(liercd) {
         xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
         xhr.onload = function() {
           var res = JSON.parse(xhr.responseText);
-          liercd.focus_input(true);
+          lierc.focus_input(true);
           document.execCommand("insertText", false, res.data.link);
         };
         xhr.send(fd);
@@ -582,14 +582,14 @@ var UIEvents = function(liercd) {
       }
     }
 
-    liercd.focus_input();
+    lierc.focus_input();
     var text = clipboard.getData("Text");
     document.execCommand("insertText", false, text);
   });
 
   clickTouchEvent(document.querySelector('.flex-wrap-left header'), function(e) {
     e.preventDefault();
-    liercd.elem.flex_wrap.classList.toggle('open');
+    lierc.elem.flex_wrap.classList.toggle('open');
   });
 
   document.addEventListener('input', function(e) {
@@ -603,10 +603,10 @@ var UIEvents = function(liercd) {
       e.preventDefault();
       this.classList.toggle('enabled');
       var enabled = e.target.classList.contains('enabled');
-      liercd.update_pref("email", enabled);
+      lierc.update_pref("email", enabled);
   });
 
-  liercd.elem.panel.addEventListener('click', function(e) {
+  lierc.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.message-menu, .message-menu *'))
       return;
 
@@ -653,15 +653,15 @@ var UIEvents = function(liercd) {
       toggle.innerHTML = '';
       var nick = message.querySelector('.message-nick').getAttribute('data-nick');
       if (is_monospace) {
-        liercd.remove_monospace_nick(liercd.focused, nick);
+        lierc.remove_monospace_nick(lierc.focused, nick);
       }
       else {
-        liercd.add_monospace_nick(liercd.focused, nick);
+        lierc.add_monospace_nick(lierc.focused, nick);
       }
     }
   });
 
-  liercd.elem.panel.addEventListener('click', function(e) {
+  lierc.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.embed-toggle'))
       return;
 
@@ -676,22 +676,22 @@ var UIEvents = function(liercd) {
     }
     else {
       var a = toggle.previousSibling;
-      liercd.focused.embed(a, embed, true);
+      lierc.focused.embed(a, embed, true);
     }
   });
 
-  liercd.elem.topic.addEventListener('click', function(e) {
-    if (liercd.focused) {
+  lierc.elem.topic.addEventListener('click', function(e) {
+    if (lierc.focused) {
       if (e.target.nodeName != 'A') {
         var elem = this;
-        liercd.focused.scroll(function() {
+        lierc.focused.scroll(function() {
           elem.classList.toggle('expanded');
         });
       }
     }
   });
 
-  liercd.elem.panel.addEventListener('click', function(e) {
+  lierc.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.embed-wrap[data-embed-id]:not(.open) *'))
       return;
 
@@ -717,7 +717,7 @@ var UIEvents = function(liercd) {
     });
   });
 
-  liercd.elem.panel.addEventListener('click', function(e) {
+  lierc.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.message-react, .message-react *'))
       return;
 
@@ -754,7 +754,7 @@ var UIEvents = function(liercd) {
         message = message.parentNode;
       }
       var hash = message.getAttribute('data-message-hash');
-      var panel = liercd.focused;
+      var panel = lierc.focused;
 
       react.classList.remove('open');
       controls.classList.remove('open');
@@ -764,36 +764,36 @@ var UIEvents = function(liercd) {
       if (! (emoji && hash && panel))
         return;
 
-      fetch(liercd.baseurl + "/connection/" + panel.connection, {
+      fetch(lierc.baseurl + "/connection/" + panel.connection, {
           'method': "POST",
           'credentials': 'same-origin',
           'content-type': "application/irc",
           'body': "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
           'headers': {
-            'lierc-token' : liercd.post_token()
+            'lierc-token' : lierc.post_token()
           }
         }).then(function(res) {
           if (!res.ok)
             throw Error(res.statusText);
           return res.json();
         }).then(function(res) {
-          liercd.post_tokens.push(res.token);
+          lierc.post_tokens.push(res.token);
         }).catch(function(e) {
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
-          liercd.load_token();
+          lierc.load_token();
         });
     }
   });
 
   window.addEventListener("beforeunload", function() {
-    if (liercd.focused) {
-      liercd.focused.update_seen();
-      liercd.save_seen(liercd.focused, true);
+    if (lierc.focused) {
+      lierc.focused.update_seen();
+      lierc.save_seen(lierc.focused, true);
     }
   });
 
-  liercd.elem.panel.addEventListener('transitionend', function(e) {
+  lierc.elem.panel.addEventListener('transitionend', function(e) {
     if (e.target.matches('li.chat'))
       e.target.classList.remove('loading', 'loaded');
   });

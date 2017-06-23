@@ -1,5 +1,5 @@
-var Commands = function(liercd) {
-  var liercd = liercd;
+var Commands = function(lierc) {
+  var lierc = lierc;
   var commands = this;
   var handlers = {};
 
@@ -40,7 +40,7 @@ var Commands = function(liercd) {
       throw "Search text required";
     }
 
-    liercd.search_panel(panel, line);
+    lierc.search_panel(panel, line);
   });
 
   add_command("clear", [], function(panel) {
@@ -64,7 +64,7 @@ var Commands = function(liercd) {
     }
 
     if (panel.type == "private") {
-      liercd.remove_panel(panel.id);
+      lierc.remove_panel(panel.id);
       return;
     }
 
