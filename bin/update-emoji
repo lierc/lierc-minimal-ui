@@ -45,7 +45,7 @@ for (@lines) {
     for my $char (@chars) {
       push @{ $current{codes} }, sprintf "%X", ord $char;
       if ( my $a = $annotations{$char} ) {
-        push @{ $current{annotations} }, @{ $a->{keywords} };
+        push @{ $current{annotations} }, @{ $a->{keywords} || [] };
         push @name, $a->{tts};
       }
     }

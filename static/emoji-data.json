@@ -260,12 +260,17 @@
       "name" : "Hugging face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "grinning",
+         "face",
+         "star",
+         "eyes"
+      ],
       "chars" : "🤩",
       "codes" : [
          "1F929"
       ],
-      "name" : ""
+      "name" : "Star-struck"
    },
    {
       "annotations" : [
@@ -279,12 +284,15 @@
       "name" : "Thinking face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "skeptic",
+         "distrust"
+      ],
       "chars" : "🤨",
       "codes" : [
          "1F928"
       ],
-      "name" : ""
+      "name" : "Face with raised eyebrow"
    },
    {
       "annotations" : [
@@ -731,12 +739,14 @@
       "name" : "Weary face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "shocked"
+      ],
       "chars" : "🤯",
       "codes" : [
          "1F92F"
       ],
-      "name" : ""
+      "name" : "Exploding head"
    },
    {
       "annotations" : [
@@ -793,12 +803,16 @@
       "name" : "Flushed face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "large",
+         "small",
+         "eye"
+      ],
       "chars" : "🤪",
       "codes" : [
          "1F92A"
       ],
-      "name" : ""
+      "name" : "Crazy face"
    },
    {
       "annotations" : [
@@ -844,7 +858,7 @@
       "codes" : [
          "1F92C"
       ],
-      "name" : ""
+      "name" : "Face with symbols over mouth"
    },
    {
       "annotations" : [
@@ -900,12 +914,15 @@
       "name" : "Nauseated face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "vomit",
+         "sick"
+      ],
       "chars" : "🤮",
       "codes" : [
          "1F92E"
       ],
-      "name" : ""
+      "name" : "Face vomiting"
    },
    {
       "annotations" : [
@@ -977,23 +994,27 @@
       "codes" : [
          "1F92B"
       ],
-      "name" : ""
+      "name" : "Shushing face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "whoops"
+      ],
       "chars" : "🤭",
       "codes" : [
          "1F92D"
       ],
-      "name" : ""
+      "name" : "Face with hand over mouth"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "stuffy"
+      ],
       "chars" : "🧐",
       "codes" : [
          "1F9D0"
       ],
-      "name" : ""
+      "name" : "Face with monocle"
    },
    {
       "annotations" : [
@@ -1042,7 +1063,6 @@
          "face",
          "fairy tale",
          "fantasy",
-         "Japanese",
          "monster"
       ],
       "chars" : "👹",
@@ -1057,7 +1077,6 @@
          "face",
          "fairy tale",
          "fantasy",
-         "Japanese",
          "monster"
       ],
       "chars" : "👺",
@@ -1425,15 +1444,20 @@
       "name" : "Baby dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "gender-neutral",
+         "young"
+      ],
       "chars" : "🧒",
       "codes" : [
          "1F9D2"
       ],
-      "name" : ""
+      "name" : "Child"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "young",
          "skin tone",
          "type 1–2"
       ],
@@ -1442,10 +1466,12 @@
          "1F9D2",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Child light skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "young",
          "skin tone",
          "type 3"
       ],
@@ -1454,10 +1480,12 @@
          "1F9D2",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Child medium-light skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "young",
          "skin tone",
          "type 4"
       ],
@@ -1466,10 +1494,12 @@
          "1F9D2",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Child medium skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "young",
          "skin tone",
          "type 5"
       ],
@@ -1478,10 +1508,12 @@
          "1F9D2",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Child medium-dark skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "young",
          "skin tone",
          "type 6"
       ],
@@ -1490,7 +1522,7 @@
          "1F9D2",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Child dark skin tone"
    },
    {
       "annotations" : [
@@ -1661,15 +1693,18 @@
       "name" : "Girl dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "gender-neutral"
+      ],
       "chars" : "🧑",
       "codes" : [
          "1F9D1"
       ],
-      "name" : ""
+      "name" : "Adult"
    },
    {
       "annotations" : [
+         "gender-neutral",
          "skin tone",
          "type 1–2"
       ],
@@ -1678,10 +1713,11 @@
          "1F9D1",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Adult light skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
          "skin tone",
          "type 3"
       ],
@@ -1690,10 +1726,11 @@
          "1F9D1",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Adult medium-light skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
          "skin tone",
          "type 4"
       ],
@@ -1702,10 +1739,11 @@
          "1F9D1",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Adult medium skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
          "skin tone",
          "type 5"
       ],
@@ -1714,10 +1752,11 @@
          "1F9D1",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Adult medium-dark skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
          "skin tone",
          "type 6"
       ],
@@ -1726,7 +1765,7 @@
          "1F9D1",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Adult dark skin tone"
    },
    {
       "annotations" : [
@@ -1879,15 +1918,20 @@
       "name" : "Woman dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "gender-neutral",
+         "old"
+      ],
       "chars" : "🧓",
       "codes" : [
          "1F9D3"
       ],
-      "name" : ""
+      "name" : "Older adult"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "old",
          "skin tone",
          "type 1–2"
       ],
@@ -1896,10 +1940,12 @@
          "1F9D3",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Older adult light skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "old",
          "skin tone",
          "type 3"
       ],
@@ -1908,10 +1954,12 @@
          "1F9D3",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Older adult medium-light skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "old",
          "skin tone",
          "type 4"
       ],
@@ -1920,10 +1968,12 @@
          "1F9D3",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Older adult medium skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "old",
          "skin tone",
          "type 5"
       ],
@@ -1932,10 +1982,12 @@
          "1F9D3",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Older adult medium-dark skin tone"
    },
    {
       "annotations" : [
+         "gender-neutral",
+         "old",
          "skin tone",
          "type 6"
       ],
@@ -1944,7 +1996,7 @@
          "1F9D3",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Older adult dark skin tone"
    },
    {
       "annotations" : [
@@ -7175,15 +7227,24 @@
       "name" : "Man with Chinese cap dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "headscarf",
+         "hijab",
+         "tichel",
+         "mantilla"
+      ],
       "chars" : "🧕",
       "codes" : [
          "1F9D5"
       ],
-      "name" : ""
+      "name" : "Woman with headscarf"
    },
    {
       "annotations" : [
+         "headscarf",
+         "hijab",
+         "tichel",
+         "mantilla",
          "skin tone",
          "type 1–2"
       ],
@@ -7192,10 +7253,14 @@
          "1F9D5",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Woman with headscarf light skin tone"
    },
    {
       "annotations" : [
+         "headscarf",
+         "hijab",
+         "tichel",
+         "mantilla",
          "skin tone",
          "type 3"
       ],
@@ -7204,10 +7269,14 @@
          "1F9D5",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Woman with headscarf medium-light skin tone"
    },
    {
       "annotations" : [
+         "headscarf",
+         "hijab",
+         "tichel",
+         "mantilla",
          "skin tone",
          "type 4"
       ],
@@ -7216,10 +7285,14 @@
          "1F9D5",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Woman with headscarf medium skin tone"
    },
    {
       "annotations" : [
+         "headscarf",
+         "hijab",
+         "tichel",
+         "mantilla",
          "skin tone",
          "type 5"
       ],
@@ -7228,10 +7301,14 @@
          "1F9D5",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Woman with headscarf medium-dark skin tone"
    },
    {
       "annotations" : [
+         "headscarf",
+         "hijab",
+         "tichel",
+         "mantilla",
          "skin tone",
          "type 6"
       ],
@@ -7240,7 +7317,7 @@
          "1F9D5",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Woman with headscarf dark skin tone"
    },
    {
       "annotations" : [],
@@ -7248,7 +7325,7 @@
       "codes" : [
          "1F9D4"
       ],
-      "name" : ""
+      "name" : "Bearded person"
    },
    {
       "annotations" : [
@@ -7260,7 +7337,7 @@
          "1F9D4",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Bearded person light skin tone"
    },
    {
       "annotations" : [
@@ -7272,7 +7349,7 @@
          "1F9D4",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Bearded person medium-light skin tone"
    },
    {
       "annotations" : [
@@ -7284,7 +7361,7 @@
          "1F9D4",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Bearded person medium skin tone"
    },
    {
       "annotations" : [
@@ -7296,7 +7373,7 @@
          "1F9D4",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Bearded person medium-dark skin tone"
    },
    {
       "annotations" : [
@@ -7308,7 +7385,7 @@
          "1F9D4",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Bearded person dark skin tone"
    },
    {
       "annotations" : [
@@ -7844,7 +7921,7 @@
       "codes" : [
          "1F931"
       ],
-      "name" : ""
+      "name" : "Breast-feeding"
    },
    {
       "annotations" : [
@@ -7856,7 +7933,7 @@
          "1F931",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Breast-feeding light skin tone"
    },
    {
       "annotations" : [
@@ -7868,7 +7945,7 @@
          "1F931",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Breast-feeding medium-light skin tone"
    },
    {
       "annotations" : [
@@ -7880,7 +7957,7 @@
          "1F931",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Breast-feeding medium skin tone"
    },
    {
       "annotations" : [
@@ -7892,7 +7969,7 @@
          "1F931",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Breast-feeding medium-dark skin tone"
    },
    {
       "annotations" : [
@@ -7904,7 +7981,7 @@
          "1F931",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Breast-feeding dark skin tone"
    },
    {
       "annotations" : [
@@ -8204,15 +8281,24 @@
       "name" : "Mrs. Claus dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress"
+      ],
       "chars" : "🧙",
       "codes" : [
          "1F9D9"
       ],
-      "name" : ""
+      "name" : "Mage"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 1–2"
       ],
@@ -8221,10 +8307,14 @@
          "1F9D9",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Mage light skin tone"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 3"
       ],
@@ -8233,10 +8323,14 @@
          "1F9D9",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Mage medium-light skin tone"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 4"
       ],
@@ -8245,10 +8339,14 @@
          "1F9D9",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Mage medium skin tone"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 5"
       ],
@@ -8257,10 +8355,14 @@
          "1F9D9",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Mage medium-dark skin tone"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 6"
       ],
@@ -8269,10 +8371,14 @@
          "1F9D9",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Mage dark skin tone"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "woman"
       ],
       "chars" : "🧙‍♀️",
@@ -8282,10 +8388,14 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Mage female sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 1–2",
          "woman"
@@ -8298,10 +8408,14 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Mage light skin tone female sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 3",
          "woman"
@@ -8314,10 +8428,14 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Mage medium-light skin tone female sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 4",
          "woman"
@@ -8330,10 +8448,14 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Mage medium skin tone female sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 5",
          "woman"
@@ -8346,10 +8468,14 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Mage medium-dark skin tone female sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 6",
          "woman"
@@ -8362,10 +8488,14 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Mage dark skin tone female sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "man"
       ],
       "chars" : "🧙‍♂️",
@@ -8375,10 +8505,14 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Mage male sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 1–2",
          "man"
@@ -8391,10 +8525,14 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Mage light skin tone male sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 3",
          "man"
@@ -8407,10 +8545,14 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Mage medium-light skin tone male sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 4",
          "man"
@@ -8423,10 +8565,14 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Mage medium skin tone male sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 5",
          "man"
@@ -8439,10 +8585,14 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Mage medium-dark skin tone male sign"
    },
    {
       "annotations" : [
+         "wizard",
+         "witch",
+         "sorcerer",
+         "sorceress",
          "skin tone",
          "type 6",
          "man"
@@ -8455,18 +8605,25 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Mage dark skin tone male sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon"
+      ],
       "chars" : "🧚",
       "codes" : [
          "1F9DA"
       ],
-      "name" : ""
+      "name" : "Fairy"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 1–2"
       ],
@@ -8475,10 +8632,13 @@
          "1F9DA",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Fairy light skin tone"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 3"
       ],
@@ -8487,10 +8647,13 @@
          "1F9DA",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Fairy medium-light skin tone"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 4"
       ],
@@ -8499,10 +8662,13 @@
          "1F9DA",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Fairy medium skin tone"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 5"
       ],
@@ -8511,10 +8677,13 @@
          "1F9DA",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Fairy medium-dark skin tone"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 6"
       ],
@@ -8523,10 +8692,13 @@
          "1F9DA",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Fairy dark skin tone"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "woman"
       ],
       "chars" : "🧚‍♀️",
@@ -8536,10 +8708,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Fairy female sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 1–2",
          "woman"
@@ -8552,10 +8727,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Fairy light skin tone female sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 3",
          "woman"
@@ -8568,10 +8746,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Fairy medium-light skin tone female sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 4",
          "woman"
@@ -8584,10 +8765,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Fairy medium skin tone female sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 5",
          "woman"
@@ -8600,10 +8784,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Fairy medium-dark skin tone female sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 6",
          "woman"
@@ -8616,10 +8803,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Fairy dark skin tone female sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "man"
       ],
       "chars" : "🧚‍♂️",
@@ -8629,10 +8819,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Fairy male sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 1–2",
          "man"
@@ -8645,10 +8838,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Fairy light skin tone male sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 3",
          "man"
@@ -8661,10 +8857,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Fairy medium-light skin tone male sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 4",
          "man"
@@ -8677,10 +8876,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Fairy medium skin tone male sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 5",
          "man"
@@ -8693,10 +8895,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Fairy medium-dark skin tone male sign"
    },
    {
       "annotations" : [
+         "Titania",
+         "Puck",
+         "Oberon",
          "skin tone",
          "type 6",
          "man"
@@ -8709,18 +8914,23 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Fairy dark skin tone male sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "Dracula",
+         "undead"
+      ],
       "chars" : "🧛",
       "codes" : [
          "1F9DB"
       ],
-      "name" : ""
+      "name" : "Vampire"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 1–2"
       ],
@@ -8729,10 +8939,12 @@
          "1F9DB",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Vampire light skin tone"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 3"
       ],
@@ -8741,10 +8953,12 @@
          "1F9DB",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Vampire medium-light skin tone"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 4"
       ],
@@ -8753,10 +8967,12 @@
          "1F9DB",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Vampire medium skin tone"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 5"
       ],
@@ -8765,10 +8981,12 @@
          "1F9DB",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Vampire medium-dark skin tone"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 6"
       ],
@@ -8777,10 +8995,12 @@
          "1F9DB",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Vampire dark skin tone"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "woman"
       ],
       "chars" : "🧛‍♀️",
@@ -8790,10 +9010,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Vampire female sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 1–2",
          "woman"
@@ -8806,10 +9028,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Vampire light skin tone female sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 3",
          "woman"
@@ -8822,10 +9046,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Vampire medium-light skin tone female sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 4",
          "woman"
@@ -8838,10 +9064,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Vampire medium skin tone female sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 5",
          "woman"
@@ -8854,10 +9082,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Vampire medium-dark skin tone female sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 6",
          "woman"
@@ -8870,10 +9100,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Vampire dark skin tone female sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "man"
       ],
       "chars" : "🧛‍♂️",
@@ -8883,10 +9115,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Vampire male sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 1–2",
          "man"
@@ -8899,10 +9133,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Vampire light skin tone male sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 3",
          "man"
@@ -8915,10 +9151,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Vampire medium-light skin tone male sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 4",
          "man"
@@ -8931,10 +9169,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Vampire medium skin tone male sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 5",
          "man"
@@ -8947,10 +9187,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Vampire medium-dark skin tone male sign"
    },
    {
       "annotations" : [
+         "Dracula",
+         "undead",
          "skin tone",
          "type 6",
          "man"
@@ -8963,18 +9205,25 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Vampire dark skin tone male sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman"
+      ],
       "chars" : "🧜",
       "codes" : [
          "1F9DC"
       ],
-      "name" : ""
+      "name" : "Merperson"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 1–2"
       ],
@@ -8983,10 +9232,13 @@
          "1F9DC",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Merperson light skin tone"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 3"
       ],
@@ -8995,10 +9247,13 @@
          "1F9DC",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Merperson medium-light skin tone"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 4"
       ],
@@ -9007,10 +9262,13 @@
          "1F9DC",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Merperson medium skin tone"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 5"
       ],
@@ -9019,10 +9277,13 @@
          "1F9DC",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Merperson medium-dark skin tone"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 6"
       ],
@@ -9031,10 +9292,13 @@
          "1F9DC",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Merperson dark skin tone"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "woman"
       ],
       "chars" : "🧜‍♀️",
@@ -9044,10 +9308,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Merperson female sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 1–2",
          "woman"
@@ -9060,10 +9327,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Merperson light skin tone female sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 3",
          "woman"
@@ -9076,10 +9346,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Merperson medium-light skin tone female sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 4",
          "woman"
@@ -9092,10 +9365,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Merperson medium skin tone female sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 5",
          "woman"
@@ -9108,10 +9384,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Merperson medium-dark skin tone female sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 6",
          "woman"
@@ -9124,10 +9403,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Merperson dark skin tone female sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "man"
       ],
       "chars" : "🧜‍♂️",
@@ -9137,10 +9419,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Merperson male sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 1–2",
          "man"
@@ -9153,10 +9438,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Merperson light skin tone male sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 3",
          "man"
@@ -9169,10 +9457,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Merperson medium-light skin tone male sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 4",
          "man"
@@ -9185,10 +9476,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Merperson medium skin tone male sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 5",
          "man"
@@ -9201,10 +9495,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Merperson medium-dark skin tone male sign"
    },
    {
       "annotations" : [
+         "mermaid",
+         "merman",
+         "merwoman",
          "skin tone",
          "type 6",
          "man"
@@ -9217,7 +9514,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Merperson dark skin tone male sign"
    },
    {
       "annotations" : [],
@@ -9225,7 +9522,7 @@
       "codes" : [
          "1F9DD"
       ],
-      "name" : ""
+      "name" : "Elf"
    },
    {
       "annotations" : [
@@ -9237,7 +9534,7 @@
          "1F9DD",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Elf light skin tone"
    },
    {
       "annotations" : [
@@ -9249,7 +9546,7 @@
          "1F9DD",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Elf medium-light skin tone"
    },
    {
       "annotations" : [
@@ -9261,7 +9558,7 @@
          "1F9DD",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Elf medium skin tone"
    },
    {
       "annotations" : [
@@ -9273,7 +9570,7 @@
          "1F9DD",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Elf medium-dark skin tone"
    },
    {
       "annotations" : [
@@ -9285,7 +9582,7 @@
          "1F9DD",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Elf dark skin tone"
    },
    {
       "annotations" : [
@@ -9298,7 +9595,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Elf female sign"
    },
    {
       "annotations" : [
@@ -9314,7 +9611,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Elf light skin tone female sign"
    },
    {
       "annotations" : [
@@ -9330,7 +9627,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Elf medium-light skin tone female sign"
    },
    {
       "annotations" : [
@@ -9346,7 +9643,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Elf medium skin tone female sign"
    },
    {
       "annotations" : [
@@ -9362,7 +9659,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Elf medium-dark skin tone female sign"
    },
    {
       "annotations" : [
@@ -9378,7 +9675,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Elf dark skin tone female sign"
    },
    {
       "annotations" : [
@@ -9391,7 +9688,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Elf male sign"
    },
    {
       "annotations" : [
@@ -9407,7 +9704,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Elf light skin tone male sign"
    },
    {
       "annotations" : [
@@ -9423,7 +9720,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Elf medium-light skin tone male sign"
    },
    {
       "annotations" : [
@@ -9439,7 +9736,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Elf medium skin tone male sign"
    },
    {
       "annotations" : [
@@ -9455,7 +9752,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Elf medium-dark skin tone male sign"
    },
    {
       "annotations" : [
@@ -9471,18 +9768,21 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Elf dark skin tone male sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "djinn"
+      ],
       "chars" : "🧞",
       "codes" : [
          "1F9DE"
       ],
-      "name" : ""
+      "name" : "Genie"
    },
    {
       "annotations" : [
+         "djinn",
          "woman"
       ],
       "chars" : "🧞‍♀️",
@@ -9492,10 +9792,11 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Genie female sign"
    },
    {
       "annotations" : [
+         "djinn",
          "man"
       ],
       "chars" : "🧞‍♂️",
@@ -9505,18 +9806,23 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Genie male sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "undead",
+         "walking dead"
+      ],
       "chars" : "🧟",
       "codes" : [
          "1F9DF"
       ],
-      "name" : ""
+      "name" : "Zombie"
    },
    {
       "annotations" : [
+         "undead",
+         "walking dead",
          "woman"
       ],
       "chars" : "🧟‍♀️",
@@ -9526,10 +9832,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Zombie female sign"
    },
    {
       "annotations" : [
+         "undead",
+         "walking dead",
          "man"
       ],
       "chars" : "🧟‍♂️",
@@ -9539,7 +9847,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Zombie male sign"
    },
    {
       "annotations" : [
@@ -13891,15 +14199,20 @@
       "name" : "People with bunny ears partying female sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "sauna",
+         "steam room"
+      ],
       "chars" : "🧖",
       "codes" : [
          "1F9D6"
       ],
-      "name" : ""
+      "name" : "Person in steamy room"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 1–2"
       ],
@@ -13908,10 +14221,12 @@
          "1F9D6",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Person in steamy room light skin tone"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 3"
       ],
@@ -13920,10 +14235,12 @@
          "1F9D6",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Person in steamy room medium-light skin tone"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 4"
       ],
@@ -13932,10 +14249,12 @@
          "1F9D6",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Person in steamy room medium skin tone"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 5"
       ],
@@ -13944,10 +14263,12 @@
          "1F9D6",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Person in steamy room medium-dark skin tone"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 6"
       ],
@@ -13956,10 +14277,12 @@
          "1F9D6",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Person in steamy room dark skin tone"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "woman"
       ],
       "chars" : "🧖‍♀️",
@@ -13969,10 +14292,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Person in steamy room female sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 1–2",
          "woman"
@@ -13985,10 +14310,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Person in steamy room light skin tone female sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 3",
          "woman"
@@ -14001,10 +14328,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Person in steamy room medium-light skin tone female sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 4",
          "woman"
@@ -14017,10 +14346,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Person in steamy room medium skin tone female sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 5",
          "woman"
@@ -14033,10 +14364,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Person in steamy room medium-dark skin tone female sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 6",
          "woman"
@@ -14049,10 +14382,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Person in steamy room dark skin tone female sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "man"
       ],
       "chars" : "🧖‍♂️",
@@ -14062,10 +14397,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Person in steamy room male sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 1–2",
          "man"
@@ -14078,10 +14415,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Person in steamy room light skin tone male sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 3",
          "man"
@@ -14094,10 +14433,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Person in steamy room medium-light skin tone male sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 4",
          "man"
@@ -14110,10 +14451,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Person in steamy room medium skin tone male sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 5",
          "man"
@@ -14126,10 +14469,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Person in steamy room medium-dark skin tone male sign"
    },
    {
       "annotations" : [
+         "sauna",
+         "steam room",
          "skin tone",
          "type 6",
          "man"
@@ -14142,7 +14487,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Person in steamy room dark skin tone male sign"
    },
    {
       "annotations" : [],
@@ -14150,7 +14495,7 @@
       "codes" : [
          "1F9D7"
       ],
-      "name" : ""
+      "name" : "Person climbing"
    },
    {
       "annotations" : [
@@ -14162,7 +14507,7 @@
          "1F9D7",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Person climbing light skin tone"
    },
    {
       "annotations" : [
@@ -14174,7 +14519,7 @@
          "1F9D7",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Person climbing medium-light skin tone"
    },
    {
       "annotations" : [
@@ -14186,7 +14531,7 @@
          "1F9D7",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Person climbing medium skin tone"
    },
    {
       "annotations" : [
@@ -14198,7 +14543,7 @@
          "1F9D7",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Person climbing medium-dark skin tone"
    },
    {
       "annotations" : [
@@ -14210,7 +14555,7 @@
          "1F9D7",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Person climbing dark skin tone"
    },
    {
       "annotations" : [
@@ -14223,7 +14568,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Person climbing female sign"
    },
    {
       "annotations" : [
@@ -14239,7 +14584,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Person climbing light skin tone female sign"
    },
    {
       "annotations" : [
@@ -14255,7 +14600,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Person climbing medium-light skin tone female sign"
    },
    {
       "annotations" : [
@@ -14271,7 +14616,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Person climbing medium skin tone female sign"
    },
    {
       "annotations" : [
@@ -14287,7 +14632,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Person climbing medium-dark skin tone female sign"
    },
    {
       "annotations" : [
@@ -14303,7 +14648,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Person climbing dark skin tone female sign"
    },
    {
       "annotations" : [
@@ -14316,7 +14661,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Person climbing male sign"
    },
    {
       "annotations" : [
@@ -14332,7 +14677,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Person climbing light skin tone male sign"
    },
    {
       "annotations" : [
@@ -14348,7 +14693,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Person climbing medium-light skin tone male sign"
    },
    {
       "annotations" : [
@@ -14364,7 +14709,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Person climbing medium skin tone male sign"
    },
    {
       "annotations" : [
@@ -14380,7 +14725,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Person climbing medium-dark skin tone male sign"
    },
    {
       "annotations" : [
@@ -14396,18 +14741,23 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Person climbing dark skin tone male sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "yoga",
+         "meditation"
+      ],
       "chars" : "🧘",
       "codes" : [
          "1F9D8"
       ],
-      "name" : ""
+      "name" : "Person in lotus position"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 1–2"
       ],
@@ -14416,10 +14766,12 @@
          "1F9D8",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Person in lotus position light skin tone"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 3"
       ],
@@ -14428,10 +14780,12 @@
          "1F9D8",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Person in lotus position medium-light skin tone"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 4"
       ],
@@ -14440,10 +14794,12 @@
          "1F9D8",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Person in lotus position medium skin tone"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 5"
       ],
@@ -14452,10 +14808,12 @@
          "1F9D8",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Person in lotus position medium-dark skin tone"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 6"
       ],
@@ -14464,10 +14822,12 @@
          "1F9D8",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Person in lotus position dark skin tone"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "woman"
       ],
       "chars" : "🧘‍♀️",
@@ -14477,10 +14837,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Person in lotus position female sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 1–2",
          "woman"
@@ -14493,10 +14855,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Light skin tone female sign"
+      "name" : "Person in lotus position light skin tone female sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 3",
          "woman"
@@ -14509,10 +14873,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone female sign"
+      "name" : "Person in lotus position medium-light skin tone female sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 4",
          "woman"
@@ -14525,10 +14891,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium skin tone female sign"
+      "name" : "Person in lotus position medium skin tone female sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 5",
          "woman"
@@ -14541,10 +14909,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone female sign"
+      "name" : "Person in lotus position medium-dark skin tone female sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 6",
          "woman"
@@ -14557,10 +14927,12 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Dark skin tone female sign"
+      "name" : "Person in lotus position dark skin tone female sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "man"
       ],
       "chars" : "🧘‍♂️",
@@ -14570,10 +14942,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Person in lotus position male sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 1–2",
          "man"
@@ -14586,10 +14960,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Light skin tone male sign"
+      "name" : "Person in lotus position light skin tone male sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 3",
          "man"
@@ -14602,10 +14978,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-light skin tone male sign"
+      "name" : "Person in lotus position medium-light skin tone male sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 4",
          "man"
@@ -14618,10 +14996,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium skin tone male sign"
+      "name" : "Person in lotus position medium skin tone male sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 5",
          "man"
@@ -14634,10 +15014,12 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Medium-dark skin tone male sign"
+      "name" : "Person in lotus position medium-dark skin tone male sign"
    },
    {
       "annotations" : [
+         "yoga",
+         "meditation",
          "skin tone",
          "type 6",
          "man"
@@ -14650,7 +15032,7 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Dark skin tone male sign"
+      "name" : "Person in lotus position dark skin tone male sign"
    },
    {
       "annotations" : [
@@ -21596,15 +21978,20 @@
       "name" : "Waving hand dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "ILY",
+         "hand"
+      ],
       "chars" : "🤟",
       "codes" : [
          "1F91F"
       ],
-      "name" : ""
+      "name" : "Love-you gesture"
    },
    {
       "annotations" : [
+         "ILY",
+         "hand",
          "skin tone",
          "type 1–2"
       ],
@@ -21613,10 +22000,12 @@
          "1F91F",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Love-you gesture light skin tone"
    },
    {
       "annotations" : [
+         "ILY",
+         "hand",
          "skin tone",
          "type 3"
       ],
@@ -21625,10 +22014,12 @@
          "1F91F",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Love-you gesture medium-light skin tone"
    },
    {
       "annotations" : [
+         "ILY",
+         "hand",
          "skin tone",
          "type 4"
       ],
@@ -21637,10 +22028,12 @@
          "1F91F",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Love-you gesture medium skin tone"
    },
    {
       "annotations" : [
+         "ILY",
+         "hand",
          "skin tone",
          "type 5"
       ],
@@ -21649,10 +22042,12 @@
          "1F91F",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Love-you gesture medium-dark skin tone"
    },
    {
       "annotations" : [
+         "ILY",
+         "hand",
          "skin tone",
          "type 6"
       ],
@@ -21661,7 +22056,7 @@
          "1F91F",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Love-you gesture dark skin tone"
    },
    {
       "annotations" : [
@@ -22006,15 +22401,18 @@
       "name" : "Raising hands dark skin tone"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "prayer"
+      ],
       "chars" : "🤲",
       "codes" : [
          "1F932"
       ],
-      "name" : ""
+      "name" : "Palms up together"
    },
    {
       "annotations" : [
+         "prayer",
          "skin tone",
          "type 1–2"
       ],
@@ -22023,10 +22421,11 @@
          "1F932",
          "1F3FB"
       ],
-      "name" : "Light skin tone"
+      "name" : "Palms up together light skin tone"
    },
    {
       "annotations" : [
+         "prayer",
          "skin tone",
          "type 3"
       ],
@@ -22035,10 +22434,11 @@
          "1F932",
          "1F3FC"
       ],
-      "name" : "Medium-light skin tone"
+      "name" : "Palms up together medium-light skin tone"
    },
    {
       "annotations" : [
+         "prayer",
          "skin tone",
          "type 4"
       ],
@@ -22047,10 +22447,11 @@
          "1F932",
          "1F3FD"
       ],
-      "name" : "Medium skin tone"
+      "name" : "Palms up together medium skin tone"
    },
    {
       "annotations" : [
+         "prayer",
          "skin tone",
          "type 5"
       ],
@@ -22059,10 +22460,11 @@
          "1F932",
          "1F3FE"
       ],
-      "name" : "Medium-dark skin tone"
+      "name" : "Palms up together medium-dark skin tone"
    },
    {
       "annotations" : [
+         "prayer",
          "skin tone",
          "type 6"
       ],
@@ -22071,7 +22473,7 @@
          "1F932",
          "1F3FF"
       ],
-      "name" : "Dark skin tone"
+      "name" : "Palms up together dark skin tone"
    },
    {
       "annotations" : [
@@ -22503,12 +22905,14 @@
       "name" : "Eye left speech bubble"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "intelligent"
+      ],
       "chars" : "🧠",
       "codes" : [
          "1F9E0"
       ],
-      "name" : ""
+      "name" : "Brain"
    },
    {
       "annotations" : [
@@ -22655,7 +23059,7 @@
       "codes" : [
          "1F9E1"
       ],
-      "name" : ""
+      "name" : "Orange heart"
    },
    {
       "annotations" : [
@@ -22936,12 +23340,14 @@
       "name" : "Jeans"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "neck"
+      ],
       "chars" : "🧣",
       "codes" : [
          "1F9E3"
       ],
-      "name" : ""
+      "name" : "Scarf"
    },
    {
       "annotations" : [],
@@ -22949,15 +23355,17 @@
       "codes" : [
          "1F9E4"
       ],
-      "name" : ""
+      "name" : "Gloves"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "jacket"
+      ],
       "chars" : "🧥",
       "codes" : [
          "1F9E5"
       ],
-      "name" : ""
+      "name" : "Coat"
    },
    {
       "annotations" : [],
@@ -22965,7 +23373,7 @@
       "codes" : [
          "1F9E6"
       ],
-      "name" : ""
+      "name" : "Socks"
    },
    {
       "annotations" : [
@@ -23184,12 +23592,14 @@
       "name" : "Graduation cap"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "baseball cap"
+      ],
       "chars" : "🧢",
       "codes" : [
          "1F9E2"
       ],
-      "name" : ""
+      "name" : "Billed cap"
    },
    {
       "annotations" : [
@@ -23443,7 +23853,7 @@
       "codes" : [
          "1F993"
       ],
-      "name" : ""
+      "name" : "Zebra"
    },
    {
       "annotations" : [
@@ -23546,7 +23956,8 @@
       "annotations" : [
          "Aries",
          "sheep",
-         "zodiac"
+         "zodiac",
+         "male"
       ],
       "chars" : "🐏",
       "codes" : [
@@ -23556,13 +23967,14 @@
    },
    {
       "annotations" : [
-         "ewe"
+         "sheep",
+         "female"
       ],
       "chars" : "🐑",
       "codes" : [
          "1F411"
       ],
-      "name" : "Sheep"
+      "name" : "Ewe"
    },
    {
       "annotations" : [
@@ -23604,7 +24016,7 @@
       "codes" : [
          "1F992"
       ],
-      "name" : ""
+      "name" : "Giraffe"
    },
    {
       "annotations" : [
@@ -23709,7 +24121,7 @@
       "codes" : [
          "1F994"
       ],
-      "name" : ""
+      "name" : "Hedgehog"
    },
    {
       "annotations" : [
@@ -23768,7 +24180,8 @@
    },
    {
       "annotations" : [
-         "turkey"
+         "turkey",
+         "bird"
       ],
       "chars" : "🦃",
       "codes" : [
@@ -23778,7 +24191,8 @@
    },
    {
       "annotations" : [
-         "chicken"
+         "chicken",
+         "bird"
       ],
       "chars" : "🐔",
       "codes" : [
@@ -23788,7 +24202,8 @@
    },
    {
       "annotations" : [
-         "rooster"
+         "rooster",
+         "bird"
       ],
       "chars" : "🐓",
       "codes" : [
@@ -23800,7 +24215,8 @@
       "annotations" : [
          "baby",
          "chick",
-         "hatching"
+         "hatching",
+         "bird"
       ],
       "chars" : "🐣",
       "codes" : [
@@ -23811,7 +24227,8 @@
    {
       "annotations" : [
          "baby",
-         "chick"
+         "chick",
+         "bird"
       ],
       "chars" : "🐤",
       "codes" : [
@@ -23822,7 +24239,8 @@
    {
       "annotations" : [
          "baby",
-         "chick"
+         "chick",
+         "bird"
       ],
       "chars" : "🐥",
       "codes" : [
@@ -23842,7 +24260,8 @@
    },
    {
       "annotations" : [
-         "penguin"
+         "penguin",
+         "bird"
       ],
       "chars" : "🐧",
       "codes" : [
@@ -23976,20 +24395,26 @@
       "name" : "Dragon"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "brontosaurus",
+         "diplodocus",
+         "brachiosaurus"
+      ],
       "chars" : "🦕",
       "codes" : [
          "1F995"
       ],
-      "name" : ""
+      "name" : "Sauropod"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "Tyrannosaurus Rex"
+      ],
       "chars" : "🦖",
       "codes" : [
          "1F996"
       ],
-      "name" : ""
+      "name" : "T-Rex"
    },
    {
       "annotations" : [
@@ -24195,7 +24620,7 @@
       "codes" : [
          "1F997"
       ],
-      "name" : ""
+      "name" : "Cricket"
    },
    {
       "annotations" : [
@@ -24636,7 +25061,7 @@
       "codes" : [
          "1F965"
       ],
-      "name" : ""
+      "name" : "Coconut"
    },
    {
       "annotations" : [
@@ -24728,7 +25153,7 @@
       "codes" : [
          "1F966"
       ],
-      "name" : ""
+      "name" : "Broccoli"
    },
    {
       "annotations" : [
@@ -24801,12 +25226,14 @@
       "name" : "Baguette bread"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "twisted"
+      ],
       "chars" : "🥨",
       "codes" : [
          "1F968"
       ],
-      "name" : ""
+      "name" : "Pretzel"
    },
    {
       "annotations" : [
@@ -24856,12 +25283,17 @@
       "name" : "Poultry leg"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "porkchop",
+         "lambchop",
+         "chop",
+         "steak"
+      ],
       "chars" : "🥩",
       "codes" : [
          "1F969"
       ],
-      "name" : ""
+      "name" : "Cut of meat"
    },
    {
       "annotations" : [
@@ -24925,7 +25357,7 @@
       "codes" : [
          "1F96A"
       ],
-      "name" : ""
+      "name" : "Sandwich"
    },
    {
       "annotations" : [
@@ -25012,12 +25444,16 @@
       "name" : "Pot of food"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "breakfast",
+         "cereal",
+         "congee"
+      ],
       "chars" : "🥣",
       "codes" : [
          "1F963"
       ],
-      "name" : ""
+      "name" : "Bowl with spoon"
    },
    {
       "annotations" : [
@@ -25042,12 +25478,14 @@
       "name" : "Popcorn"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "can"
+      ],
       "chars" : "🥫",
       "codes" : [
          "1F96B"
       ],
-      "name" : ""
+      "name" : "Canned food"
    },
    {
       "annotations" : [
@@ -25204,12 +25642,18 @@
       "name" : "Dango"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "potsticker",
+         "gyōza",
+         "jiaozi",
+         "pierogi",
+         "empanada"
+      ],
       "chars" : "🥟",
       "codes" : [
          "1F95F"
       ],
-      "name" : ""
+      "name" : "Dumpling"
    },
    {
       "annotations" : [],
@@ -25217,15 +25661,17 @@
       "codes" : [
          "1F960"
       ],
-      "name" : ""
+      "name" : "Fortune cookie"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "oyster pail"
+      ],
       "chars" : "🥡",
       "codes" : [
          "1F961"
       ],
-      "name" : ""
+      "name" : "Takeout box"
    },
    {
       "annotations" : [
@@ -25326,7 +25772,7 @@
       "codes" : [
          "1F967"
       ],
-      "name" : ""
+      "name" : "Pie"
    },
    {
       "annotations" : [
@@ -25565,20 +26011,25 @@
       "name" : "Tumbler glass"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "soda",
+         "juice"
+      ],
       "chars" : "🥤",
       "codes" : [
          "1F964"
       ],
-      "name" : ""
+      "name" : "Cup with straw"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "hashi"
+      ],
       "chars" : "🥢",
       "codes" : [
          "1F962"
       ],
-      "name" : ""
+      "name" : "Chopsticks"
    },
    {
       "annotations" : [
@@ -25850,13 +26301,13 @@
    },
    {
       "annotations" : [
-         "house"
+         "houses"
       ],
       "chars" : "🏘",
       "codes" : [
          "1F3D8"
       ],
-      "name" : "House"
+      "name" : "Houses"
    },
    {
       "annotations" : [
@@ -27041,12 +27492,14 @@
       "name" : "Rocket"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "UFO"
+      ],
       "chars" : "🛸",
       "codes" : [
          "1F6F8"
       ],
-      "name" : ""
+      "name" : "Flying saucer"
    },
    {
       "annotations" : [
@@ -28488,7 +28941,7 @@
       "codes" : [
          "1F3CF"
       ],
-      "name" : "Cricket"
+      "name" : "Cricket game"
    },
    {
       "annotations" : [
@@ -28656,12 +29109,15 @@
       "name" : "Skis"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "sledge",
+         "sleigh"
+      ],
       "chars" : "🛷",
       "codes" : [
          "1F6F7"
       ],
-      "name" : ""
+      "name" : "Sled"
    },
    {
       "annotations" : [],
@@ -28669,7 +29125,7 @@
       "codes" : [
          "1F94C"
       ],
-      "name" : ""
+      "name" : "Curling stone"
    },
    {
       "annotations" : [
@@ -29476,7 +29932,6 @@
    {
       "annotations" : [
          "bar",
-         "Japanese",
          "lantern",
          "light",
          "red"
