@@ -29,9 +29,9 @@ Embed.embed = function(a, panel) {
         if (! res.error) {
           panel.scroll(function() {
             var toggle = document.createElement('SPAN');
-            res['id'] = id;
+            res['id'] = 'embed-' + String(id);
             toggle.setAttribute('data-embed', JSON.stringify(res));
-            toggle.setAttribute('data-embed-id', id);
+            toggle.setAttribute('data-embed-id', res['id']);
             toggle.setAttribute("class", "embed-toggle");
             toggle.setAttribute("aria-hidden", "true");
             a.parentNode.insertBefore(toggle, a.nextSibling);
