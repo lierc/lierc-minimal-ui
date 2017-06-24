@@ -263,7 +263,7 @@ a:hover {
 }
 
 .image-wrap {
-  padding-top: 10px;
+  padding: 4px 0;
   line-height: 0px;
 }
 
@@ -1463,7 +1463,7 @@ ul.channel-controls li a:hover {
 }
 
 .embed-wrap-wrap {
-  padding: 8px 0 4px 0;
+  padding: 4px 0 4px 0;
 }
 
 .embed-wrap.open {
@@ -1584,9 +1584,7 @@ li.message:hover .message-controls,
 }
 
 .reactions {
-  margin-top: 5px;
   text-align: right;
-  padding-left: 5px;
 }
 
 .reactions span {

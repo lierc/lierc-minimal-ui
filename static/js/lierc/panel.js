@@ -578,6 +578,9 @@ var Panel = function(name, id, connection, mobile) {
   panel.img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
   panel.imagify = function (elem) {
     var links = elem.querySelectorAll("a");
+    var message = elem.querySelector('.message-text');
+    if (!message) return;
+
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.img_re)) {
@@ -616,7 +619,7 @@ var Panel = function(name, id, connection, mobile) {
 
               var start = panel.scroller.scrollTop;
               wrap.appendChild(a);
-              link.parentNode.appendChild(wrap);
+              message.appendChild(wrap);
 
               var diff = panel.scroller.scrollTop - start;
               panel.scroller.scrollTop += wrap.getBoundingClientRect().height - diff;
@@ -630,6 +633,9 @@ var Panel = function(name, id, connection, mobile) {
   panel.vid_re = /^http[^\s]*\.(?:gifv|mp4)[^\/]*$/i;
   panel.vidify = function(elem) {
     var links = elem.querySelectorAll("a");
+    var message = elem.querySelector('.message-text');
+    if (!message) return;
+
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.vid_re)) {
@@ -671,7 +677,7 @@ var Panel = function(name, id, connection, mobile) {
 
             var start = panel.scroller.scrollTop;
             wrap.appendChild(video);
-            link.parentNode.appendChild(wrap);
+            message.appendChild(wrap);
 
             var diff = panel.scroller.scrollTop - start;
             panel.scroller.scrollTop += wrap.getBoundingClientRect().height - diff;
@@ -687,6 +693,9 @@ var Panel = function(name, id, connection, mobile) {
   panel.aud_re = /^http[^\s]*\.(?:mp3|wav|aac|m4a)[^\/]*$/i;
   panel.audify = function(elem) {
     var links = elem.querySelectorAll("a");
+    var message = elem.querySelector('.message-text');
+    if (!message) return;
+
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.aud_re)) {
@@ -698,7 +707,7 @@ var Panel = function(name, id, connection, mobile) {
             var s = panel.scroller;
             var start = s.scrollHeight;
             var wrap = document.createElement('DIV');
-            link.parentNode.appendChild(wrap);
+            message.appendChild(wrap);
             link.parentNode.removeChild(link);
             wrap.appendChild(link);
             link.innerHTML = "";
