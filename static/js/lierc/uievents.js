@@ -617,7 +617,7 @@ var UIEvents = function(lierc) {
 
     if (target.matches('.message-menu')) {
       if (toggle.classList.contains('open')) {
-        var html = Handlebars.templates.message_menu({
+        var html = lierc.template('message_menu', {
           is_monospace: is_monospace
         });
         controls.classList.add('open');

@@ -100,7 +100,7 @@ var Panel = function(name, id, connection, mobile) {
           break;
         }
         else if (o > order) {
-          var html = Handlebars.templates.nick({
+          var html = lierc.template('nick', {
             nick: nick,
             order: order,
             sigil: nicks[nick],
@@ -112,7 +112,7 @@ var Panel = function(name, id, connection, mobile) {
       }
 
       if (!inserted) {
-        var html = Handlebars.templates.nick({
+        var html = lierc.template('nick', {
           nick: nick,
           order: order,
           sigil: nicks[nick],
@@ -158,7 +158,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.build_nav = function() {
-    var html = Handlebars.templates.nav_item({
+    var html = lierc.template('nav_item', {
       name: panel.name,
       status: panel.type == "status",
       id: panel.id
@@ -348,7 +348,7 @@ var Panel = function(name, id, connection, mobile) {
         );
     }
 
-    var html = Handlebars.templates.embed({
+    var html = lierc.template('embed', {
       provider_name_lc: embed.provider_name.toLowerCase(),
       provider_name: embed.provider_name,
       id: embed.id,
