@@ -7,6 +7,7 @@ var Lierc = function(url, user) {
 
   lierc.user = user;
   lierc.baseurl = url;
+  lierc.api = new API(url);
   lierc.stream;
   lierc.connections = {};
   lierc.filling_backlog = false;
@@ -179,11 +180,8 @@ var Lierc = function(url, user) {
 
   lierc.init = function() {
     lierc.default_panel = lierc.find_default_panel();
-    fetch(lierc.baseurl + '/connection', {
-        credentials: 'same-origin'
-      }).then(function(res) {
-        return res.json();
-      }).then(function(configs) {
+    lierc.api.get('/connection', {
+      success: function(configs) {
         if (!configs.length)
           lierc.config_modal();
 
@@ -198,25 +196,18 @@ var Lierc = function(url, user) {
           lierc.stream.destroy();
 
         lierc.connect();
-      }).catch(function(e) {
-        console.log(e);
-      });
+      }
+    });
   };
 
   lierc.add_recent_privates = function() {
-    fetch(lierc.baseurl + '/privates', {
-        credentials: 'same-origin'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(privates) {
+    lierc.api.get("/privates", {
+      success: function(privates) {
         privates.forEach(function(priv) {
           lierc.add_panel(priv.nick, priv.connection, false);
         });
-      }).catch(function(e) {
-        console.log(e);
-      });;
+      }
+    });;
   };
 
   lierc.connect = function() {
@@ -395,17 +386,14 @@ var Lierc = function(url, user) {
           lierc.remove_panel(id);
       }
       else if (e.target.classList.contains('edit-panel')) {
-        fetch(lierc.baseurl + "/connection/" + panel.connection, {
-            credentials: 'same-origin'
-          }).then(function(res) {
-            if (!res.ok)
-              throw Error(res.statusText);
-            return res.json();
-          }).then(function(res) {
+        lierc.api.get("/connection/" + panel.connection, {
+          success: function(res) {
             lierc.config_modal(null, res);
-          }).catch(function(e) {
-            alert("I'm sorry: " + e);
-          });
+          },
+          error: function(e) {
+            alert(e);
+          }
+        });
       }
       else {
         lierc.focus_panel(id);
@@ -456,6 +444,7 @@ var Lierc = function(url, user) {
     }
     return token;
   };
+
   lierc.part_channel = function(name, connection) {
     if (!confirm("Are you sure you want to leave " + name + "?"))
       return;
@@ -464,37 +453,26 @@ var Lierc = function(url, user) {
     headers.append('lierc-token', lierc.post_token());
     headers.append('content-type', 'application/irc');
 
-    fetch(lierc.baseurl + '/connection/' + connection, {
-        credentials: 'same-origin',
-        method: 'POST',
-        body: 'PART ' + name,
-        headers: headers
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(res) {
+    lierc.api.post(lierc.baseurl + '/connection/' + connection, {
+      body: 'PART ' + name,
+      headers: headers,
+      success: function(res) {
         lierc.remove_panel(panel_id(name, connection));
         lierc.post_tokens.push(res.token);
-      }).catch(function(e) {
+      },
+      error: function(e) {
         alert("Error: " + e);
         lierc.load_token();
-      });
+      }
+    });
   };
 
   lierc.delete_connection = function(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    fetch(lierc.baseurl + '/connection/' + connection, {
-        credentials: 'same-origin',
-        method: 'DELETE'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).catch(function(e) {
-        alert(res);
-      });
+    lierc.api.delete(lierc.baseurl + '/connection/' + connection, {
+      error: function(e) { alert(e); }
+    });
   };
 
   lierc.channel_panels = function() {
@@ -526,19 +504,16 @@ var Lierc = function(url, user) {
   };
 
   lierc.fill_missed = function(start) {
-    fetch(lierc.baseurl + "/log/" + start, {
-        credentials: 'same-origin'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(events) {
+    lierc.api.get("/log/" + start, {
+      success: function(events) {
         for (var i=0; i < events.length; i++) {
           lierc.stream.fire('message', events[i]);
         }
-      }).catch(function(e) {
+      },
+      error: function(e) {
         lierc.reset();
-      });
+      }
+    });
   };
 
   lierc.fill_backlog = function(panel, msgid) {
@@ -552,19 +527,15 @@ var Lierc = function(url, user) {
     var limit = panel.ignore_events ? 150 : 50;
     var name = panel.type == "status" ? "status" : panel.name;
     var parts = [
-      lierc.baseurl, "connection", connection.id, "channel", encodeURIComponent(name), "events"
+      "connection", connection.id, "channel", encodeURIComponent(name), "events"
     ];
 
     if (msgid)
       parts.push(msgid);
 
-    fetch(parts.join("/") + '?limit=' + limit, {
-        credentials: 'same-origin',
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(events) {
+    lierc.api.get("/" + parts.join("/"), {
+      data: { limit: limit },
+      success: function(events) {
         if (events.length < limit)
           panel.backlog_empty = true;
 
@@ -596,11 +567,13 @@ var Lierc = function(url, user) {
         panel.react_backlog_check();
         panel.set_loading(false);
 
-      }).catch(function(e) {
+      },
+      error: function(e) {
         lierc.filling_backlog = false;
         panel.set_loading(false);
         console.log(e);
-      });
+      }
+    });
   };
 
   lierc.is_reaction = function(message) {
@@ -794,20 +767,15 @@ var Lierc = function(url, user) {
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
-      fetch(lierc.baseurl + action, {
-          method: method,
-          body: JSON.stringify(data),
-          credentials: 'same-origin'
-        }).then(function(res) {
-          if (!res.ok)
-            throw Error(res.statusText);
-          return res.json();
-        }).then(function(res) {
+      lierc.api.request(method, action, {
+        body: JSON.stringify(data),
+        success: function(res) {
           lierc.close_dialog();
-        }).catch(function(e) {
-          console.log(e);
+        },
+        error: function(e) {
           alert("i'm sorry");
-        });
+        }
+      });
     });
   };
 
@@ -862,13 +830,8 @@ var Lierc = function(url, user) {
   setInterval(lierc.ping_server, 1000 * 15);
 
   lierc.get_prefs = function(cb) {
-    fetch(lierc.baseurl + "/preference", {
-        credentials: 'same-origin'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(data) {
+    lierc.api.get("/preference", {
+      success: function(data) {
         var prefs = {};
         for (var i=0; i < data.length; i++) {
           try {
@@ -879,9 +842,9 @@ var Lierc = function(url, user) {
           }
         }
         cb(prefs);
-      }).catch(function() {
-        cb();
-      });
+      },
+      error: function(e) { alert(e); }
+    });
   };
 
   lierc.get_pref = function(name) {
@@ -924,49 +887,39 @@ var Lierc = function(url, user) {
 
   lierc.update_pref = function(name, value) {
     lierc.prefs[name] = value;
-    fetch(lierc.baseurl + "/preference/" + encodeURIComponent(name), {
-      method: 'POST',
+    lierc.api.post("/preference/" + encodeURIComponent(name), {
       body: JSON.stringify(value),
-      credentials: 'same-origin',
     });
   };
 
   lierc.load_token = function(cb) {
-    fetch(lierc.baseurl + "/token", {
-        credentials: 'same-origin'
-      })
-      .then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(data) {
+    lierc.api.get("/token", {
+      success: function(data) {
         lierc.post_tokens.push(data.token);
         if (data.extra) {
           lierc.post_tokens = lierc.post_tokens.concat(data.extra);
         }
         if (cb) cb();
-      }).catch(function(e) {
-        alert("Error fetching token: " + e);
+      },
+      error: function(e) {
         if (cb) cb();
-      });
+      }
+    });
   };
 
   lierc.load_seen = function(cb) {
-    fetch(lierc.baseurl + "/seen", {
-        credentials: 'same-origin'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(res) {
+    lierc.api.get("/seen", {
+      success: function(res) {
         for (i in res) {
           var id = panel_id(res[i]["channel"], res[i]["connection"]);
           lierc.last_seen[id] = res[i]["message_id"];
         }
         cb();
-      }).catch(function(e) {
+      },
+      error: function(e) {
         cb();
-      });
+      }
+    });
   };
 
   lierc.save_seen = function(panel, force) {
@@ -977,15 +930,13 @@ var Lierc = function(url, user) {
 
     if (send || force) {
       var parts = [
-        lierc.baseurl, "connection", panel.connection,
+        "connection", panel.connection,
         "channel", encodeURIComponent(panel.name), "seen"
       ];
 
-      fetch(parts.join("/"), {
-          credentials: 'same-origin',
-          method: 'POST',
-          body: "" + last_seen
-        });
+      lierc.api.post("/" + parts.join("/"), {
+        body: "" + last_seen
+      });
 
       lierc.last_seen[id] = last_seen;
     }
@@ -998,24 +949,9 @@ var Lierc = function(url, user) {
         lierc.last_seen[lierc.focused.id] = lierc.focused.last_seen;
     }
 
-    var query = [];
-
-    for (k in lierc.last_seen) {
-      query.push([
-        encodeURIComponent(k),
-        encodeURIComponent(lierc.last_seen[k])
-      ].join('='));
-    }
-
-    var url = lierc.baseurl + "/missed?" + query.join('&');
-
-    fetch(url, {
-        credentials: 'same-origin',
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(res) {
+    lierc.api.get("/missed", {
+      data: lierc.last_seen,
+      success: function(res) {
         lierc.missed = {};
         for (connection in res) {
           for (channel in res[connection]) {
@@ -1028,23 +964,17 @@ var Lierc = function(url, user) {
             }
           }
         }
-      }).catch(function(e) {
-        console.log(e);
-      });
+      }
+    });
   };
 
   lierc.search_panel = function(panel, text) {
-    var url = lierc.baseurl + "/connection/" + panel.connection
-      + "/channel/" + encodeURIComponent(panel.name) + "/last?"
-      + "query=" + encodeURIComponent(text) + "&limit=10";
+    var parts = [ "connection", panel.connection
+      , "channel", encodeURIComponent(panel.name), "last" ];
 
-    fetch(url, {
-        credentials: 'same-origin'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(messages) {
+    lierc.api.get("/" + parts.join("/"), {
+      data: { query: text, limit: 10 },
+      success: function(messages) {
         if (messages.length > 0) {
           var line = document.createElement('DIV');
           line.classList.add('search-start');
@@ -1059,7 +989,8 @@ var Lierc = function(url, user) {
           msg.Search = true;
           panel.append(Render(msg));
         }
-      });
+      }
+    });
   };
 
   lierc.get_prefs(function(prefs) {
