@@ -240,27 +240,23 @@ var UIEvents = function(lierc) {
       var channel = dialog.el.querySelector('input[name=channel]').value;
       var select = dialog.el.querySelector('select');
       var conn = select.options[select.selectedIndex].value;
-      fetch(lierc.baseurl + '/connection/' + conn, {
-          'method': "POST",
-          'body': "JOIN " + channel,
-          'credentials': 'same-origin',
-          'headers': {
-            'content-type': "application/irc",
-            'lierc-token' : lierc.post_token()
-          },
-        }).then(function(res) {
-          lierc.close_dialog();
-
-          if (!res.ok)
-            throw Error(res.statusText);
-          return res.json();
-        }).then(function(res) {
+      lierc.api.post('/connection/' + conn, {
+        body: "JOIN " + channel,
+        headers: {
+          'content-type': "application/irc",
+          'lierc-token' : lierc.post_token()
+        },
+        success: function(res) {
           lierc.post_tokens.push(res.token);
-        }).catch(function(e) {
+          lierc.close_dialog();
+        },
+        error: function(e) {
+          lierc.close_dialog();
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
           lierc.load_token();
-        });
+        }
+      });
     });
   }
 
@@ -390,26 +386,22 @@ var UIEvents = function(lierc) {
 
     function sendlines(lines) {
       if (!lines.length) return;
-      fetch(lierc.baseurl + "/connection/" + panel.connection, {
-          credentials: 'same-origin',
-          method: "POST",
-          headers:{
-            'content-type': 'application/irc',
-            'lierc-token' : lierc.post_token()
-          },
-          body: lines.shift(),
-        }).then(function(res) {
-          if (!res.ok)
-            throw Error(res.statusText);
-          return res.json();
-        }).then(function(res) {
+      lierc.api.post("/connection/" + panel.connection, {
+        headers:{
+          'content-type': 'application/irc',
+          'lierc-token' : lierc.post_token()
+        },
+        body: lines.shift(),
+        success: function(res) {
           lierc.post_tokens.push(res.token);
           if (lines.length)
             sendlines(lines);
-        }).catch(function(e) {;
+        },
+        error: function(e) {;
           alert("Error: " + e);
           lierc.load_token();
-        });
+        }
+      });
     }
 
     sendlines(send);
@@ -767,25 +759,21 @@ var UIEvents = function(lierc) {
       if (! (emoji && hash && panel))
         return;
 
-      fetch(lierc.baseurl + "/connection/" + panel.connection, {
-          'method': "POST",
-          'credentials': 'same-origin',
+      lierc.api.post("/connection/" + panel.connection, {
+        body: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
+        headers: {
+          'lierc-token' : lierc.post_token(),
           'content-type': "application/irc",
-          'body': "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
-          'headers': {
-            'lierc-token' : lierc.post_token()
-          }
-        }).then(function(res) {
-          if (!res.ok)
-            throw Error(res.statusText);
-          return res.json();
-        }).then(function(res) {
+        },
+        success: function(res) {
           lierc.post_tokens.push(res.token);
-        }).catch(function(e) {
+        },
+        error: function(e) {
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
           lierc.load_token();
-        });
+        }
+      });
     }
   });
 
