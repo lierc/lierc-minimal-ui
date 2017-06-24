@@ -6,7 +6,6 @@ var Lierc = function(url, user) {
   var lierc = this;
 
   lierc.user = user;
-  lierc.baseurl = url;
   lierc.api = new API(url);
   lierc.stream;
   lierc.connections = {};
@@ -211,7 +210,7 @@ var Lierc = function(url, user) {
   };
 
   lierc.connect = function() {
-    var stream = new Stream(lierc.baseurl);
+    var stream = lierc.api.stream();
 
     stream.on('message', function(e) {
       var conn_id = e.ConnectionId;
@@ -453,7 +452,7 @@ var Lierc = function(url, user) {
     headers.append('lierc-token', lierc.post_token());
     headers.append('content-type', 'application/irc');
 
-    lierc.api.post(lierc.baseurl + '/connection/' + connection, {
+    lierc.api.post('/connection/' + connection, {
       body: 'PART ' + name,
       headers: headers,
       success: function(res) {
@@ -470,7 +469,7 @@ var Lierc = function(url, user) {
   lierc.delete_connection = function(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    lierc.api.delete(lierc.baseurl + '/connection/' + connection, {
+    lierc.api.delete('/connection/' + connection, {
       error: function(e) { alert(e); }
     });
   };
@@ -800,10 +799,8 @@ var Lierc = function(url, user) {
   setInterval(lierc.check_scroll, 250);
 
   lierc.ping_server = function() {
-    fetch(lierc.baseurl + "/auth", {
-        credentials: 'same-origin'
-      })
-      .then(function(res) {
+    lierc.api.auth(
+      function(res) {
         if (res.status == 200)
           return;
 
@@ -824,7 +821,8 @@ var Lierc = function(url, user) {
         if (data["error"]) {
           console.log(data["error"]);
         }
-      });
+      }
+    );
   };
 
   setInterval(lierc.ping_server, 1000 * 15);

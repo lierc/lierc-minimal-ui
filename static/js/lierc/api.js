@@ -65,6 +65,28 @@ var API = function(baseurl) {
     }).join("&");
   };
 
+  api.stream = function() {
+    return new Stream(api.baseurl);
+  };
+
+  api.auth = function(cb) {
+    return fetch(api.baseurl + "/auth", {
+      credentials: 'same-origin'
+    }).then(cb);
+  };
+
+  api.logout = function() {
+    return fetch(api.baseurl + "/logout", {
+      'method': 'POST',
+      'credentials': 'same-origin',
+    }).then(function(res) {
+      if (!res.ok)
+        alert('Error!');
+      else
+        window.location.reload();
+    });
+  };
+
   api.get = function(path, options) {
     if (options['data'])
       path += '?' + api.build_query(options['data']);

@@ -495,15 +495,7 @@ var UIEvents = function(lierc) {
     if (!confirm("Are you sure you want to log out?"))
       return;
 
-    fetch(lierc.baseurl + "/logout", {
-      'method': 'POST',
-      'credentials': 'same-origin',
-    }).then(function(res) {
-      if (!res.ok)
-        alert('Error!');
-      else
-        window.location.reload();
-    });
+    lierc.api.logout();
   });
 
   window.addEventListener('resize', function(e) {
