@@ -146,7 +146,7 @@ var Commands = function(lierc) {
       return;
   });
 
-  commands.handle_command = function(panel, line) {
+  commands.handle = function(panel, line) {
     var parts = line.split(" ", 1);
     var command = parts[0].toLowerCase();
 

@@ -7,6 +7,7 @@ var Lierc = function(url, user) {
 
   lierc.user = user;
   lierc.api = new API(url);
+  lierc.commands = new Commands(lierc);
   lierc.stream;
   lierc.connections = {};
   lierc.filling_backlog = false;

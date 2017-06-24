@@ -10,8 +10,6 @@ var UIEvents = function(lierc) {
     cmd: false
   };
 
-  var commands = new Commands(lierc);
-
   function clickTouchEvent(el, f) {
     ['click', 'touch'].forEach(function(type) {
       el.addEventListener(type, f);
@@ -336,7 +334,7 @@ var UIEvents = function(lierc) {
 
     if (value.substring(0,1) == "/") {
       try {
-         send.push(commands.handle_command(panel, value.substring(1)));
+         send.push(lierc.commands.handle(panel, value.substring(1)));
       }
       catch (e) {
         alert(e);
