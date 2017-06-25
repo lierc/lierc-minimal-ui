@@ -170,7 +170,7 @@ Format.parse = function(acc, tokens) {
     break;
 
   case "\x0F":
-    node = make();
+    node = Format.make();
     break;
 
   case "\x1D":
