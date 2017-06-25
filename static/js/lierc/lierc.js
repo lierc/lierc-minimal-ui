@@ -783,7 +783,9 @@ var Lierc = function(url, user) {
     if (lierc.filling_backlog
       || !lierc.focused
       || lierc.focused.backlog_empty
+      || lierc.overlayed()
       || !lierc.connections[lierc.focused.connection]
+      || lierc.elem.flex_wrap.classList.contains('open')
       || getComputedStyle(lierc.elem.scroll).display == "none")
     {
       return;
