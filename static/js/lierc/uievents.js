@@ -677,7 +677,10 @@ var UIEvents = function(lierc) {
   });
 
   lierc.elem.panel.addEventListener('click', function(e) {
-    if (!e.target.matches('.embed-wrap[data-embed-id]:not(.open) *'))
+    if (!e.target.matches(
+      '.embed-wrap[data-embed-id]:not(.open),' +
+      '.embed-wrap[data-embed-id]:not(.open) *'
+    ))
       return;
 
     var p = e.target;
