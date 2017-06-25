@@ -1,38 +1,40 @@
 var Unformat = function(html) {
   var parser = new DOMParser();
   var doc = parser.parseFromString(html, "text/html");
-  var block = [
-    "DIV",
-  ];
-  var tags = {
-    "B": "\x02",
-    "U": "\x1F",
-    "I": "\x1D"
-  };
-  var invert = "\x16";
-
-  function descend(node, string) {
-    if (node.nodeType == 3) {
-      string += node.textContent;
-    }
-    else if (node.nodeType == 1 || node.nodeType == 9) {
-      if (block.indexOf(node.nodeName) != -1)
-        string += "\n";
-      if (tags[node.nodeName])
-        string += tags[node.nodeName];
-      if (node.classList && node.classList.contains('invert'))
-        string += invert;
-      for (var i=0; i < node.childNodes.length; i++) {
-        string = descend(node.childNodes[i], string);
-      }
-      if (tags[node.nodeName])
-        string += tags[node.nodeName];
-    }
-    return string;
-  };
-
-  return descend(doc, "");
+  return Unformat.descend(doc, "");
 };
+
+Unformat.descend = function(node, string) {
+  if (node.nodeType == 3) {
+    string += node.textContent;
+  }
+  else if (node.nodeType == 1 || node.nodeType == 9) {
+    if (Unformat.block.indexOf(node.nodeName) != -1)
+      string += "\n";
+    if (Unformat.tags[node.nodeName])
+      string += Unformat.tags[node.nodeName];
+    if (node.classList && node.classList.contains('invert'))
+      string += Unformat.invert;
+    for (var i=0; i < node.childNodes.length; i++) {
+      string = Unformat.descend(node.childNodes[i], string);
+    }
+    if (Unformat.tags[node.nodeName])
+      string += Unformat.tags[node.nodeName];
+  }
+  return string;
+};
+
+Unformat.block = [
+  "DIV",
+];
+
+Unformat.tags = {
+  "B": "\x02",
+  "U": "\x1F",
+  "I": "\x1D"
+};
+
+Unformat.invert = "\x16";
 
 var Format = function(text) {
   var tokens = text.split(Format.token_re);
