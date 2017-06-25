@@ -78,7 +78,6 @@ var Render = function(message, force_raw) {
       ].concat(Format(text))
     );
 
-    linkify(span);
     return append(
       make("event", message),
       [ span ]
@@ -97,7 +96,6 @@ var Render = function(message, force_raw) {
       ].concat(Format(text))
     );
 
-    linkify(span);
     return append(
       make("event", message),
       [
@@ -141,8 +139,6 @@ var Render = function(message, force_raw) {
       append(msg, Format(text));
     }
 
-    linkify(msg);
-
     var hash = md5(message.Raw);
     var li = make("message", message);
     li.setAttribute('data-message-hash', hash);
@@ -165,8 +161,6 @@ var Render = function(message, force_raw) {
       make_text(' '),
       Format(text)
     );
-
-    linkify(span);
 
     return append(
       make("raw notice", message),
@@ -373,49 +367,4 @@ var Render = function(message, force_raw) {
   }
 };
 
-var url_re = /(https?:\/\/[^\s<"]*)/ig;
 
-function linkify(elem) {
-  var children = elem.childNodes;
-  var length = children.length;
-  var tmp = document.createElement('SPAN');
-
-  for (var i=0; i < length; i++) {
-    var node = children[i];
-    if (node.nodeName == "A") {
-      continue;
-    }
-    else if (node.nodeName != "#text") {
-      linkify(node);
-      continue;
-    }
-    if (node.nodeValue === null) {
-      continue;
-    }
-    if (!node.nodeValue) {
-      console.log(node);
-    }
-    if (node.nodeValue && node.nodeValue.match(url_re)) {
-      var span = document.createElement("SPAN");
-      tmp.textContent = node.nodeValue;
-      var escaped = tmp.innerHTML;
-      span.innerHTML = escaped.replace(
-        url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
-      node.parentNode.replaceChild(span, node);
-      node = span;
-    }
-    if (node.nodeValue && Emoji.regex.test(node.nodeValue)) {
-      var chars = node.nodeValue.match(Emoji.regex);
-      var span = document.createElement("SPAN");
-      tmp.textContent = node.nodeValue;
-      var escaped = tmp.innerHTML;
-
-      for (var j=0; j < chars.length; j++) {
-        var title = Emoji.names[chars[j]];
-        escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span title="'+title+'">' + chars[j] + '</span>');
-      }
-      span.innerHTML = escaped;
-      node.parentNode.replaceChild(span, node);
-    }
-  }
-}

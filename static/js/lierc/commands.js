@@ -10,6 +10,12 @@ var Commands = function(lierc) {
     });
   }
 
+  commands.completions = function() {
+    return Object.keys(handlers).map(function(k) {
+      return "/" + k;
+    });
+  };
+
   add_command("help", ["h"], function(panel, line) {
   });
 

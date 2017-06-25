@@ -518,7 +518,6 @@ var Panel = function(name, id, connection, mobile) {
     Format(topic.value).forEach(function(el) {
       panel.elem.topic.appendChild(el);
     });
-    linkify(panel.elem.topic);
 
     if (topic.user && topic.time) {
       var date = (new Date(topic.time * 1000));
