@@ -80,6 +80,7 @@ var UIEvents = function(lierc) {
       else if (e.which == 13) {
         var selected = lierc.elem.nav.querySelector('li.selected');
         if (selected) {
+          e.preventDefault();
           var id = selected.getAttribute('data-panel-id');
           lierc.focus_panel(id);
           lierc.hide_switcher();

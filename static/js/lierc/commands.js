@@ -19,6 +19,31 @@ var Commands = function(lierc) {
   add_command("help", ["h"], function(panel, line) {
   });
 
+  add_command("panel", ["p"], function(panel, line) {
+    var parts  = line.split(" ", 2);
+    var action = parts[0];
+    var rest   = parts[1];
+
+    switch (action) {
+    case "sort":
+      var order = parseInt(rest);
+      var li = panel.elem.nav;
+      var ul = li.parentNode;
+      var before = ul.querySelectorAll('li:not([data-panel-id="' + panel.id + '"])')[order - 1];
+      if (before) {
+        ul.removeChild(li);
+        ul.insertBefore(li, before);
+        lierc.save_channel_order();
+      }
+      else {
+        alert("Invalid position: '" + order + "'");
+      }
+      break;
+    default:
+      alert("Unknown command: 'panel " + line + "'");
+    }
+  });
+
   add_command("join", ["j"], function(panel, line) {
     var parts = ["JOIN", line];
     return parts.join(" ");
