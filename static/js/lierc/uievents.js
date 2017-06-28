@@ -569,7 +569,10 @@ var UIEvents = function(lierc) {
     }
 
     lierc.focus_input();
-    var text = clipboard.getData("Text");
+    var lines = clipboard.getData("Text").trim().split(/[\r\n]/);
+    var text = lines.map(function(line) { return line.trim(); })
+      .filter(function(line) { return line.match(/\S/); })
+      .join("\n");
     document.execCommand("insertText", false, text);
   });
 

@@ -25,7 +25,7 @@ var Commands = function(lierc) {
     var rest   = parts[1];
 
     switch (action) {
-    case "sort":
+    case "move":
       var order = parseInt(rest);
       var li = panel.elem.nav;
       var ul = li.parentNode;

@@ -875,7 +875,7 @@ var Panel = function(name, id, connection, mobile) {
 
       var next_visible;
       while (msg.nextSibling) {
-        if (getComputedStyle(msg.nextSibling).display != "none") {
+        if (msg.nodeType == 1 && getComputedStyle(msg.nextSibling).display != "none") {
           next_visible = msg.nextSibling;
           break;
         }
