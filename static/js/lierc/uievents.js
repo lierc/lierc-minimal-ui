@@ -41,6 +41,10 @@ var UIEvents = function(lierc) {
     else if (lierc.overlayed()) {
       return;
     }
+    else if (e.which == 27) {
+      var open = document.querySelectorAll('.popup-toggle.open');
+      open.forEach(function(el) { el.classList.remove('open'); });
+    }
 
     /* task switcher is open, special keys */
     if (lierc.elem.switcher.classList.contains('open')) {
@@ -225,6 +229,11 @@ var UIEvents = function(lierc) {
       var panel = lierc.add_panel(nick, connection, true);
       lierc.focus_panel(panel.id);
     }
+    document.querySelectorAll('.popup-toggle.open').forEach(function(el) {
+      if (!el.contains(e.target)) {
+        el.classList.remove('open');
+      }
+    });
   });
 
   function join_click(e) {
@@ -621,25 +630,25 @@ var UIEvents = function(lierc) {
 
     if (target.matches('.message-menu')) {
       if (toggle.classList.contains('open')) {
-        var html = lierc.template('message_menu', {
-          is_monospace: is_monospace
-        });
+        var has_child = toggle.querySelector('.message-menu-popup');
+        if (!has_child) {
+          var html = lierc.template('message_menu', {
+            is_monospace: is_monospace
+          });
+          toggle.insertAdjacentHTML('beforeend', html);
+        }
         controls.classList.add('open');
-        toggle.insertAdjacentHTML('beforeend', html);
       }
       else {
         controls.classList.remove('open');
-        toggle.innerHTML = '';
       }
     }
     else if (target.matches('.message-privmsg')) {
       controls.classList.remove('open');
-      toggle.innerHTML = '';
       message.querySelector('.message-nick').click();
     }
     else if (target.matches('.message-monospace')) {
       controls.classList.remove('open');
-      toggle.innerHTML = '';
       var nick = message.querySelector('.message-nick').getAttribute('data-nick');
       if (is_monospace) {
         lierc.remove_monospace_nick(lierc.focused, nick);

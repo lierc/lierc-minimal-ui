@@ -1339,6 +1339,10 @@ ul.channel-controls li a:hover {
   position: relative;
 }
 
+.message-menu.open .message-menu-popup {
+  display: block;
+}
+
 .message-menu-popup {
   z-index: 999;
   width: 120px;
@@ -1348,6 +1352,7 @@ ul.channel-controls li a:hover {
   right: -10px;
   padding: 0px;
   background: #fff;
+  display: none;
 }
 
 .message-menu-popup ul {
