@@ -1611,6 +1611,27 @@ li.message:hover .message-controls,
   line-height: 16px;
 }
 
+#color-info {
+  margin-top: 5px;
+  width: 0px;
+  overflow: hidden;
+  text-align: right;
+  transition: width 1s;
+}
+
+#color-info.open {
+  width: auto;
+}
+
+#color-info td {
+  font-family: "Menlo", "Inconsolata", "Consolas",
+    "Droid Sans Mono", "Monaco", monospace;
+  font-size: 10px;
+  color: #000;
+  padding: 2px;
+  text-align: center;
+}
+
 @media (max-width: 500px) {
   div.flex-wrap {
     flex-direction: column;

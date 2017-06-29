@@ -10,6 +10,7 @@ var Editor = function(element) {
   var TAB = 9;
 
   editor.el = element;
+  editor.info = document.getElementById('color-info');
   editor.completion = new Completion(element);
   editor.focused = false;
   editor.coloring = false;
@@ -21,7 +22,14 @@ var Editor = function(element) {
     if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
       if (e.which == COLOR) {
         editor.coloring = !editor.coloring;
-        editor.el.classList.add('coloring');
+        if (editor.coloring) {
+          editor.el.classList.add('coloring');
+          editor.info.classList.add('open');
+        }
+        else {
+          editor.el.classList.remove('coloring');
+          editor.info.classList.remove('open');
+        }
       }
     }
 
@@ -38,6 +46,7 @@ var Editor = function(element) {
       else {
         editor.coloring = false;
         editor.el.classList.remove('coloring');
+        editor.info.classList.remove('open');
 
         var seq = editor.color;
         var parts = seq.match(/^(?:([0-9]{1,2}),?([0-9]{1,2})?)?$/);
