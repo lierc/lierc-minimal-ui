@@ -56,9 +56,9 @@ var Format = function(text) {
     span.textContent = item.text;
 
     if (item.background != null)
-      span.style.backgroundColor = Format.color_map[item.background];
+      span.style.backgroundColor = Format.color_map[parseInt(item.background)];
     if (item.color != null)
-      span.style.color = Format.color_map[item.color];
+      span.style.color = Format.color_map[parseInt(item.color)];
     if (item.bold)
       span.style.fontWeight = "bold";
     if (item.italic)

@@ -40,7 +40,7 @@ var Editor = function(element) {
         editor.el.classList.remove('coloring');
 
         var seq = editor.color;
-        var parts = seq.match(/^([0-9]{1,2},?([0-9]{1,2})?)?$/);
+        var parts = seq.match(/^(?:([0-9]{1,2}),?([0-9]{1,2})?)?$/);
         editor.color = "";
 
         if (parts === null) {
@@ -65,7 +65,7 @@ var Editor = function(element) {
 
           span.style.color = c;
 
-          if (i.length == 0) i = "0" + String(i);
+          if (i.length == 1) i = "0" + String(i);
           span.setAttribute('data-color-fg', i);
 
           if (typeof(parts[2]) != "undefined") {
@@ -79,7 +79,7 @@ var Editor = function(element) {
 
             span.style.backgroundColor = c;
 
-            if (i.length == 0) i = "0" + String(i);
+            if (i.length == 1) i = "0" + String(i);
             span.setAttribute('data-color-bg', i);
           }
         }
