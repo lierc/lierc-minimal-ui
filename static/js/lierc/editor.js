@@ -19,21 +19,7 @@ var Editor = function(element) {
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
   editor.keydown = function(e, mods) {
-    if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
-      if (e.which == COLOR) {
-        editor.coloring = !editor.coloring;
-        if (editor.coloring) {
-          editor.el.classList.add('coloring');
-          editor.info.classList.add('open');
-        }
-        else {
-          editor.el.classList.remove('coloring');
-          editor.info.classList.remove('open');
-        }
-      }
-    }
-
-    else if (editor.coloring) {
+    if (editor.coloring) {
       if (e.which >= 48 && e.which <= 57) {
         var i = String(9 - (57 - e.which));
         editor.color += i;
@@ -104,7 +90,20 @@ var Editor = function(element) {
           span.textContent = "\u200b";
           range.setStart(span, 0);
         }
+      }
+    }
 
+    else if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
+      if (e.which == COLOR) {
+        editor.coloring = !editor.coloring;
+        if (editor.coloring) {
+          editor.el.classList.add('coloring');
+          editor.info.classList.add('open');
+        }
+        else {
+          editor.el.classList.remove('coloring');
+          editor.info.classList.remove('open');
+        }
       }
     }
 
