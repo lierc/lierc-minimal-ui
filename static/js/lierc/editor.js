@@ -5,19 +5,101 @@ var Editor = function(element) {
   var ITALIC = 73;
   var UNDERLINE = 85;
   var INVERT = 191;
+  var COLOR = 67;
 
   var TAB = 9;
 
   editor.el = element;
   editor.completion = new Completion(element);
   editor.focused = false;
-  editor.foreground = null;
-  editor.background = null;
+  editor.coloring = false;
+  editor.color = "";
 
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
   editor.keydown = function(e, mods) {
-    if (mods['ctrl'] && !mods['shift'] && !mods['alt']) {
+    if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
+      if (e.which == COLOR) {
+        editor.coloring = !editor.coloring;
+        editor.el.classList.add('coloring');
+      }
+    }
+
+    else if (editor.coloring) {
+      if (e.which >= 48 && e.which <= 57) {
+        var i = String(9 - (57 - e.which));
+        editor.color += i;
+        e.preventDefault();
+      }
+      else if (e.which == 188) {
+        editor.color += ",";
+        e.preventDefault();
+      }
+      else {
+        editor.coloring = false;
+        editor.el.classList.remove('coloring');
+
+        var seq = editor.color;
+        var parts = seq.match(/^([0-9]{1,2},?([0-9]{1,2})?)?$/);
+        editor.color = "";
+
+        if (parts === null) {
+          alert("Invalid color sequence: '" + seq + "'");
+          return;
+        }
+
+        var sel = window.getSelection();
+        var node = sel.focusNode;
+        var range = sel.getRangeAt(0);
+        var span = document.createElement('SPAN');
+        span.appendChild(range.extractContents());
+
+        if (typeof(parts[1]) != "undefined") {
+          var i = parts[1];
+          var c = Format.color_map[parseInt(i)];
+
+          if (typeof(c) === "undefined") {
+            alert("Invalid color '" + i + "' in sequence '" + seq + "'");
+            return;
+          }
+
+          span.style.color = c;
+
+          if (i.length == 0) i = "0" + String(i);
+          span.setAttribute('data-color-fg', i);
+
+          if (typeof(parts[2]) != "undefined") {
+            var i = parts[2];
+            var c = Format.color_map[parseInt(i)];
+
+            if (typeof(c) === "undefined") {
+              alert("Invalid color '" + i + "' in sequence '" + seq + "'");
+              return;
+            }
+
+            span.style.backgroundColor = c;
+
+            if (i.length == 0) i = "0" + String(i);
+            span.setAttribute('data-color-bg', i);
+          }
+        }
+        else {
+          span.style.color = "#000";
+          span.style.backgroundColor = "#fff";
+          span.setAttribute('data-color-reset', 1);
+        }
+
+        range.insertNode(span);
+
+        if (span.textContent == "") {
+          span.textContent = "\u200b";
+          range.setStart(span, 0);
+        }
+
+      }
+    }
+
+    else if (mods['ctrl'] && !mods['shift'] && !mods['meta']) {
       if (e.which == BOLD) {
         e.preventDefault();
         document.execCommand('bold');
