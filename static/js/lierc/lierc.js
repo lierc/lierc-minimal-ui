@@ -187,7 +187,7 @@ var Lierc = function(url, user) {
 
         configs.forEach(function(conn) {
           var conn_id   = conn.Id;
-          var host = conn.Config.Host;
+          var host = conn.Config.Alias || conn.Config.Host;
           var nick = conn.Nick;
           lierc.setup_connection(conn_id, host, nick);
         });
@@ -713,6 +713,7 @@ var Lierc = function(url, user) {
       vars.Nick = config.Nick;
       vars.User = config.User;
       vars.Pass = config.Pass;
+      vars.Alias = config.Alias;
       vars.Channels = config.Channels.join(", ");
       vars.Highlight = config.Highlight.join(", ");
 
@@ -730,6 +731,7 @@ var Lierc = function(url, user) {
         vars.Port = "6697";
         vars.Ssl = true;
         vars.Channels = "#lierc";
+        vars.Alias = "freenode";
       }
 
       vars.action = "/connection";
@@ -763,6 +765,7 @@ var Lierc = function(url, user) {
         Nick: form.querySelector('input[name="Nick"]').value,
         User: form.querySelector('input[name="User"]').value,
         Pass: form.querySelector('input[name="Pass"]').value,
+        Alias: form.querySelector('input[name="Alias"]').value,
         Channels: form.querySelector('input[name="Channels"]').value.split(/\s*,\s*/),
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };

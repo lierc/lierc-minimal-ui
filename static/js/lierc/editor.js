@@ -59,8 +59,6 @@ var Editor = function(element) {
           }
 
           span.style.color = c;
-
-          if (i.length == 1) i = "0" + String(i);
           span.setAttribute('data-color-fg', i);
 
           if (typeof(parts[2]) != "undefined") {
@@ -73,8 +71,6 @@ var Editor = function(element) {
             }
 
             span.style.backgroundColor = c;
-
-            if (i.length == 1) i = "0" + String(i);
             span.setAttribute('data-color-bg', i);
           }
         }

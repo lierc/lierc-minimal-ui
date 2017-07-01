@@ -106,7 +106,9 @@ templates['connection'] = template({"1":function(container,depth0,helpers,partia
     + alias4(((helper = (helper = helpers.Channels || (depth0 != null ? depth0.Channels : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"Channels","hash":{},"data":data}) : helper)))
     + "\">\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"highlight\">Highlight words (comma separated)</label>\n          <input name=\"Highlight\" type=\"text\" value=\""
     + alias4(((helper = (helper = helpers.Highlight || (depth0 != null ? depth0.Highlight : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"Highlight","hash":{},"data":data}) : helper)))
-    + "\">\n        </fieldset>\n        <fieldset class=\"submit-group\">\n"
+    + "\">\n        </fieldset>\n        <fieldset class=\"input-group\">\n          <label for=\"alias\">Network alias</label>\n          <input name=\"Alias\" type=\"text\" value=\""
+    + alias4(((helper = (helper = helpers.Alias || (depth0 != null ? depth0.Alias : depth0)) != null ? helper : alias2),(typeof helper === alias3 ? helper.call(alias1,{"name":"Alias","hash":{},"data":data}) : helper)))
+    + "\">\n        </fieldset>\n\n        <fieldset class=\"submit-group\">\n"
     + ((stack1 = helpers["if"].call(alias1,(depth0 != null ? depth0.edit : depth0),{"name":"if","hash":{},"fn":container.program(7, data, 0),"inverse":container.program(9, data, 0),"data":data})) != null ? stack1 : "")
     + "          <p style=\"float:right\" class=\"note\"><span class=\"required\">*</span> required</p>\n        </fieldset>\n      </form>\n    </section>\n\n";
 },"useData":true});
