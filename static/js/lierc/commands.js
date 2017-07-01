@@ -117,7 +117,7 @@ var Commands = function(lierc) {
     return parts.join(" ");
   });
 
-  add_command("names", ["n"], function(panel, line) {
+  add_command("names", ["n", "nicks"], function(panel, line) {
     var parts = ["NAMES"];
     if (!line) {
       parts.push(":" + panel.name);
@@ -125,6 +125,7 @@ var Commands = function(lierc) {
     else {
       parts.push(":" + line);
     }
+    document.querySelector('#toggle-nicks').click();
     return parts.join(" ");
   });
 

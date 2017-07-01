@@ -508,7 +508,7 @@ var UIEvents = function(lierc) {
 
   window.addEventListener('resize', function(e) {
     if (lierc.focused) {
-      lierc.focused.scroll();
+      lierc.focused.scroll(true);
       lierc.focused.resize_filler();
     }
   });

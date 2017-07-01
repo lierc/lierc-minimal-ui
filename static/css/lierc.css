@@ -394,6 +394,7 @@ a:hover {
   -webkit-user-select: none;
   background: rgba(0,0,0,0.03);
   overflow: auto;
+  border-right: 1px solid #eee;
 }
 
 #nav.filtering h2 {
@@ -1635,6 +1636,10 @@ li.message:hover .message-controls,
 @media (max-width: 500px) {
   div.flex-wrap {
     flex-direction: column;
+  }
+
+  #nav {
+    border-right: none;
   }
 
   .flex-wrap-left {

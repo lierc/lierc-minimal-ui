@@ -1128,4 +1128,3 @@ var Lierc = function(url, user) {
 
   var events = new UIEvents(lierc);
 };
-
