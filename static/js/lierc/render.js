@@ -128,7 +128,8 @@ var Render = function(message, force_raw) {
     if (text.substring(0, 1) == "\x01") {
       if (text.substring(1,7) == "ACTION") {
         from.textContent = '* ' + nick + ' ';
-        append(msg, Format(text.substring(8, text.length - 1)));
+        var action = text.substring(8).replace(/\x01$/, "");
+        append(msg, Format(action));
       }
       else {
         return;
