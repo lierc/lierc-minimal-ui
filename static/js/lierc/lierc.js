@@ -301,7 +301,7 @@ var Lierc = function(url, user) {
   lierc.close_panel = function(id) {
     var panel = lierc.panels[id];
     if (panel.type == "private") {
-      var path = "/connection/" + panel.connection + "/nick/" + panel.name;
+      var path = "/connection/" + panel.connection + "/nick/" + encodeURIComponent(panel.name);
       lierc.api.delete(path);
     }
     lierc.remove_panel(id);
