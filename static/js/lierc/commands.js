@@ -95,7 +95,7 @@ var Commands = function(lierc) {
     }
 
     if (panel.type == "private") {
-      lierc.remove_panel(panel.id);
+      lierc.close_panel(panel.id);
       return;
     }
 

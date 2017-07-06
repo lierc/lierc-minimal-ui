@@ -298,6 +298,15 @@ var Lierc = function(url, user) {
     return lierc.panels[id];
   };
 
+  lierc.close_panel = function(id) {
+    var panel = lierc.panels[id];
+    if (panel.type == "private") {
+      var path = "/connection/" + panel.connection + "/nick/" + panel.name;
+      lierc.api.delete(path);
+    }
+    lierc.remove_panel(id);
+  };
+
   lierc.remove_panel = function(id) {
     if (!lierc.panels[id])
       return;
@@ -383,7 +392,7 @@ var Lierc = function(url, user) {
         else if (panel.type == "status")
           lierc.delete_connection(panel.connection);
         else
-          lierc.remove_panel(id);
+          lierc.close_panel(id);
       }
       else if (e.target.classList.contains('edit-panel')) {
         lierc.api.get("/connection/" + panel.connection, {
