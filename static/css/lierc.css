@@ -1759,5 +1759,11 @@ body[data-panel-type=channel] #panel-scroll {
   padding: 8px 10px 8px 10px;
 }
 
+.emoji-popup,
+.upload-popup {
+  max-width: none;
+  width: 100%;
+}
+
 }
 
