@@ -137,10 +137,14 @@ var Commands = function(lierc) {
     var args = line.split(" ", 1);
     var rest = line.substring(args[0].length).trim();
 
-    var parts = ["PRIVMSG", args[0]];
+    if (!rest.length) {
+      var connection = panel.connection;
+      lierc.add_panel(args[0], connection, true);
+      return;
+    }
 
-    if (rest)
-      parts.push(":" + rest);
+    var parts = ["PRIVMSG", args[0]];
+    parts.push(":" + rest);
 
     return parts.join(" ");
   });

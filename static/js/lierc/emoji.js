@@ -90,4 +90,3 @@ Emoji.load = function() {
     });
 };
 
-Emoji.load();

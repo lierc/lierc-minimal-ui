@@ -226,8 +226,7 @@ var UIEvents = function(lierc) {
       e.preventDefault();
       var nick = e.target.getAttribute('data-nick');
       var connection = lierc.focused.connection;
-      var panel = lierc.add_panel(nick, connection, true);
-      lierc.focus_panel(panel.id);
+      lierc.add_panel(nick, connection, true);
     }
     document.querySelectorAll('.popup-toggle.open').forEach(function(el) {
       if (!el.contains(e.target)) {
