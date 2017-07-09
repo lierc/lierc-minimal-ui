@@ -124,8 +124,6 @@ var Panel = function(name, id, connection, mobile) {
     for (var i=0; i < del.length; i++) {
       list.removeChild(del[i]);
     }
-
-    panel.editor.completion.completions = sorted;
   };
 
   panel.focus = function() {

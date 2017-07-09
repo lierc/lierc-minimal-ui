@@ -11,7 +11,8 @@ var Completion = function(element) {
   this.complete = function(e) {
     if (! this.completing)
       this.start();
-    this.cycle();
+    if (this.completing)
+      this.cycle();
   };
 
   this.stop = function() {
@@ -23,6 +24,8 @@ var Completion = function(element) {
 
   this.start = function() {
     var word = this.last_word();
+    if (word == "")
+      return;
     var sel = window.getSelection();
     this.position = sel.focusOffset - word.length;
     this.completing = true

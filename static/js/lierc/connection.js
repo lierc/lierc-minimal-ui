@@ -48,14 +48,17 @@ var Connection = function(id, host, nick) {
 
   conn.nicks = function(channel) {
     var ret = {};
+    var nicks = channel.nicks;
+    var l = nicks.length;
 
-    for (nick in channel.nicks) {
-      var modes = channel.nicks[nick];
+    for (var i=0; i < l; i++) {
+      var nick = nicks[i];
+      var modes = channel.nick_modes[nick];
       ret[nick] = "";
 
-      for (var i=0; i < conn.prefix.length; i++) {
-        if (modes.indexOf( conn.prefix[i][0]) != -1) {
-          ret[nick] = conn.prefix[i][1] + ret[nick];
+      for (var j=0; j < conn.prefix.length; j++) {
+        if (modes.indexOf( conn.prefix[j][0]) != -1) {
+          ret[nick] = conn.prefix[j][1] + ret[nick];
         }
       }
     }
@@ -295,12 +298,16 @@ var Connection = function(id, host, nick) {
       if (text && text.substring(0,5) == "\x01" + "FACE")
         type = "react";
 
+      var channel = conn.channel(name);
+
       if (name == conn.nick && priv)
         fire("private:"+type, conn.id, nick, message);
       else if (priv)
         fire("private:"+type, conn.id, name, message);
-      else if (conn.channel(name))
+      else if (channel) {
+        channel.bump_nick(nick);
         fire("channel:"+type, conn.id, name, message);
+      }
       break;
 
     case "PING":

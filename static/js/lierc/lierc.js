@@ -361,6 +361,11 @@ var Lierc = function(url, user) {
       panel.last_seen = lierc.last_seen[panel.id];
     panel.update_nav();
 
+    if (panel.type == "channel") {
+      var channel = conn.channel(panel.name);
+      panel.editor.completion.completions = channel.nicks;
+    }
+
     lierc.panels[id] = panel;
 
     if (panel.type == "status")
