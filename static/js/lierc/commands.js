@@ -17,6 +17,8 @@ var Commands = function(lierc) {
   };
 
   add_command("help", ["h"], function(panel, line) {
+    lierc.new_dialog("help");
+    return;
   });
 
   add_command("panel", ["p"], function(panel, line) {
