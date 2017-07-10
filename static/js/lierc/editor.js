@@ -6,6 +6,7 @@ var Editor = function(element) {
   var UNDERLINE = 85;
   var INVERT = 191;
   var COLOR = 67;
+  var RESET = 79;
 
   var TAB = 9;
 
@@ -101,6 +102,23 @@ var Editor = function(element) {
           editor.el.classList.remove('coloring');
           editor.info.classList.remove('open');
         }
+        return;
+      }
+
+      if (e.which == RESET) {
+        var sel = window.getSelection();
+        var range = sel.getRangeAt(0);
+
+        var last = editor.el.lastChild;
+        range.setEndAfter(last);
+
+        var contents = range.extractContents();
+        var text = document.createTextNode("\u200b" + contents.textContent);
+        editor.el.appendChild(text);
+
+        range.setStart(text, 1);
+        range.setEnd(text, 1);
+        return;
       }
     }
 
@@ -113,7 +131,6 @@ var Editor = function(element) {
       if (e.which == INVERT) {
         e.preventDefault();
         var sel = window.getSelection();
-        var node = sel.focusNode;
         var range = sel.getRangeAt(0);
         var span = document.createElement('SPAN');
         span.appendChild(range.extractContents());
