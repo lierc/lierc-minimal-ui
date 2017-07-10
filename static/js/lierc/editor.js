@@ -84,7 +84,8 @@ var Editor = function(element) {
 
         if (span.textContent == "") {
           span.textContent = "\u200b";
-          range.setStart(span, 0);
+          range.setStart(span, 1);
+          range.setEnd(span, 1);
         }
       }
     }
