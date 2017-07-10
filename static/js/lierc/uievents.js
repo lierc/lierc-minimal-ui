@@ -336,6 +336,7 @@ var UIEvents = function(lierc) {
     var value = Unformat(input.innerHTML);
     if (value == "") return;
     input.innerHTML = "";
+    value = value.replace("\u200b", ""); // ew
 
     var panel = lierc.panels[input.getAttribute('data-panel-id')];
     var connection = lierc.connections[panel.connection];
