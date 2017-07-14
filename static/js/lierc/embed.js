@@ -1,64 +1,62 @@
 var Embed = {
   patterns: []
-};
+}
 
-var embed_id = 0;
+var embed_id = 0
 
-Embed.embed_all = function(els, panel) {
-  els.forEach(function(el) {
-    el.querySelectorAll('.message-text a[href]').forEach(function(link) {
-      Embed.embed(link, panel);
-    });
-  });
-};
+Embed.embed_all = function (els, panel) {
+  els.forEach(function (el) {
+    el.querySelectorAll('.message-text a[href]').forEach(function (link) {
+      Embed.embed(link, panel)
+    })
+  })
+}
 
-Embed.embed = function(a, panel) {
-  var href = a.href;
-  var id = embed_id++;
+Embed.embed = function (a, panel) {
+  var href = a.href
+  var id = embed_id++
 
-  for (var i=0; i < Embed.patterns.length; i++) {
+  for (var i = 0; i < Embed.patterns.length; i++) {
     if (Embed.patterns[i].test(href)) {
-      var url = "//noembed.com/embed?url="
-        + encodeURIComponent(href) + "&maxwidth=450";
+      var url = '//noembed.com/embed?url=' +
+        encodeURIComponent(href) + '&maxwidth=450'
 
-      fetch(url).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(res) {
-        if (! res.error) {
-          panel.scroll(function() {
-            var toggle = document.createElement('SPAN');
-            res['id'] = 'embed-' + String(id);
-            toggle.setAttribute('data-embed', JSON.stringify(res));
-            toggle.setAttribute('data-embed-id', res['id']);
-            toggle.setAttribute("class", "embed-toggle");
-            toggle.setAttribute("aria-hidden", "true");
-            a.parentNode.insertBefore(toggle, a.nextSibling);
-            panel.embed(a, res);
-          });
+      fetch(url).then(function (res) {
+        if (!res.ok) { throw Error(res.statusText) }
+        return res.json()
+      }).then(function (res) {
+        if (!res.error) {
+          panel.scroll(function () {
+            var toggle = document.createElement('SPAN')
+            res['id'] = 'embed-' + String(id)
+            toggle.setAttribute('data-embed', JSON.stringify(res))
+            toggle.setAttribute('data-embed-id', res['id'])
+            toggle.setAttribute('class', 'embed-toggle')
+            toggle.setAttribute('aria-hidden', 'true')
+            a.parentNode.insertBefore(toggle, a.nextSibling)
+            panel.embed(a, res)
+          })
         }
-      });
+      })
 
-      return;
+      return
     }
   }
-};
+}
 
-Embed.load = function() {
-  fetch("//noembed.com/providers")
-    .then(function(res) {
-      if (! res.ok)
-        throw Error(res.statusText);
-      return res.json();
-    }).then(function(res) {
+Embed.load = function () {
+  fetch('//noembed.com/providers')
+    .then(function (res) {
+      if (!res.ok) { throw Error(res.statusText) }
+      return res.json()
+    }).then(function (res) {
       for (provider in res) {
-        var p = res[provider].patterns;
-        for (var i=0; i < p.length; i++) {
-          Embed.patterns.push(new RegExp(p[i]));
+        var p = res[provider].patterns
+        for (var i = 0; i < p.length; i++) {
+          Embed.patterns.push(new RegExp(p[i]))
         }
       }
-    });
-};
+    })
+}
 
-Embed.load();
+Embed.load()
