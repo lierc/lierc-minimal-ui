@@ -139,7 +139,7 @@
       document.addEventListener("DOMContentLoaded", function(e) {
         var auth = new Auth("/api");
         auth.auth(function(res) {
-          window.lierc = new Lierc("/api", res);
+          window.lierc = new App("/api", res);
         });
       });
     </script>

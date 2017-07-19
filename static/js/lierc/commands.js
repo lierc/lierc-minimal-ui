@@ -1,5 +1,5 @@
-var Commands = function(lierc) {
-  var lierc = lierc;
+var Commands = function(app) {
+  var app = app;
   var commands = this;
   var handlers = {};
 
@@ -17,7 +17,7 @@ var Commands = function(lierc) {
   };
 
   add_command("help", ["h"], function(panel, line) {
-    lierc.new_dialog("help");
+    app.new_dialog("help");
     return;
   });
 
@@ -35,7 +35,7 @@ var Commands = function(lierc) {
       if (before) {
         ul.removeChild(li);
         ul.insertBefore(li, before);
-        lierc.save_channel_order();
+        app.save_channel_order();
       }
       else {
         alert("Invalid position: '" + order + "'");
@@ -73,7 +73,7 @@ var Commands = function(lierc) {
       throw "Search text required";
     }
 
-    lierc.search_panel(panel, line);
+    app.search_panel(panel, line);
   });
 
   add_command("clear", [], function(panel) {
@@ -97,7 +97,7 @@ var Commands = function(lierc) {
     }
 
     if (panel.type == "private") {
-      lierc.close_panel(panel.id);
+      app.close_panel(panel.id);
       return;
     }
 
@@ -141,7 +141,7 @@ var Commands = function(lierc) {
 
     if (!rest.length) {
       var connection = panel.connection;
-      lierc.add_panel(args[0], connection, true);
+      app.add_panel(args[0], connection, true);
       return;
     }
 

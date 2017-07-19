@@ -2,31 +2,31 @@ if (!("forEach" in NodeList)) {
   NodeList.prototype.forEach = Array.prototype.forEach;
 }
 
-var Lierc = function(url, user) {
-  var lierc = this;
+var App = function(url, user) {
+  var app = this;
 
-  lierc.user = user;
-  lierc.api = new API(url);
-  lierc.commands = new Commands(lierc);
-  lierc.stream;
-  lierc.connections = {};
-  lierc.filling_backlog = false;
-  lierc.dialog = null;
-  lierc.sorting = [];
-  lierc.last_seen = {};
-  lierc.missed = {};
-  lierc.panels = {};
-  lierc.focused = null;
-  lierc.last_panel_id = null;
-  lierc.window_focused = true;
-  lierc.default_panel = null;
-  lierc.default_focused = false;
-  lierc.prefs = {};
-  lierc.touchstart = "ontouchstart" in document.documentElement;
-  lierc.mobile = detect_mobile();
-  lierc.post_tokens = [];
+  app.user = user;
+  app.api = new API(url);
+  app.commands = new Commands(app);
+  app.stream;
+  app.connections = {};
+  app.filling_backlog = false;
+  app.dialog = null;
+  app.sorting = [];
+  app.last_seen = {};
+  app.missed = {};
+  app.panels = {};
+  app.focused = null;
+  app.last_panel_id = null;
+  app.window_focused = true;
+  app.default_panel = null;
+  app.default_focused = false;
+  app.prefs = {};
+  app.touchstart = "ontouchstart" in document.documentElement;
+  app.mobile = detect_mobile();
+  app.post_tokens = [];
 
-  lierc.elem = {
+  app.elem = {
     panel: document.getElementById('panel'),
     nav: document.getElementById('nav'),
     'status': document.getElementById('status'),
@@ -48,12 +48,12 @@ var Lierc = function(url, user) {
     reconnect: document.getElementById('reconnect-status')
   };
 
-  if (!lierc.mobile) {
+  if (!app.mobile) {
     document.querySelectorAll('.sortable').forEach(function(el) {
       Sortable.create(el, {
         delay: 0,
         onSort: function(e) {
-          lierc.save_channel_order();
+          app.save_channel_order();
         }
       });
     });
@@ -63,155 +63,155 @@ var Lierc = function(url, user) {
     return [connection, name.toLowerCase()].join("-");
   }
 
-  lierc.set_connected = function(conn_id, status, message) {
-    var connection = lierc.connections[conn_id];
+  app.set_connected = function(conn_id, status, message) {
+    var connection = app.connections[conn_id];
     connection.connected = status;
 
-    for (id in lierc.panels) {
-      var panel = lierc.panels[id];
+    for (id in app.panels) {
+      var panel = app.panels[id];
       if (panel.connection == conn_id) {
         panel.set_connected(status, message);
       }
     }
   };
 
-  lierc.setup_connection = function(id, host, nick) {
-    if (lierc.connections[id])
+  app.setup_connection = function(id, host, nick) {
+    if (app.connections[id])
       return;
 
     var connection = new Connection(id, host);
-    lierc.connections[id] = connection;
+    app.connections[id] = connection;
 
-    var panel = lierc.add_panel("status", connection.id);
+    var panel = app.add_panel("status", connection.id);
     panel.change_name(host);
     panel.update_topic({value: "status."});
 
     connection.on("channel:new", function(conn, channel, message) {
-      lierc.add_panel(channel, conn, ("Id" in message));
+      app.add_panel(channel, conn, ("Id" in message));
     });
 
     connection.on("private:msg", function(conn, nick, message) {
-      var panel = lierc.add_panel(nick, conn, false);
-      var connection = lierc.connections[conn];
+      var panel = app.add_panel(nick, conn, false);
+      var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
       panel.append(Render(message));
 
-      if (from && (!lierc.is_focused(panel) || !panel.is_scrolled()))
-        lierc.elem.audio.play();
+      if (from && (!app.is_focused(panel) || !panel.is_scrolled()))
+        app.elem.audio.play();
     });
 
     connection.on("channel:msg", function(conn, channel, message) {
-      var panel = lierc.get_panel(channel, conn);
+      var panel = app.get_panel(channel, conn);
       var html = Render(message);
       if (html) {
         panel.append(html);
 
-        if (message.Highlight && (!lierc.is_focused(panel) || !panel.is_scrolled()))
-          lierc.elem.audio.play();
+        if (message.Highlight && (!app.is_focused(panel) || !panel.is_scrolled()))
+          app.elem.audio.play();
       }
     });
 
     connection.on("channel:react", function(conn, channel, message) {
-      var panel = lierc.get_panel(channel, conn);
+      var panel = app.get_panel(channel, conn);
       var parts = message.Params[1].split(" ");
       panel.handle_reaction(message.Prefix.Name, parts[1], parts[2]);
     });
 
     connection.on("private:react", function(conn, nick, message) {
-      var panel = lierc.get_panel(nick, conn);
+      var panel = app.get_panel(nick, conn);
       var parts = message.Params[1].split(" ");
       panel.handle_reaction(message.Prefix.Name, parts[1], parts[2]);
     });
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
-      var panel = lierc.get_panel(channel, conn);
+      var panel = app.get_panel(channel, conn);
       if (panel.focused)
         panel.update_nicks(nicks);
     });
 
     connection.on("channel:mode", function(conn, channel, mode) {
-      var panel = lierc.get_panel(channel, conn);
+      var panel = app.get_panel(channel, conn);
       panel.update_mode(mode);
     });
 
     connection.on("channel:close", function(conn, channel) {
-      lierc.remove_panel(panel_id(channel, conn));
+      app.remove_panel(panel_id(channel, conn));
     });
 
     connection.on("status:raw", function(conn, message) {
-      var panel = lierc.get_panel("status", conn);
+      var panel = app.get_panel("status", conn);
       panel.append(Render(message, true));
     });
 
     connection.on("status", function(conn, message) {
-      var panel = lierc.get_panel("status", conn);
+      var panel = app.get_panel("status", conn);
       panel.append(Render(message));
     });
 
     connection.on("connect", function(conn, message) {
-      lierc.set_connected(conn, true, message.Params[0]);
+      app.set_connected(conn, true, message.Params[0]);
     });
 
     connection.on("disconnect", function(conn, message) {
-      lierc.set_connected(conn, false, message.Params[0]);
+      app.set_connected(conn, false, message.Params[0]);
     });
 
     connection.on("channel:topic", function(conn, channel, topic) {
-      var panel = lierc.get_panel(channel, conn);
+      var panel = app.get_panel(channel, conn);
       panel.update_topic(topic);
     });
   };
 
-  lierc.is_focused = function(panel) {
-    return lierc.window_focused && lierc.focused && lierc.focused.id == panel.id;
+  app.is_focused = function(panel) {
+    return app.window_focused && app.focused && app.focused.id == panel.id;
   };
 
-  lierc.find_default_panel = function() {
+  app.find_default_panel = function() {
     var parts = window.location.hash.split("/").slice(1);
     if (parts.length == 2) {
       return panel_id(decodeURIComponent(parts[1]), parts[0]);
     }
-    else if (lierc.sorting.length) {
-      return lierc.sorting[0];
+    else if (app.sorting.length) {
+      return app.sorting[0];
     }
     return null;
   };
 
-  lierc.init = function() {
-    lierc.default_panel = lierc.find_default_panel();
-    lierc.api.get('/connection', {
+  app.init = function() {
+    app.default_panel = app.find_default_panel();
+    app.api.get('/connection', {
       success: function(configs) {
         if (!configs.length)
-          lierc.config_modal();
+          app.config_modal();
 
         configs.forEach(function(conn) {
           var conn_id   = conn.Id;
           var host = conn.Config.Alias || conn.Config.Host;
           var nick = conn.Nick;
-          lierc.setup_connection(conn_id, host, nick);
+          app.setup_connection(conn_id, host, nick);
         });
 
-        if (lierc.stream)
-          lierc.stream.destroy();
+        if (app.stream)
+          app.stream.destroy();
 
-        lierc.connect();
+        app.connect();
       }
     });
   };
 
-  lierc.add_recent_privates = function() {
-    lierc.api.get("/privates", {
+  app.add_recent_privates = function() {
+    app.api.get("/privates", {
       success: function(privates) {
         privates.forEach(function(priv) {
-          lierc.add_panel(priv.nick, priv.connection, false);
+          app.add_panel(priv.nick, priv.connection, false);
         });
       }
     });;
   };
 
-  lierc.connect = function() {
-    var stream = lierc.api.stream();
+  app.connect = function() {
+    var stream = app.api.stream();
 
     stream.on('message', function(e) {
       var conn_id = e.ConnectionId;
@@ -221,8 +221,8 @@ var Lierc = function(url, user) {
         message.Id =  e.MessageId;
       message.Highlight = e.Highlight;
 
-      if (lierc.connections[conn_id]) {
-        lierc.connections[conn_id].on_message(message);
+      if (app.connections[conn_id]) {
+        app.connections[conn_id].on_message(message);
       }
     });
 
@@ -231,134 +231,134 @@ var Lierc = function(url, user) {
       var message = e.Message;
       var nick    = message.Params[0];
       var host    = message.Params[1];
-      lierc.setup_connection(conn_id, host, nick);
+      app.setup_connection(conn_id, host, nick);
     });
 
     stream.on('delete_connection', function(e) {
       var conn_id = e.ConnectionId;
 
-      for (id in lierc.panels) {
-        var panel = lierc.panels[id];
+      for (id in app.panels) {
+        var panel = app.panels[id];
         if (panel.connection == conn_id) {
-          lierc.remove_panel(id);
+          app.remove_panel(id);
         }
       }
 
-      delete lierc.connections[conn_id];
+      delete app.connections[conn_id];
     });
 
     stream.on('close', function(e) {
-      for (id in lierc.panels) {
-        lierc.panels[id].set_disabled(true);
+      for (id in app.panels) {
+        app.panels[id].set_disabled(true);
       }
-      if (lierc.focused) {
-        lierc.focused.scroll(function() {
-          lierc.elem.body.classList.add('disconnected');
+      if (app.focused) {
+        app.focused.scroll(function() {
+          app.elem.body.classList.add('disconnected');
         });
       }
       else {
-        lierc.elem.body.classList.add('disconnected');
+        app.elem.body.classList.add('disconnected');
       }
     });
 
     stream.on('reconnect-status', function(text) {
-      if (lierc.focused) {
-        lierc.focused.scroll(function() {
-          lierc.elem.reconnect.textContent = text;
+      if (app.focused) {
+        app.focused.scroll(function() {
+          app.elem.reconnect.textContent = text;
         });
       }
       else {
-        lierc.elem.reconnect.textContent = text;
+        app.elem.reconnect.textContent = text;
       }
     });
 
     stream.on('open', function(e) {
-      lierc.elem.body.classList.remove('disconnected');
-      if (lierc.focused) {
+      app.elem.body.classList.remove('disconnected');
+      if (app.focused) {
         if (stream.last_id) {
-          lierc.fill_missed(stream.last_id);
+          app.fill_missed(stream.last_id);
         }
       }
 
-      for (var id in lierc.panels) {
-        lierc.panels[id].set_disabled(false);
-        if (!lierc.focused || id != lierc.focused.id) {
-          lierc.panels[id].clear_lists();
+      for (var id in app.panels) {
+        app.panels[id].set_disabled(false);
+        if (!app.focused || id != app.focused.id) {
+          app.panels[id].clear_lists();
         }
       }
     });
 
-    lierc.sync_missed();
-    lierc.add_recent_privates();
-    lierc.stream = stream;
+    app.sync_missed();
+    app.add_recent_privates();
+    app.stream = stream;
   };
 
-  lierc.get_panel = function(name, connection) {
+  app.get_panel = function(name, connection) {
     var id = panel_id(name, connection);
-    return lierc.panels[id];
+    return app.panels[id];
   };
 
-  lierc.close_panel = function(id) {
-    var panel = lierc.panels[id];
+  app.close_panel = function(id) {
+    var panel = app.panels[id];
     if (panel.type == "private") {
       var path = "/connection/" + panel.connection + "/nick/" + encodeURIComponent(panel.name);
-      lierc.api.delete(path);
+      app.api.delete(path);
     }
-    lierc.remove_panel(id);
+    app.remove_panel(id);
   };
 
-  lierc.remove_panel = function(id) {
-    if (!lierc.panels[id])
+  app.remove_panel = function(id) {
+    if (!app.panels[id])
       return;
 
-    var focused = id == lierc.focused.id;
-    lierc.panels[id].remove_elems();
-    delete lierc.panels[id];
+    var focused = id == app.focused.id;
+    app.panels[id].remove_elems();
+    delete app.panels[id];
 
     if (focused) {
-      if (lierc.last_panel_id && lierc.panels[lierc.last_panel_id])
-        lierc.focus_panel(lierc.last_panel_id);
-      else if (Object.keys(lierc.panels).length)
-        lierc.focus_panel(Object.keys(lierc.panels)[0]);
+      if (app.last_panel_id && app.panels[app.last_panel_id])
+        app.focus_panel(app.last_panel_id);
+      else if (Object.keys(app.panels).length)
+        app.focus_panel(Object.keys(app.panels)[0]);
       else
-        lierc.focused = null;
+        app.focused = null;
     }
 
-    lierc.update_nav_counts();
+    app.update_nav_counts();
   };
 
-  lierc.update_nav_counts = function() {
-    lierc.elem.status
+  app.update_nav_counts = function() {
+    app.elem.status
       .previousSibling.previousSibling
       .querySelector('.count')
-      .textContent = lierc.elem.status.querySelectorAll("li").length
+      .textContent = app.elem.status.querySelectorAll("li").length
 
-    lierc.elem.privates
+    app.elem.privates
       .previousSibling.previousSibling
       .querySelector(".count")
-      .textContent = lierc.elem.privates.querySelectorAll("li").length;
+      .textContent = app.elem.privates.querySelectorAll("li").length;
 
-    lierc.elem.channels
+    app.elem.channels
       .previousSibling.previousSibling
       .querySelector(".count")
-      .textContent = lierc.elem.channels.querySelectorAll("li").length;
+      .textContent = app.elem.channels.querySelectorAll("li").length;
   };
 
-  lierc.add_panel = function(name, connection, focus) {
+  app.add_panel = function(name, connection, focus) {
     var id = panel_id(name, connection);
 
-    if (lierc.panels[id])
-      return lierc.panels[id];
+    if (app.panels[id])
+      return app.panels[id];
 
-    if (!lierc.connections[connection]) {
+    if (!app.connections[connection]) {
       console.log("Connection does not exist", connection);
       throw "Connection does not exist";
     }
 
-    var conn = lierc.connections[connection];
-    var panel = new Panel(name, id, conn, lierc.mobile);
-    if (lierc.last_seen[panel.id])
-      panel.last_seen = lierc.last_seen[panel.id];
+    var conn = app.connections[connection];
+    var panel = new Panel(name, id, conn, app.mobile);
+    if (app.last_seen[panel.id])
+      panel.last_seen = app.last_seen[panel.id];
     panel.update_nav();
 
     if (panel.type == "channel") {
@@ -366,43 +366,43 @@ var Lierc = function(url, user) {
       panel.editor.completion.completions = channel.nicks;
     }
 
-    lierc.panels[id] = panel;
+    app.panels[id] = panel;
 
     if (panel.type == "status")
-      lierc.elem.status.append(panel.elem.nav);
+      app.elem.status.append(panel.elem.nav);
     else if (panel.type == "private")
-      lierc.elem.privates.append(panel.elem.nav);
+      app.elem.privates.append(panel.elem.nav);
     else
-      lierc.insert_sorted_nav(panel);
+      app.insert_sorted_nav(panel);
 
-    lierc.update_nav_counts();
+    app.update_nav_counts();
 
     if (panel.type == "channel")
-      lierc.ignore_events_pref(panel);
+      app.ignore_events_pref(panel);
 
-    lierc.collapse_embeds_pref(panel);
-    lierc.monospace_nicks_pref(panel);
+    app.collapse_embeds_pref(panel);
+    app.monospace_nicks_pref(panel);
 
     panel.elem.nav.addEventListener('click', function(e) {
       e.preventDefault();
 
-      lierc.elem.flex_wrap.classList.remove("open");
+      app.elem.flex_wrap.classList.remove("open");
 
       var id = this.getAttribute('data-panel-id');
-      var panel = lierc.panels[id];
+      var panel = app.panels[id];
 
       if (e.target.classList.contains('close-panel')) {
         if (panel.type == "channel")
-          lierc.part_channel(panel.name, panel.connection);
+          app.part_channel(panel.name, panel.connection);
         else if (panel.type == "status")
-          lierc.delete_connection(panel.connection);
+          app.delete_connection(panel.connection);
         else
-          lierc.close_panel(id);
+          app.close_panel(id);
       }
       else if (e.target.classList.contains('edit-panel')) {
-        lierc.api.get("/connection/" + panel.connection, {
+        app.api.get("/connection/" + panel.connection, {
           success: function(res) {
-            lierc.config_modal(null, res);
+            app.config_modal(null, res);
           },
           error: function(e) {
             alert(e);
@@ -410,34 +410,34 @@ var Lierc = function(url, user) {
         });
       }
       else {
-        lierc.focus_panel(id);
+        app.focus_panel(id);
       }
     });
 
     // force focusing or no focused panel
-    if (focus === true || !lierc.focused) {
-      lierc.focus_panel(id);
+    if (focus === true || !app.focused) {
+      app.focus_panel(id);
     }
     // this channel was in the URL on load
-    else if (lierc.default_panel && id == lierc.default_panel) {
-      lierc.default_panel = null;
-      lierc.default_focused = true;
-      lierc.focus_panel(id);
+    else if (app.default_panel && id == app.default_panel) {
+      app.default_panel = null;
+      app.default_focused = true;
+      app.focus_panel(id);
     }
     // focus the first channel added
-    else if (!lierc.default_focused && panel.type == "channel" && lierc.channel_panels() == 1) {
-      lierc.focus_panel(id);
+    else if (!app.default_focused && panel.type == "channel" && app.channel_panels() == 1) {
+      app.focus_panel(id);
     }
 
-    if (!panel.focused && lierc.missed[panel.id])
-      lierc.apply_missed(panel, lierc.missed[panel.id]);
+    if (!panel.focused && app.missed[panel.id])
+      app.apply_missed(panel, app.missed[panel.id]);
 
-    delete lierc.missed[panel.id];
+    delete app.missed[panel.id];
 
-    return lierc.panels[id];
+    return app.panels[id];
   };
 
-  lierc.apply_missed = function(panel, missed) {
+  app.apply_missed = function(panel, missed) {
     if (missed.messages) {
       panel.unread = true;
       if (panel.type == "private")
@@ -450,8 +450,8 @@ var Lierc = function(url, user) {
     }
   };
 
-  lierc.post_token = function() {
-    var token = lierc.post_tokens.pop();
+  app.post_token = function() {
+    var token = app.post_tokens.pop();
     if (!token) {
       alert("No post tokens, tell Lee!");
       throw Error("No tokens");
@@ -459,81 +459,81 @@ var Lierc = function(url, user) {
     return token;
   };
 
-  lierc.part_channel = function(name, connection) {
+  app.part_channel = function(name, connection) {
     if (!confirm("Are you sure you want to leave " + name + "?"))
       return;
 
     var headers = new Headers();
-    headers.append('lierc-token', lierc.post_token());
+    headers.append('lierc-token', app.post_token());
     headers.append('content-type', 'application/irc');
 
-    lierc.api.post('/connection/' + connection, {
+    app.api.post('/connection/' + connection, {
       body: 'PART ' + name,
       headers: headers,
       success: function(res) {
-        lierc.remove_panel(panel_id(name, connection));
-        lierc.post_tokens.push(res.token);
+        app.remove_panel(panel_id(name, connection));
+        app.post_tokens.push(res.token);
       },
       error: function(e) {
         alert("Error: " + e);
-        lierc.load_token();
+        app.load_token();
       }
     });
   };
 
-  lierc.delete_connection = function(connection) {
+  app.delete_connection = function(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    lierc.api.delete('/connection/' + connection, {
+    app.api.delete('/connection/' + connection, {
       error: function(e) { alert(e); }
     });
   };
 
-  lierc.channel_panels = function() {
+  app.channel_panels = function() {
     var panels = 0
-    for (id in lierc.panels) {
-      if (lierc.panels[id].type == "channel")
+    for (id in app.panels) {
+      if (app.panels[id].type == "channel")
         panels++;
     }
     return panels;
   };
 
-  lierc.insert_sorted_nav = function(panel) {
-    var index = lierc.sorting.indexOf(panel.id);
+  app.insert_sorted_nav = function(panel) {
+    var index = app.sorting.indexOf(panel.id);
     if (index == -1) {
-      lierc.elem.channels.appendChild(panel.elem.nav);
-      lierc.save_channel_order();
+      app.elem.channels.appendChild(panel.elem.nav);
+      app.save_channel_order();
       return;
     }
-    var items = lierc.elem.channels.childNodes;
+    var items = app.elem.channels.childNodes;
     for (var i=0; i < items.length; i++) {
       var id = items[i].getAttribute('data-panel-id');
-      if (index < lierc.sorting.indexOf(id)) {
-        lierc.elem.channels.insertBefore(panel.elem.nav, items[i]);
+      if (index < app.sorting.indexOf(id)) {
+        app.elem.channels.insertBefore(panel.elem.nav, items[i]);
         return;
       }
     }
 
-    lierc.elem.channels.appendChild(panel.elem.nav);
+    app.elem.channels.appendChild(panel.elem.nav);
   };
 
-  lierc.fill_missed = function(start) {
-    lierc.api.get("/log/" + start, {
+  app.fill_missed = function(start) {
+    app.api.get("/log/" + start, {
       success: function(events) {
         for (var i=0; i < events.length; i++) {
-          lierc.stream.fire('message', events[i]);
+          app.stream.fire('message', events[i]);
         }
       },
       error: function(e) {
-        lierc.reset();
+        app.reset();
       }
     });
   };
 
-  lierc.fill_backlog = function(panel, msgid) {
+  app.fill_backlog = function(panel, msgid) {
     if (panel.backlog_empty) return;
 
-    var connection = lierc.connections[panel.connection];
+    var connection = app.connections[panel.connection];
     if (!connection) return;
 
     panel.set_loading(true);
@@ -547,7 +547,7 @@ var Lierc = function(url, user) {
     if (msgid)
       parts.push(msgid);
 
-    lierc.api.get("/" + parts.join("/"), {
+    app.api.get("/" + parts.join("/"), {
       data: { limit: limit },
       success: function(events) {
         if (events.length < limit)
@@ -561,7 +561,7 @@ var Lierc = function(url, user) {
           message.Id = e.MessageId;
           message.Highlight = e.Highlight;
 
-          if (lierc.is_reaction(message))
+          if (app.is_reaction(message))
             reactions.push(message);
           else {
             var el = Render(message);
@@ -571,7 +571,7 @@ var Lierc = function(url, user) {
         });
 
         panel.prepend(list);
-        lierc.filling_backlog = false;
+        app.filling_backlog = false;
 
         reactions.forEach(function(reaction) {
           var parts = reaction.Params[1].split(" ");
@@ -583,32 +583,32 @@ var Lierc = function(url, user) {
 
       },
       error: function(e) {
-        lierc.filling_backlog = false;
+        app.filling_backlog = false;
         panel.set_loading(false);
         console.log(e);
       }
     });
   };
 
-  lierc.is_reaction = function(message) {
+  app.is_reaction = function(message) {
     return message.Command == "PRIVMSG"
     && (message.Params[1] || "").substring(0,5) == "\x01" + "FACE";
   };
 
-  lierc.prev_panel = function() {
-    var items = lierc.elem.nav.querySelectorAll("li");
+  app.prev_panel = function() {
+    var items = app.elem.nav.querySelectorAll("li");
     for (var i=items.length - 1; i >= 0; i--) {
       var item = items[i];
       if (item.classList.contains("active") && items[i - 1]) {
         var id = items[i - 1].getAttribute('data-panel-id');
-        lierc.focus_panel(id);
+        app.focus_panel(id);
         return;
       }
     }
   };
 
-  lierc.prev_unread_panel = function() {
-    var items = lierc.elem.nav.querySelectorAll("li");
+  app.prev_unread_panel = function() {
+    var items = app.elem.nav.querySelectorAll("li");
     for (var i=items.length - 1; i >= 0; i--) {
       var item = items[i];
       if (item.classList.contains("active")) {
@@ -616,7 +616,7 @@ var Lierc = function(url, user) {
           var item = items[j - 1];
           if (item.classList.contains("unread")) {
             var id = item.getAttribute('data-panel-id');
-            lierc.focus_panel(id);
+            app.focus_panel(id);
             return;
           }
         }
@@ -625,20 +625,20 @@ var Lierc = function(url, user) {
     }
   };
 
-  lierc.next_panel = function() {
-    var items = lierc.elem.nav.querySelectorAll("li");
+  app.next_panel = function() {
+    var items = app.elem.nav.querySelectorAll("li");
     for (var i=0; i < items.length; i++) {
       var item = items[i];
       if (item.classList.contains("active") && items[i + 1]) {
         var id = items[i + 1].getAttribute('data-panel-id');
-        lierc.focus_panel(id);
+        app.focus_panel(id);
         return;
       }
     }
   }
 
-  lierc.next_unread_panel = function() {
-    var items = lierc.elem.nav.querySelectorAll("li");
+  app.next_unread_panel = function() {
+    var items = app.elem.nav.querySelectorAll("li");
     for (var i=0; i < items.length; i++) {
       var item = items[i];
       if (item.classList.contains("active")) {
@@ -646,7 +646,7 @@ var Lierc = function(url, user) {
           var item = items[j + 1];
           if (item.classList.contains("unread")) {
             var id = item.getAttribute('data-panel-id');
-            lierc.focus_panel(id);
+            app.focus_panel(id);
             return;
           }
         }
@@ -655,66 +655,66 @@ var Lierc = function(url, user) {
     }
   };
 
-  lierc.focus_panel = function(id) {
-    if (lierc.focused) {
-      if (lierc.focused.id == id)
+  app.focus_panel = function(id) {
+    if (app.focused) {
+      if (app.focused.id == id)
         return;
-      lierc.last_panel_id = lierc.focused.id;
+      app.last_panel_id = app.focused.id;
     }
 
-    if (lierc.elem.switcher.classList.contains('open')) {
-      lierc.hide_switcher();
+    if (app.elem.switcher.classList.contains('open')) {
+      app.hide_switcher();
     }
 
-    var panel = lierc.panels[id];
+    var panel = app.panels[id];
 
     if (! panel)
       return;
 
-    lierc.elem.panel_name.textContent = panel.name;
-    lierc.replace_child("panel", panel.elem.list);
-    lierc.replace_child("input", panel.elem.input);
-    lierc.replace_child("topic", panel.elem.topic);
-    lierc.replace_child("filler", panel.elem.filler);
-    lierc.replace_child("prefix", panel.elem.prefix);
+    app.elem.panel_name.textContent = panel.name;
+    app.replace_child("panel", panel.elem.list);
+    app.replace_child("input", panel.elem.input);
+    app.replace_child("topic", panel.elem.topic);
+    app.replace_child("filler", panel.elem.filler);
+    app.replace_child("prefix", panel.elem.prefix);
 
-    lierc.elem.body.setAttribute("data-panel-type", panel.type);
-    lierc.replace_child("nicks", panel.elem.nicks);
+    app.elem.body.setAttribute("data-panel-type", panel.type);
+    app.replace_child("nicks", panel.elem.nicks);
 
-    lierc.elem.title.textContent = panel.name;
+    app.elem.title.textContent = panel.name;
 
-    if (lierc.focused) {
-      lierc.focused.unfocus();
-      lierc.save_seen(lierc.focused);
+    if (app.focused) {
+      app.focused.unfocus();
+      app.save_seen(app.focused);
     }
 
-    //lierc.scroll_to_nav(panel.elem.nav);
+    //app.scroll_to_nav(panel.elem.nav);
 
     if (panel.first_focus && panel.type == "channel")
-      lierc.show_nicklist_pref(panel);
+      app.show_nicklist_pref(panel);
 
     panel.focus();
-    lierc.focused = panel;
+    app.focused = panel;
     window.history.replaceState({}, "", panel.path);
-    lierc.check_scroll();
+    app.check_scroll();
 
     if (panel.type == "channel") {
-      var conn = lierc.connections[panel.connection];
+      var conn = app.connections[panel.connection];
       panel.update_nicks(
         conn.nicks(conn.channel(panel.name))
       );
     }
   };
 
-  lierc.replace_child = function(p, c) {
-    p = lierc.elem[p];
+  app.replace_child = function(p, c) {
+    p = app.elem[p];
     while (p.firstChild) {
       p.removeChild(p.firstChild);
     }
     p.appendChild(c);
   };
 
-  lierc.config_modal = function(e, connection) {
+  app.config_modal = function(e, connection) {
     if (e) e.preventDefault();
 
     var vars = {};
@@ -736,11 +736,11 @@ var Lierc = function(url, user) {
       vars.edit = true;
     }
     else {
-      vars.Nick = lierc.user.user;
-      vars.User = lierc.user.user;
-      vars.Highlight = lierc.user.user;
+      vars.Nick = app.user.user;
+      vars.User = app.user.user;
+      vars.Highlight = app.user.user;
 
-      if (Object.keys(lierc.connections).length == 0) {
+      if (Object.keys(app.connections).length == 0) {
         vars.Host = "irc.freenode.com";
         vars.Port = "6697";
         vars.Ssl = true;
@@ -753,16 +753,16 @@ var Lierc = function(url, user) {
       vars.edit = false;
     }
 
-    lierc.elem.flex_wrap.classList.remove('open');
+    app.elem.flex_wrap.classList.remove('open');
 
-    var dialog = lierc.new_dialog("connection", vars);
+    var dialog = app.new_dialog("connection", vars);
 
     var del = dialog.el.querySelector('.delete-connection');
     if (del && connection) {
       del.addEventListener('click', function(e) {
         e.preventDefault();
-        lierc.delete_connection(connection.Id);
-        lierc.close_dialog();
+        app.delete_connection(connection.Id);
+        app.close_dialog();
       });
     }
 
@@ -784,10 +784,10 @@ var Lierc = function(url, user) {
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
-      lierc.api.request(method, action, {
+      app.api.request(method, action, {
         body: JSON.stringify(data),
         success: function(res) {
-          lierc.close_dialog();
+          app.close_dialog();
         },
         error: function(e) {
           alert("i'm sorry");
@@ -796,30 +796,30 @@ var Lierc = function(url, user) {
     });
   };
 
-  lierc.check_scroll = function() {
-    if (lierc.filling_backlog
-      || !lierc.focused
-      || lierc.focused.backlog_empty
-      || lierc.overlayed()
-      || !lierc.connections[lierc.focused.connection]
-      || lierc.elem.flex_wrap.classList.contains('open')
-      || getComputedStyle(lierc.elem.scroll).display == "none")
+  app.check_scroll = function() {
+    if (app.filling_backlog
+      || !app.focused
+      || app.focused.backlog_empty
+      || app.overlayed()
+      || !app.connections[app.focused.connection]
+      || app.elem.flex_wrap.classList.contains('open')
+      || getComputedStyle(app.elem.scroll).display == "none")
     {
       return;
     }
 
-    if (lierc.elem.scroll.scrollTop <= 150) {
-      lierc.filling_backlog = true;
-      lierc.fill_backlog(
-        lierc.focused, lierc.focused.oldest_message_id()
+    if (app.elem.scroll.scrollTop <= 150) {
+      app.filling_backlog = true;
+      app.fill_backlog(
+        app.focused, app.focused.oldest_message_id()
       );
     }
   };
 
-  setInterval(lierc.check_scroll, 250);
+  setInterval(app.check_scroll, 250);
 
-  lierc.ping_server = function() {
-    lierc.api.auth(
+  app.ping_server = function() {
+    app.api.auth(
       function(res) {
         if (res.status == 200)
           return;
@@ -833,7 +833,7 @@ var Lierc = function(url, user) {
 
         // ping failed, force a reconnect of stream...
         if (res.status == 0) {
-          lierc.stream.close();
+          app.stream.close();
           return;
         }
 
@@ -845,10 +845,10 @@ var Lierc = function(url, user) {
     );
   };
 
-  setInterval(lierc.ping_server, 1000 * 15);
+  setInterval(app.ping_server, 1000 * 15);
 
-  lierc.get_prefs = function(cb) {
-    lierc.api.get("/preference", {
+  app.get_prefs = function(cb) {
+    app.api.get("/preference", {
       success: function(data) {
         var prefs = {};
         for (var i=0; i < data.length; i++) {
@@ -865,57 +865,57 @@ var Lierc = function(url, user) {
     });
   };
 
-  lierc.get_pref = function(name) {
-    return lierc.prefs[name];
+  app.get_pref = function(name) {
+    return app.prefs[name];
   };
 
-  lierc.show_nicklist_pref = function(panel) {
-    var value = lierc.get_pref(panel.id + "-show-nicklist");
+  app.show_nicklist_pref = function(panel) {
+    var value = app.get_pref(panel.id + "-show-nicklist");
     if (value != undefined)
       panel.set_show_nicklist(value);
   };
 
-  lierc.ignore_events_pref = function(panel) {
-    var value = lierc.get_pref(panel.id + "-ignore-events");
+  app.ignore_events_pref = function(panel) {
+    var value = app.get_pref(panel.id + "-ignore-events");
     if (value !== undefined)
       panel.set_ignore_events(value);
   };
 
-  lierc.collapse_embeds_pref = function(panel) {
-    var value = lierc.get_pref(panel.id + "-collapse-embeds");
+  app.collapse_embeds_pref = function(panel) {
+    var value = app.get_pref(panel.id + "-collapse-embeds");
     if (value !== undefined)
       panel.set_collapse_embeds(value);
   };
 
-  lierc.monospace_nicks_pref = function(panel) {
-    var value = lierc.get_pref(panel.id + '-monospace-nicks');
+  app.monospace_nicks_pref = function(panel) {
+    var value = app.get_pref(panel.id + '-monospace-nicks');
     if (value !== undefined)
       panel.monospace_nicks = value;
   };
 
-  lierc.add_monospace_nick = function(panel, nick) {
+  app.add_monospace_nick = function(panel, nick) {
     panel.add_monospace_nick(nick);
-    lierc.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+    app.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
   };
 
-  lierc.remove_monospace_nick = function(panel, nick) {
+  app.remove_monospace_nick = function(panel, nick) {
     panel.remove_monospace_nick(nick);
-    lierc.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+    app.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
   };
 
-  lierc.update_pref = function(name, value) {
-    lierc.prefs[name] = value;
-    lierc.api.post("/preference/" + encodeURIComponent(name), {
+  app.update_pref = function(name, value) {
+    app.prefs[name] = value;
+    app.api.post("/preference/" + encodeURIComponent(name), {
       body: JSON.stringify(value),
     });
   };
 
-  lierc.load_token = function(cb) {
-    lierc.api.get("/token", {
+  app.load_token = function(cb) {
+    app.api.get("/token", {
       success: function(data) {
-        lierc.post_tokens.push(data.token);
+        app.post_tokens.push(data.token);
         if (data.extra) {
-          lierc.post_tokens = lierc.post_tokens.concat(data.extra);
+          app.post_tokens = app.post_tokens.concat(data.extra);
         }
         if (cb) cb();
       },
@@ -925,12 +925,12 @@ var Lierc = function(url, user) {
     });
   };
 
-  lierc.load_seen = function(cb) {
-    lierc.api.get("/seen", {
+  app.load_seen = function(cb) {
+    app.api.get("/seen", {
       success: function(res) {
         for (i in res) {
           var id = panel_id(res[i]["channel"], res[i]["connection"]);
-          lierc.last_seen[id] = res[i]["message_id"];
+          app.last_seen[id] = res[i]["message_id"];
         }
         cb();
       },
@@ -940,11 +940,11 @@ var Lierc = function(url, user) {
     });
   };
 
-  lierc.save_seen = function(panel, force) {
+  app.save_seen = function(panel, force) {
     var diffs = 0;
     var id = panel.id;
     var last_seen = panel.last_seen;
-    var send = last_seen && last_seen != lierc.last_seen[id];
+    var send = last_seen && last_seen != app.last_seen[id];
 
     if (send || force) {
       var parts = [
@@ -952,33 +952,33 @@ var Lierc = function(url, user) {
         "channel", encodeURIComponent(panel.name), "seen"
       ];
 
-      lierc.api.post("/" + parts.join("/"), {
+      app.api.post("/" + parts.join("/"), {
         body: "" + last_seen
       });
 
-      lierc.last_seen[id] = last_seen;
+      app.last_seen[id] = last_seen;
     }
   };
 
-  lierc.sync_missed = function() {
-    if (lierc.focused) {
-      lierc.focused.update_seen();
-      if (lierc.focused.last_seen)
-        lierc.last_seen[lierc.focused.id] = lierc.focused.last_seen;
+  app.sync_missed = function() {
+    if (app.focused) {
+      app.focused.update_seen();
+      if (app.focused.last_seen)
+        app.last_seen[app.focused.id] = app.focused.last_seen;
     }
 
-    lierc.api.get("/missed", {
-      data: lierc.last_seen,
+    app.api.get("/missed", {
+      data: app.last_seen,
       success: function(res) {
-        lierc.missed = {};
+        app.missed = {};
         for (connection in res) {
           for (channel in res[connection]) {
             var id = panel_id(channel, connection);
-            if (lierc.panels[id]) {
-              lierc.apply_missed(lierc.panels[id], res[connection][channel]);
+            if (app.panels[id]) {
+              app.apply_missed(app.panels[id], res[connection][channel]);
             }
             else {
-              lierc.missed[id] = res[connection][channel];
+              app.missed[id] = res[connection][channel];
             }
           }
         }
@@ -986,11 +986,11 @@ var Lierc = function(url, user) {
     });
   };
 
-  lierc.search_panel = function(panel, text) {
+  app.search_panel = function(panel, text) {
     var parts = [ "connection", panel.connection
       , "channel", encodeURIComponent(panel.name), "last" ];
 
-    lierc.api.get("/" + parts.join("/"), {
+    app.api.get("/" + parts.join("/"), {
       data: { query: text, limit: 10 },
       success: function(messages) {
         if (messages.length > 0) {
@@ -1011,128 +1011,128 @@ var Lierc = function(url, user) {
     });
   };
 
-  lierc.get_prefs(function(prefs) {
-    lierc.prefs = prefs;
-    lierc.sorting = lierc.prefs['sorting'] || [];
-    delete lierc.prefs['sorting'];
+  app.get_prefs(function(prefs) {
+    app.prefs = prefs;
+    app.sorting = app.prefs['sorting'] || [];
+    delete app.prefs['sorting'];
 
-    if (lierc.prefs['email'] === true) {
+    if (app.prefs['email'] === true) {
       document.getElementById('email-notify')
         .classList.add('enabled');
     }
 
-    lierc.load_seen(function() {
-      lierc.load_token(function() {
-        lierc.init();
+    app.load_seen(function() {
+      app.load_token(function() {
+        app.init();
       });
     });
   });
 
-  lierc.update_email_pref = function(disabled) {
+  app.update_email_pref = function(disabled) {
 
   };
 
-  lierc.focus_input = function(force) {
+  app.focus_input = function(force) {
     if (force) {
-      lierc.focused.elem.input.focus();
+      app.focused.elem.input.focus();
       return;
     }
 
-    if (lierc.mobile)
+    if (app.mobile)
       return;
-    if (!lierc.focused)
+    if (!app.focused)
       return;
-    if (lierc.overlayed())
+    if (app.overlayed())
       return;
-    lierc.focused.elem.input.focus();
+    app.focused.elem.input.focus();
   };
 
-  lierc.hide_switcher = function() {
-    lierc.elem.switcher.classList.remove('open');
-    lierc.elem.nav.classList.remove('filtering');
-    lierc.elem.nav.querySelectorAll('li').forEach(function(li) {
+  app.hide_switcher = function() {
+    app.elem.switcher.classList.remove('open');
+    app.elem.nav.classList.remove('filtering');
+    app.elem.nav.querySelectorAll('li').forEach(function(li) {
       li.classList.remove('match', 'selected', 'candidate');
     });
   };
 
-  lierc.toggle_switcher = function() {
-    lierc.elem.switcher.querySelector('input').value = '';
-    if (lierc.elem.switcher.classList.contains('open')) {
-      lierc.hide_switcher();
+  app.toggle_switcher = function() {
+    app.elem.switcher.querySelector('input').value = '';
+    if (app.elem.switcher.classList.contains('open')) {
+      app.hide_switcher();
     }
     else {
-      lierc.elem.switcher.classList.add('open');
-      lierc.elem.nav.classList.add('filtering');
-      lierc.elem.nav.querySelectorAll('#channels li[data-name], #privates li[data-name]').forEach(function(li) {
+      app.elem.switcher.classList.add('open');
+      app.elem.nav.classList.add('filtering');
+      app.elem.nav.querySelectorAll('#channels li[data-name], #privates li[data-name]').forEach(function(li) {
         li.classList.add('candidate', 'match');
       });
-      var matches = lierc.elem.nav.querySelectorAll('li[data-name].candidate');
+      var matches = app.elem.nav.querySelectorAll('li[data-name].candidate');
       if (matches.length) {
         matches[0].classList.add('selected');
       }
-      lierc.elem.switcher.querySelector('input').focus();
+      app.elem.switcher.querySelector('input').focus();
     }
   };
 
-  lierc.save_channel_order = function() {
+  app.save_channel_order = function() {
     var order = Array.prototype.map.call(
-      lierc.elem.channels.querySelectorAll('li'),
+      app.elem.channels.querySelectorAll('li'),
       function(li) {
         return li.getAttribute('data-panel-id');
       });
 
-    lierc.sorting = order;
-    lierc.update_pref("sorting", order);
+    app.sorting = order;
+    app.update_pref("sorting", order);
   };
 
-  lierc.overlayed = function() {
-    return lierc.dialog && lierc.dialog.open;
+  app.overlayed = function() {
+    return app.dialog && app.dialog.open;
   };
 
-  lierc.close_dialog = function() {
-    if (lierc.dialog)
-      lierc.dialog.close();
-    lierc.dialog = null;
+  app.close_dialog = function() {
+    if (app.dialog)
+      app.dialog.close();
+    app.dialog = null;
   };
 
-  lierc.new_dialog = function(name, vars) {
-    if (lierc.dialog)
-      lierc.dialog.close();
+  app.new_dialog = function(name, vars) {
+    if (app.dialog)
+      app.dialog.close();
 
     var dialog = new Dialog(name, vars);
-    lierc.elem.flex_wrap.classList.remove('open');
-    dialog.append(lierc.elem.body);
+    app.elem.flex_wrap.classList.remove('open');
+    dialog.append(app.elem.body);
     var input = dialog.el.querySelector('input[type=text]')
-    if (!lierc.mobile && input) {
+    if (!app.mobile && input) {
       input.focus();
       input.select();
     }
-    lierc.dialog = dialog;
+    app.dialog = dialog;
     return dialog;
   };
 
-  lierc.reset = function() {
-    var path = lierc.focused ? lierc.focused.path : "";
+  app.reset = function() {
+    var path = app.focused ? app.focused.path : "";
 
-    for (id in lierc.panels) {
-      lierc.remove_panel(id);
+    for (id in app.panels) {
+      app.remove_panel(id);
     }
 
     window.history.replaceState({}, "", path);
-    lierc.default_focused = false;
-    lierc.connections = [];
-    lierc.last_seen = {};
-    lierc.missed = {};
-    lierc.focused = null;
+    app.default_focused = false;
+    app.connections = [];
+    app.last_seen = {};
+    app.missed = {};
+    app.focused = null;
 
-    lierc.load_seen(function() {
-      lierc.load_token(function() {
-        lierc.init();
+    app.load_seen(function() {
+      app.load_token(function() {
+        app.init();
       });
     });
   };
 
-  lierc.template = function(name, vars) {
+  app.template = function(name, vars) {
     return Handlebars.templates[name](vars);
   };
 
@@ -1140,6 +1140,6 @@ var Lierc = function(url, user) {
     return (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) return true; return false;})(navigator.userAgent||navigator.vendor||window.opera);
   };
 
-  var events = new UIEvents(lierc);
+  var events = new UIEvents(app);
   Emoji.load();
 };

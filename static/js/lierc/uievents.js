@@ -1,5 +1,5 @@
-var UIEvents = function(lierc) {
-  var lierc = lierc;
+var UIEvents = function(app) {
+  var app = app;
   var events = this;
   var max_userhost_len = 63 + 10 + 1;
 
@@ -34,11 +34,11 @@ var UIEvents = function(lierc) {
       mods['cmd'] = true;
       return;
     }
-    else if (e.which == 27 && lierc.overlayed()) {
-      lierc.close_dialog();
+    else if (e.which == 27 && app.overlayed()) {
+      app.close_dialog();
       return;
     }
-    else if (lierc.overlayed()) {
+    else if (app.overlayed()) {
       return;
     }
     else if (e.which == 27) {
@@ -47,17 +47,17 @@ var UIEvents = function(lierc) {
     }
 
     /* task switcher is open, special keys */
-    if (lierc.elem.switcher.classList.contains('open')) {
+    if (app.elem.switcher.classList.contains('open')) {
       //escape
       if (e.which == 27) {
-        lierc.hide_switcher();
-        lierc.focus_input();
+        app.hide_switcher();
+        app.focus_input();
         return;
       }
       // down or tab
       else if (e.which == 40 || e.which == 9) {
         e.preventDefault();
-        var items = lierc.elem.nav.querySelectorAll('li[data-name].candidate.match');
+        var items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
         for (var i=1; i < items.length; i++) {
           if (items[i - 1].classList.contains("selected")) {
@@ -70,7 +70,7 @@ var UIEvents = function(lierc) {
       // up
       else if (e.which == 38) {
         e.preventDefault();
-        var items = lierc.elem.nav.querySelectorAll('li[data-name].candidate.match');
+        var items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
         for (var i=0; i < items.length - 1; i++) {
           if (items[i + 1].classList.contains("selected")) {
@@ -82,12 +82,12 @@ var UIEvents = function(lierc) {
       }
       // enter
       else if (e.which == 13) {
-        var selected = lierc.elem.nav.querySelector('li.selected');
+        var selected = app.elem.nav.querySelector('li.selected');
         if (selected) {
           e.preventDefault();
           var id = selected.getAttribute('data-panel-id');
-          lierc.focus_panel(id);
-          lierc.hide_switcher();
+          app.focus_panel(id);
+          app.hide_switcher();
           return;
         }
       }
@@ -102,19 +102,19 @@ var UIEvents = function(lierc) {
     /* panel up */
     else if (e.which == 38 && mods['meta']) {
       e.preventDefault();
-      mods['shift'] ? lierc.prev_unread_panel() : lierc.prev_panel();
+      mods['shift'] ? app.prev_unread_panel() : app.prev_panel();
       return;
     }
     /* panel down */
     else if (e.which == 40 && mods['meta']) {
       e.preventDefault();
-      mods['shift'] ? lierc.next_unread_panel() : lierc.next_panel();
+      mods['shift'] ? app.next_unread_panel() : app.next_panel();
       return;
     }
     /* toggle task switcher */
     else if ((e.which == 75 || e.which == 84) && mods['meta']) {
       e.preventDefault();
-      lierc.toggle_switcher();
+      app.toggle_switcher();
       return;
     }
 
@@ -122,17 +122,17 @@ var UIEvents = function(lierc) {
 
     /* jump to panel by number */
     if ((mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
-      var panels = lierc.elem.nav.querySelectorAll('#channels li,#privates li');
+      var panels = app.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
-        lierc.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
+        app.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
         return;
       }
     }
 
-    if (lierc.focused) {
+    if (app.focused) {
       /* send to editor (bold, italic, tab complete) */
-      if (lierc.focused.editor.focused) {
-        lierc.focused.editor.keydown(e, mods);
+      if (app.focused.editor.focused) {
+        app.focused.editor.keydown(e, mods);
       }
       /* focus input area on a-z 0-9 keys */
       else if (
@@ -141,14 +141,14 @@ var UIEvents = function(lierc) {
         && ! mods['meta'] && ! mods['ctrl'] && ! mods['cmd']
         && ( c.match(/[a-zA-Z0-9\/]/) || e.which == 191 )
       ) {
-        lierc.focus_input();
+        app.focus_input();
       }
     }
   });
 
-  lierc.elem.switcher.addEventListener("input", function(e) {
-    var val = lierc.elem.switcher.querySelector('input').value;
-    var items = lierc.elem.nav.querySelectorAll('li[data-name]');
+  app.elem.switcher.addEventListener("input", function(e) {
+    var val = app.elem.switcher.querySelector('input').value;
+    var items = app.elem.nav.querySelectorAll('li[data-name]');
 
     val = val.toLowerCase();
     if (val) {
@@ -164,7 +164,7 @@ var UIEvents = function(lierc) {
       }
     }
     else {
-      lierc.elem.nav.querySelectorAll('li[data-name]').forEach(function(el) {
+      app.elem.nav.querySelectorAll('li[data-name]').forEach(function(el) {
         el.classList.add('match');
       });
     }
@@ -197,7 +197,7 @@ var UIEvents = function(lierc) {
     mods['ctrl'] = false;
     mods['cmd'] = false;
 
-    lierc.window_focused = false;
+    app.window_focused = false;
   });
 
   window.addEventListener("focus", function(e) {
@@ -206,8 +206,8 @@ var UIEvents = function(lierc) {
     mods['ctrl'] = false;
     mods['cmd'] = false;
 
-    lierc.window_focused = true;
-    lierc.focus_input();
+    app.window_focused = true;
+    app.focus_input();
   });
 
   document.addEventListener("keyup", function(e) {
@@ -225,8 +225,8 @@ var UIEvents = function(lierc) {
     if (e.target.hasAttribute('data-nick')) {
       e.preventDefault();
       var nick = e.target.getAttribute('data-nick');
-      var connection = lierc.focused.connection;
-      lierc.add_panel(nick, connection, true);
+      var connection = app.focused.connection;
+      app.add_panel(nick, connection, true);
     }
     document.querySelectorAll('.popup-toggle.open').forEach(function(el) {
       if (!el.contains(e.target)) {
@@ -237,9 +237,9 @@ var UIEvents = function(lierc) {
 
   function join_click(e) {
     e.preventDefault();
-    lierc.elem.flex_wrap.classList.remove('open');
-    var dialog = lierc.new_dialog("join", {
-      connections: Object.values(lierc.connections)
+    app.elem.flex_wrap.classList.remove('open');
+    var dialog = app.new_dialog("join", {
+      connections: Object.values(app.connections)
     });
 
     dialog.el.addEventListener('submit', function(e) {
@@ -247,21 +247,21 @@ var UIEvents = function(lierc) {
       var channel = dialog.el.querySelector('input[name=channel]').value;
       var select = dialog.el.querySelector('select');
       var conn = select.options[select.selectedIndex].value;
-      lierc.api.post('/connection/' + conn, {
+      app.api.post('/connection/' + conn, {
         body: "JOIN " + channel,
         headers: {
           'content-type': "application/irc",
-          'lierc-token' : lierc.post_token()
+          'app-token' : app.post_token()
         },
         success: function(res) {
-          lierc.post_tokens.push(res.token);
-          lierc.close_dialog();
+          app.post_tokens.push(res.token);
+          app.close_dialog();
         },
         error: function(e) {
-          lierc.close_dialog();
+          app.close_dialog();
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
-          lierc.load_token();
+          app.load_token();
         }
       });
     });
@@ -272,7 +272,7 @@ var UIEvents = function(lierc) {
   });
 
   document.querySelectorAll('.add-connection').forEach(function(el) {
-    el.addEventListener('click', lierc.config_modal);
+    el.addEventListener('click', app.config_modal);
   });
 
   document.querySelectorAll('#nav .nav-title')
@@ -291,40 +291,40 @@ var UIEvents = function(lierc) {
 
   clickTouchEvent(document.querySelector('#toggle-hideevents a'), function(e) {
     e.preventDefault();
-    lierc.focused.set_ignore_events(!lierc.focused.ignore_events);
-    lierc.update_pref(lierc.focused.id + "-ignore-events", lierc.focused.ignore_events);
+    app.focused.set_ignore_events(!app.focused.ignore_events);
+    app.update_pref(app.focused.id + "-ignore-events", app.focused.ignore_events);
   });
 
   clickTouchEvent(document.querySelector('#toggle-hideembeds a'), function(e) {
     e.preventDefault();
-    lierc.focused.set_collapse_embeds(!lierc.focused.collapse_embeds);
-    lierc.update_pref(lierc.focused.id + "-collapse-embeds", lierc.focused.collapse_embeds);
+    app.focused.set_collapse_embeds(!app.focused.collapse_embeds);
+    app.update_pref(app.focused.id + "-collapse-embeds", app.focused.collapse_embeds);
   });
 
   clickTouchEvent(document.querySelector('#toggle-nicks'), function(e) {
     e.preventDefault();
-    lierc.focused.set_show_nicklist(!lierc.focused.show_nicklist);
-    lierc.update_pref(lierc.focused.id + "-show-nicklist", lierc.focused.show_nicklist);
+    app.focused.set_show_nicklist(!app.focused.show_nicklist);
+    app.update_pref(app.focused.id + "-show-nicklist", app.focused.show_nicklist);
   });
 
-  lierc.elem.emoji.addEventListener('click', function(e) {
+  app.elem.emoji.addEventListener('click', function(e) {
     e.preventDefault();
     var emoji_search = document.querySelector('.emoji-search input');
 
     if (e.target.matches('li[data-chars]')) {
-      lierc.focus_input(true);
+      app.focus_input(true);
       document.execCommand("insertText", false, e.target.getAttribute('data-chars'));
 
-      lierc.elem.emoji.classList.remove("open");
+      app.elem.emoji.classList.remove("open");
       emoji_search.value = '';
-      Emoji.filter(lierc.elem.emoji, '');
+      Emoji.filter(app.elem.emoji, '');
     }
     if (e.target.matches('#emoji')) {
       e.target.classList.toggle('open');
-      if (!lierc.mobile) {
+      if (!app.mobile) {
         if (e.target.classList.contains('open')) {
           emoji_search.value = '';
-          Emoji.filter(lierc.elem.emoji, '');
+          Emoji.filter(app.elem.emoji, '');
           emoji_search.focus();
         }
       }
@@ -332,19 +332,19 @@ var UIEvents = function(lierc) {
   });
 
   function send_submit() {
-    var input = lierc.elem.input.querySelector(".input");
+    var input = app.elem.input.querySelector(".input");
     var value = Unformat(input.innerHTML);
     if (value == "") return;
     input.innerHTML = "";
     value = value.replace("\u200b", ""); // ew
 
-    var panel = lierc.panels[input.getAttribute('data-panel-id')];
-    var connection = lierc.connections[panel.connection];
+    var panel = app.panels[input.getAttribute('data-panel-id')];
+    var connection = app.connections[panel.connection];
     var send = [];
 
     if (value.substring(0,1) == "/") {
       try {
-         send.push(lierc.commands.handle(panel, value.substring(1)));
+         send.push(app.commands.handle(panel, value.substring(1)));
       }
       catch (e) {
         alert(e);
@@ -394,20 +394,20 @@ var UIEvents = function(lierc) {
 
     function sendlines(lines) {
       if (!lines.length) return;
-      lierc.api.post("/connection/" + panel.connection, {
+      app.api.post("/connection/" + panel.connection, {
         headers:{
           'content-type': 'application/irc',
-          'lierc-token' : lierc.post_token()
+          'app-token' : app.post_token()
         },
         body: lines.shift(),
         success: function(res) {
-          lierc.post_tokens.push(res.token);
+          app.post_tokens.push(res.token);
           if (lines.length)
             sendlines(lines);
         },
         error: function(e) {;
           alert("Error: " + e);
-          lierc.load_token();
+          app.load_token();
         }
       });
     }
@@ -444,7 +444,7 @@ var UIEvents = function(lierc) {
         submit.removeAttribute('disabled');
         text.removeAttribute('disabled');
         text.value = '';
-        lierc.focus_input(true);
+        app.focus_input(true);
         document.execCommand("insertText", false, res.html_url);
         document.getElementById('upload').classList.remove('open');
       }).catch(function(e) {
@@ -475,7 +475,7 @@ var UIEvents = function(lierc) {
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
-      lierc.focus_input(true);
+      app.focus_input(true);
       document.execCommand("insertText", false, res.data.link);
       document.getElementById('upload').classList.remove('open');
       image.value = null;
@@ -494,7 +494,7 @@ var UIEvents = function(lierc) {
 
   clickTouchEvent(document.getElementById("help"), function(e) {
     e.preventDefault();
-    lierc.new_dialog("help");
+    app.new_dialog("help");
   });
 
   clickTouchEvent(document.getElementById('logout'), function(e) {
@@ -503,18 +503,18 @@ var UIEvents = function(lierc) {
     if (!confirm("Are you sure you want to log out?"))
       return;
 
-    lierc.api.logout();
+    app.api.logout();
   });
 
   window.addEventListener('resize', function(e) {
-    if (lierc.focused) {
-      lierc.focused.scroll(true);
-      lierc.focused.resize_filler();
+    if (app.focused) {
+      app.focused.scroll(true);
+      app.focused.resize_filler();
     }
   });
 
   document.addEventListener('copy', function(e) {
-    if ( lierc.overlayed() )
+    if ( app.overlayed() )
       return;
 
     e.preventDefault();
@@ -549,7 +549,7 @@ var UIEvents = function(lierc) {
   });
 
   document.addEventListener('paste', function(e) {
-    if (lierc.overlayed())
+    if (app.overlayed())
       return;
     if (document.activeElement.matches('#gist-upload-input'))
       return;
@@ -560,7 +560,7 @@ var UIEvents = function(lierc) {
     var items = clipboard.items;
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
-        lierc.focus_input();
+        app.focus_input();
         var blob = items[i].getAsFile();
         var fd = new FormData();
         fd.append("image", blob);
@@ -569,7 +569,7 @@ var UIEvents = function(lierc) {
         xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
         xhr.onload = function() {
           var res = JSON.parse(xhr.responseText);
-          lierc.focus_input(true);
+          app.focus_input(true);
           document.execCommand("insertText", false, res.data.link);
         };
         xhr.send(fd);
@@ -577,7 +577,7 @@ var UIEvents = function(lierc) {
       }
     }
 
-    lierc.focus_input();
+    app.focus_input();
     var lines = clipboard.getData("Text").trim().split(/[\r\n]/);
     var text = lines.map(function(line) { return line.trim(); })
       .filter(function(line) { return line.match(/\S/); })
@@ -587,7 +587,7 @@ var UIEvents = function(lierc) {
 
   clickTouchEvent(document.querySelector('.flex-wrap-left header'), function(e) {
     e.preventDefault();
-    lierc.elem.flex_wrap.classList.toggle('open');
+    app.elem.flex_wrap.classList.toggle('open');
   });
 
   document.addEventListener('input', function(e) {
@@ -601,10 +601,10 @@ var UIEvents = function(lierc) {
       e.preventDefault();
       this.classList.toggle('enabled');
       var enabled = e.target.classList.contains('enabled');
-      lierc.update_pref("email", enabled);
+      app.update_pref("email", enabled);
   });
 
-  lierc.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.message-menu, .message-menu *'))
       return;
 
@@ -632,7 +632,7 @@ var UIEvents = function(lierc) {
       if (toggle.classList.contains('open')) {
         var has_child = toggle.querySelector('.message-menu-popup');
         if (!has_child) {
-          var html = lierc.template('message_menu', {
+          var html = app.template('message_menu', {
             is_monospace: is_monospace
           });
           toggle.insertAdjacentHTML('beforeend', html);
@@ -651,15 +651,15 @@ var UIEvents = function(lierc) {
       controls.classList.remove('open');
       var nick = message.querySelector('.message-nick').getAttribute('data-nick');
       if (is_monospace) {
-        lierc.remove_monospace_nick(lierc.focused, nick);
+        app.remove_monospace_nick(app.focused, nick);
       }
       else {
-        lierc.add_monospace_nick(lierc.focused, nick);
+        app.add_monospace_nick(app.focused, nick);
       }
     }
   });
 
-  lierc.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.embed-toggle'))
       return;
 
@@ -674,22 +674,22 @@ var UIEvents = function(lierc) {
     }
     else {
       var a = toggle.previousSibling;
-      lierc.focused.embed(a, embed, true);
+      app.focused.embed(a, embed, true);
     }
   });
 
-  lierc.elem.topic.addEventListener('click', function(e) {
-    if (lierc.focused) {
+  app.elem.topic.addEventListener('click', function(e) {
+    if (app.focused) {
       if (e.target.nodeName != 'A') {
         var elem = this;
-        lierc.focused.scroll(function() {
+        app.focused.scroll(function() {
           elem.classList.toggle('expanded');
         });
       }
     }
   });
 
-  lierc.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches(
       '.embed-wrap[data-embed-id]:not(.open),' +
       '.embed-wrap[data-embed-id]:not(.open) *'
@@ -718,7 +718,7 @@ var UIEvents = function(lierc) {
     });
   });
 
-  lierc.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches('.message-react, .message-react *'))
       return;
 
@@ -755,7 +755,7 @@ var UIEvents = function(lierc) {
         message = message.parentNode;
       }
       var hash = message.getAttribute('data-message-hash');
-      var panel = lierc.focused;
+      var panel = app.focused;
 
       react.classList.remove('open');
       controls.classList.remove('open');
@@ -765,32 +765,32 @@ var UIEvents = function(lierc) {
       if (! (emoji && hash && panel))
         return;
 
-      lierc.api.post("/connection/" + panel.connection, {
+      app.api.post("/connection/" + panel.connection, {
         body: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
         headers: {
-          'lierc-token' : lierc.post_token(),
+          'app-token' : app.post_token(),
           'content-type': "application/irc",
         },
         success: function(res) {
-          lierc.post_tokens.push(res.token);
+          app.post_tokens.push(res.token);
         },
         error: function(e) {
           var res = JSON.parse(e.responseText);
           alert("Error: " + res.error);
-          lierc.load_token();
+          app.load_token();
         }
       });
     }
   });
 
   window.addEventListener("beforeunload", function() {
-    if (lierc.focused) {
-      lierc.focused.update_seen();
-      lierc.save_seen(lierc.focused, true);
+    if (app.focused) {
+      app.focused.update_seen();
+      app.save_seen(app.focused, true);
     }
   });
 
-  lierc.elem.panel.addEventListener('transitionend', function(e) {
+  app.elem.panel.addEventListener('transitionend', function(e) {
     if (e.target.matches('li.chat'))
       e.target.classList.remove('loading', 'loaded');
   });
