@@ -1,5 +1,5 @@
-class Editor (element) {
-  constructor {
+class Editor {
+  constructor (element) {
     this.el = element
     this.info = document.getElementById('color-info')
     this.completion = new Completion(element)

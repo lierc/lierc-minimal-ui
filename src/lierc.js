@@ -116,14 +116,14 @@ class Lierc {
       var connection = this.connections[conn]
       var from = message.Prefix.Name != connection.nick
 
-      panel.append(Render(message))
+      panel.append(Message.render(message))
 
       if (from && (!this.is_focused(panel) || !panel.is_scrolled())) { this.elem.audio.play() }
     })
 
     connection.on('channel:msg', (conn, channel, message) =>  {
       var panel = this.get_panel(channel, conn)
-      var html = Render(message)
+      var html = Message.render(message)
       if (html) {
         panel.append(html)
 
@@ -159,12 +159,12 @@ class Lierc {
 
     connection.on('status:raw', (conn, message) => {
       var panel = this.get_panel('status', conn)
-      panel.append(Render(message, true))
+      panel.append(Message.render(message, true))
     })
 
     connection.on('status', (conn, message) =>  {
       var panel = this.get_panel('status', conn)
-      panel.append(Render(message))
+      panel.append(Message.render(message))
     })
 
     connection.on('connect', (conn, message) => {
@@ -561,7 +561,7 @@ class Lierc {
           message.Highlight = e.Highlight
 
           if (this.is_reaction(message)) { reactions.push(message) } else {
-            var el = Render(message)
+            var el = Message.render(message)
             if (el) { list.push(el) }
           }
         })
@@ -982,14 +982,10 @@ class Lierc {
         for (var i = messages.length - 1; i >= 0; i--) {
           var msg = messages[i].Message
           msg.Search = true
-          panel.append(Render(msg))
+          panel.append(Message.render(msg))
         }
       }
     })
-  }
-
-  update_email_pref (disabled) {
-
   }
 
   focus_input (force) {

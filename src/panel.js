@@ -517,7 +517,7 @@ class Panel {
     this.elem.topic.childNodes.forEach( el => {
       this.elem.topic.removeChild(el)
     })
-    Format(topic.value).forEach( el => {
+    Format.html(topic.value).forEach( el => {
       this.elem.topic.appendChild(el)
     })
 

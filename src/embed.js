@@ -26,7 +26,7 @@ class Embed {
           return res.json()
         }).then( res => {
           if (!res.error) {
-            panel.scroll( => {
+            panel.scroll( () => {
               var toggle = document.createElement('SPAN')
               res['id'] = 'embed-' + String(id)
               toggle.setAttribute('data-embed', JSON.stringify(res))

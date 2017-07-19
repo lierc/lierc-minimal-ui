@@ -1,56 +1,25 @@
-class Unformat {
-  static block = [
-    'DIV'
+class Format {
+  static url_re = /(https?:\/\/[^\s<"]*)/ig
+  static token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/
+  static color_map = [
+    'white',
+    'black',
+    'navy',
+    'green',
+    'red',
+    'maroon',
+    'purple',
+    'olive',
+    'yellow',
+    'lightgreen',
+    'teal',
+    'cyan',
+    'royalblue',
+    'magenta',
+    'gray',
+    'lightgray'
   ]
 
-  static tags = {
-    'B': '\x02',
-    'U': '\x1F',
-    'I': '\x1D'
-  }
-
-  static invert = '\x16'
-
-  static irc_text (html) {
-    var parser = new DOMParser()
-    var doc = parser.parseFromString(html, 'text/html')
-    return Format.descend(doc, '')
-  }
-
-  static descend (node, string) {
-    if (node.nodeType == 3) {
-      string += node.textContent.replace(/^\u200b/, '')
-    } else if (node.nodeType == 1 || node.nodeType == 9) {
-      if (Unformat.block.indexOf(node.nodeName) != -1) {
-        string += '\n'
-      }
-      if (Unformat.tags[node.nodeName]) {
-        string += Unformat.tags[node.nodeName]
-      }
-      if (node.nodeType == 1) {
-        if (node.classList && node.classList.contains('invert')) { string += Unformat.invert }
-        if (node.hasAttribute('data-color-fg')) {
-          string += '\x03' + node.getAttribute('data-color-fg')
-          if (node.hasAttribute('data-color-bg')) {
-            string += ',' + node.getAttribute('data-color-bg')
-          }
-        }
-        if (node.hasAttribute('data-color-reset')) {
-          string += '\x03'
-        }
-      }
-      for (var i = 0; i < node.childNodes.length; i++) {
-        string = Unformat.descend(node.childNodes[i], string)
-      }
-      if (Unformat.tags[node.nodeName]) {
-        string += Unformat.tags[node.nodeName]
-      }
-    }
-    return string
-  }
-}
-
-class Format {
   static html (text) {
     var tokens = text.split(Format.token_re)
 
@@ -79,9 +48,6 @@ class Format {
       return Format.linkify(span)
     })
   }
-
-  static url_re = /(https?:\/\/[^\s<"]*)/ig
-  static token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/
 
   static linkify (elem) {
     var children = elem.childNodes
@@ -150,25 +116,6 @@ class Format {
       underline: node.underline
     }
   }
-
-  static color_map = [
-    'white',
-    'black',
-    'navy',
-    'green',
-    'red',
-    'maroon',
-    'purple',
-    'olive',
-    'yellow',
-    'lightgreen',
-    'teal',
-    'cyan',
-    'royalblue',
-    'magenta',
-    'gray',
-    'lightgray'
-  ]
 
   static parse (acc, tokens) {
     if (tokens.length == 0) { return acc }
