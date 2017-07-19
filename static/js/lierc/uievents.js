@@ -632,7 +632,7 @@ var UIEvents = function(app) {
       if (toggle.classList.contains('open')) {
         var has_child = toggle.querySelector('.message-menu-popup');
         if (!has_child) {
-          var html = app.template('message_menu', {
+          var html = Template('message_menu', {
             is_monospace: is_monospace
           });
           toggle.insertAdjacentHTML('beforeend', html);
