@@ -251,7 +251,7 @@ var UIEvents = function(app) {
         body: "JOIN " + channel,
         headers: {
           'content-type': "application/irc",
-          'app-token' : app.post_token()
+          'lierc-token' : app.post_token()
         },
         success: function(res) {
           app.post_tokens.push(res.token);
@@ -397,7 +397,7 @@ var UIEvents = function(app) {
       app.api.post("/connection/" + panel.connection, {
         headers:{
           'content-type': 'application/irc',
-          'app-token' : app.post_token()
+          'lierc-token' : app.post_token()
         },
         body: lines.shift(),
         success: function(res) {
@@ -768,7 +768,7 @@ var UIEvents = function(app) {
       app.api.post("/connection/" + panel.connection, {
         body: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
         headers: {
-          'app-token' : app.post_token(),
+          'lierc-token' : app.post_token(),
           'content-type': "application/irc",
         },
         success: function(res) {
