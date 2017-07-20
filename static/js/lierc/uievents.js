@@ -3,14 +3,6 @@ var UIEvents = function(app) {
   var events = this;
   var max_userhost_len = 63 + 10 + 1;
   var lang = window.navigator.language;
-  var en = lang.match(/^en-/);
-
-  var mods = {
-    meta: false,
-    shift: false,
-    ctrl: false,
-    cmd: false
-  };
 
   function clickTouchEvent(el, f) {
     ['click', 'touch'].forEach(function(type) {
@@ -19,24 +11,14 @@ var UIEvents = function(app) {
   }
 
   document.addEventListener("keydown", function(e) {
-    /* track modifier keys */
-    if (e.which == 17) {
-      mods['ctrl'] = true;
-      return;
-    }
-    else if (e.which == 18) {
-      mods['meta'] = true;
-      return;
-    }
-    else if (e.which == 16) {
-      mods['shift'] = true;
-      return;
-    }
-    else if (e.which == 91 || e.which == 93 || e.which == 224 ) {
-      mods['cmd'] = true;
-      return;
-    }
-    else if (e.which == 27 && app.overlayed()) {
+    var mods = {
+      meta: e.altKey,
+      shift: e.shiftKey,
+      ctrl: e.ctrlKey,
+      cmd: e.metaKey
+    };
+
+    if (e.which == 27 && app.overlayed()) {
       app.close_dialog();
       return;
     }
@@ -123,7 +105,7 @@ var UIEvents = function(app) {
     var c = String.fromCharCode(e.which);
 
     /* jump to panel by number */
-    if (en && (mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
+    if ((mods['cmd'] || (!mods['ctrl'] && mods['meta'])) && c.match(/^[1-9]$/)) {
       var panels = app.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
         app.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
@@ -194,33 +176,12 @@ var UIEvents = function(app) {
   });
 
   window.addEventListener("blur", function(e) {
-    mods['shift'] = false;
-    mods['meta'] = false;
-    mods['ctrl'] = false;
-    mods['cmd'] = false;
-
     app.window_focused = false;
   });
 
   window.addEventListener("focus", function(e) {
-    mods['shift'] = false;
-    mods['meta'] = false;
-    mods['ctrl'] = false;
-    mods['cmd'] = false;
-
     app.window_focused = true;
     app.focus_input();
-  });
-
-  document.addEventListener("keyup", function(e) {
-    if (e.which == 18)
-      mods['meta'] = false;
-    if (e.which == 16)
-      mods['shift'] = false;
-    if (e.which == 17)
-      mods['ctrl'] = false;
-    if (e.which == 91)
-      mods['cmd'] = false;
   });
 
   document.addEventListener('click', function(e) {
