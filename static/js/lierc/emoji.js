@@ -80,7 +80,7 @@ Emoji.load = function() {
 
     function append_chunk () {
       var chunk = data.splice(0, 50);
-      if (emoji.length > 0) {
+      if (chunk.length > 0) {
         var html = Template("emoji", { emoji:  chunk });
         Emoji.list.insertAdjacentHTML('beforeend', html);
       }
