@@ -2,6 +2,8 @@ var UIEvents = function(app) {
   var app = app;
   var events = this;
   var max_userhost_len = 63 + 10 + 1;
+  var lang = window.navigator.language;
+  var en = lang.match(/^en-/);
 
   var mods = {
     meta: false,
@@ -121,7 +123,7 @@ var UIEvents = function(app) {
     var c = String.fromCharCode(e.which);
 
     /* jump to panel by number */
-    if ((mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
+    if (en && (mods['cmd'] || mods['meta']) && c.match(/^[1-9]$/)) {
       var panels = app.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
         app.focus_panel(panels[c - 1].getAttribute("data-panel-id"));

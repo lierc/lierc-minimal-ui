@@ -110,7 +110,7 @@ Format.linkify = function(elem) {
 
       for (var j=0; j < chars.length; j++) {
         var title = Emoji.names[chars[j]];
-        escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span title="'+title+'">' + chars[j] + '</span>');
+        escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span class="emoji" title="'+title+'">' + chars[j] + '</span>');
       }
       span.innerHTML = escaped;
       node.parentNode.replaceChild(span, node);

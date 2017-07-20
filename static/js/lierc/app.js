@@ -1024,6 +1024,7 @@ var App = function(url, user) {
     app.load_seen(function() {
       app.load_token(function() {
         app.init();
+        Emoji.load();
       });
     });
   });
@@ -1137,5 +1138,4 @@ var App = function(url, user) {
   };
 
   var events = new UIEvents(app);
-  Emoji.load();
 };

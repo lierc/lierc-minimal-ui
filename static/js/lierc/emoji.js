@@ -75,18 +75,19 @@ Emoji.load = function() {
       else
         return 1;
     });
+
     Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "g");
 
-    for (var i=0; i < data.length; i++) {
-      var li = document.createElement('LI');
-      li.setAttribute('data-chars', data[i]['chars']);
-      li.setAttribute('data-keywords', data[i]['keywords'].toLowerCase());
-      li.setAttribute('data-name', data[i]['name'].toLowerCase());
-      li.setAttribute('title', data[i]['name']);
-      li.textContent = data[i]['chars'];
-
-      Emoji.list.appendChild(li);
+    function append_chunk () {
+      var chunk = data.splice(0, 50);
+      if (chunk.length == 50) {
+        var html = Template("emoji", { emoji:  chunk });
+        Emoji.list.insertAdjacentHTML('beforeend', html);
+        window.requestAnimationFrame(append_chunk);
+      }
     }
+
+    window.requestAnimationFrame(append_chunk);
   });
 };
 

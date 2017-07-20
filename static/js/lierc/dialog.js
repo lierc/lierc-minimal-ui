@@ -2,7 +2,7 @@ var Dialog = function(template, vars) {
   this.open = false;
   this.el = document.createElement('DIV');
   this.el.classList.add('overlay');
-  this.el.innerHTML = Template[template](vars);
+  this.el.innerHTML = Template(template, vars);
 
   this.append = function(p) {
     this.open = true;

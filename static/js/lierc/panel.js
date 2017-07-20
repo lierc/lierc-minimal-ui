@@ -311,14 +311,35 @@ var Panel = function(name, id, connection, mobile) {
     panel.resize_filler();
 
     for (var i=0; i < els.length; i++) {
-      panel.imagify(els[i], false);
-      panel.vidify(els[i], false);
-      panel.audify(els[i], false);
+      panel.imagify(els[i]);
+      panel.vidify(els[i]);
+      panel.audify(els[i]);
+      panel.emojify(els[i]);
     }
 
     Embed.embed_all(els, panel);
 
     panel.last_seen_separator();
+  };
+
+  panel.emojify = function(el) {
+    var message = el.querySelector(".message-text");
+    if (!message)
+      return;
+    var emojis = message.querySelectorAll("span.emoji");
+    if (emojis.length != 1)
+      return;
+    var e = emojis[0];
+    if (e.innerText != message.innerText)
+      return;
+    panel.scroll(function() {
+      var wrap = document.createElement('DIV');
+      wrap.className = "emoji-wrap";
+      e.parentNode.removeChild(e);
+      e.className = "emoji-large";
+      wrap.appendChild(e);
+      message.appendChild(wrap);
+    });
   };
 
   panel.embed = function(a, embed, manual) {
@@ -436,6 +457,7 @@ var Panel = function(name, id, connection, mobile) {
             panel.imagify(el);
             panel.vidify(el);
             panel.audify(el);
+            panel.emojify(el);
             Embed.embed_all([el], panel);
           }
         }

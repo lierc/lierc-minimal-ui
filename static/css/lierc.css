@@ -1199,6 +1199,18 @@ ul.channel-controls li a:hover {
   flex-grow: 1;
 }
 
+.emoji-wrap {
+  line-height: 0px;
+}
+
+.emoji-large {
+  font-size: 48px;
+  line-height: 64px;
+  display: inline-block;
+  height: 64px;
+  overflow: hidden;
+}
+
 #emoji {
   cursor: pointer;
 }
