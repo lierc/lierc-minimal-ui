@@ -296,18 +296,21 @@ var UIEvents = function(app) {
 
   function send_submit() {
     var input = app.elem.input.querySelector(".input");
+    var text = input.textContent.trim();
+    if (text == "") return;
+
     var value = Unformat(input.innerHTML);
-    if (value == "") return;
     input.innerHTML = "";
     value = value.replace("\u200b", ""); // ew
+    text = text.replace("\u200b", ""); // ew
 
     var panel = app.panels[input.getAttribute('data-panel-id')];
     var connection = app.connections[panel.connection];
     var send = [];
 
-    if (value.substring(0,1) == "/") {
+    if (text.substring(0,1) == "/") {
       try {
-         send.push(app.commands.handle(panel, value.substring(1)));
+         send.push(app.commands.handle(panel, text.substring(1)));
       }
       catch (e) {
         alert(e);
