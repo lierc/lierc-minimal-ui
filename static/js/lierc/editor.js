@@ -175,8 +175,10 @@ var Editor = function(element) {
       var sel = window.getSelection();
       var range = sel.getRangeAt(0);
       var last = editor.el.lastChild;
-      range.setStartAfter(last);
-      range.setEndAfter(last);
+      if (last) {
+        range.setStartAfter(last);
+        range.setEndAfter(last);
+      }
       return;
     }
 
@@ -187,8 +189,10 @@ var Editor = function(element) {
       var sel = window.getSelection();
       var range = sel.getRangeAt(0);
       var last = editor.el.lastChild;
-      range.setStartAfter(last);
-      range.setEndAfter(last);
+      if (last) {
+        range.setStartAfter(last);
+        range.setEndAfter(last);
+      }
       return;
     }
 
