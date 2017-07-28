@@ -9,10 +9,13 @@ var Editor = function(element) {
   var RESET = 79;
 
   var TAB = 9;
+  var UP = 38;
+  var DOWN = 40;
 
   editor.el = element;
   editor.info = document.getElementById('color-info');
   editor.completion = new Completion(element);
+  editor.history = new History(element);
   editor.focused = false;
   editor.coloring = false;
   editor.color = "";
@@ -164,6 +167,32 @@ var Editor = function(element) {
     }
 
     editor.completion.stop();
+
+    if (e.which == UP && !mods['ctrl'] && !mods['meta'] && !mods['shift']) {
+      e.preventDefault();
+      editor.history.up();
+
+      var sel = window.getSelection();
+      var range = sel.getRangeAt(0);
+      var last = editor.el.lastChild;
+      range.setStartAfter(last);
+      range.setEndAfter(last);
+      return;
+    }
+
+    if (e.which == DOWN && !mods['ctrl'] && !mods['meta'] && !mods['shift']) {
+      e.preventDefault();
+      editor.history.down();
+
+      var sel = window.getSelection();
+      var range = sel.getRangeAt(0);
+      var last = editor.el.lastChild;
+      range.setStartAfter(last);
+      range.setEndAfter(last);
+      return;
+    }
+
+
   };
 
   editor.blur = function() {

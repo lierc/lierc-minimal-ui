@@ -17,7 +17,7 @@ var History = function(element) {
       index = 0;
     }
 
-    this.el.value = history[index];
+    this.el.innerHTML = history[index];
   };
 
   this.tail = function(rev) {
@@ -32,7 +32,7 @@ var History = function(element) {
 
   this.current = function() {
     if (current === null) {
-      current = this.el.value;
+      current = this.el.innerHTML;
     }
     return current;
   };
@@ -52,11 +52,11 @@ var History = function(element) {
       index = history.length - 1;
     }
 
-    this.el.value = history[index];
+    this.el.innerHTML = history[index];
   };
 
   this.record = function() {
-    this.history.unshift(this.el.value);
+    this.history.unshift(this.el.innerHTML);
     current = null;
     if (this.history.length > this.limit)
       this.history = this.history.slice(0, this.limit);

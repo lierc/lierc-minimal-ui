@@ -296,15 +296,17 @@ var UIEvents = function(app) {
 
   function send_submit() {
     var input = app.elem.input.querySelector(".input");
+    var panel = app.panels[input.getAttribute('data-panel-id')];
     var text = input.textContent.trim();
     if (text == "") return;
+
+    panel.editor.history.record();
 
     var value = Unformat(input.innerHTML);
     input.innerHTML = "";
     value = value.replace("\u200b", ""); // ew
     text = text.replace("\u200b", ""); // ew
 
-    var panel = app.panels[input.getAttribute('data-panel-id')];
     var connection = app.connections[panel.connection];
     var send = [];
 
@@ -338,6 +340,11 @@ var UIEvents = function(app) {
           var words = value.split(/(\b)/);
           var len = 0;
           var buf = [];
+
+          if (words.length > max * 20) {
+            alert("This is too much text!");
+            return;
+          }
 
           for (var i=0; i < words.length; i++) {
             var word = words[i];
