@@ -192,7 +192,7 @@ var Editor = function(element) {
       return;
     }
 
-
+    editor.history.reset();
   };
 
   editor.blur = function() {
