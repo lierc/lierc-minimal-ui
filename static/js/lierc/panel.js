@@ -532,9 +532,9 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.update_topic = function(topic) {
-    panel.elem.topic.childNodes.forEach(function(el) {
-      panel.elem.topic.removeChild(el);
-    });
+    while (panel.elem.topic.firstChild) {
+      panel.elem.topic.removeChild(panel.elem.topic.firstChild);
+    }
     Format(topic.value).forEach(function(el) {
       panel.elem.topic.appendChild(el);
     });
