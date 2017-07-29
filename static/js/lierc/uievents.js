@@ -772,4 +772,10 @@ var UIEvents = function(app) {
     if (e.target.matches('li.chat'))
       e.target.classList.remove('loading', 'loaded');
   });
+
+  document.onselectionchange = function(e) {
+    if (app.focused && app.focused.editor.focused) {
+      app.focused.editor.save_selection();
+    }
+  };
 }

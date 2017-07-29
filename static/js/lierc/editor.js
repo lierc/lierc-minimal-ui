@@ -19,6 +19,7 @@ var Editor = function(element) {
   editor.focused = false;
   editor.coloring = false;
   editor.color = "";
+  editor.range = null;
 
   var osx = window.navigator.userAgent.match(/Macintosh/);
 
@@ -205,8 +206,21 @@ var Editor = function(element) {
 
   editor.focus = function() {
     editor.focused = true;
+    if (editor.range) {
+      var s = window.getSelection();
+      s.removeAllRanges();
+      s.addRange(editor.range);
+    }
   };
-  
+
+  editor.save_selection = function() {
+    var s = window.getSelection();
+    if (s.rangeCount > 0)
+      editor.range = s.getRangeAt(0);
+    else
+      editor.range = null;
+  };
+
   editor.el.addEventListener("blur", editor.blur);
   editor.el.addEventListener("focus", editor.focus);
 };
