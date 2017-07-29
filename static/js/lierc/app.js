@@ -370,9 +370,9 @@ var App = function(url, user) {
     app.panels[id] = panel;
 
     if (panel.type == "status")
-      app.elem.status.append(panel.elem.nav);
+      app.elem.status.appendChild(panel.elem.nav);
     else if (panel.type == "private")
-      app.elem.privates.append(panel.elem.nav);
+      app.elem.privates.appendChild(panel.elem.nav);
     else
       app.insert_sorted_nav(panel);
 
