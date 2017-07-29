@@ -8,6 +8,10 @@ body {
   text-rendering: optimizeLegibility;
   font-size: 14px;
   overflow-x: hidden;
+  -webkit-text-size-adjust: none;
+  -moz-text-size-adjust: none;
+  -ms-text-size-adjust: none;
+  text-size-adjust: none;
 }
 
 body,input {
@@ -649,8 +653,6 @@ body.disconnected #reconnect {
   line-height: 14px;
   font-size: 14px;
   color: #555;
-  -webkit-text-size-adjust: none;
-  text-size-adjust: none;
 }
 
 .overlay {
