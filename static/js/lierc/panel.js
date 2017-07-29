@@ -19,7 +19,6 @@ var Panel = function(name, id, connection, mobile) {
   panel.first_focus = true;
   panel.last_seen = null;
   panel.path = window.location.pathname + "#/" + connection.id + "/" + encodeURIComponent(name);
-  panel.observers = {};
 
   panel.mode = "";
   panel.network = connection.host;
@@ -229,7 +228,6 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.clear_lists = function() {
-    panel.remove_observers(panel.elem.list);
     var list = panel.elem.list;
     while (list.firstChild) {
       list.removeChild(list.firstChild);
@@ -552,20 +550,9 @@ var Panel = function(name, id, connection, mobile) {
 
     if (els.length > 200) {
       els.slice(0, 200).forEach(function(el) {
-        panel.remove_observers(el);
         el.parentNode.removeChild(el);
       });
     }
-  };
-
-  panel.remove_observers = function(els) {
-    els.querySelectorAll('[data-embed-id]').forEach(function(el) {
-      var id = el.getAttribute('data-embed-id');
-      if (panel.observers[id]) {
-        panel.observers[id].disconnect();
-        delete panel.observers[id];
-      }
-    });
   };
 
   panel.editor = new Editor(panel.elem.input);
