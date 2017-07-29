@@ -304,6 +304,7 @@ var UIEvents = function(app) {
 
     var value = Unformat(input.innerHTML);
     input.innerHTML = "";
+    panel.editor.save_selection();
     value = value.replace("\u200b", ""); // ew
     text = text.replace("\u200b", ""); // ew
 
