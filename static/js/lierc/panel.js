@@ -240,7 +240,6 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.prepend = function(els) {
     var list = panel.elem.list;
-    var height = panel.inner.getBoundingClientRect().height;
 
     var prev_time, prev_nick, prev_mono;
     var length = els.length;
@@ -866,14 +865,22 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.scroll_bottom = function(set) {
     var s = panel.scroller.scrollHeight;
-    var h = panel.scroller.clientHeight;
 
     if (set !== undefined) {
-      panel.scroller.scrollTop = (s - h) - set;
+      if (set <= 5) {
+        panel.scroller.scrollTop = s;
+        return set;
+      }
+      var h = panel.scroller.clientHeight;
+      var t = (s - h) - set;
+      panel.scroller.scrollTop = t;
+      return set;
     }
-    else {
-      var t = panel.scroller.scrollTop;
-      return s - (t + h);
-    }
+
+    var s = panel.scroller.scrollHeight;
+    var h = panel.scroller.clientHeight;
+    var t = panel.scroller.scrollTop;
+    var b = s - (t + h);
+    return b;
   };
 };

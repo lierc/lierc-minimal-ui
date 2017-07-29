@@ -640,15 +640,17 @@ var UIEvents = function(app) {
     var toggle = e.target;
     var embed = JSON.parse(toggle.getAttribute('data-embed'));
 
-    toggle.classList.toggle('hidden');
-    if (toggle.classList.contains('hidden')) {
-      var wrap = document.querySelector(".embed-wrap[data-embed-id='"+embed.id+"']");
-      wrap.parentNode.parentNode.removeChild(wrap.parentNode);
-    }
-    else {
-      var a = toggle.previousSibling;
-      app.focused.embed(a, embed, true);
-    }
+    app.focused.scroll(function() {
+      toggle.classList.toggle('hidden');
+      if (toggle.classList.contains('hidden')) {
+        var wrap = document.querySelector(".embed-wrap[data-embed-id='"+embed.id+"']");
+        wrap.parentNode.parentNode.removeChild(wrap.parentNode);
+      }
+      else {
+        var a = toggle.previousSibling;
+        app.focused.embed(a, embed, true);
+      }
+    });
   });
 
   app.elem.topic.addEventListener('click', function(e) {
@@ -676,18 +678,21 @@ var UIEvents = function(app) {
     var id = p.getAttribute('data-embed-id');
     var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
     var embed = JSON.parse(a.getAttribute('data-embed'));
-    p.classList.add('open');
-    p.innerHTML = embed.html;
 
-    var head = document.querySelector('head');
-    p.querySelectorAll('script').forEach(function(el) {
-      var s = el.parentNode.removeChild(el);
-      var script = document.createElement('SCRIPT');
-      var attrs = s.attributes;
-      for (var i=0; i < attrs.length; i ++) {
-        script.setAttribute(attrs[i].name, attrs[i].value);
-      }
-      head.appendChild(script);
+    app.focused.scroll(function() {
+      p.classList.add('open');
+      p.innerHTML = embed.html;
+
+      var head = document.querySelector('head');
+      p.querySelectorAll('script').forEach(function(el) {
+        var s = el.parentNode.removeChild(el);
+        var script = document.createElement('SCRIPT');
+        var attrs = s.attributes;
+        for (var i=0; i < attrs.length; i ++) {
+          script.setAttribute(attrs[i].name, attrs[i].value);
+        }
+        head.appendChild(script);
+      });
     });
   });
 
