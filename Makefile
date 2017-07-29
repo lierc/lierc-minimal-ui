@@ -36,3 +36,9 @@ static/site.css: $(css)
 .PHONY: watch
 watch:
 	bin/watch --exec make --dir . --ignore .gz --ignore .br --ignore .map.js
+
+.PHONY: emoji
+emoji:
+	bin/update-emoji > static/emoji-data.json
+	cat static/emoji-data.json | gzip > static/emoji-data.json.gz
+	cat static/emoji-data.json | bro > static/emoji-data.json.br
