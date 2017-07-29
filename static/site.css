@@ -60,7 +60,7 @@ a:hover {
   opacity: 1;
   content: "\f110";
   color: #ffa130;
-  transition: opacity 0.5s;
+  transition: opacity 0.1s;
   -webkit-animation: fa-spin 2s infinite linear;
   animation: fa-spin 2s infinite linear;
 }
