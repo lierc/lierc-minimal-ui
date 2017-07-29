@@ -809,7 +809,7 @@ var App = function(url, user) {
       return;
     }
 
-    if (app.elem.scroll.scrollTop <= 150) {
+    if (app.elem.scroll.scrollTop == 0) {
       app.filling_backlog = true;
       app.fill_backlog(
         app.focused, app.focused.oldest_message_id()
@@ -995,12 +995,11 @@ var App = function(url, user) {
       data: { query: text, limit: 10 },
       success: function(messages) {
         if (messages.length > 0) {
-          var line = document.createElement('DIV');
-          line.classList.add('search-start');
-          var scrolled = panel.is_scrolled();
-          panel.elem.list.appendChild(line);
-          if (scrolled)
-            panel.scroll();
+          panel.scroll(function() {
+            var line = document.createElement('DIV');
+            line.classList.add('search-start');
+            panel.elem.list.appendChild(line);
+          });
         }
 
         for (var i=messages.length - 1; i >= 0; i--) {

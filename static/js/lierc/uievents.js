@@ -481,7 +481,7 @@ var UIEvents = function(app) {
 
   window.addEventListener('resize', function(e) {
     if (app.focused) {
-      app.focused.scroll(true);
+      app.focused.scroll_bottom(0);
       app.focused.resize_filler();
     }
   });
