@@ -809,7 +809,7 @@ var App = function(url, user) {
       return;
     }
 
-    if (app.elem.scroll.scrollTop == 0) {
+    if (app.elem.scroll.scrollTop <= 1) {
       app.filling_backlog = true;
       app.fill_backlog(
         app.focused, app.focused.oldest_message_id()
