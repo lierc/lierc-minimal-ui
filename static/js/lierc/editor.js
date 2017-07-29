@@ -206,19 +206,40 @@ var Editor = function(element) {
 
   editor.focus = function() {
     editor.focused = true;
+    editor.restore_selection();
+  };
+
+  editor.restore_selection = function() {
     if (editor.range) {
       var s = window.getSelection();
       s.removeAllRanges();
-      s.addRange(editor.range);
+      var range = document.createRange();
+      range.setStart(editor.range.startContainer, editor.range.startOffset);
+      range.setEnd(editor.range.endContainer, editor.range.endOffset);
+      s.addRange(range);
     }
   };
 
   editor.save_selection = function() {
     var s = window.getSelection();
-    if (s.rangeCount > 0)
-      editor.range = s.getRangeAt(0);
-    else
+    if (s.rangeCount == 0) {
       editor.range = null;
+      return;
+    }
+
+    var range = s.getRangeAt(0);
+    var node = range.commonAncestorContainer;
+    if (editor.el.contains(node)) {
+      editor.range = {
+        startContainer: range.startContainer,
+        endContainer: range.endContainer,
+        startOffset: range.startOffset,
+        endOffset: range.endOffset
+      };
+    }
+    else {
+      editor.range = null;
+    }
   };
 
   editor.el.addEventListener("blur", editor.blur);
