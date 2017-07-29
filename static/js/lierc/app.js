@@ -363,8 +363,9 @@ var App = function(url, user) {
 
     if (panel.type == "channel") {
       var channel = conn.channel(panel.name);
-      panel.editor.completion.completions = channel.nicks;
+      panel.editor.completion.nicks = channel.nicks;
     }
+    panel.editor.completion.commands = app.commands.completions();
 
     app.panels[id] = panel;
 

@@ -2,6 +2,8 @@ var Completion = function(element) {
   var TAB = 9;
 
   this.completions = [];
+  this.commands = [];
+  this.nicks = [];
   this.completing = false;
   this.matches = []
   this.position = 0;
@@ -18,6 +20,7 @@ var Completion = function(element) {
   this.stop = function() {
     this.completing = false;
     this.matches = [];
+    this.completions = [];
     this.position = 0;
     this.index = 0;
   };
@@ -26,6 +29,7 @@ var Completion = function(element) {
     var word = this.last_word();
     if (word == "")
       return;
+    this.completions = word[0] == "/" ? this.commands : this.nicks;
     var sel = window.getSelection();
     this.position = sel.focusOffset - word.length;
     this.completing = true
@@ -45,7 +49,7 @@ var Completion = function(element) {
 
     if (this.index != this.matches.length) {
       // add a ":" if this is the first word on the line
-      if (start.indexOf(" ") == -1) {
+      if (start.indexOf(" ") == -1 && end[0] != "/") {
         end += ":";
       }
       end += " ";
