@@ -695,6 +695,26 @@ var UIEvents = function(app) {
         head.appendChild(script);
       });
     });
+
+    var h = p.getBoundingClientRect().height;
+    var panel = app.focused;
+
+    var m = new MutationObserver(function(s) {
+      var u = p.getBoundingClientRect().height;
+      if (!panel.is_scrolled())
+        panel.scroller.scrollTop += u - h;
+      h = u;
+    });
+
+    var c = {
+      childList: true,
+      attributes: true,
+      subtree: true,
+      attributeFilter: ['class','style']
+    };
+    m.observe(p, c);
+
+    setTimeout(function(){m.disconnect()}, 10000);
   });
 
   app.elem.panel.addEventListener('click', function(e) {
