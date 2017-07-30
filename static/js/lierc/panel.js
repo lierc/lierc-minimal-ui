@@ -547,8 +547,9 @@ var Panel = function(name, id, connection, mobile) {
       return getComputedStyle(el).display != "none";
     });
 
-    if (els.length > 200) {
-      els.slice(0, 200).forEach(function(el) {
+    var l = els.length;
+    if (l > 300) {
+      els.slice(0, l - 300).forEach(function(el) {
         el.parentNode.removeChild(el);
       });
     }
