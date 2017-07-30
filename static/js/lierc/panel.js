@@ -595,10 +595,17 @@ var Panel = function(name, id, connection, mobile) {
 
               toggle.addEventListener("click", function(e) {
                 e.preventDefault();
-                panel.scroll(function() {
-                  wrap.classList.toggle("hidden");
-                  toggle.classList.toggle("hidden");
-                });
+                var hidden = wrap.classList.contains("hidden");
+                if (hidden) {
+                  panel.scroll(function() {
+                    wrap.classList.remove("hidden");
+                    toggle.classList.remove("hidden");
+                  });
+                }
+                else {
+                  wrap.classList.add("hidden");
+                  toggle.classList.add("hidden");
+                }
               });
             };
         })(image, link);
@@ -648,10 +655,17 @@ var Panel = function(name, id, connection, mobile) {
 
             toggle.addEventListener("click", function(e) {
               e.preventDefault();
-              panel.scroll(function() {
-                wrap.classList.toggle("hidden");
-                toggle.classList.toggle("hidden");
-              });
+              var hidden = wrap.classList.contains("hidden");
+              if (hidden) {
+                panel.scroll(function() {
+                  wrap.classList.remove("hidden");
+                  toggle.classList.remove("hidden");
+                });
+              }
+              else {
+                wrap.classList.add("hidden");
+                toggle.classList.add("hidden");
+              }
             });
           };
         })(video, link), false);
