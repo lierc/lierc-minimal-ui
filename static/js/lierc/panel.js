@@ -453,8 +453,8 @@ var Panel = function(name, id, connection, mobile) {
   panel.resize_filler = function() {
     if (!panel.focused) return;
 
-    var scroll = panel.scroller.getBoundingClientRect().height;
-    var chat   = panel.elem.list.getBoundingClientRect().height;
+    var scroll = panel.scroller.clientHeight;
+    var chat   = panel.elem.list.clientHeight;
 
     panel.elem.filler.style.height = Math.max(0, scroll - chat) + "px";
   };

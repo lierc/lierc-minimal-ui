@@ -696,11 +696,11 @@ var UIEvents = function(app) {
       });
     });
 
-    var h = p.getBoundingClientRect().height;
+    var h = p.clientHeight;
     var panel = app.focused;
 
     var m = new MutationObserver(function(s) {
-      var u = p.getBoundingClientRect().height;
+      var u = p.clientHeight;
       if (!panel.is_scrolled())
         panel.scroller.scrollTop += u - h;
       h = u;
@@ -714,7 +714,7 @@ var UIEvents = function(app) {
     };
     m.observe(p, c);
 
-    setTimeout(function(){m.disconnect()}, 10000);
+    setTimeout(function(){ m.disconnect(); }, 10000);
   });
 
   app.elem.panel.addEventListener('click', function(e) {
