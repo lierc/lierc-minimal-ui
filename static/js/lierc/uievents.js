@@ -641,17 +641,17 @@ var UIEvents = function(app) {
     var toggle = e.target;
     var embed = JSON.parse(toggle.getAttribute('data-embed'));
 
-    app.focused.scroll(function() {
-      toggle.classList.toggle('hidden');
-      if (toggle.classList.contains('hidden')) {
-        var wrap = document.querySelector(".embed-wrap[data-embed-id='"+embed.id+"']");
-        wrap.parentNode.parentNode.removeChild(wrap.parentNode);
-      }
-      else {
+    toggle.classList.toggle('hidden');
+    if (toggle.classList.contains('hidden')) {
+      var wrap = document.querySelector(".embed-wrap[data-embed-id='"+embed.id+"']");
+      wrap.parentNode.parentNode.removeChild(wrap.parentNode);
+    }
+    else {
+      app.focused.scroll(function() {
         var a = toggle.previousSibling;
         app.focused.embed(a, embed, true);
-      }
-    });
+      });
+    }
   });
 
   app.elem.topic.addEventListener('click', function(e) {
