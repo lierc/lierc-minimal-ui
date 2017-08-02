@@ -135,22 +135,40 @@ var UIEvents = function(app) {
     var items = app.elem.nav.querySelectorAll('li[data-name]');
 
     val = val.toLowerCase();
+    matches = [];
+    misses  = [];
     if (val) {
       for (var i=0; i < items.length; i++) {
         var item = items[i];
-        var text = item.getAttribute("data-name").toLowerCase();
-        if (text.indexOf(val) == -1) {
-          item.classList.remove("match");
+        var text = item.getAttribute("data-name")
+          .toLowerCase()
+          .replace(/^[#&]/, "");
+
+        if (text.substring(0, val.length) == val) {
+          matches.push(item);
         }
         else {
-          item.classList.add("match");
+          misses.push(item);
         }
       }
     }
     else {
-      app.elem.nav.querySelectorAll('li[data-name]').forEach(function(el) {
-        el.classList.add('match');
-      });
+      for (var i=0; i < items.length; i++) {
+        var item = items[i];
+        if (item.classList.contains("unread")) {
+          matches.push(item);
+        }
+        else {
+          misses.push(item);
+        }
+      }
+    }
+
+    for (var i=0; i < matches.length; i++) {
+      matches[i].classList.add("match");
+    }
+    for (var i=0; i < misses.length; i++) {
+      misses[i].classList.remove("match");
     }
 
     for (var i=0; i < items.length; i++) {

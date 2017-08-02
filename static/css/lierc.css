@@ -1800,5 +1800,11 @@ body[data-panel-type=channel] #panel-scroll {
   width: 100%;
 }
 
+#emoji {
+  display: none;
+}
+#foot {
+  flex-direction: row-reverse;
+}
 }
 

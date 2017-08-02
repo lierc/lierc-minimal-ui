@@ -1024,9 +1024,13 @@ var App = function(url, user) {
       app.elem.switcher.classList.add('open');
       app.elem.nav.classList.add('filtering');
       app.elem.nav.querySelectorAll('#channels li[data-name], #privates li[data-name]').forEach(function(li) {
-        li.classList.add('candidate', 'match');
+        li.classList.add('candidate');
+        if (li.classList.contains("unread"))
+          li.classList.add("match");
       });
-      var matches = app.elem.nav.querySelectorAll('li[data-name].candidate');
+      var matches = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
+      if (!matches.length)
+        matches = app.elem.nav.querySelectorAll('li[data-name].candidate');
       if (matches.length) {
         matches[0].classList.add('selected');
       }
