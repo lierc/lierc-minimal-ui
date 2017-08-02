@@ -200,6 +200,7 @@ var UIEvents = function(app) {
   window.addEventListener("focus", function(e) {
     app.window_focused = true;
     app.focus_input();
+    app.update_title();
   });
 
   document.addEventListener('click', function(e) {

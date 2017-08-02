@@ -81,6 +81,7 @@ var App = function(url, user) {
       var from = message.Prefix.Name != connection.nick;
 
       panel.append(Render(message));
+      app.update_title(true);
 
       if (from && (!app.is_focused(panel) || !panel.is_scrolled()))
         app.elem.audio.play();
@@ -91,6 +92,7 @@ var App = function(url, user) {
       var html = Render(message);
       if (html) {
         panel.append(html);
+        app.update_title(true);
 
         if (message.Highlight && (!app.is_focused(panel) || !panel.is_scrolled()))
           app.elem.audio.play();
@@ -434,6 +436,18 @@ var App = function(url, user) {
       panel.missed = true;
       panel.update_nav();
     }
+    app.update_title();
+  };
+
+  app.update_title = function(highlight) {
+    if (!app.focused) return;
+    var name = app.focused.name;
+
+    if (!app.window_focused && highlight) {
+      name = "*" + name;
+    }
+
+    app.elem.title.textContent = name;
   };
 
   app.post_token = function() {
@@ -667,8 +681,6 @@ var App = function(url, user) {
     app.elem.body.setAttribute("data-panel-type", panel.type);
     app.replace_child("nicks", panel.elem.nicks);
 
-    app.elem.title.textContent = panel.name;
-
     if (app.focused) {
       app.focused.unfocus();
       app.save_seen(app.focused);
@@ -683,6 +695,7 @@ var App = function(url, user) {
     app.focused = panel;
     window.history.replaceState({}, "", panel.path);
     app.check_scroll();
+    app.update_title();
 
     if (panel.type == "channel") {
       var conn = app.connections[panel.connection];
