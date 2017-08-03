@@ -82,6 +82,11 @@ var Commands = function(app) {
     panel.elem.list.get(0).innerHTML = '';
   });
 
+  add_command("bikin", ["bike", "biek", "beik"], function(panel) {
+    var url = ":https://www.youtube.com/watch?v=WYi-YUsYZtY";
+    return ["PRIVMSG", panel.name, url].join(" ");
+  });
+
   add_command("bustin", ["bust"], function(panel) {
     var url = ":https://www.youtube.com/watch?v=0tdyU_gW6WE";
     return ["PRIVMSG", panel.name, url].join(" ");
