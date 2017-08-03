@@ -8,7 +8,7 @@ var Channel = function(name) {
   };
 
   this.nicks = [];
-  this.nick_modes;
+  this.nick_modes = {};
   this.synced = true;
   this.mode = "";
 
@@ -76,7 +76,7 @@ var Channel = function(name) {
   };
 
   this.rename_nick = function(old, nick) {
-    var i = this.nicks.indexOf(nick);
+    var i = this.nicks.indexOf(old);
     if (i != -1) {
       this.nicks.splice(i, 1, nick);
       this.nick_modes[nick] = this.nick_modes[old];
