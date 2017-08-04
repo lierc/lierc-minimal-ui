@@ -390,7 +390,7 @@ var Panel = function(name, id, connection, mobile) {
       if (id && panel.elem.list.querySelectorAll('li[data-message-id="'+id+'"]').length)
         return;
 
-      panel.scroll(function(scrolled) {
+      panel.scroll(function() {
         panel.elem.list.appendChild(el);
 
         if (el.classList.contains("chat")) {
@@ -459,19 +459,17 @@ var Panel = function(name, id, connection, mobile) {
     panel.elem.filler.style.height = Math.max(0, scroll - chat) + "px";
   };
 
+  panel.scroll_jump = 0;
   panel.scrolling = false;
   panel.scroll = function(cb) {
     var nested = panel.scrolling;
-    var b = panel.scroll_bottom();
-
+    panel.scroll_jump = panel.scroll_bottom();
     panel.scrolling = true;
 
-    if (cb)
-      cb(b < 10);
-
+    if (cb) cb();
     if (!nested) {
       if (panel.focused) {
-        panel.scroll_bottom(b);
+        panel.scroll_bottom(panel.scroll_jump);
         panel.resize_filler();
       }
       panel.scrolling = false;
@@ -888,7 +886,16 @@ var Panel = function(name, id, connection, mobile) {
       }
       var h = panel.scroller.clientHeight;
       var t = (s - h) - set;
+
       panel.scroller.scrollTop = t;
+
+      if (window.navigator.userAgent.match(/iP(hone|pad)/i)) {
+        panel.scroller.style.overflowY = 'hidden';
+        requestAnimationFrame(function() {
+          panel.scroller.style.overflowY = 'visible';
+        });
+      }
+
       return set;
     }
 
