@@ -889,7 +889,7 @@ var Panel = function(name, id, connection, mobile) {
 
       panel.scroller.scrollTop = t;
 
-      if (window.navigator.userAgent.match(/iP(hone|pad)/i)) {
+      if (window.navigator.userAgent.match(/iP(hone|ad)/i)) {
         panel.scroller.style.overflowY = 'hidden';
         requestAnimationFrame(function() {
           panel.scroller.style.overflowY = 'visible';
