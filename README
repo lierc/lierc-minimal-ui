@@ -16,3 +16,10 @@ Install dependencies with:
 sudo apt-get install node-uglify cpanminus
 sudo cpanm -nq AnyEvent::Filesys::Notify
 ```
+
+Or, if you're on another platform, make sure you have cpanminus installed (along with the package above) as well as node and npm. Then, run:
+
+```
+npm install uglify-js@2.4.11 -g
+npm install bro -g
+```
