@@ -1144,6 +1144,7 @@ var App = function(url, user) {
   });
 
   app.events = new UIEvents(app);
+  app.notify = new Notifier(app);
 };
 
 App.detect_mobile = function () {

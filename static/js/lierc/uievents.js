@@ -590,6 +590,16 @@ var UIEvents = function(app) {
     }
   });
 
+  document.getElementById('web-notify').addEventListener('click', function(e) {
+    e.preventDefault();
+    if (app.notify.subscribed) {
+      app.notify.unsubscribe();
+    }
+    else {
+      app.notify.subscribe();
+    }
+  });
+
   document.getElementById('email-notify').addEventListener('click', function(e) {
       e.preventDefault();
       this.classList.toggle('enabled');
@@ -818,4 +828,4 @@ var UIEvents = function(app) {
       app.focused.editor.save_selection();
     }
   };
-}
+};

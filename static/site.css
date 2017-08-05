@@ -841,11 +841,13 @@ div.header-right {
   color: #ccc;
 }
 
+#web-notify.enabled a:before,
 #email-notify.enabled a:before {
   content: "\f046";
   padding-right: 5px;
 }
 
+#web-notify a:before,
 #email-notify a:before {
   content: "\f096";
   padding-right: 5px;
