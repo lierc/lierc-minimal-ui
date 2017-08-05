@@ -3,7 +3,7 @@ var Notifier = function(app) {
   notifier.subscribed = false;
 
   if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/serviceworker.js")
+    navigator.serviceWorker.register("/service-worker.js")
       .then(function() {
         notifier.setup();
       });
@@ -29,7 +29,7 @@ var Notifier = function(app) {
       serviceWorkerRegistration.pushManager.getSubscription()
         .then(function(subscription) {
           if(subscription) {
-            notifier.set_enabled(true, subscription.endpoint);
+            notifier.set_enabled(true, subscription);
           }
         });
     });
@@ -58,7 +58,7 @@ var Notifier = function(app) {
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
         .then(function(subscription) {
-          notifier.set_enabled(true, subscription.endpoint);
+          notifier.set_enabled(true, subscription);
         })
         .catch(function(e) {
           if (Notification.permission === 'denied') {
@@ -72,17 +72,35 @@ var Notifier = function(app) {
     });
   };
 
-  notifier.set_enabled = function(bool, url) {
+  notifier.build_pref = function(sub) {
+    var rawKey = sub.getKey ? sub.getKey('p256dh') : '';
+    var key = rawKey ?
+      btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) :
+      '';
+
+    var rawAuthSecret = sub.getKey ? sub.getKey('auth') : '';
+    var authSecret = rawAuthSecret ?
+      btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) :
+      '';
+
+    return {
+      endpoint: sub.endpoint,
+      key: key,
+      auth: authSecret
+    };
+  };
+
+  notifier.set_enabled = function(bool, sub) {
     notifier.subscribed = bool;
 
     if (bool) {
-      if (url) {
-        app.update_pref("google_subscription_url", url);
+      if (sub) {
+        app.update_pref("gcm_sub", notifier.build_pref(sub));
       }
       document.getElementById("web-notify").classList.add("enabled");
     }
     else {
-      app.update_pref("google_subscription_url", null);
+      app.update_pref("gcm_sub", null);
       document.getElementById("web-notify").classList.remove("enabled");
     }
   };
