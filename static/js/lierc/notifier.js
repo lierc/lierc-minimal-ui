@@ -9,8 +9,13 @@ var Notifier = function(app) {
       });
   }
 
+  notifier.hide = function() {
+    document.getElementById("web-notify").classList.add("broken");
+  };
+
   notifier.setup = function() {
     if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
+      notifier.hide();
       console.log("Notifications not supported.");
       return;
     }
@@ -21,6 +26,7 @@ var Notifier = function(app) {
     }
 
     if (!('PushManager' in window)) {
+      notifier.hide();
       console.log("Push notifications not supported.");
       return;
     }

@@ -841,6 +841,10 @@ div.header-right {
   color: #ccc;
 }
 
+#web-notify.broken {
+  display: none;
+}
+
 #web-notify.enabled a:before,
 #email-notify.enabled a:before {
   content: "\f046";
