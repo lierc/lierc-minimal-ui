@@ -39,7 +39,7 @@ var UIEvents = function(app) {
         return;
       }
       // down or tab
-      else if (e.which == 40 || e.which == 9) {
+      else if ((e.which == 40 && mods['ctrl']) || e.which == 9) {
         e.preventDefault();
         var items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
@@ -52,7 +52,7 @@ var UIEvents = function(app) {
         }
       }
       // up
-      else if (e.which == 38) {
+      else if (e.which == 38 && mods['ctrl']) {
         e.preventDefault();
         var items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
