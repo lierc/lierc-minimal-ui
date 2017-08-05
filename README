@@ -16,3 +16,5 @@ Install dependencies with:
 sudo apt-get install node-uglify cpanminus
 sudo cpanm -nq AnyEvent::Filesys::Notify
 ```
+
+Install the `bro` command here: https://github.com/google/brotli/releases
