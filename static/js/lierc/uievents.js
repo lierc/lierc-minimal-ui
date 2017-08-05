@@ -603,7 +603,7 @@ var UIEvents = function(app) {
   document.getElementById('email-notify').addEventListener('click', function(e) {
       e.preventDefault();
       this.classList.toggle('enabled');
-      var enabled = e.target.classList.contains('enabled');
+      var enabled = this.classList.contains('enabled');
       app.update_pref("email", enabled);
   });
 
