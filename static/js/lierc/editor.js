@@ -169,7 +169,7 @@ var Editor = function(element) {
 
     editor.completion.stop();
 
-    if (e.which == UP && !mods['ctrl'] && !mods['meta'] && !mods['shift']) {
+    if (e.which == UP && !mods['ctrl'] && !mods['meta'] && mods['shift']) {
       e.preventDefault();
       editor.history.up();
 
@@ -183,7 +183,7 @@ var Editor = function(element) {
       return;
     }
 
-    if (e.which == DOWN && !mods['ctrl'] && !mods['meta'] && !mods['shift']) {
+    if (e.which == DOWN && !mods['ctrl'] && !mods['meta'] && mods['shift']) {
       e.preventDefault();
       editor.history.down();
 
