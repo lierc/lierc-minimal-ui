@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta name="description" content="Chat on IRC in a web browser">
+    <meta name="keywords" content="IRC,cloud,HTTP,chat,browser,irccloud,relaychat,party">
+    <meta name="author" content="Lee Aylward">
+    <title>Relaychat Party: Chat on IRC in a web browser</title>
+    <style type="text/css">
+      body {
+        font-family: -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
+          "Fira Sans", "Droid Sans", "Helvetica Neue", 
+          sans-serif, FontAwesome;
+        background: #fff;
+        padding: 0;
+        margin: 0;
+        color: #000;
+      }
+      #login {
+        background: #eee;
+        padding: 10px;
+        color: #333;
+        display: inline-block;
+      }
+      #login p {
+        margin: 0;
+      }
+      #login a {
+        font-weight: bold;
+      }
+      #login input {
+        margin-bottom: 10px;
+      }
+      #login label {
+        margin-bottom: 5px;
+      }
+      #login input, #login label {
+        display: block;
+        width: 150px;
+        font-size: 16px;
+        font-family: -apple-system, BlinkMacSystemFont,
+          "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
+          "Fira Sans", "Droid Sans", "Helvetica Neue", 
+          sans-serif, FontAwesome;
+      }
+      main {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      section {
+        margin: 0 auto;
+        max-width: 600px;
+        position: relative;
+        text-align: center;
+        border-bottom: 1px solid #ccc;
+        padding: 20px 0;
+        margin-bottom: 20px;
+      }
+      section ul {
+        margin: 20px auto;
+        list-style: none;
+        padding: 0;
+      }
+      section li {
+        font-size: 18px;
+        margin-bottom: 10px;
+        padding: 0;
+      }
+      header h1 span {
+        font-weight: normal;
+      }
+      header {
+        background: #ffb6c0;
+        color: #fff;
+        padding: 20px 0;
+      }
+      header h1 {
+        text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
+        font-size: 32px;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        max-width: 400px;
+        margin: 0 auto;
+      }
+      a img {
+        display: block;
+        border: 5px solid #ffb6c0;
+        box-sizing: border-box;
+      }
+      footer {
+        max-width: 700px;
+        margin: 0 auto;
+      }
+      footer ul {
+        list-style: none;
+        text-align: center;
+        margin: 0;
+        padding: 0;
+        margin-bottom: 20px;
+      }
+      footer ul a {
+        text-decoration: none;
+      }
+      footer ul li {
+        display: inline;
+        margin: 0;
+        padding: 0;
+      }
+      a {
+        color: #0093ff;
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1 title="IRC, with pictures">relaychat<span>.party 🍆</span></h1>
+    </header>
+
+    <main>
+      <!--googleoff: all-->
+      <section>
+      <form id="login" method="POST" action="/api/auth">
+        <label for="email">Email or username</label>
+        <input type="text" name="email" id="email" placeholder="test@example.com" autocorrect="off" autocapitalize="none">
+        <label for="pass">Password</label>
+        <input type="password" name="pass" id="pass">
+        <input type="submit" value="Log in" id="submit">
+        <p><a href="/app">Click here to register.</a></p>
+      </form>
+      </section>
+      <!--googleon: all-->
+
+      <section style="border-bottom:none;padding:0">
+        <p>A pretty good IRC client. Check it out!</p>
+      </section>
+
+      <a href="https://i.imgur.com/E9TN14M.png" target="_blank"><img alt="Relaychat party" src="https://i.imgur.com/E9TN14M.png" width="100%"></a>
+
+      <section>
+        <h2>Features</h2>
+        <ul>
+          <li>Configurable highlight terms</li>
+          <li>Notifications for missed mentions</li>
+          <li>Mobile user-interface</li>
+          <li>Last-read message tracking</li>
+        </ul>
+      </section>
+
+    <footer>
+      <ul>
+        <li><a href="https://github.com/lierc">Github project</a></li>
+      </ul>
+    </footer>
+    <script type="text/javascript" src="/static/js/vendor/fetch.js"></script>
+    <script type="text/javascript">
+    fetch("/api/auth", {
+        'credentials': 'same-origin'
+      }).then(function(res) {
+        if (!res.ok)
+          throw Error(res.statusText);
+        return res.json();
+      }).then(function(res) {
+        var  p = document.createElement('P');
+        p.textContent = "Hello, " + res['user'];
+        var link = document.createElement('A');
+        link.setAttribute('href', '/app/');
+        link.textContent = "Launch the chats!";
+        var login = document.getElementById('login');
+        login.innerHTML = '';
+        login.appendChild(p);
+        login.appendChild(link);
+      });
+
+    document.getElementById('login').addEventListener('submit', function(e) {
+      e.preventDefault();
+
+      var submit = document.getElementById('submit');
+      submit.setAttribute('disabled', 'disabled');
+
+      var email = encodeURIComponent(document.getElementById('email').value);
+      var pass = encodeURIComponent(document.getElementById('pass').value);
+
+      fetch("/api/auth", {
+          method: "POST",
+          credentials: 'same-origin',
+          headers: {
+            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
+          },
+          body: 'email='+email+'&pass='+pass
+        }).then(function(res) {
+          if (!res.ok)
+            throw Error("Invalid username or password");
+          window.location = "/app/";
+        }).catch(function(e) {
+          alert(e);
+          submit.removeAttribute('disabled');
+        });
+    });
+    </script>
+  </body>
+</html>
