@@ -16,10 +16,9 @@ $(templates): $(handlebars)
 
 static/site.map.js static/site.js: $(vendor) $(templates) $(site)
 	uglifyjs \
-		--source-map /tmp/site.map.js \
-		--source-map-url /$(map) \
-		--prefix 1 \
-		$(vendor) $(templates) $(site) > /tmp/site.js
+		$(vendor) $(templates) $(site) \
+		-o /tmp/site.js \
+		--prefix 1
 	install /tmp/site.js static/site.js
 	cat static/site.js | bro > static/site.js.br
 	gzip -c -k static/site.js > static/site.js.gz

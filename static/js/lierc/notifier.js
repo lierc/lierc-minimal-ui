@@ -66,17 +66,10 @@ var Notifier = function(app) {
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       app.api.get("/notification/web_push_keys", {
         success: function(res) {
-          var vapid = atob(res['vapid_public_key']);
-          var len = vapid.length;
-          var bytes = new Uint8Array(len);
-
-          for (var i=0; i < len; i++) {
-            bytes[i] = vapid.charCodeAt(i);
-          }
-
+          var vapid = base64url.decode(res['vapid_public_key']);
           serviceWorkerRegistration.pushManager.subscribe({
               userVisibleOnly: true,
-              applicationServerKey: bytes.buffer
+              applicationServerKey: vapid.buffer
             })
             .then(function(subscription) {
               notifier.set_enabled(true, subscription);
@@ -98,12 +91,12 @@ var Notifier = function(app) {
   notifier.build_pref = function(sub) {
     var rawKey = sub.getKey ? sub.getKey('p256dh') : '';
     var key = rawKey ?
-      btoa(String.fromCharCode.apply(null, new Uint8Array(rawKey))) :
+      base64url.encode(rawKey) :
       '';
 
     var rawAuthSecret = sub.getKey ? sub.getKey('auth') : '';
     var authSecret = rawAuthSecret ?
-      btoa(String.fromCharCode.apply(null, new Uint8Array(rawAuthSecret))) :
+      base64url.encode(rawAuthSecret) :
       '';
 
     return {
