@@ -51,12 +51,8 @@ var Notifier = function(app) {
           }
           subscription.unsubscribe().then(function() {
             notifier.set_enabled(false);
-            var headers = new Headers();
-            headers.append('lierc-token', app.post_token());
             var part = encodeURIComponent(subscription.endpoint);;
-            app.api.delete("/notification/web_push/" + part, {
-              headers: headers
-            });
+            app.api.delete("/notification/web_push/" + part);
           }).catch(function(e) {
             console.log("Failed to unsubscribe", e);
           });
@@ -108,7 +104,6 @@ var Notifier = function(app) {
     if (bool) {
       if (sub) {
         var headers = new Headers();
-        headers.append('lierc-token', app.post_token());
         headers.append(
           'content-type',
           'application/x-www-form-urlencoded; charset=UTF-8'
