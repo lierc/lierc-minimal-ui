@@ -1139,12 +1139,12 @@ var App = function(url, user) {
       app.load_token(function() {
         app.init();
         Emoji.load();
+        app.notify = new Notifier(app);
       });
     });
   });
 
   app.events = new UIEvents(app);
-  app.notify = new Notifier(app);
 };
 
 App.detect_mobile = function () {

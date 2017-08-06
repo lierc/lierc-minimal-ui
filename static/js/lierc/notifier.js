@@ -101,7 +101,16 @@ var Notifier = function(app) {
 
     if (bool) {
       if (sub) {
-        app.update_pref("gcm_sub", notifier.build_pref(sub));
+        var headers = new Headers();
+        headers.append('lierc-token', app.post_token());
+        headers.append(
+          'content-type',
+          'application/x-www-form-urlencoded; charset=UTF-8'
+        );
+        app.api.post("/notification/web_push", {
+          body: app.api.build_query(notifier.build_pref(sub)),
+          headers: headers
+        });
       }
       document.getElementById("web-notify").classList.add("enabled");
     }

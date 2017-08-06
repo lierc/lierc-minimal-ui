@@ -13,7 +13,7 @@ var API = function(baseurl) {
 
     if (options['body']) {
       var body = options['body'];
-      if (body && typeof(body) == "Object") {
+      if (body && typeof(body) == "object") {
         settings['body'] = JSON.stringify(body);
       }
       else {
