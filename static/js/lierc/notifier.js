@@ -2,13 +2,6 @@ var Notifier = function(app) {
   var notifier = this;
   notifier.subscribed = false;
 
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(function() {
-        notifier.setup();
-      });
-  }
-
   notifier.hide = function() {
     document.getElementById("web-notify").classList.add("broken");
   };
@@ -127,4 +120,14 @@ var Notifier = function(app) {
       document.getElementById("web-notify").classList.remove("enabled");
     }
   };
+
+  if ("serviceWorker" in navigator) {
+    navigator.serviceWorker.register("/service-worker.js")
+      .then(function() {
+        notifier.setup();
+      });
+  }
+  else {
+    notifier.hide();
+  }
 };

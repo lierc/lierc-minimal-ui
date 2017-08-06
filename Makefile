@@ -3,7 +3,7 @@ site = $(wildcard static/js/lierc/*)
 css = $(wildcard static/css/*)
 handlebars = $(wildcard templates/*)
 templates = static/js/templates.js
-map = static/site.map.js
+map = static/site.js.map
 
 all: index.html.br static/site.js static/site.css static/site.map.js
 
@@ -17,14 +17,15 @@ $(templates): $(handlebars)
 static/site.map.js static/site.js: $(vendor) $(templates) $(site)
 	uglifyjs \
 		$(vendor) $(templates) $(site) \
-		-o /tmp/site.js \
-		--prefix 1
+		--source-map url=static/site.js.map \
+		--prefix 1 \
+		-o /tmp/site.js
 	install /tmp/site.js static/site.js
 	cat static/site.js | bro > static/site.js.br
 	gzip -c -k static/site.js > static/site.js.gz
-	install /tmp/site.map.js static/site.map.js
-	cat static/site.map.js | bro > static/site.map.js.br
-	gzip -c -k static/site.map.js > static/site.map.js.gz
+	install /tmp/site.js.map static/site.js.map
+	cat static/site.js.map | bro > static/site.js.map.br
+	gzip -c -k static/site.js.map > static/site.js.map.gz
 
 static/site.css: $(css)
 	cat $(css) > /tmp/site.css
