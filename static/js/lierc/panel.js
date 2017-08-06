@@ -622,9 +622,9 @@ var Panel = function(name, id, connection, mobile) {
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.vid_re)) {
-        if (link.href.match(/i\.imgur\.com\/[^\/\.]+\.gifv/))
+        if (link.href.match(/(i\.)?imgur\.com\/[^\/\.]+\.gifv/))
           link.href = link.href.replace('.gifv', '.mp4');
-        if (link.href.match(/http:\/\/i\.imgur\.com/))
+        if (link.href.match(/http:\/\/(i\.)?imgur\.com/))
           link.href = link.href.replace(/^http/, 'https');
 
         var video = document.createElement('VIDEO');
