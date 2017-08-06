@@ -51,6 +51,12 @@ var Notifier = function(app) {
           }
           subscription.unsubscribe().then(function() {
             notifier.set_enabled(false);
+            var headers = new Headers();
+            headers.append('lierc-token', app.post_token());
+            var part = encodeURIComponent(subscription.endpoint);;
+            app.api.delete("/notification/web_push/" + part, {
+              headers: headers
+            });
           }).catch(function(e) {
             console.log("Failed to unsubscribe", e);
           });
@@ -115,7 +121,6 @@ var Notifier = function(app) {
       document.getElementById("web-notify").classList.add("enabled");
     }
     else {
-      app.update_pref("gcm_sub", null);
       document.getElementById("web-notify").classList.remove("enabled");
     }
   };
