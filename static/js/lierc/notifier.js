@@ -64,19 +64,34 @@ var Notifier = function(app) {
 
   notifier.subscribe = function() {
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-      serviceWorkerRegistration.pushManager.subscribe({userVisibleOnly: true})
-        .then(function(subscription) {
-          notifier.set_enabled(true, subscription);
-        })
-        .catch(function(e) {
-          if (Notification.permission === 'denied') {
-            console.log("Notifier permission denied");
+      app.api.get("/notification/web_push_keys", {
+        success: function(res) {
+          var vapid = atob(res['vapid_public_key']);
+          var len = vapid.length;
+          var bytes = new Uint8Array(len);
+
+          for (var i=0; i < len; i++) {
+            bytes[i] = vapid.charCodeAt(i);
           }
-          else {
-            console.log("Unable to subscribe", e);
-          }
-          notifier.set_enabled(false);
-        });
+
+          serviceWorkerRegistration.pushManager.subscribe({
+              userVisibleOnly: true,
+              applicationServerKey: bytes.buffer
+            })
+            .then(function(subscription) {
+              notifier.set_enabled(true, subscription);
+            })
+            .catch(function(e) {
+              if (Notification.permission === 'denied') {
+                console.log("Notifier permission denied");
+              }
+              else {
+                console.log("Unable to subscribe", e);
+              }
+              notifier.set_enabled(false);
+            });
+        }
+      });
     });
   };
 
