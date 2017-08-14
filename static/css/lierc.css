@@ -1226,6 +1226,10 @@ ul.channel-controls li a:hover {
   flex-grow: 1;
 }
 
+#panel-scroll:focus {
+  outline: none;
+}
+
 .emoji-wrap {
   line-height: 0px;
 }
