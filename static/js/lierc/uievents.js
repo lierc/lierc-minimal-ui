@@ -116,6 +116,12 @@ var UIEvents = function(app) {
     if (app.focused) {
       /* send to editor (bold, italic, tab complete) */
       if (app.focused.editor.focused) {
+        if (e.which == 33 || e.which == 34) {
+          app.focused.scroller.focus();
+          requestAnimationFrame(function() {
+            app.focus_input();
+          });
+        }
         app.focused.editor.keydown(e, mods);
       }
       /* focus input area on a-z 0-9 keys */

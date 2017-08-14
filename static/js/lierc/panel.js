@@ -533,7 +533,18 @@ var Panel = function(name, id, connection, mobile) {
   panel.elem.input.classList.add('input');
   panel.elem.filler.classList.add('filler');
   panel.elem.prefix.textContent = panel.name;
-  panel.elem.topic.textContent = 'No topic set';
+
+  switch (panel.type) {
+  case "channel":
+    panel.elem.topic.textContent = 'No topic set';
+    break;
+  case "private":
+    panel.elem.topic.textContent = '';
+    break;
+  case "status":
+    panel.elem.topic.textContent = panel.elem.name;
+    break;
+  }
 
   panel.scroller = document.getElementById('panel-scroll');
   panel.inner = document.getElementById('panel-inner-scroll');
