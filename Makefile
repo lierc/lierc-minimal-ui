@@ -14,7 +14,7 @@ index.html.br index.html.gz: index.html
 $(templates): $(handlebars)
 	handlebars $(handlebars) > $(templates)
 
-static/site.map.js static/site.js: $(vendor) $(templates) $(site)
+static/site.js.map static/site.js: $(vendor) $(templates) $(site)
 	uglifyjs \
 		$(vendor) $(templates) $(site) \
 		--source-map url=static/site.js.map \
