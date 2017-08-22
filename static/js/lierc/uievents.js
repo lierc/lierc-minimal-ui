@@ -103,6 +103,11 @@ var UIEvents = function(app) {
       app.toggle_switcher();
       return;
     }
+    /* toggle nick list */
+    else if (e.which == 186 && mods['meta']) {
+      document.querySelector('#toggle-nicks').click();
+      return;
+    }
 
     var c = String.fromCharCode(e.which);
 
