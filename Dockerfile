@@ -11,5 +11,4 @@ RUN cd brotli && ./configure && make
 RUN cp brotli/bin/brotli /usr/local/bin/
 RUN rm -rf brotli
 
-ADD . /opt/lierc-basicui
 CMD make watch
