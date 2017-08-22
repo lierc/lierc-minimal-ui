@@ -2,6 +2,7 @@
 
 use AnyEvent::Filesys::Notify;
 use Getopt::Long;
+use Term::ANSIColor;
 
 $0 = "gward";
 
@@ -22,7 +23,19 @@ my $skip = sprintf "(?:%s)", join "|", map quotemeta, @ignore;
 my $notify = AnyEvent::Filesys::Notify->new(
   dirs   => \@dirs,
   filter => sub { shift !~ /$skip/ },
-  cb     => sub { system $exec     },
+  cb     => sub {
+    return if $_[0]->type eq "deleted";
+    warn sprintf "\n[%s] %s%s%s (%s)\n",
+      timestamp(),
+      color("bold green"), $_[0]->path,
+      color("reset"), $_[0]->type;
+    system $exec;
+  },
 );
+
+sub timestamp {
+  my @t = localtime();
+  sprintf "%02d:%02d:%02d", @t[2,1,0];
+}
 
 AE::cv->recv;
