@@ -10,11 +10,9 @@ To build the assets run `make`. To monitor changes to assets and
 rebuild automatically, run `make watch`. This make target requires
 some perl modules to work.
 
-Install dependencies with:
+Dependencies
+============
 
-```
-sudo apt-get install node-uglify cpanminus
-sudo cpanm -nq AnyEvent::Filesys::Notify
-```
-
-Install the `bro` command here: https://github.com/google/brotli/releases
+ * `brotli` command
+ * `uglify-es` nodejs module
+ * `AnyEvent::Filesys::Notify` perl module
