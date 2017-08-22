@@ -338,7 +338,9 @@ var UIEvents = function(app) {
 
     if (text.substring(0,1) == "/") {
       try {
-         send.push(app.commands.handle(panel, text.substring(1)));
+        var val = app.commands.handle(panel, text.substring(1));
+        if (val)
+          send.push(val);
       }
       catch (e) {
         alert(e);

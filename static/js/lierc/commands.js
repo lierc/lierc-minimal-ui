@@ -44,6 +44,7 @@ var Commands = function(app) {
     default:
       alert("Unknown command: 'panel " + line + "'");
     }
+    return;
   });
 
   add_command("join", ["j"], function(panel, line) {
