@@ -26,8 +26,10 @@ var UIEvents = function(app) {
       return;
     }
     else if (e.which == 27) {
-      var open = document.querySelectorAll('.popup-toggle.open');
-      open.forEach(function(el) { el.classList.remove('open'); });
+      document.querySelectorAll('.popup-toggle.open,.flex-wrap.open')
+        .forEach(function(el) {
+          el.classList.remove('open');
+        });
     }
 
     /* task switcher is open, special keys */
