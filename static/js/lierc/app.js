@@ -727,6 +727,7 @@ var App = function(url, user) {
       vars.User = config.User;
       vars.Pass = config.Pass;
       vars.Alias = config.Alias;
+      vars.SASL = config.SASL;
       vars.Channels = config.Channels.join(", ");
       vars.Highlight = config.Highlight.join(", ");
 
@@ -775,6 +776,7 @@ var App = function(url, user) {
         Host: form.querySelector('input[name="Host"]').value,
         Port: parseInt(form.querySelector('input[name="Port"]').value),
         Ssl:  form.querySelector('input[name="Ssl"]').checked,
+        SASL:  form.querySelector('input[name="SASL"]').checked,
         Nick: form.querySelector('input[name="Nick"]').value,
         User: form.querySelector('input[name="User"]').value,
         Pass: form.querySelector('input[name="Pass"]').value,

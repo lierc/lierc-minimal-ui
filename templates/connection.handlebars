@@ -34,6 +34,13 @@
             <input name="Pass" type="text" value="{{Pass}}">
           </fieldset>
         </div>
+        <div class="input-h-group">
+          <fieldset class="input-group" style="width:100%">
+            <input style="float:left" name="SASL" type="checkbox"{{#if SASL}} checked=checked{{/if}}>
+            <label style="float:left;width:auto" for="sasl">Require SASL</label>
+          </fieldset>
+        </div>
+        <hr>
         <fieldset class="input-group">
           <label for="channels">Channels
             <span>(comma separated)</span>

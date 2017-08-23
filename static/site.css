@@ -754,6 +754,12 @@ body.disconnected #reconnect {
   color: red;
 }
 
+.overlay hr {
+  border: none;
+  border-top: 1px solid #ccc;
+  height: 0;
+}
+
 .overlay .submit-group {
   margin: 0;
   padding: 0;
