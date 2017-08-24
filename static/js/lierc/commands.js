@@ -65,8 +65,10 @@ var Commands = function(app) {
     return parts.join(" ");
   });
 
-  add_command("ignores", [], function() {
+  add_command("ignores", [], function(panel) {
     // TODO sane way to return this list to the user?
+    ignores = app.ignores(panel).join("\n");
+    alert(ignores);
   });
 
   add_command("ignore", [], function(panel, nick) {

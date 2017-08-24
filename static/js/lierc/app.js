@@ -578,7 +578,7 @@ var App = function(url, user) {
           if (panel.ignore_nicks.indexOf(nick) != -1) {
             return;
           }
-          
+
           if (app.is_reaction(message))
             reactions.push(message);
           else {
@@ -922,6 +922,10 @@ var App = function(url, user) {
     var value = app.get_pref(panel.id + '-ignore-nicks');
     if (value !== undefined)
       panel.ignore_nicks = value;
+  };
+
+  app.ignores = function(panel) {
+    return panel.ignore_nicks;
   };
 
   app.add_ignore = function(panel, nick) {
