@@ -65,6 +65,21 @@ var Commands = function(app) {
     return parts.join(" ");
   });
 
+  add_command("ignores", [], function(panel, line) {
+    var connection = panel.connection;
+    return connection.ignores;
+  }
+
+  add_command("ignore", [], function(panel, line) {
+    var connection = panel.connection;
+    app.add_ignore(line);
+  }
+
+  add_command("unignore", [], function(panel, line) {
+    var connection = panel.connection;
+    app.remove_ignore(line);
+  }
+
   add_command("last", ["lastlog", "l"], function(panel, line) {
     if (panel.type == "status") {
       throw "Can not search on a status panel.";
