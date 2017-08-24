@@ -80,7 +80,7 @@ var App = function(url, user) {
       var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
-      if (conn.ignores.indexOf(nick) != -1) {
+      if (panel.ignore_nicks.indexOf(nick) != -1) {
         return;
       }
 
@@ -94,6 +94,13 @@ var App = function(url, user) {
     connection.on("channel:msg", function(conn, channel, message) {
       var panel = app.get_panel(channel, conn);
       var html = Render(message);
+
+      nick = message.Prefix.Name
+
+      if (panel.ignore_nicks.indexOf(nick) != -1) {
+        return;
+      }
+
       if (html) {
         panel.append(html);
         app.update_title(true);
@@ -374,7 +381,7 @@ var App = function(url, user) {
 
     app.collapse_embeds_pref(panel);
     app.monospace_nicks_pref(panel);
-    app.ignores_pref(conn);
+    app.ignore_nicks_pref(panel);
 
     panel.elem.nav.addEventListener('click', function(e) {
       e.preventDefault();
@@ -566,6 +573,12 @@ var App = function(url, user) {
           message.Id = e.MessageId;
           message.Highlight = e.Highlight;
 
+          nick = message.Prefix.Name
+
+          if (panel.ignore_nicks.indexOf(nick) != -1) {
+            return;
+          }
+          
           if (app.is_reaction(message))
             reactions.push(message);
           else {
@@ -905,20 +918,20 @@ var App = function(url, user) {
     app.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
   };
 
-  app.ignores_pref = function(panel) {
-    var value = app.get_pref(conn.id + '-ignores');
+  app.ignore_nicks_pref = function(panel) {
+    var value = app.get_pref(panel.id + '-ignore-nicks');
     if (value !== undefined)
-      conn.ignores = value;
+      panel.ignore_nicks = value;
   };
 
   app.add_ignore = function(panel, nick) {
-    conn.add_ignore(nick);
-    app.update_pref(conn.id + "-monospace-nicks", conn.ignores);
+    panel.add_ignore(nick);
+    app.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
   };
 
   app.remove_ignore = function(panel, nick) {
-    conn.remove_ignore(nick);
-    app.update_pref(conn.id + "-ignores", conn.ignores);
+    panel.remove_ignore(nick);
+    app.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
   };
 
   app.update_pref = function(name, value) {
