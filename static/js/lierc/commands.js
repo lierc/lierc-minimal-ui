@@ -70,7 +70,7 @@ var Commands = function(app) {
     // TODO sane way to return this list to the user?
   }
 
-  add_command("ignore", [], function(panel, line) {
+  add_command("ignore", [], function(panel, line)) {
     var connection = panel.connection;
     app.add_ignore(line);
   }
