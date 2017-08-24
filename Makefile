@@ -43,7 +43,7 @@ $(build_css): $(css)
 
 .PHONY: watch
 watch:
-	bin/watch --exec make --dir . --ignore site.js --ignore site.css --ignore .swp --ignore .gz --ignore .br --ignore .js.map
+	bin/watch --exec make --dir . --ignore site.js --ignore site.css --ignore .swp --ignore .gz --ignore .br --ignore .js.map --ignore .git
 
 .PHONY: emoji
 emoji:

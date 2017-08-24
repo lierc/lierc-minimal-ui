@@ -271,11 +271,9 @@ var Render = function(message, force_raw) {
     var controls = document.createElement('DIV');
     controls.classList.add('message-controls', 'popup-toggle');
 
-    if (!message.Prefix.Self) {
-      var react = document.createElement('DIV');
-      react.classList.add('message-react', 'popup-toggle');
-      controls.appendChild(react);
-    }
+    var react = document.createElement('DIV');
+    react.classList.add('message-react', 'popup-toggle');
+    controls.appendChild(react);
 
     var menu = document.createElement('DIV');
     menu.classList.add('message-menu', 'popup-toggle');
