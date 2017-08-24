@@ -67,7 +67,7 @@ var Commands = function(app) {
 
   add_command("ignores", [], function(panel, line) {
     var connection = panel.connection;
-    return connection.ignores;
+    // TODO sane way to return this list to the user?
   }
 
   add_command("ignore", [], function(panel, line) {
