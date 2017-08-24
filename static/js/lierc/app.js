@@ -913,12 +913,12 @@ var App = function(url, user) {
 
   app.add_ignore = function(panel, nick) {
     conn.add_ignore(nick);
-    app.update_pref(conn.id + "-monospace-nicks", panel.ignores);
+    app.update_pref(conn.id + "-monospace-nicks", conn.ignores);
   };
 
   app.remove_ignore = function(panel, nick) {
     conn.remove_ignore(nick);
-    app.update_pref(conn.id + "-ignores", panel.ignores);
+    app.update_pref(conn.id + "-ignores", conn.ignores);
   };
 
   app.update_pref = function(name, value) {
