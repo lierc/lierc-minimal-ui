@@ -6,6 +6,7 @@ var Connection = function(id, host, nick) {
   conn.nick = nick;
   conn.connected = false;
   conn.channels = [];
+  conn.ignores = [];
   conn.isupport = {};
   conn.prefix = [ ["v","+"],["o","@"],["h", "%"]];
   conn.chantypes = ["#","&"];
@@ -26,6 +27,20 @@ var Connection = function(id, host, nick) {
       });
     }
   }
+
+
+  conn.add_ignore = function(nick) {
+    if (conn.ignores.indexOf(nick) == -1) {
+      conn.ignores.push(nick);
+    }
+  };
+
+  conn.remove_ignore = function(nick) {
+    var i = conn.ignores.indexOf(nick);
+    if (i != -1) {
+      conn.ignores.splice(i, 1);
+    }
+  };
 
   conn.remove_channel = function(name) {
     var i = conn.channels.indexOf(name);
