@@ -68,17 +68,17 @@ var Commands = function(app) {
   add_command("ignores", [], function(panel, line) {
     var connection = panel.connection;
     // TODO sane way to return this list to the user?
-  }
+  });
 
-  add_command("ignore", [], function(panel, line)) {
+  add_command("ignore", [], function(panel, line) {
     var connection = panel.connection;
     app.add_ignore(line);
-  }
+  });
 
   add_command("unignore", [], function(panel, line) {
     var connection = panel.connection;
     app.remove_ignore(line);
-  }
+  });
 
   add_command("last", ["lastlog", "l"], function(panel, line) {
     if (panel.type == "status") {
