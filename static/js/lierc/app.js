@@ -374,7 +374,7 @@ var App = function(url, user) {
 
     app.collapse_embeds_pref(panel);
     app.monospace_nicks_pref(panel);
-    app.ignores_pref(panel);
+    app.ignores_pref(conn);
 
     panel.elem.nav.addEventListener('click', function(e) {
       e.preventDefault();
