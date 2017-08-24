@@ -80,6 +80,10 @@ var App = function(url, user) {
       var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
+      if (conn.ignores.indexOf(nick) != -1) {
+        return;
+      }
+
       panel.append(Render(message));
       app.update_title(true);
 
@@ -370,6 +374,7 @@ var App = function(url, user) {
 
     app.collapse_embeds_pref(panel);
     app.monospace_nicks_pref(panel);
+    app.ignores_pref(panel);
 
     panel.elem.nav.addEventListener('click', function(e) {
       e.preventDefault();
@@ -898,6 +903,22 @@ var App = function(url, user) {
   app.remove_monospace_nick = function(panel, nick) {
     panel.remove_monospace_nick(nick);
     app.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+  };
+
+  app.ignores_pref = function(panel) {
+    var value = app.get_pref(conn.id + '-ignores');
+    if (value !== undefined)
+      conn.ignores = value;
+  };
+
+  app.add_ignore = function(panel, nick) {
+    conn.add_ignore(nick);
+    app.update_pref(conn.id + "-monospace-nicks", panel.ignores);
+  };
+
+  app.remove_ignore = function(panel, nick) {
+    conn.remove_ignore(nick);
+    app.update_pref(conn.id + "-ignores", panel.ignores);
   };
 
   app.update_pref = function(name, value) {
