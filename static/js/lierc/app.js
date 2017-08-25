@@ -80,9 +80,8 @@ var App = function(url, user) {
       var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
-      if (panel.ignore_nicks.indexOf(nick) != -1) {
+      if (app.is_ignore(panel, message))
         return;
-      }
 
       panel.append(Render(message));
       app.update_title(true);
@@ -95,11 +94,8 @@ var App = function(url, user) {
       var panel = app.get_panel(channel, conn);
       var html = Render(message);
 
-      nick = message.Prefix.Name
-
-      if (panel.ignore_nicks.indexOf(nick) != -1) {
+      if (app.is_ignore(panel, message))
         return;
-      }
 
       if (html) {
         panel.append(html);
@@ -573,11 +569,8 @@ var App = function(url, user) {
           message.Id = e.MessageId;
           message.Highlight = e.Highlight;
 
-          nick = message.Prefix.Name
-
-          if (panel.ignore_nicks.indexOf(nick) != -1) {
+          if (app.is_ignore(panel, message))
             return;
-          }
 
           if (app.is_reaction(message))
             reactions.push(message);
@@ -926,6 +919,18 @@ var App = function(url, user) {
 
   app.ignores = function(panel) {
     return panel.ignore_nicks;
+  };
+
+  app.is_ignore = function(panel, message) {
+    if (message.Command != "PRIVMSG")
+      return false;
+
+    var nick = message.Prefix.Name;
+    if (panel.ignore_nicks.indexOf(nick) != -1) {
+      return true;
+    }
+
+    return false;
   };
 
   app.add_ignore = function(panel, nick) {
