@@ -13,6 +13,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.backlog_empty = false;
   panel.reactions = [];
   panel.monospace_nicks = [];
+  panel.ignore_nicks = [];
   panel.ignore_events = false;
   panel.collapse_embeds = false;
   panel.show_nicklist = false;
@@ -39,7 +40,7 @@ var Panel = function(name, id, connection, mobile) {
     panel.mode = mode;
     panel.update_nav();
   };
-  
+
   panel.update_nicks = function(nicks) {
     var order = [ "@", "+" ];
     var sorted = Object.keys(nicks).map(function(n) {
@@ -825,6 +826,19 @@ var Panel = function(name, id, connection, mobile) {
 
       panel.show_nicklist = bool;
     });
+  };
+
+  panel.add_ignore = function(nick) {
+    if (panel.ignore_nicks.indexOf(nick) == -1) {
+      panel.ignore_nicks.push(nick);
+    }
+  };
+
+  panel.remove_ignore = function(nick) {
+    var i = panel.ignore_nicks.indexOf(nick);
+    if (i != -1) {
+      panel.ignore_nicks.splice(i, 1);
+    }
   };
 
   panel.add_monospace_nick = function(nick) {

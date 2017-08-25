@@ -65,6 +65,22 @@ var Commands = function(app) {
     return parts.join(" ");
   });
 
+  add_command("ignores", [], function(panel) {
+    // TODO sane way to return this list to the user?
+    alert(app.ignores(panel).join("\n"));
+    return;
+  });
+
+  add_command("ignore", [], function(panel, nick) {
+    app.add_ignore(panel, nick);
+    return;
+  });
+
+  add_command("unignore", [], function(panel, nick) {
+    app.remove_ignore(panel, nick);
+    return;
+  });
+
   add_command("last", ["lastlog", "l"], function(panel, line) {
     if (panel.type == "status") {
       throw "Can not search on a status panel.";
