@@ -66,18 +66,27 @@ var Commands = function(app) {
   });
 
   add_command("ignores", [], function(panel) {
-    // TODO sane way to return this list to the user?
-    alert(app.ignores(panel).join("\n"));
+    var ignores = panel.ignore_nicks;
+    var text = "";
+    if (ignores.length) {
+      text = "Ignores:\n" . ignores.join("\n");
+    }
+    else {
+      text = "No ignores for " + panel.name;
+    }
+    panel.info(text);
     return;
   });
 
   add_command("ignore", [], function(panel, nick) {
     app.add_ignore(panel, nick);
+    panel.info("Ignoring " + nick + " in channel " + panel.name);
     return;
   });
 
   add_command("unignore", [], function(panel, nick) {
     app.remove_ignore(panel, nick);
+    panel.info("Unignored " + nick + " in channel " + panel.name);
     return;
   });
 

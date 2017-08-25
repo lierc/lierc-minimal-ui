@@ -451,6 +451,16 @@ var Panel = function(name, id, connection, mobile) {
     }
   };
 
+  panel.info = function(text) {
+    var li = document.createElement('LI');
+    li.classList.add('message', 'info', 'monospace');
+    li.textContent = text;
+
+    panel.scroll(function() {
+      panel.elem.list.appendChild(li)
+    });
+  };
+
   panel.resize_filler = function() {
     if (!panel.focused) return;
 

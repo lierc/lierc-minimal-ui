@@ -65,6 +65,22 @@ a:hover {
   animation: fa-spin 2s infinite linear;
 }
 
+#panel ol li.info.monospace,
+#panel ol li.info {
+  background: #eee;
+  padding: 2px 10px;
+  white-space: pre-wrap;
+  color: #333;
+  font-family: "Menlo", "Inconsolata", "Consolas",
+    "Droid Sans Mono", "Monaco", monospace;
+  font-size: 14px;
+  padding
+}
+
+#panel ol li.chat.info:hover {
+  background: #eee;
+}
+
 #panel ol li.chat {
   padding: 2px 10px;
   position: relative;
