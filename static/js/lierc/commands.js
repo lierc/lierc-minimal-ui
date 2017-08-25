@@ -68,12 +68,14 @@ var Commands = function(app) {
   add_command("ignores", [], function(panel) {
     var ignores = panel.ignore_nicks;
     var text = "";
+
     if (ignores.length) {
-      text = "Ignores:\n" . ignores.join("\n");
+      text = "Ignores:\n" + ignores.join("\n");
     }
     else {
       text = "No ignores for " + panel.name;
     }
+
     panel.info(text);
     return;
   });
