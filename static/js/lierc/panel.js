@@ -298,7 +298,7 @@ var Panel = function(name, id, connection, mobile) {
           list.appendChild(els[i]);
         }
       }
-      panel.check_dates(els);
+      panel.check_dates(els, true);
     });
 
     requestAnimationFrame(function() {
@@ -320,11 +320,11 @@ var Panel = function(name, id, connection, mobile) {
     panel.last_seen_separator();
   };
 
-  panel.check_dates = function(els) {
-    var len = els.length - 1;
+  panel.check_dates = function(els, prepend) {
+    var len = els.length;
     var prev_ts, prev_date;
 
-    if (panel.oldest_message) {
+    if (prepend && panel.oldest_message) {
       prev_date = panel.oldest_message;
       prev_ts = [prev_date.getYear(), prev_date.getMonth(), prev_date.getDate()].join(":");
     }
@@ -347,7 +347,8 @@ var Panel = function(name, id, connection, mobile) {
       }
     }
 
-    panel.oldest_message = prev_date;
+    if (prepend)
+      panel.oldest_message = prev_date;
   };
 
   var months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
@@ -483,7 +484,7 @@ var Panel = function(name, id, connection, mobile) {
         }
 
         if (el.previousSibling) {
-          panel.check_dates([el.previousSibling, el]);
+          panel.check_dates([el, el.previousSibling]);
         }
       });
     }
