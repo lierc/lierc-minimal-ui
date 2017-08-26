@@ -89,7 +89,7 @@ a:hover {
 
 #panel ol li.chat.loading {
   opacity: 0;
-  transition: opacity 0.4s ease-out;
+  transition: opacity 0.2s ease-out;
 }
 
 #panel ol li.chat.loading.loaded {

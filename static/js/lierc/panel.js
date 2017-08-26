@@ -482,7 +482,9 @@ var Panel = function(name, id, connection, mobile) {
           }
         }
 
-        panel.check_dates([el]);
+        if (el.previousSibling) {
+          panel.check_dates([el.previousSibling, el]);
+        }
       });
     }
     else {
