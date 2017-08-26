@@ -299,6 +299,8 @@ var Render = function(message, force_raw) {
 
     if (message.Id)
       li.setAttribute('data-message-id', message.Id);
+    if (message.Time)
+      li.setAttribute('data-time', message.Time);
     return li;
   }
 

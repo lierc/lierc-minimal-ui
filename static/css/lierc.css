@@ -153,6 +153,14 @@ a:hover {
   line-height: 1.2em;
 }
 
+#panel ol .date-separator {
+  text-align: center;
+  font-weight: bold;
+  color: #333;
+  font-size: 12px;
+  text-decoration: underline;
+}
+
 #panel ol li.event + .last-read + li.event,
 #panel ol li.event + li.event {
   border-top: none;

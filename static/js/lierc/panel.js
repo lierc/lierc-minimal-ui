@@ -20,6 +20,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.first_focus = true;
   panel.last_seen = null;
   panel.path = window.location.pathname + "#/" + connection.id + "/" + encodeURIComponent(name);
+  panel.oldest_message = null;
 
   panel.mode = "";
   panel.network = connection.host;
@@ -216,6 +217,7 @@ var Panel = function(name, id, connection, mobile) {
     panel.elem.nav.classList.remove("active");
     panel.clear_lists();
     panel.backlog_empty = false;
+    panel.oldest_message = null;
   };
 
   panel.remove_elems = function() {
@@ -296,6 +298,7 @@ var Panel = function(name, id, connection, mobile) {
           list.appendChild(els[i]);
         }
       }
+      panel.check_dates(els);
     });
 
     requestAnimationFrame(function() {
@@ -315,6 +318,44 @@ var Panel = function(name, id, connection, mobile) {
     Embed.embed_all(els, panel);
 
     panel.last_seen_separator();
+  };
+
+  panel.check_dates = function(els) {
+    var len = els.length - 1;
+    var prev = panel.oldest_message;
+
+    for (var i=len; i >= 0; i--) {
+      if (getComputedStyle(els[i]).display == "none")
+        continue;
+
+      var time = els[i].getAttribute('data-time');
+      if (time) {
+        var date = new Date(time * 1000);
+        var ts = [date.getYear(), date.getMonth(), date.getDay()].join(":");
+        if (prev && prev != ts) {
+          panel.insert_date_separator_before(els[i], date);
+        }
+        prev = ts;
+      }
+    }
+
+    if (prev)
+      panel.oldest_message = prev;
+  };
+
+  var months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
+  var days   = [ "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat" ];
+  panel.insert_date_separator_before = function(el, date) {
+    if (!panel.focused)
+      return;
+
+      var sep = Template('date_separator', {
+        day: days[ date.getDay() ],
+        month: months[ date.getMonth() ],
+        date: date.getDate(),
+        year: (date.getYear() + 1900),
+      });
+      el.insertAdjacentHTML('beforebegin', sep);
   };
 
   panel.emojify = function(el) {
