@@ -326,7 +326,7 @@ var Panel = function(name, id, connection, mobile) {
 
     if (panel.oldest_message) {
       prev_date = panel.oldest_message;
-      prev_ts = [prev_date.getYear(), prev_date.getMonth(), prev_date.getDate()].join(":")
+      prev_ts = [prev_date.getYear(), prev_date.getMonth(), prev_date.getDate()].join(":");
     }
 
     for (var i=0; i < len; i++) {
@@ -351,7 +351,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   var months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
-  var days   = [ "Sun", "Mon", "Tues", "Wed", "Thur", "Fri", "Sat" ];
+  var days   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
   panel.insert_date_separator_before = function(el, date) {
     if (!panel.focused)
       return;
@@ -481,6 +481,8 @@ var Panel = function(name, id, connection, mobile) {
             Embed.embed_all([el], panel);
           }
         }
+
+        panel.check_dates([el]);
       });
     }
     else {
