@@ -322,25 +322,32 @@ var Panel = function(name, id, connection, mobile) {
 
   panel.check_dates = function(els) {
     var len = els.length - 1;
-    var prev = panel.oldest_message;
+    var prev_ts, prev_date;
 
-    for (var i=len; i >= 0; i--) {
+    if (panel.oldest_message) {
+      prev_date = panel.oldest_message;
+      prev_ts = [prev_date.getYear(), prev_date.getMonth(), prev_date.getDate()].join(":")
+    }
+
+    for (var i=0; i < len; i++) {
       if (getComputedStyle(els[i]).display == "none")
         continue;
 
       var time = els[i].getAttribute('data-time');
       if (time) {
         var date = new Date(time * 1000);
-        var ts = [date.getYear(), date.getMonth(), date.getDay()].join(":");
-        if (prev && prev != ts) {
-          panel.insert_date_separator_before(els[i], date);
+        var ts = [date.getYear(), date.getMonth(), date.getDate()].join(":");
+
+        if (prev_ts && prev_ts != ts) {
+          panel.insert_date_separator_before(els[i], prev_date);
         }
-        prev = ts;
+
+        prev_ts = ts;
+        prev_date = date;
       }
     }
 
-    if (prev)
-      panel.oldest_message = prev;
+    panel.oldest_message = prev_date;
   };
 
   var months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
@@ -355,7 +362,7 @@ var Panel = function(name, id, connection, mobile) {
         date: date.getDate(),
         year: (date.getYear() + 1900),
       });
-      el.insertAdjacentHTML('beforebegin', sep);
+      el.insertAdjacentHTML('afterend', sep);
   };
 
   panel.emojify = function(el) {
