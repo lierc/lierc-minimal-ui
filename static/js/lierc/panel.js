@@ -361,7 +361,7 @@ var Panel = function(name, id, connection, mobile) {
         day: days[ date.getDay() ],
         month: months[ date.getMonth() ],
         date: date.getDate(),
-        year: (date.getYear() + 1900),
+        year: (date.getYear() + 1900)
       });
       el.insertAdjacentHTML('afterend', sep);
   };
@@ -440,7 +440,7 @@ var Panel = function(name, id, connection, mobile) {
       if (id && panel.elem.list.querySelectorAll('li[data-message-id="'+id+'"]').length)
         return;
 
-      panel.scroll(function() {
+      var append = function() {
         panel.elem.list.appendChild(el);
 
         if (el.classList.contains("chat")) {
@@ -486,7 +486,9 @@ var Panel = function(name, id, connection, mobile) {
         if (el.previousSibling) {
           panel.check_dates([el, el.previousSibling]);
         }
-      });
+      };
+
+      panel.is_scrolled() ? panel.scroll(append) :  append();
     }
     else {
       el.innerHTML = '';
