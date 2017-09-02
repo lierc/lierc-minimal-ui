@@ -2,7 +2,7 @@ var UIEvents = function(app) {
   var app = app;
   var events = this;
   var max_userhost_len = 63 + 10 + 1;
-  var lang = window.navigator.language;
+  var mac = /^Mac/.test(window.navigator.platform);
 
   function clickTouchEvent(el, f) {
     ['click', 'touch'].forEach(function(type) {
@@ -104,7 +104,7 @@ var UIEvents = function(app) {
       return;
     }
     /* toggle nick list */
-    else if (e.which == 186 && mods['meta']) {
+    else if (!mac && e.which == 186 && mods['meta']) {
       document.querySelector('#toggle-nicks').click();
       return;
     }
