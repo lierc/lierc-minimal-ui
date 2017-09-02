@@ -538,7 +538,7 @@ var App = function(url, user) {
     });
   };
 
-  app.fill_backlog = function(panel, msgid) {
+  app.fill_backlog = function(panel, msgid, focus) {
     if (panel.backlog_empty) return;
 
     var connection = app.connections[panel.connection];
@@ -591,7 +591,10 @@ var App = function(url, user) {
 
         panel.react_backlog_check();
         panel.set_loading(false);
-
+        if (focus) {
+          panel.update_seen();
+          app.save_seen(panel);
+        }
       },
       error: function(e) {
         app.filling_backlog = false;
@@ -705,7 +708,7 @@ var App = function(url, user) {
     panel.focus();
     app.focused = panel;
     window.history.replaceState({}, "", panel.path);
-    app.check_scroll();
+    app.check_scroll(true);
     app.update_title();
 
     if (panel.type == "channel") {
@@ -808,7 +811,7 @@ var App = function(url, user) {
     });
   };
 
-  app.check_scroll = function() {
+  app.check_scroll = function(focus) {
     if (app.filling_backlog
       || !app.focused
       || app.focused.backlog_empty
@@ -823,7 +826,7 @@ var App = function(url, user) {
     if (app.elem.scroll.scrollTop <= 1) {
       app.filling_backlog = true;
       app.fill_backlog(
-        app.focused, app.focused.oldest_message_id()
+        app.focused, app.focused.oldest_message_id(), focus
       );
     }
   };
