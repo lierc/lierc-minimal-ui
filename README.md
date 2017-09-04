@@ -14,5 +14,5 @@ Dependencies
 ============
 
  * `brotli` command
- * `uglify-es` nodejs module
+ * `handlebars` nodejs module
  * `AnyEvent::Filesys::Notify` perl module
