@@ -1,4 +1,4 @@
-var Notifier = function(app) {
+var WebPush = function(app) {
   var notifier = this;
   notifier.subscribed = false;
 
@@ -131,3 +131,48 @@ var Notifier = function(app) {
     notifier.hide();
   }
 };
+
+var APN = function(app) {
+  var apn = this;
+  apn.subscribed = false;
+  apn.config = {};
+
+  apn.setup = function() {
+    app.api.get("/notification/apn/config", {
+      success: function(c) {
+        apn.config = c;
+        var per = window.safari.pushNotification.permission(c.push_id);
+        apn.check_per(per);
+      }
+    });
+  };
+
+  apn.check_per = function(per) {
+    if (per.permission === 'default') {
+      window.safari.pushNotification.requestPermission(
+        apn.config.service_url,
+        apn.config.push_id,
+        { user: apn.config.user },
+        function(per) {
+          apn.check_per(per)
+        }
+      );
+    }
+    else if (per.permission == 'denied') {
+      console.log(per);
+    }
+    else if (per.permission == 'granted') {
+      console.log(per);
+    }
+  };
+
+  if (APN.supported()) {
+    apn.setup();
+  }
+};
+
+APN.supported = function() {
+  return 'safari' in window && 'pushNotification' in window.safari
+};
+
+var Notifier = APN.supported() ? APN : WebPush;
