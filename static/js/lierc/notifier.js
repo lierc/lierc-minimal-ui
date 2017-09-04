@@ -159,10 +159,10 @@ var APN = function(app) {
       );
     }
     else if (per.permission == 'denied') {
-      console.log(per);
+      document.getElementById("web-notify").classList.remove("enabled");
     }
     else if (per.permission == 'granted') {
-      console.log(per);
+      document.getElementById("web-notify").classList.add("enabled");
     }
   };
 
