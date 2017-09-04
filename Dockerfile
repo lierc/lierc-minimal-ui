@@ -3,7 +3,7 @@ FROM node
 WORKDIR /opt/lierc-basicui
 RUN apt-get update && apt-get install -y cpanminus
 
-RUN npm install -g uglify-es handlebars
+RUN npm install -g handlebars
 RUN cpanm -nq AnyEvent::Filesys::Notify Term::ANSIColor
 
 RUN git clone https://github.com/google/brotli.git
