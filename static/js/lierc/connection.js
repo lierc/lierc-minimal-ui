@@ -288,6 +288,28 @@ var Connection = function(id, host, nick) {
       }
       break;
 
+    case "NOTICE":
+      var nick = message.Prefix.Name;
+      var name = message.Params[0];
+      var text = message.Params[1];
+      var priv = conn.chantypes.indexOf(name[0]) == -1;
+      var type = "msg";
+
+      var channel = conn.channel(name);
+
+      if (name == conn.nick && priv)
+        fire("private:"+type, conn.id, nick, message);
+      else if (priv)
+        fire("private:"+type, conn.id, name, message);
+      else if (channel)
+        fire("channel:"+type, conn.id, name, message);
+      else
+        fire("status", conn.id, message);
+
+      break;
+
+
+
     case "PRIVMSG":
       var nick = message.Prefix.Name;
       var name = message.Params[0];
