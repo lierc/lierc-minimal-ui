@@ -254,6 +254,10 @@ var Panel = function(name, id, connection, mobile) {
       if (!el.matches('li.chat'))
         continue;
 
+      var id = el.getAttribute('data-message-id');
+      if (id && panel.elem.list.querySelectorAll('li[data-message-id="'+id+'"]').length)
+        continue;
+
       var time = el.querySelector('time');
       if (time) {
         if (time.innerHTML == prev_time)
