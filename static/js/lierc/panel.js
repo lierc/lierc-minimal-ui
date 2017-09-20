@@ -714,7 +714,6 @@ var Panel = function(name, id, connection, mobile) {
 
         video.addEventListener('loadeddata', (function(video, link) {
           return function(e) {
-            var s = panel.scroller;
             var wrap = document.createElement('DIV');
             var toggle = document.createElement('SPAN');
 
@@ -770,14 +769,36 @@ var Panel = function(name, id, connection, mobile) {
 
         audio.addEventListener('loadeddata', (function(audio, link) {
           return function(e) {
+            var wrap = document.createElement('DIV');
+            var toggle = document.createElement('SPAN');
+
             panel.scroll(function() {
-              var wrap = document.createElement('DIV');
+              if (panel.collapse_embeds) {
+                toggle.setAttribute("class", "image-toggle hidden");
+                wrap.setAttribute("class", "image-wrap hidden");
+              }
+              else {
+                toggle.setAttribute("class", "image-toggle");
+                wrap.setAttribute("class", "image-wrap");
+              }
+              toggle.setAttribute("aria-hidden", "true");
+              link.parentNode.insertBefore(toggle, link.nextSibling);
+              wrap.appendChild(audio);
               message.appendChild(wrap);
-              link.parentNode.removeChild(link);
-              wrap.appendChild(link);
-              link.innerHTML = "";
-              link.appendChild(audio);
-              wrap.className = "image-wrap";
+            });
+            toggle.addEventListener("click", function(e) {
+              e.preventDefault();
+              var hidden = wrap.classList.contains("hidden");
+              if (hidden) {
+                panel.scroll(function() {
+                  wrap.classList.remove("hidden");
+                  toggle.classList.remove("hidden");
+                });
+              }
+              else {
+                wrap.classList.add("hidden");
+                toggle.classList.add("hidden");
+              }
             });
           };
         })(audio, link), false);
