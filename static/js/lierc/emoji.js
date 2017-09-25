@@ -1,6 +1,6 @@
 var Emoji = {
   names: {},
-  regex: new RegExp(),
+  regex: new RegExp("impossibleregexthatshouldnothappen"),
   list:  document.querySelector('#emoji ul'),
 };
 
@@ -89,7 +89,9 @@ Emoji.load = function() {
       }
     }
 
-    window.requestAnimationFrame(append_chunk);
+    if (Emoji.list) {
+      window.requestAnimationFrame(append_chunk);
+    }
   });
 };
 
