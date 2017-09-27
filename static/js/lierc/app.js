@@ -135,7 +135,7 @@ var App = function(url, user) {
 
     connection.on("status:raw", function(conn, message) {
       var panel = app.get_panel("status", conn);
-      panel.append(Render(message, true));
+      panel.append(Render(message, {raw: true}));
     });
 
     connection.on("status", function(conn, message) {

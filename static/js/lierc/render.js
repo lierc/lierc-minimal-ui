@@ -1,5 +1,6 @@
-var Render = function(message, force_raw) {
-  if (force_raw) return raw(message);
+var Render = function(message, opts) {
+  if (!opts) opts = {};
+  if (opts['raw']) return raw(message);
   switch (String(message.Command)) {
   case "NICK":
     var old = message.Prefix.Name;
@@ -148,7 +149,7 @@ var Render = function(message, force_raw) {
       li,
       [
         flex(from, wrap, timestamp(message)),
-        controls(message)
+        opts['controls'] !== false ? controls(message) : null
       ]
     );
 
@@ -200,7 +201,10 @@ var Render = function(message, force_raw) {
 
   function append(node, children) {
     for (var i=0; i < children.length; i++) {
-      if (typeof(children[i]) === "string") {
+      if (children[i] === null) {
+        // do nothing
+      }
+      else if (typeof(children[i]) === "string") {
         node.appendChild(document.createTextNode(children[i]));
       }
       else {

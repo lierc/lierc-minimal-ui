@@ -33,3 +33,7 @@
   padding-right: 0;
   border-right: none;
 }
+
+#panel ol:before {
+  display: none;
+}

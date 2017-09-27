@@ -3,8 +3,8 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-    <link type="text/css" rel="stylesheet" href="/static/css/search.css"></link>
     <link type="text/css" rel="stylesheet" href="/static/css/lierc.css"></link>
+    <link type="text/css" rel="stylesheet" href="/static/css/search.css"></link>
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css"></link>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
@@ -30,7 +30,14 @@
       </div>
 
       <div class="log-search-group">
-        <input required id="date" type="date" name="date">
+        <input id="nick" type="nick" name="nick" placeholder="nick">
+      </div>
+
+      <div class="log-search-group">
+        <label for="from">Date</label>
+        <input required id="from" type="date" name="from">
+        -
+        <input required id="to" type="date" name="to">
       </div>
 
       <div class="log-search-group">

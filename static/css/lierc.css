@@ -1029,6 +1029,11 @@ header:hover #global-controls-toggle {
   color: #fff;
 }
 
+#global-controls sup {
+  font-size: 9px;
+  line-height: 0px;
+}
+
 #global-controls li {
   border-bottom: 1px solid rgba(0,0,0,0.05);
 }
@@ -1578,10 +1583,10 @@ ul.channel-controls li a:hover {
   overflow: hidden;
   max-width: 100%;
   box-sizing: border-box;
-  border-radius: 5px;
   border: 1px solid #eee;
   cursor: pointer;
   max-width: 500px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.05);
 }
 
 .embed-wrap-wrap {
@@ -1597,6 +1602,7 @@ ul.channel-controls li a:hover {
 
 .embed-wrap:hover {
   border-color: #ccc;
+  box-shadow: 0 0 5px rgba(0,0,0,0.15);
 }
 
 .embed-wrap p,
