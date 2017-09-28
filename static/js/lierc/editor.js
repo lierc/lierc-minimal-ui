@@ -244,4 +244,5 @@ var Editor = function(element) {
 
   editor.el.addEventListener("blur", editor.blur);
   editor.el.addEventListener("focus", editor.focus);
+  editor.el.addEventListener("input", editor.save_selection);
 };
