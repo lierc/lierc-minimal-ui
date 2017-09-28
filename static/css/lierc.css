@@ -1586,23 +1586,24 @@ ul.channel-controls li a:hover {
   border: 1px solid #eee;
   cursor: pointer;
   max-width: 500px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.05);
+  outline: 2px solid rgba(0,0,0,0.025);
 }
 
 .embed-wrap-wrap {
   padding: 4px 0 4px 0;
 }
 
+.embed-wrap.open:hover,
 .embed-wrap.open {
   border: none;
   border-radius: 0px;
   cursor: auto;
   max-width: none;
+  outline: none;
 }
 
 .embed-wrap:hover {
-  border-color: #ccc;
-  box-shadow: 0 0 5px rgba(0,0,0,0.15);
+  border: 1px solid #ccc;
 }
 
 .embed-wrap p,
@@ -1619,8 +1620,6 @@ ul.channel-controls li a:hover {
   width: 100px;
   height: 100px;
   float: left;
-  border-top-left-radius: 5px;
-  border-bottom-left-radius: 5px;
   margin-right: 10px;
 }
 

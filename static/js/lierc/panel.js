@@ -407,11 +407,21 @@ var Panel = function(name, id, connection, mobile) {
       li = li.parentNode;
     }
 
+    var use_html = false;
+
     if (embed.provider_name == "Twitter") {
+      use_html = true;
       embed.html = new Handlebars.SafeString(
         embed.html
           .replace(/<script[^>]+>.*<\/script>/, "")
           .replace(/twitter-tweet/, "")
+        );
+    }
+    else if (embed.provider_name == "Facebook") {
+      use_html = true;
+      embed.html = new Handlebars.SafeString(
+        embed.html
+          .replace(/<script[^>]+>.*<\/script>/, "")
         );
     }
 
@@ -423,7 +433,7 @@ var Panel = function(name, id, connection, mobile) {
       title: embed.title,
       description: embed.desciption,
       html: embed.html,
-      use_html: embed.provider_name == "Twitter",
+      use_html: use_html
     });
 
     panel.scroll(function() {

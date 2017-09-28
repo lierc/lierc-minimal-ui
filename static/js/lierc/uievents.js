@@ -736,6 +736,7 @@ var UIEvents = function(app) {
         for (var i=0; i < attrs.length; i ++) {
           script.setAttribute(attrs[i].name, attrs[i].value);
         }
+        script.innerHTML = s.innerHTML;
         head.appendChild(script);
       });
     });
