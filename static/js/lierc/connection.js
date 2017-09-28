@@ -57,7 +57,7 @@ var Connection = function(id, host, nick) {
       ret[nick] = "";
 
       for (var j=0; j < conn.prefix.length; j++) {
-        if (modes.indexOf( conn.prefix[j][0]) != -1) {
+        if (modes && modes.indexOf( conn.prefix[j][0]) != -1) {
           ret[nick] = conn.prefix[j][1] + ret[nick];
         }
       }
