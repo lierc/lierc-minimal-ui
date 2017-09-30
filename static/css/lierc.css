@@ -1651,6 +1651,10 @@ p.embed-source {
   max-height: none;
 }
 
+.embed-wrap[data-embed-provider="twitter"] blockquote > p {
+  white-space: pre-wrap;
+}
+
 .embed-wrap .twitter-tweet-rendered,
 .embed-wrap twitterwidget {
   margin-top: 0px !important;
