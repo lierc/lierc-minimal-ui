@@ -555,6 +555,7 @@ a:hover {
 .nav-title-text {
   display: inline-block;
   padding-left: 4px;
+  text-decoration: underline;
 }
 
 .nav-title:hover {
@@ -587,12 +588,13 @@ a:hover {
   color: #555;
 }
 
-.nav li.missed:before {
-  content: "\f1db";
+.nav li.unread {
+  font-weight: bold;
 }
 
-.nav li.unread:before {
+.nav li.highlighted:before {
   content: "\f111";
+  color: #02c702;
 }
 
 .nav li.disconnected:before {
@@ -610,33 +612,6 @@ a:hover {
   display: inline-block;
 }
 
-.nav li.missed.highlighted:hover,
-.nav li.missed.highlighted,
-.nav li.unread.highlighted:hover,
-.nav li.unread.highlighted,
-.nav li.highlighted:hover,
-.nav li.highlighted {
-  color: #02c702;
-}
-
-.nav li.missed:hover,
-.nav li.missed {
-  color: #ccc;
-}
-
-.nav li.missed.unread:hover,
-.nav li.missed.unread,
-.nav li.unread:hover,
-.nav li.unread {
-  color: #999;
-}
-
-#status li {
-  font-size: 12px;
-  line-height: 12px;
-  padding: 4px 0 4px 5px;
-}
-
 #status li.unread,
 #status li.missed {
   font-weight: bold;
@@ -644,7 +619,7 @@ a:hover {
 
 .nav li {
   cursor: pointer;
-  padding: 7px 0px 7px 5px;
+  padding: 6px 0px 6px 5px;
   color: #ccc;
   font-size: 14px;
   line-height: 14px;
