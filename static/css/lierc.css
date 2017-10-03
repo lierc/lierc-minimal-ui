@@ -515,7 +515,7 @@ a:hover {
 .nav-title:before {
   content: "\f0d7";
   font-family: FontAwesome;
-  color: #ddd;
+  color: #ccc;
   font-size: 16px;
   line-height:15px;
   height: 15px;
@@ -555,11 +555,11 @@ a:hover {
 .nav-title-text {
   display: inline-block;
   padding-left: 4px;
-  text-decoration: underline;
+  font-style: italic;
 }
 
 .nav-title:hover {
-  color: #555;
+  color: #333;
 }
 
 .nav li a.edit-panel,
@@ -571,11 +571,6 @@ a:hover {
   height: 14px;
   opacity: 0;
   color: #ccc;
-}
-
-.nav li.active a.edit-panel,
-.nav li.active a.close-panel {
-  color: #999;
 }
 
 .nav li:hover a.edit-panel,
@@ -626,20 +621,15 @@ a:hover {
   list-style: none;
 }
 
+.nav li.active:hover,
 .nav li.active {
-  background: #ddd;
-  color: #ddd;
+  background: rgba(0,0,0,0.1);
 }
 
 .nav li.selected a,
 .nav li.selected {
   background: #0093ff !important;
   color: #fff !important;
-}
-
-.nav li.active:hover {
-  color: #ddd;
-  background: #ddd;
 }
 
 .nav li:hover {
@@ -871,7 +861,7 @@ div.header-right {
   flex-grow: 0;
   flex-shrink: 0;
   box-sizing: border-box;
-  background: #ffb6c0;
+  background: #fb7e8f;
   font-size: 14px;
   line-height: 14px;
   color: #fff;
@@ -1056,7 +1046,7 @@ header:hover #global-controls-toggle {
 .flex-wrap.open #panel-name,
 .flex-wrap.open #global-controls-toggle {
   background: #fff;
-  color: #ffb6c0;
+  color: #fb7e8f;
 }
 
 .flex-wrap.open #global-controls {
@@ -1179,7 +1169,7 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
   right: 0px;
   padding: 6px 15px;
   background: #fff1f2;
-  color: #ffb6c0;
+  color: #fb7e8f;
   font-size: 18px;
   cursor: pointer;
 }
