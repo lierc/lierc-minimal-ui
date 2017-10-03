@@ -22,3 +22,4 @@ vendor:
 	curl https://raw.githubusercontent.com/github/fetch/master/fetch.js > static/js/vendor/fetch.js
 	curl https://raw.githubusercontent.com/taylorhakes/promise-polyfill/master/promise.js > static/js/vendor/promise.js
 	curl https://raw.githubusercontent.com/RubaXa/Sortable/master/Sortable.js > static/js/vendor/Sortable.js
+	curl https://raw.githubusercontent.com/mfranzke/datalist-polyfill/master/datalist-polyfill.js > static/js/vendor/datalist-polyfill.js
