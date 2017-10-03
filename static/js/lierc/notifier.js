@@ -1,14 +1,14 @@
 var WebPush = function(app) {
-  var notifier = this;
-  notifier.subscribed = false;
+  var webpush = this;
+  webpush.subscribed = false;
 
-  notifier.hide = function() {
+  webpush.hide = function() {
     document.getElementById("web-notify").classList.add("broken");
   };
 
-  notifier.setup = function() {
+  webpush.setup = function() {
     if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-      notifier.hide();
+      webpush.hide();
       console.log("Notifications not supported.");
       return;
     }
@@ -19,7 +19,7 @@ var WebPush = function(app) {
     }
 
     if (!('PushManager' in window)) {
-      notifier.hide();
+      webpush.hide();
       console.log("Push notifications not supported.");
       return;
     }
@@ -28,22 +28,22 @@ var WebPush = function(app) {
       serviceWorkerRegistration.pushManager.getSubscription()
         .then(function(subscription) {
           if(subscription) {
-            notifier.set_enabled(true, subscription);
+            webpush.set_enabled(true, subscription);
           }
         });
     });
   };
 
-  notifier.unsubscribe = function() {
+  webpush.unsubscribe = function() {
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       serviceWorkerRegistration.pushManager.getSubscription()
         .then(function(subscription) {
           if (!subscription) {
-            notifier.set_enabled(false);
+            webpush.set_enabled(false);
             return;
           }
           subscription.unsubscribe().then(function() {
-            notifier.set_enabled(false);
+            webpush.set_enabled(false);
             var part = encodeURIComponent(subscription.endpoint);;
             app.api.delete("/notification/web_push/" + part);
           }).catch(function(e) {
@@ -55,7 +55,7 @@ var WebPush = function(app) {
     });
   };
 
-  notifier.subscribe = function() {
+  webpush.subscribe = function() {
     navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
       app.api.get("/notification/web_push_keys", {
         success: function(res) {
@@ -65,7 +65,7 @@ var WebPush = function(app) {
               applicationServerKey: vapid.buffer
             })
             .then(function(subscription) {
-              notifier.set_enabled(true, subscription);
+              webpush.set_enabled(true, subscription);
             })
             .catch(function(e) {
               if (Notification.permission === 'denied') {
@@ -74,14 +74,14 @@ var WebPush = function(app) {
               else {
                 console.log("Unable to subscribe", e);
               }
-              notifier.set_enabled(false);
+              webpush.set_enabled(false);
             });
         }
       });
     });
   };
 
-  notifier.build_pref = function(sub) {
+  webpush.build_pref = function(sub) {
     var rawKey = sub.getKey ? sub.getKey('p256dh') : '';
     var key = rawKey ?
       base64url.encode(rawKey) :
@@ -99,8 +99,8 @@ var WebPush = function(app) {
     };
   };
 
-  notifier.set_enabled = function(bool, sub) {
-    notifier.subscribed = bool;
+  webpush.set_enabled = function(bool, sub) {
+    webpush.subscribed = bool;
 
     if (bool) {
       if (sub) {
@@ -110,7 +110,7 @@ var WebPush = function(app) {
           'application/x-www-form-urlencoded; charset=UTF-8'
         );
         app.api.post("/notification/web_push", {
-          body: app.api.build_query(notifier.build_pref(sub)),
+          body: app.api.build_query(webpush.build_pref(sub)),
           headers: headers
         });
       }
@@ -124,11 +124,11 @@ var WebPush = function(app) {
   if ("serviceWorker" in navigator) {
     navigator.serviceWorker.register("/service-worker.js")
       .then(function() {
-        notifier.setup();
+        webpush.setup();
       });
   }
   else {
-    notifier.hide();
+    webpush.hide();
   }
 };
 
