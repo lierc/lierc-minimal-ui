@@ -3,7 +3,7 @@ var Logs = function(url) {
   logs.api = new API(url);
   logs.form = document.getElementById("log-search");
   logs.results = document.getElementById("results");
-  logs.nick = document.getElementById("nick");
+  logs.text = document.getElementById("text");
   logs.connection = document.getElementById("connection");
   logs.channel = document.getElementById("channel");
   logs.from = document.getElementById("from");
@@ -98,12 +98,13 @@ var Logs = function(url) {
       from = [from.getYear() + 1900, from.getMonth() + 1, from.getDate()].join("-");
       to   = [to.getYear() + 1900, to.getMonth() + 1, to.getDate()].join("-");
 
+      var data = {};
+      if (logs.text.value != "") {
+        data['text'] = logs.text.value;
+      }
+
       var path = "/connection/" + conn + "/channel/" + chan + "/date/" + from + "/" + to;
-
-      var query = logs.api.build_query({
-        nick: logs.nick.value
-      });
-
+      var query = logs.api.build_query(data);
       var es = new EventSource(logs.api.baseurl + path + '?' + query);
 
       es.addEventListener("log", function(e) {

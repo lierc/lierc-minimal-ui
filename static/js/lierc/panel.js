@@ -445,9 +445,12 @@ var Panel = function(name, id, connection, mobile) {
     return panel.scroll_bottom() <  10;
   };
 
-  panel.append = function(el) {
+  panel.append = function(el, opts) {
     if (el === undefined)
       return;
+
+    if (!opts)
+      opts = {};
 
     if (panel.focused) {
       var id = el.getAttribute('data-message-id');
@@ -470,7 +473,7 @@ var Panel = function(name, id, connection, mobile) {
               el.classList.add('consecutive');
           }
 
-          if (prev && prev.classList.contains("chat")) {
+          if (prev && prev.classList.contains("chat") && !opts['skip_date']) {
             var time = el.querySelector("time");
             var prev_time = prev.querySelector("time");
             if (time && prev_time && time.textContent == prev_time.textContent)
@@ -497,7 +500,7 @@ var Panel = function(name, id, connection, mobile) {
           }
         }
 
-        if (el.previousSibling) {
+        if (!opts['skip_date'] && el.previousSibling) {
           panel.check_dates([el, el.previousSibling]);
         }
       };

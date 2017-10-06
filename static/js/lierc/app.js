@@ -1047,7 +1047,7 @@ var App = function(url, user) {
         for (var i=messages.length - 1; i >= 0; i--) {
           var msg = messages[i].Message;
           msg.Search = true;
-          panel.append(Render(msg));
+          panel.append(Render(msg), {skip_date: true});
         }
       }
     });
