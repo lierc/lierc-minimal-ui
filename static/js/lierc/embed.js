@@ -4,9 +4,12 @@ var Embed = {
 
 var embed_id = 0;
 
-Embed.embed_all = function(el, panel) {
-  el.querySelectorAll('.message-text a[href]').forEach(function(link) {
-    Embed.embed(link, panel);
+Embed.embed_all = function(els, panel) {
+  els.forEach(function(el) {
+    var links = el.querySelectorAll('.message-text a[href]:not(.processed)');
+    links.forEach(function(link) {
+      Embed.embed(link, panel);
+    });
   });
 };
 
@@ -18,6 +21,8 @@ Embed.embed = function(a, panel) {
     if (Embed.patterns[i].test(href)) {
       var url = "//noembed.com/embed?url="
         + encodeURIComponent(href) + "&maxwidth=450";
+
+      a.classList.add("processed");
 
       fetch(url).then(function(res) {
         if (!res.ok)
