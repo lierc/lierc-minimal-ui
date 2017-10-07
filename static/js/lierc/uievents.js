@@ -724,6 +724,11 @@ var UIEvents = function(app) {
     var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
     var embed = JSON.parse(a.getAttribute('data-embed'));
 
+    if (embed.type == "link") {
+      window.open(embed.url);
+      return;
+    }
+
     app.focused.scroll(function() {
       p.classList.add('open');
       p.innerHTML = embed.html;

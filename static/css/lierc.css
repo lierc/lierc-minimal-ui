@@ -1590,14 +1590,17 @@ ul.channel-controls li a:hover {
   font-size: 14px;
   margin: 5px 15px;
 }
+.embed-wrap p.description {
+  font-size: 12px;
+}
 
 .embed-thumb {
   background-repeat: no-repeat;
   position: relative;
   background-position: center center;
   background-size: cover;
-  width: 100px;
-  height: 100px;
+  width: 110px;
+  height: 110px;
   float: left;
   margin-right: 10px;
 }

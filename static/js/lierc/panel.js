@@ -313,13 +313,12 @@ var Panel = function(name, id, connection, mobile) {
 
 
     for (var i=0; i < els.length; i++) {
-      panel.imagify(els[i]);
-      panel.vidify(els[i]);
-      panel.audify(els[i]);
-      panel.emojify(els[i]);
+      panel.imagify(els[i])
+        || panel.vidify(els[i])
+        || panel.audify(els[i])
+        || panel.emojify(els[i])
+        || Embed.embed_all(els[i], panel);
     }
-
-    Embed.embed_all(els, panel);
 
     panel.last_seen_separator();
   };
@@ -429,9 +428,11 @@ var Panel = function(name, id, connection, mobile) {
       provider_name_lc: embed.provider_name.toLowerCase(),
       provider_name: embed.provider_name,
       id: embed.id,
+      is_video: embed.type == "video",
+      image: embed.image,
       thumbnail_url: embed.thumbnail_url,
       title: embed.title,
-      description: embed.desciption,
+      description: embed.description,
       html: embed.html,
       use_html: use_html
     });
@@ -492,11 +493,11 @@ var Panel = function(name, id, connection, mobile) {
           }
 
           if (el.classList.contains('message')) {
-            panel.imagify(el);
-            panel.vidify(el);
-            panel.audify(el);
-            panel.emojify(el);
-            Embed.embed_all([el], panel);
+            panel.imagify(el)
+              || panel.vidify(el)
+              || panel.audify(el)
+              || panel.emojify(el)
+              || Embed.embed_all(el, panel);
           }
         }
 
@@ -654,13 +655,15 @@ var Panel = function(name, id, connection, mobile) {
   panel.imagify = function (elem) {
     var links = elem.querySelectorAll("a");
     var message = elem.querySelector('.message-text');
-    if (!message) return;
+    var match = false;
+    if (!message) return match;
 
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.img_re)) {
         if (link.href.match(/\.gifv/)) continue;
         if (link.href.match(/#(nsfw|hide)/)) continue;
+        match = true;
         var image = new Image();
         image.setAttribute("title", link.href);
         image.onload = (function(image, link) {
@@ -705,17 +708,20 @@ var Panel = function(name, id, connection, mobile) {
         image.src = "https://noembed.com/i/0/600/" + link.href;
       }
     }
+    return match;
   };
 
   panel.vid_re = /^http[^\s]*\.(?:gifv|mp4)[^\/]*$/i;
   panel.vidify = function(elem) {
     var links = elem.querySelectorAll("a");
     var message = elem.querySelector('.message-text');
-    if (!message) return;
+    var match = false;
+    if (!message) return match;
 
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.vid_re)) {
+        match = true;
         if (link.href.match(/(i\.)?imgur\.com\/[^\/\.]+\.gifv/))
           link.href = link.href.replace('.gifv', '.mp4');
         if (link.href.match(/http:\/\/(i\.)?imgur\.com/))
@@ -766,17 +772,20 @@ var Panel = function(name, id, connection, mobile) {
         video.load();
       }
     }
+    return match;
   };
 
   panel.aud_re = /^http[^\s]*\.(?:mp3|wav|aac|m4a)[^\/]*$/i;
   panel.audify = function(elem) {
     var links = elem.querySelectorAll("a");
     var message = elem.querySelector('.message-text');
-    if (!message) return;
+    var match = false;
+    if (!message) return match;
 
     for (var i=links.length - 1; i >= 0; i--) {
       var link = links[i];
       if (link.href.match(panel.aud_re)) {
+        match = true;
         var audio = document.createElement('AUDIO');
         audio.controls = "controls";
 
@@ -820,6 +829,7 @@ var Panel = function(name, id, connection, mobile) {
         audio.load();
       }
     }
+    return match;
   };
 
 
