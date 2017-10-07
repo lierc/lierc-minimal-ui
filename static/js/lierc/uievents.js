@@ -476,20 +476,33 @@ var UIEvents = function(app) {
     var fd = new FormData();
     fd.append("image", files[0]);
     var xhr = new XMLHttpRequest();
-    console.log(app.api);
-    xhr.open("POST", app.api.baseurl + "/image");
 
     submit.setAttribute('disabled','disabled');
 
     xhr.addEventListener("load", function() {
       var res = JSON.parse(xhr.responseText);
+      submit.removeAttribute('disabled');
+
+      if (xhr.status != 200) {
+        var err = res['data'] ? res['data']['error'] : res['error'];
+        alert(err);
+        return;
+      }
+      else {
+        app.focus_input(true);
+        document.execCommand("insertText", false, res.data.link);
+        document.getElementById('upload').classList.remove('open');
+        image.value = null;
+      }
+    });
+
+    xhr.addEventListener("error", function(e) {
+      var res = JSON.parse(xhr.responseText);
       app.focus_input(true);
-      document.execCommand("insertText", false, res.data.link);
-      document.getElementById('upload').classList.remove('open');
-      image.value = null;
       submit.removeAttribute('disabled');
     });
 
+    xhr.open("POST", app.api.baseurl + "/image");
     xhr.send(fd);
   });
 
@@ -573,12 +586,20 @@ var UIEvents = function(app) {
         var fd = new FormData();
         fd.append("image", blob);
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", app.api.baseurl + "/image");
-        xhr.onload = function() {
+        xhr.addEventListener("load", function() {
           var res = JSON.parse(xhr.responseText);
-          app.focus_input(true);
-          document.execCommand("insertText", false, res.data.link);
-        };
+          if (xhr.status != 200) {
+            var err = res['data'] ? res['data']['error'] : res['error'];
+            alert(err);
+            return;
+          }
+          else {
+            app.focus_input(true);
+            document.execCommand("insertText", false, res.data.link);
+          }
+        });
+
+        xhr.open("POST", app.api.baseurl + "/image");
         xhr.send(fd);
         return;
       }
