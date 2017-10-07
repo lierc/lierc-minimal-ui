@@ -476,8 +476,8 @@ var UIEvents = function(app) {
     var fd = new FormData();
     fd.append("image", files[0]);
     var xhr = new XMLHttpRequest();
-    xhr.open("POST", "//api.imgur.com/3/image");
-    xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
+    console.log(app.api);
+    xhr.open("POST", app.api.baseurl + "/image");
 
     submit.setAttribute('disabled','disabled');
 
@@ -573,8 +573,7 @@ var UIEvents = function(app) {
         var fd = new FormData();
         fd.append("image", blob);
         var xhr = new XMLHttpRequest();
-        xhr.open("POST", "//api.imgur.com/3/image");
-        xhr.setRequestHeader('Authorization', 'Client-ID 033f98700d8577c');
+        xhr.open("POST", app.api.baseurl + "/image");
         xhr.onload = function() {
           var res = JSON.parse(xhr.responseText);
           app.focus_input(true);
