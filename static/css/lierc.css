@@ -1065,6 +1065,15 @@ header:hover #global-controls-toggle {
   text-align: left;
 }
 
+#global-controls li.link {
+  padding: 0;
+}
+
+#global-controls li.link a {
+  padding: 8px 25px;
+  display: block;
+}
+
 #global-controls li:hover a {
   color: #555;
 }
