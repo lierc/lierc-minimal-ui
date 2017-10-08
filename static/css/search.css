@@ -1,37 +1,31 @@
 #log-search {
   display: block;
   padding: 5px 10px;
+}
+
+.flex-wrap-left {
   background: #eee;
-  border-bottom: 1px solid #ccc;
 }
 
 #log-search label {
   font-weight: bold;
   color: #666;
   font-size: 14px;
+  display: block;
+}
+
+#log-search input {
+  width: 100%;
+  box-sizing: border-box;
 }
 
 .log-search-group {
-  float: left;
-  padding: 0 10px;
-  border-right: 1px solid #ccc;
+  padding: 7px 0;
 }
 
 .log-search-group select,
 .log-search-group input {
   font-size: 14px;
-}
-
-#channel {
-  width: 100px;
-}
-
-.log-search-group:first-child {
-  padding-left: 0;
-}
-.log-search-group:last-child {
-  padding-right: 0;
-  border-right: none;
 }
 
 #panel ol:before {

@@ -15,36 +15,42 @@
   </head>
   <body>
     <div class="flex-wrap">
-    <div class="flex-wrap-right">
 
+    <div class="flex-wrap-left">
     <form id="log-search">
       <div class="log-search-group">
+        <label for="connection">Connection</label>
         <select id="connection" name="connection">
         </select>
       </div>
 
       <div class="log-search-group">
+        <label for="channel">Channel</label>
         <input required list="channels" id="channel" type="text" name="channel" placeholder="#channel">
         <datalist id="channels">
         </datalist>
       </div>
 
       <div class="log-search-group">
+        <label for="text">Search text</label>
         <input id="text" type="text" name="text" placeholder="text">
       </div>
 
       <div class="log-search-group">
-        <label for="from">Date</label>
+        <label for="from">Date range</label>
         <input required id="from" type="date" name="from">
-        -
         <input required id="to" type="date" name="to">
       </div>
 
       <div class="log-search-group">
-        <input id="view" type="submit" value="View">
+        <input id="submit" type="submit" value="Search">
       </div>
 
     </form>
+
+
+    </div>
+    <div class="flex-wrap-right">
 
     <div class="flex-wrap-panel">
     <div id="panel-scroll">

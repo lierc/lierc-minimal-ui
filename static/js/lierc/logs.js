@@ -2,6 +2,7 @@ var Logs = function(url) {
   var logs = this;
   logs.api = new API(url);
   logs.form = document.getElementById("log-search");
+  logs.submit = document.getElementById("submit");
   logs.results = document.getElementById("results");
   logs.text = document.getElementById("text");
   logs.connection = document.getElementById("connection");
@@ -12,24 +13,35 @@ var Logs = function(url) {
 
   logs.populate_datalist = function() {
     var path = "/connection/" + logs.connection.value + "/channel";
-    logs.channel.setAttribute('disabled', 'disabled');
-    logs.channel.value = 'loading...';
+
+    if (logs.channel.value == '') {
+      logs.channel.value = 'loading...';
+      logs.channel.setAttribute('disabled', 'disabled');
+    }
+
     logs.api.get(path, {
       error: function(err) {
-        logs.channel.value = '';
+        if (logs.channel.value == 'loading...') {
+          logs.channel.value = '';
+        }
       },
       success: function(channels) {
         logs.datalist.innerHTML = '';
+
         channels.forEach(function(chan) {
           var item = document.createElement('OPTION');
           item.value = chan;
           logs.datalist.appendChild(item);
         });
-        logs.channel.value = '';
-        if (logs.datalist.childNodes.length) {
-          logs.channel.value = logs.datalist.childNodes[0].value;
+
+        if (logs.channel.value == 'loading...') {
+          logs.channel.value = '';
+          logs.channel.removeAttribute('disabled');
+
+          if (logs.datalist.childNodes.length) {
+            logs.channel.value = logs.datalist.childNodes[0].value;
+          }
         }
-        logs.channel.removeAttribute('disabled');
       }
     });
   };
@@ -55,6 +67,7 @@ var Logs = function(url) {
 
           logs.connection.appendChild(item);
         });
+        logs.load_url_search();
         logs.populate_datalist();
       }
     });
@@ -95,8 +108,28 @@ var Logs = function(url) {
       from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
       to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
 
-      from = [from.getYear() + 1900, from.getMonth() + 1, from.getDate()].join("-");
-      to   = [to.getYear() + 1900, to.getMonth() + 1, to.getDate()].join("-");
+      var from_month = String(from.getMonth() + 1);
+      if (from_month.length == 1) {
+        from_month = "0" + from_month;
+      }
+
+      var from_day = String(from.getDate());
+      if (from_day.length == 1) {
+        from_day = "0" + from_day;
+      }
+
+      var to_month = String(to.getMonth() + 1);
+      if (to_month.length == 1) {
+        to_month = "0" + to_month;
+      }
+
+      var to_day = String(to.getDate());
+      if (to_day.length == 1) {
+        to_day = "0" + to_day;
+      }
+
+      from = [from.getYear() + 1900, from_month, from_day].join("-");
+      to   = [to.getYear() + 1900, to_month, to_day].join("-");
 
       var data = {};
       if (logs.text.value != "") {
@@ -105,7 +138,14 @@ var Logs = function(url) {
 
       var path = "/connection/" + conn + "/channel/" + chan + "/date/" + from + "/" + to;
       var query = logs.api.build_query(data);
-      var es = new EventSource(logs.api.baseurl + path + '?' + query);
+
+      if (query) {
+        path += '?' + query;
+      }
+
+      var es = new EventSource(logs.api.baseurl + path);
+
+      window.history.replaceState({}, path, "/search/#!" + path);
 
       es.addEventListener("log", function(e) {
         var line = JSON.parse(e.data);
@@ -119,5 +159,45 @@ var Logs = function(url) {
         es.close();
       });
     });
+  };
+
+  logs.load_url_search = function() {
+    var hash = window.location.hash;
+    if (!hash) return;
+
+    var parts = hash.split("?");
+    var path = parts[0];
+    var query_string = parts[1];
+    var path_parts = path.split("/").slice(1);
+
+    if (query) {
+      var pairs = query_string.split("&");
+      var query = {};
+
+      for (var i=0; i < pairs.length; i++) {
+        var kv = pairs[i].split("=");
+        query[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
+      }
+
+      if (query["text"]) {
+        logs.text.value = query["text"];
+      }
+    }
+
+    while (path_parts.length) {
+      var name = path_parts.shift();
+      if (name == "connection") {
+        logs.connection.value = decodeURIComponent(path_parts.shift());
+      }
+      else if (name == "channel") {
+        logs.channel.value = decodeURIComponent(path_parts.shift());
+      }
+      else if (name == "date") {
+        logs.from.value = decodeURIComponent(path_parts.shift());
+        logs.to.value = decodeURIComponent(path_parts.shift());
+      }
+    }
+
+    logs.submit.click();
   };
 }
