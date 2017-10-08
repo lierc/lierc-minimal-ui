@@ -2,6 +2,7 @@ var Logs = function(url) {
   var logs = this;
   logs.api = new API(url);
   logs.form = document.getElementById("log-search");
+  logs.status = document.getElementById("status");
   logs.submit = document.getElementById("submit");
   logs.results = document.getElementById("results");
   logs.text = document.getElementById("text");
@@ -147,7 +148,11 @@ var Logs = function(url) {
 
       window.history.replaceState({}, path, "/search/#!" + path);
 
+      logs.status.textContent = "searching...";
+      var total = 0;
+
       es.addEventListener("log", function(e) {
+        total++;
         var line = JSON.parse(e.data);
         var message = line.Message;
         message.Id = line.MessageId;
@@ -157,6 +162,7 @@ var Logs = function(url) {
 
       es.addEventListener("error", function() {
         es.close();
+        logs.status.textContent = total + " results";
       });
     });
   };

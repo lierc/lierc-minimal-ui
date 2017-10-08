@@ -14,6 +14,11 @@
   display: block;
 }
 
+#status {
+  color: #666;
+  text-align: center;
+}
+
 #log-search input {
   width: 100%;
   box-sizing: border-box;
