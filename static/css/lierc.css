@@ -1566,6 +1566,7 @@ ul.channel-controls li a:hover {
   cursor: pointer;
   max-width: 500px;
   outline: 2px solid rgba(0,0,0,0.025);
+  background: #fff;
 }
 
 .embed-wrap-wrap {
@@ -1579,6 +1580,7 @@ ul.channel-controls li a:hover {
   cursor: auto;
   max-width: none;
   outline: none;
+  background: none;
 }
 
 .embed-wrap:hover {
