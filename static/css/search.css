@@ -19,6 +19,7 @@
   text-align: center;
 }
 
+#log-search select,
 #log-search input {
   width: 100%;
   box-sizing: border-box;
@@ -31,8 +32,32 @@
 .log-search-group select,
 .log-search-group input {
   font-size: 14px;
+  margin-top: 4px;
 }
 
 #panel ol:before {
   display: none;
+}
+
+p.note {
+  font-size: 12px;
+  color: #666;
+}
+
+span.note {
+  font-size: 12px;
+  font-weight: normal;
+}
+
+span.required {
+  font-weight: bold;
+  color: red;
+}
+
+.flex-wrap-left header {
+  cursor: default;
+}
+
+.flex-wrap-left header h1 {
+  padding-left: 10px;
 }

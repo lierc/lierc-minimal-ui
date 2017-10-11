@@ -1,6 +1,7 @@
 var Logs = function(url) {
   var logs = this;
   logs.api = new API(url);
+  logs.es = null;
   logs.form = document.getElementById("log-search");
   logs.status = document.getElementById("status");
   logs.submit = document.getElementById("submit");
@@ -11,6 +12,7 @@ var Logs = function(url) {
   logs.from = document.getElementById("from");
   logs.to = document.getElementById("to");
   logs.datalist = document.getElementById("channels");
+  logs.topic = document.getElementById("topic");
 
   logs.populate_datalist = function() {
     var path = "/connection/" + logs.connection.value + "/channel";
@@ -106,6 +108,11 @@ var Logs = function(url) {
       var from = new Date(logs.from.value);
       var to = new Date(logs.to.value);
 
+      if (isNaN(from) || isNaN(to)) {
+        alert("Invalid date rate '" + logs.from.value + "' - '" + logs.to.value + "'");
+        return;
+      }
+
       from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
       to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
 
@@ -132,6 +139,26 @@ var Logs = function(url) {
       from = [from.getYear() + 1900, from_month, from_day].join("-");
       to   = [to.getYear() + 1900, to_month, to_day].join("-");
 
+      var title;
+      var p = document.createElement('P');
+
+      if (logs.text.value == "") {
+        title = "";
+      }
+      else {
+        title = "'" + logs.text.value + "' in  ";
+      }
+      p.innerText = title;
+
+      var c = document.createElement('STRONG');
+      c.innerText = logs.channel.value;
+      p.appendChild(c);
+      var s = document.createElement('SPAN');
+      s.innerText = " from " + from + " to " + to;
+      p.appendChild(s);
+      logs.topic.innerHTML = '';
+      logs.topic.appendChild(p);
+
       var data = {};
       if (logs.text.value != "") {
         data['text'] = logs.text.value;
@@ -144,14 +171,18 @@ var Logs = function(url) {
         path += '?' + query;
       }
 
-      var es = new EventSource(logs.api.baseurl + path);
+      if (logs.es) {
+        logs.es.close();
+      }
+
+      logs.es = new EventSource(logs.api.baseurl + path);
 
       window.history.replaceState({}, path, "/search/#!" + path);
 
       logs.status.textContent = "searching...";
       var total = 0;
 
-      es.addEventListener("log", function(e) {
+      logs.es.addEventListener("log", function(e) {
         total++;
         var line = JSON.parse(e.data);
         var message = line.Message;
@@ -160,8 +191,9 @@ var Logs = function(url) {
         logs.results.appendChild(Render(message, {controls: false}));
       });
 
-      es.addEventListener("error", function() {
-        es.close();
+      logs.es.addEventListener("error", function(e) {
+        logs.es.close();
+        logs.es = null;
         logs.status.textContent = total + " results";
       });
     });
@@ -176,7 +208,7 @@ var Logs = function(url) {
     var query_string = parts[1];
     var path_parts = path.split("/").slice(1);
 
-    if (query) {
+    if (query_string) {
       var pairs = query_string.split("&");
       var query = {};
 

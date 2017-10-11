@@ -106,8 +106,7 @@ var Commands = function(app) {
 
   add_command("clear", [], function(panel) {
     panel.backlog_empty = true;
-    panel.remove_observers(panel.elem.list);
-    panel.elem.list.get(0).innerHTML = '';
+    panel.elem.list.innerHTML = '';
   });
 
   add_command("bikin", ["bike", "biek", "beik"], function(panel) {
