@@ -112,7 +112,7 @@ var UIEvents = function(app) {
     var c = String.fromCharCode(e.which);
 
     /* jump to panel by number */
-    if ((mods['cmd'] || (!mods['ctrl'] && mods['meta'])) && c.match(/^[1-9]$/)) {
+    if (!mac && (mods['cmd'] || (!mods['ctrl'] && mods['meta'])) && c.match(/^[1-9]$/)) {
       var panels = app.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
         app.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
