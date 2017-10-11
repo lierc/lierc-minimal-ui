@@ -651,7 +651,7 @@ var Panel = function(name, id, connection, mobile) {
   panel.editor = new Editor(panel.elem.input);
   setInterval(panel.prune, 1000 * 60);
 
-  panel.img_re = /^http[^\s]*\.(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
+  panel.img_re = /^http[^\s]*(?:\.|format=)(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
   panel.imagify = function (elem) {
     var links = elem.querySelectorAll("a[href]:not(.processed)");
     var message = elem.querySelector('.message-text');
