@@ -41,7 +41,12 @@ var Stream = function(baseurl) {
     if (stream.eventsource)
       stream.eventsource.close();
 
-    var backoff = Math.max(3, Math.min(stream.retries++, 15));
+    var backoff = Math.max(0, Math.min(stream.retries++, 15));
+
+    if (backoff == 0) {
+      connect();
+      return;
+    }
 
     console.log("reconnecting in " + backoff + " seconds");
     stream.fire("reconnect-status", "Reconnecting in " + backoff + " seconds");
