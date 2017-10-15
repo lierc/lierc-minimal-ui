@@ -570,7 +570,12 @@ a:hover {
   font-size: 14px;
   height: 14px;
   opacity: 0;
-  color: #ccc;
+  color: #999;
+}
+
+.nav li.active a.edit-panel,
+.nav li.active a.close-panel {
+  color: #777;
 }
 
 .nav li:hover a.edit-panel,
@@ -607,11 +612,6 @@ a:hover {
   display: inline-block;
 }
 
-#status li.unread,
-#status li.missed {
-  font-weight: bold;
-}
-
 .nav li {
   cursor: pointer;
   padding: 6px 0px 6px 5px;
@@ -633,7 +633,6 @@ a:hover {
 }
 
 .nav li:hover {
-  color: #555;
   background: #efefef;
 }
 

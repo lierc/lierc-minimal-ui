@@ -142,9 +142,9 @@ templates['connection'] = template({"1":function(container,depth0,helpers,partia
     + "          <p style=\"float:right\" class=\"note\"><span class=\"required\">*</span> required</p>\n        </fieldset>\n      </form>\n    </section>\n\n";
 },"useData":true});
 templates['nav_item'] = template({"1":function(container,depth0,helpers,partials,data) {
-    return "<a class=\"fa fa-pencil edit edit-panel\"></a>";
+    return "<a class=\"fa fa-pencil edit edit-panel\" title=\"Edit\"></a>";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "<a class=\"fa fa-times close-panel\"></a>";
+    return "<a class=\"fa fa-times close-panel\" title=\"Close\"></a>";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
