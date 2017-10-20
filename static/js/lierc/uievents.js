@@ -262,6 +262,12 @@ var UIEvents = function(app) {
     });
   }
 
+  document.querySelectorAll('#global-controls li.link').forEach(function(el) {
+    el.addEventListener('click', function(e) {
+      app.elem.flex_wrap.classList.remove('open');
+    });
+  });
+
   document.querySelectorAll('.join-channel').forEach(function(el) {
     el.addEventListener('click', join_click);
   });

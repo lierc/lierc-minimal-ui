@@ -193,7 +193,12 @@ var Logs = function(url) {
       c.innerText = logs.channel.value;
       p.appendChild(c);
       var s = document.createElement('SPAN');
-      s.innerText = " from " + from + " to " + to;
+      if (from == to) {
+        s.innerText = " from " + from;
+      }
+      else {
+        s.innerText = " from " + from + " to " + to;
+      }
       p.appendChild(s);
       logs.topic.innerHTML = '';
       logs.topic.appendChild(p);
