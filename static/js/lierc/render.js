@@ -11,7 +11,7 @@ var Render = function(message, opts) {
       [
         make_text(old + " is now known as "),
         make_nick(message),
-        timestamp(message)
+        timestamp(message, opts)
       ]
     );
 
@@ -24,7 +24,7 @@ var Render = function(message, opts) {
       [
         make_nick(message),
         make_text(' has left' + (msg ? " ("+msg+")" : "")),
-        timestamp(message)
+        timestamp(message, opts)
       ]
     );
 
@@ -39,7 +39,7 @@ var Render = function(message, opts) {
         [
           make_text(message.Params.slice(1).join(" ")),
           make_text(" by " + message.Prefix.Name),
-          timestamp(message)
+          timestamp(message, opts)
         ]
       );
     }
@@ -52,7 +52,7 @@ var Render = function(message, opts) {
       [
         make_nick(message),
         make_text(' has quit' + (msg ? " ("+msg+")" : "")),
-        timestamp(message)
+        timestamp(message, opts)
       ]
     );
 
@@ -64,7 +64,7 @@ var Render = function(message, opts) {
       [
         make_nick(message),
         make_text(' has joined the channel'),
-        timestamp(message)
+        timestamp(message, opts)
       ]
     );
 
@@ -101,7 +101,7 @@ var Render = function(message, opts) {
       make("event", message),
       [
         span,
-        timestamp(message)
+        timestamp(message, opts)
       ]
     );
 
@@ -148,7 +148,7 @@ var Render = function(message, opts) {
     return append(
       li,
       [
-        flex(from, wrap, timestamp(message)),
+        flex(from, wrap, timestamp(message, opts)),
         opts['controls'] !== false ? controls(message) : null
       ]
     );
@@ -254,7 +254,7 @@ var Render = function(message, opts) {
     return raw;
   }
 
-  function timestamp (message) {
+  function timestamp (message, opts) {
     var date = new Date(message.Time * 1000);
     var h = String(date.getHours());
     if (h.length < 2)
@@ -266,7 +266,17 @@ var Render = function(message, opts) {
     var time = document.createElement('TIME');
     time.setAttribute('data-time', message.Time);
     time.setAttribute('title', date.toString());
-    time.textContent = h + ":" + m;
+
+    if (opts && opts['full_date']) {
+      var mos = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+      var mo = mos[date.getMonth()];
+      var y = date.getYear() + 1900;
+      var d = date.getDate();
+      time.textContent =  mo + " " + d + ", " + y + " " + h + ":" + m;
+    }
+    else {
+      time.textContent = h + ":" + m;
+    }
 
     return time;
   }

@@ -2,6 +2,8 @@ var Logs = function(url) {
   var logs = this;
   logs.api = new API(url);
   logs.es = null;
+  logs.highlight = null;
+  logs.query = false;
   logs.form = document.getElementById("log-search");
   logs.status = document.getElementById("status");
   logs.submit = document.getElementById("submit");
@@ -54,6 +56,41 @@ var Logs = function(url) {
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     logs.from.value = JSON.stringify(now).slice(1,11);
     logs.to.value = logs.from.value;
+
+    logs.results.addEventListener('click', function(e) {
+      var el = e.target;
+
+      if (!el.matches('li.message time')) {
+        return;
+      }
+
+      while (el && el.nodeName != "LI") {
+        el = el.parentNode;
+      }
+
+      if (logs.query && el) {
+        var time = el.getAttribute('data-time');
+        var id   = el.getAttribute('data-message-id');
+
+        var d = new Date(time * 1000);
+        var y = String(d.getUTCFullYear());
+        var mo = String(d.getUTCMonth() + 1);
+        if (mo.length == 1)
+          mo = "0" + mo;
+        var day = String(d.getUTCDate());
+        if (day.length == 1)
+          day = "0" + day;
+        var date = [y, mo, day].join("-");
+        logs.from.value = date;
+        logs.to.value = date;
+        logs.text.value = '';
+        logs.highlight = id;
+        logs.submit.click();
+      }
+      else if (el) {
+        el.scrollIntoView();
+      }
+    });
 
     logs.api.get("/connection", {
       success: function(conns) {
@@ -144,9 +181,11 @@ var Logs = function(url) {
 
       if (logs.text.value == "") {
         title = "";
+        logs.query = false;
       }
       else {
         title = "'" + logs.text.value + "' in  ";
+        logs.query = true;
       }
       p.innerText = title;
 
@@ -188,13 +227,22 @@ var Logs = function(url) {
         var message = line.Message;
         message.Id = line.MessageId;
         message.Highlight = e.Highlight;
-        logs.results.appendChild(Render(message, {controls: false}));
+        var el = Render(message, {controls: false, full_date: true});
+        if (el) {
+          logs.results.appendChild(el);
+        }
       });
 
       logs.es.addEventListener("error", function(e) {
         logs.es.close();
         logs.es = null;
         logs.status.textContent = total + " results";
+        if (logs.highlight) {
+          var el = logs.results.querySelector('li[data-message-id="' + logs.highlight + '"]');
+          if (el) {
+            el.scrollIntoView();
+          }
+        }
       });
     });
   };
@@ -219,6 +267,10 @@ var Logs = function(url) {
 
       if (query["text"]) {
         logs.text.value = query["text"];
+        logs.query = true;
+      }
+      else {
+        logs.query = false;
       }
     }
 

@@ -58,6 +58,11 @@ span.required {
   cursor: default;
 }
 
+li.message time:hover {
+  cursor: pointer;
+  text-decoration: underline;
+}
+
 .flex-wrap-left header h1 {
   padding-left: 10px;
 }
