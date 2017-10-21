@@ -395,6 +395,9 @@ var App = function(url, user) {
         else
           app.close_panel(id);
       }
+      else if (e.target.classList.contains('panel-log')) {
+        app.open_log(panel);
+      }
       else if (e.target.classList.contains('edit-panel')) {
         app.api.get("/connection/" + panel.connection, {
           success: function(res) {
@@ -1118,6 +1121,13 @@ var App = function(url, user) {
     if (app.dialog)
       app.dialog.close();
     app.dialog = null;
+  };
+
+  app.open_log = function(panel) {
+    var url = "/search/#!/"
+      + "/connection/" + encodeURIComponent(panel.connection)
+      + "/channel/" + encodeURIComponent(panel.name);
+    window.open(url);
   };
 
   app.new_dialog = function(name, vars) {

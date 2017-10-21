@@ -544,7 +544,7 @@ a:hover {
 }
 
 .nav-title {
-  padding: 10px 15px 0 5px;
+  padding: 10px 10px 0 5px;
   font-size: 12px;
   color: #999;
   font-weight: normal;
@@ -562,27 +562,35 @@ a:hover {
   color: #333;
 }
 
+.nav li a.panel-log,
 .nav li a.edit-panel,
 .nav li a.close-panel {
   display: block;
   float: right;
-  margin-right: 15px;
+  margin-right: 10px;
   font-size: 14px;
   height: 14px;
   opacity: 0;
   color: #999;
 }
 
+.nav li a.panel-log {
+  margin-right: 0;
+}
+
+.nav li.active a.panel-log,
 .nav li.active a.edit-panel,
 .nav li.active a.close-panel {
   color: #777;
 }
 
+.nav li:hover a.panel-log,
 .nav li:hover a.edit-panel,
 .nav li:hover a.close-panel {
   opacity: 1;
 }
 
+.nav li a.panel-log:hover,
 .nav li a.edit-panel:hover,
 .nav li a.close-panel:hover {
   color: #555;
@@ -887,6 +895,11 @@ div.header-right {
   padding-right: 5px;
 }
 
+#logs a:before {
+  content: "\f0f6";
+  padding-right: 5px;
+}
+
 #web-notify a:before,
 #email-notify a:before {
   content: "\f096";
@@ -1014,7 +1027,7 @@ header:hover #global-controls-toggle {
 }
 
 #global-controls-toggle {
-  padding: 8px 15px 8px 15px;
+  padding: 8px 10px 8px 10px;
   cursor: pointer;
 }
 
@@ -1218,7 +1231,7 @@ ul.channel-controls li a {
 }
 
 #view-log .history:before {
-  content: "\f08e";
+  content: "\f0f6";
 }
 
 ul.channel-controls li a:hover {
@@ -1807,6 +1820,7 @@ li.message:hover .message-controls,
     padding-left: 10px;
   }
 
+  .nav li a.panel-log,
   .nav li a.edit-panel,
   .nav li a.close-panel {
     opacity: 1;

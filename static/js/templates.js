@@ -144,7 +144,7 @@ templates['connection'] = template({"1":function(container,depth0,helpers,partia
 templates['nav_item'] = template({"1":function(container,depth0,helpers,partials,data) {
     return "<a class=\"fa fa-pencil edit edit-panel\" title=\"Edit\"></a>";
 },"3":function(container,depth0,helpers,partials,data) {
-    return "<a class=\"fa fa-times close-panel\" title=\"Close\"></a>";
+    return "<a class=\"fa fa-times close-panel\" title=\"Close\"></a><a class=\"fa fa-file-text-o panel-log\" title=\"View logs\"></a>";
 },"compiler":[7,">= 4.0.0"],"main":function(container,depth0,helpers,partials,data) {
     var stack1, helper, alias1=depth0 != null ? depth0 : (container.nullContext || {}), alias2=helpers.helperMissing, alias3="function", alias4=container.escapeExpression;
 
