@@ -546,7 +546,7 @@ var UIEvents = function(app) {
   });
 
   document.addEventListener('copy', function(e) {
-    if ( app.overlayed() || app.mobile() )
+    if (app.overlayed() || app.mobile)
       return;
 
     e.preventDefault();
