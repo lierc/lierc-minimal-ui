@@ -290,6 +290,15 @@ var UIEvents = function(app) {
       });
     });
 
+  clickTouchEvent(document.querySelector('#view-log'), function(e) {
+    e.preventDefault();
+    var panel = app.focused;
+    var url = "/search/#!/"
+      + "/connection/" + encodeURIComponent(panel.connection)
+      + "/channel/" + encodeURIComponent(panel.name);
+    window.open(url);
+  });
+
   clickTouchEvent(document.querySelector('#toggle-hideevents a'), function(e) {
     e.preventDefault();
     app.focused.set_ignore_events(!app.focused.ignore_events);

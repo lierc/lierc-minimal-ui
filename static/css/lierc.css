@@ -1201,6 +1201,7 @@ ul.channel-controls li a {
   padding: 5px 15px;
 }
 
+#view-log .history:before,
 #toggle-hideembeds .checkbox:before,
 #toggle-hideevents .checkbox:before {
   content: "\f096";
@@ -1216,6 +1217,9 @@ ul.channel-controls li a {
   content: "\f046";
 }
 
+#view-log .history:before {
+  content: "\f08e";
+}
 
 ul.channel-controls li a:hover {
   background: #efefef;
