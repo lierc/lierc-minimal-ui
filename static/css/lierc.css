@@ -575,7 +575,9 @@ a:hover {
 }
 
 .nav li a.panel-log {
-  margin-right: 0;
+  margin-right: 1px;
+  padding-top: 2px;
+  font-size: 12px;
 }
 
 .nav li.active a.panel-log,
