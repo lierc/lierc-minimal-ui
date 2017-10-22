@@ -157,10 +157,14 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.build_nav = function() {
+    var log_url = "/search/#!"
+      + "/connection/" + encodeURIComponent(panel.connection)
+      + "/channel/" + encodeURIComponent(panel.name);
     var html = Template('nav_item', {
       name: panel.name,
       status: panel.type == "status",
-      id: panel.id
+      id: panel.id,
+      logs: log_url
     });
     var el = document.createElement('DIV');
     el.innerHTML = html;

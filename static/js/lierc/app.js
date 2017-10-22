@@ -380,6 +380,9 @@ var App = function(url, user) {
     app.ignore_nicks_pref(panel);
 
     panel.elem.nav.addEventListener('click', function(e) {
+      if (e.target.classList.contains("panel-log"))
+        return;
+
       e.preventDefault();
 
       app.elem.flex_wrap.classList.remove("open");
@@ -394,9 +397,6 @@ var App = function(url, user) {
           app.delete_connection(panel.connection);
         else
           app.close_panel(id);
-      }
-      else if (e.target.classList.contains('panel-log')) {
-        app.open_log(panel);
       }
       else if (e.target.classList.contains('edit-panel')) {
         app.api.get("/connection/" + panel.connection, {
