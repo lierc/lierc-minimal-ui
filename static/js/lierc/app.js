@@ -1174,7 +1174,6 @@ var App = function(url, user) {
         var html = Template("images", {
           images: images
         });
-      console.log(html, images);
         app.elem.images.innerHTML = html;
       }
     });
