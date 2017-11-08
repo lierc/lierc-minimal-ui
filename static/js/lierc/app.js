@@ -45,7 +45,8 @@ var App = function(url, user) {
     switcher: document.getElementById('switcher-wrap'),
     panel_name: document.getElementById('panel-name'),
     flex_wrap: document.querySelector('.flex-wrap'),
-    reconnect: document.getElementById('reconnect-status')
+    reconnect: document.getElementById('reconnect-status'),
+    images: document.getElementById('image-uploads')
   };
 
   app.set_connected = function(conn_id, status, message) {
@@ -1164,6 +1165,18 @@ var App = function(url, user) {
       app.load_token(function() {
         app.init();
       });
+    });
+  };
+
+  app.fill_images = function() {
+    app.api.get("/image", {
+      success: function(images) {
+        var html = Template("images", {
+          images: images
+        });
+      console.log(html, images);
+        app.elem.images.innerHTML = html;
+      }
     });
   };
 

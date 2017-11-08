@@ -336,6 +336,47 @@ a:hover {
   display: none;
 }
 
+#image-uploads {
+  max-height: 80px;
+  min-height: 20px;
+  background: #fff;
+  border: 1px solid #ccc;
+  margin: 0 10px;
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+#image-uploads div.uploaded-image:hover {
+  border: 1px solid #ccc;
+}
+
+#image-uploads div.uploaded-image {
+  float: left;
+  border: 1px solid #fff;
+  position: relative;
+}
+
+#image-uploads div.image-delete:before {
+  position: absolute;
+  top: 0px;
+  right: 0px;
+  content: "\f057";
+  color: #000;
+  opacity: 0;
+}
+
+#image-uploads div.uploaded-image:hover div.image-delete:before {
+  opacity: 1;
+}
+
+#image-uploads div.image-delete:hover:before {
+  color: red;
+}
+
+#image-uploads div.uploaded-image img {
+  display: block;
+}
+
 .image-toggle.hidden:after,
 .embed-toggle.hidden:after {
   content: "\f0da";
@@ -1512,10 +1553,9 @@ ul.channel-controls li a:hover {
 .message-menu-popup,
 .emoji-popup,
 .upload-popup {
-  box-shadow: 0 0 3px rgba(0,0,0,0.5);
+  box-shadow: 0 1px 3px rgba(0,0,0,0.5);
   background: #eee;
   border-bottom: none;
-  border-radius: 4px;
   border-top: 1px solid #fff;
   border-left: 1px solid #fff;
   border-right: 1px solid #ccc;

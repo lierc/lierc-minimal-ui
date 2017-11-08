@@ -517,10 +517,27 @@ var UIEvents = function(app) {
     xhr.send(fd);
   });
 
+  clickTouchEvent(document.getElementById('image-uploads'), function(e) {
+    if (e.target.matches('.image-delete')) {
+      e.preventDefault();
+      var url = e.target.getAttribute('data-url');
+      if (confirm("Are you sure you would like to delete " + url + "?")) {
+        app.api.delete("/image/" + encodeURIComponent(url), {
+          success: function() {
+            app.fill_images();
+          }
+        });
+      }
+    }
+  });
+
   clickTouchEvent(document.getElementById('upload'), function(e) {
     if (e.target.matches('#upload')) {
       e.preventDefault();
       e.target.classList.toggle("open");
+      if (e.target.classList.contains("open")) {
+        app.fill_images();
+      }
     }
   });
 

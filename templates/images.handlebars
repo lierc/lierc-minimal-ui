@@ -1,0 +1,10 @@
+<div>
+{{#each images}}
+  <div class="uploaded-image">
+    <a target="_blank" href="{{this.url}}">
+      <div class="image-delete" data-url="{{this.url}}" title="Delete image"></div>
+      <img src="https://noembed.com/i/100/50/{{this.url}}" title="{{this.created}}">
+    </a>
+  </div>
+{{/each}}
+</div>

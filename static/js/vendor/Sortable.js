@@ -70,6 +70,7 @@
 		Polymer = win.Polymer,
 
 		captureMode = false,
+		passiveMode = false,
 
 		supportDraggable = ('draggable' in document.createElement('div')),
 		supportCssPointerEvents = (function (el) {
@@ -215,6 +216,20 @@
 		}
 	;
 
+	// Detect support a passive mode
+	try {
+		window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
+			get: function () {
+				// `false`, because everything starts to work incorrectly and instead of d'n'd,
+				// begins the page has scrolled.
+				passiveMode = false;
+				captureMode = {
+					capture: false,
+					passive: passiveMode
+				};
+			}
+		}));
+	} catch (err) {}
 
 	/**
 	 * @class  Sortable
@@ -262,7 +277,8 @@
 			fallbackClass: 'sortable-fallback',
 			fallbackOnBody: false,
 			fallbackTolerance: 0,
-			fallbackOffset: {x: 0, y: 0}
+			fallbackOffset: {x: 0, y: 0},
+			supportPointer: Sortable.supportPointer !== false
 		};
 
 
@@ -286,7 +302,7 @@
 		// Bind events
 		_on(el, 'mousedown', this._onTapStart);
 		_on(el, 'touchstart', this._onTapStart);
-		_on(el, 'pointerdown', this._onTapStart);
+		options.supportPointer && _on(el, 'pointerdown', this._onTapStart);
 
 		if (this.nativeDraggable) {
 			_on(el, 'dragover', this);
@@ -427,8 +443,8 @@
 				_on(ownerDocument, 'mouseup', _this._onDrop);
 				_on(ownerDocument, 'touchend', _this._onDrop);
 				_on(ownerDocument, 'touchcancel', _this._onDrop);
-				_on(ownerDocument, 'pointercancel', _this._onDrop);
 				_on(ownerDocument, 'selectstart', _this);
+				options.supportPointer && _on(ownerDocument, 'pointercancel', _this._onDrop);
 
 				if (options.delay) {
 					// If the user moves the pointer or let go the click or touch
@@ -439,7 +455,7 @@
 					_on(ownerDocument, 'touchcancel', _this._disableDelayedDrag);
 					_on(ownerDocument, 'mousemove', _this._disableDelayedDrag);
 					_on(ownerDocument, 'touchmove', _this._disableDelayedDrag);
-					_on(ownerDocument, 'pointermove', _this._disableDelayedDrag);
+					options.supportPointer && _on(ownerDocument, 'pointermove', _this._disableDelayedDrag);
 
 					_this._dragStartTimer = setTimeout(dragStartFn, options.delay);
 				} else {
@@ -526,9 +542,14 @@
 					_css(ghostEl, 'display', 'none');
 				}
 
-				var target = document.elementFromPoint(touchEvt.clientX, touchEvt.clientY),
-					parent = target,
-					i = touchDragOverListeners.length;
+				var target = document.elementFromPoint(touchEvt.clientX, touchEvt.clientY);
+				var parent = target;
+				var i = touchDragOverListeners.length;
+
+				if (target && target.shadowRoot) {
+					target = target.shadowRoot.elementFromPoint(touchEvt.clientX, touchEvt.clientY);
+					parent = target;
+				}
 
 				if (parent) {
 					do {
@@ -656,8 +677,11 @@
 					_on(document, 'touchmove', _this._onTouchMove);
 					_on(document, 'touchend', _this._onDrop);
 					_on(document, 'touchcancel', _this._onDrop);
-					_on(document, 'pointermove', _this._onTouchMove);
-					_on(document, 'pointerup', _this._onDrop);
+
+					if (options.supportPointer) {
+						_on(document, 'pointermove', _this._onTouchMove);
+						_on(document, 'pointerup', _this._onDrop);
+					}
 				} else {
 					// Old brwoser
 					_on(document, 'mousemove', _this._onTouchMove);
@@ -676,7 +700,8 @@
 
 				// #1143: Бывает элемент с IFrame внутри блокирует `drop`,
 				// поэтому если вызвался `mouseover`, значит надо отменять весь d'n'd.
-				_on(document, 'mouseover', _this);
+				// Breaking Chrome 62+
+				// _on(document, 'mouseover', _this);
 
 				_this._dragStartId = _nextTick(_this._dragStarted);
 			}
@@ -1479,17 +1504,6 @@
 		}
 	});
 
-	try {
-		window.addEventListener('test', null, Object.defineProperty({}, 'passive', {
-			get: function () {
-				captureMode = {
-					capture: false,
-					passive: false
-				};
-			}
-		}));
-	} catch (err) {}
-
 	// Export utils
 	Sortable.utils = {
 		on: _on,
@@ -1521,6 +1535,6 @@
 
 
 	// Export
-	Sortable.version = '1.6.1';
+	Sortable.version = '1.7.0';
 	return Sortable;
 });
