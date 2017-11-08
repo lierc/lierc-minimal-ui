@@ -358,11 +358,18 @@ a:hover {
 
 #image-uploads div.image-delete:before {
   position: absolute;
-  top: 0px;
-  right: 0px;
+  top: 2px;
+  right: 2px;
   content: "\f057";
+  font-size: 18px;
   color: #000;
   opacity: 0;
+  border-radius: 9px;
+  line-height: 18px;
+  height: 18px;
+  width: 18px;
+  text-align: center;
+  background: #fff;
 }
 
 #image-uploads div.uploaded-image:hover div.image-delete:before {
