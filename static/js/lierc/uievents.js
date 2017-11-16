@@ -221,7 +221,7 @@ var UIEvents = function(app) {
       e.preventDefault();
       var nick = e.target.getAttribute('data-nick');
       var connection = app.focused.connection;
-      app.add_panel(nick, connection, true);
+      app.add_panel(nick, connection, {focus: true});
     }
     document.querySelectorAll('.popup-toggle.open').forEach(function(el) {
       if (!el.contains(e.target)) {

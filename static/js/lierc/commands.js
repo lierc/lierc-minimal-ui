@@ -173,7 +173,7 @@ var Commands = function(app) {
 
     if (!rest.length) {
       var connection = panel.connection;
-      app.add_panel(args[0], connection, true);
+      app.add_panel(args[0], connection, {focus: true});
       return;
     }
 

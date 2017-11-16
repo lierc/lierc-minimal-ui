@@ -73,11 +73,11 @@ var App = function(url, user) {
     panel.update_topic({value: "status."});
 
     connection.on("channel:new", function(conn, channel, message) {
-      app.add_panel(channel, conn, ("Id" in message));
+      app.add_panel(channel, conn, {focus: ("Id" in message)});
     });
 
     connection.on("private:msg", function(conn, nick, message) {
-      var panel = app.add_panel(nick, conn, false);
+      var panel = app.add_panel(nick, conn, {focus: false});
       var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
@@ -199,7 +199,10 @@ var App = function(url, user) {
     app.api.get("/privates", {
       success: function(privates) {
         privates.forEach(function(priv) {
-          app.add_panel(priv.nick, priv.connection, false);
+          app.add_panel(priv.nick, priv.connection, {
+            focus: false,
+            dont_save: true
+          });
         });
       }
     });;
@@ -293,6 +296,11 @@ var App = function(url, user) {
     return app.panels[id];
   };
 
+  app.add_private = function(conn_id, name) {
+    var path = "/connection/" + conn_id + "/nick/" + encodeURIComponent(name);
+    app.api.post(path);
+  };
+
   app.close_panel = function(id) {
     var panel = app.panels[id];
     if (panel.type == "private") {
@@ -339,7 +347,8 @@ var App = function(url, user) {
       .textContent = app.elem.channels.querySelectorAll("li").length;
   };
 
-  app.add_panel = function(name, connection, focus) {
+  app.add_panel = function(name, connection, opts) {
+    if (!opts) opts = {};
     var id = App.panel_id(name, connection);
 
     if (app.panels[id])
@@ -359,6 +368,9 @@ var App = function(url, user) {
     if (panel.type == "channel") {
       var channel = conn.channel(panel.name);
       panel.editor.completion.nicks = channel.nicks;
+    }
+    if (panel.type == "private" && !opts['dont_save']) {
+      app.add_private(connection, panel.name);
     }
     panel.editor.completion.commands = app.commands.completions();
 
@@ -415,7 +427,7 @@ var App = function(url, user) {
     });
 
     // force focusing or no focused panel
-    if (focus === true || !app.focused) {
+    if (opts['focus'] === true || !app.focused) {
       app.focus_panel(id);
     }
     // this channel was in the URL on load
