@@ -551,8 +551,10 @@ var Panel = function(name, id, connection, mobile) {
   panel.scrolling = false;
   panel.scroll = function(cb) {
     var nested = panel.scrolling;
-    panel.scroll_jump = panel.scroll_bottom();
-    panel.scrolling = true;
+    if (! nested) {
+      panel.scroll_jump = panel.scroll_bottom();
+      panel.scrolling = true;
+    }
 
     if (cb) cb();
     if (!nested) {
