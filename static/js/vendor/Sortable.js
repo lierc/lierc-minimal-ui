@@ -1480,6 +1480,8 @@
 	}
 
 	function _saveInputCheckedState(root) {
+		savedInputChecked.length = 0;
+		
 		var inputs = root.getElementsByTagName('input');
 		var idx = inputs.length;
 
