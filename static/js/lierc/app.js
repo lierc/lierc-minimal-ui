@@ -68,7 +68,7 @@ var App = function(url, user) {
     var connection = new Connection(id, host);
     app.connections[id] = connection;
 
-    var panel = app.add_panel("status", connection.id);
+    var panel = app.add_panel("status", connection.id, {status: true});
     panel.change_name(host);
     panel.update_topic({value: "status."});
 
@@ -360,7 +360,25 @@ var App = function(url, user) {
     }
 
     var conn = app.connections[connection];
-    var panel = new Panel(name, id, conn, app.mobile);
+    var type = opts['status'] ? 'status'
+      : conn.is_channel(name)
+        ? 'channel' : 'private';
+
+    var panel = new Panel({
+      name: name,
+      id: id,
+      log_url: opts['status'] ? null : "/search/#!/connection/" + encodeURIComponent(conn.id) + "/channel/" + encodeURIComponent(name),
+      backlog_url: "/connection/" + conn.id + "/channel/" + encodeURIComponent(name) + "/events",
+      path: window.location.pathname + "#/" + conn.id + "/" + encodeURIComponent(name),
+      closable: opts['status'] ? false : true,
+      editable: opts['status'] ? true : false,
+      connection: conn.id,
+      connected: conn.connected,
+      mobile: app.mobile,
+      type: type,
+      network: conn.host
+    });
+
     if (app.last_seen[panel.id])
       panel.last_seen = app.last_seen[panel.id];
     panel.update_nav();
@@ -368,6 +386,10 @@ var App = function(url, user) {
     if (panel.type == "channel") {
       var channel = conn.channel(panel.name);
       panel.editor.completion.nicks = channel.nicks;
+      panel.update_topic({value: "No topic set"});
+    }
+    else {
+      panel.update_topic({value: panel.name});
     }
     if (panel.type == "private" && !opts['dont_save']) {
       app.add_private(connection, panel.name);
@@ -557,21 +579,21 @@ var App = function(url, user) {
   app.fill_backlog = function(panel, msgid, focus) {
     if (panel.backlog_empty) return;
 
-    var connection = app.connections[panel.connection];
-    if (!connection) return;
+    if (panel.connection) {
+      var connection = app.connections[panel.connection];
+      if (!connection) return;
+    }
 
     panel.set_loading(true);
 
     var limit = panel.ignore_events ? 150 : 50;
     var name = panel.type == "status" ? "status" : panel.name;
-    var parts = [
-      "connection", connection.id, "channel", encodeURIComponent(name), "events"
-    ];
+    var url = panel.backlog_url;
 
     if (msgid)
-      parts.push(msgid);
+      url += "/" + msgid;
 
-    app.api.get("/" + parts.join("/"), {
+    app.api.get(url, {
       data: { limit: limit },
       success: function(events) {
         if (events.length < limit)
@@ -832,7 +854,6 @@ var App = function(url, user) {
       || !app.focused
       || app.focused.backlog_empty
       || app.overlayed()
-      || !app.connections[app.focused.connection]
       || app.elem.flex_wrap.classList.contains('open')
       || getComputedStyle(app.elem.scroll).display == "none")
     {
@@ -1206,6 +1227,22 @@ var App = function(url, user) {
 
   setInterval(app.check_scroll, 250);
   setInterval(app.ping_server, 1000 * 15);
+
+  app.highlights = new Panel({
+    name: "highlights",
+    id: "highlights",
+    closable: false,
+    editable: false,
+    backlog_url: "/highlight",
+    path: window.location.pathname + "#/highlights",
+    mobile: app.mobile,
+    connected: true,
+    type: "search"
+  });
+
+  document.getElementById("meta-channels").appendChild(app.highlights.elem.nav);
+
+  app.panels[app.highlights.id] = app.highlights;
 
   app.get_prefs(function(prefs) {
     app.prefs = prefs;

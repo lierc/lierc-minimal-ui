@@ -341,4 +341,8 @@ var Connection = function(id, host, nick) {
     }
     return false;
   };
+
+  conn.is_channel = function(name) {
+    return conn.chantypes.indexOf(name[0]) != -1;
+  };
 };

@@ -502,6 +502,39 @@ a:hover {
   border-radius: 2px;
 }
 
+.nav li[data-panel-id=highlights] {
+  padding: 6px 0 6px 5px;
+  margin: 5px 0;
+  font-size: 14px;
+  line-height: 14px;
+  color: #555;
+  font-weight: normal;
+  cursor: pointer;
+}
+
+.nav li[data-panel-id=highlights]:hover {
+  background: #efefef;
+}
+
+.nav li[data-panel-id=highlights]:hover:before {
+  color: #999;
+}
+
+.nav li[data-panel-id=highlights]:before {
+  content: "\f0e5";
+  font-family: FontAwesome;
+  color: #ccc;
+  font-size: 16px;
+  line-height:15px;
+  height: 15px;
+  float: left;
+  padding-top: 0px;
+  padding-right: 4px;
+  width: 16px;
+  display: inline-block;
+  text-align: center;
+}
+
 #nav {
   position: relative;
   width: 200px;
