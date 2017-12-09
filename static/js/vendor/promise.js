@@ -12,7 +12,7 @@ function noop() {}
 
 // Polyfill for Function.prototype.bind
 function bind(fn, thisArg) {
-  return function () {
+  return function() {
     fn.apply(thisArg, arguments);
   };
 }
