@@ -1,14 +1,22 @@
-var Panel = function(name, id, connection, mobile) {
+var Panel = function(opts) {
   var panel = this;
 
-  panel.name = name;
-  panel.id = id;
-  panel.connection = connection.id;
+  panel.name = opts.name;
+  panel.id = opts.id;
+  panel.type = opts.type;
+  panel.connection = opts.connection;
+  panel.editable = opts.editable;
+  panel.closable = opts.closable;
+  panel.log_url = opts.log_url;
+  panel.backlog_url = opts.backlog_url;
+  panel.path = opts.path;
+  panel.connected = opts.connected;
+  panel.network = opts.network;
+  panel.mobile = opts.mobile;
+
   panel.unread = false;
   panel.missed = false;
-  panel.connected = connection.connected;
   panel.highlighted = false;
-  panel.type = determine_panel_type(name, connection.chantypes);
   panel.focused = false;
   panel.backlog_empty = false;
   panel.reactions = [];
@@ -19,23 +27,13 @@ var Panel = function(name, id, connection, mobile) {
   panel.show_nicklist = false;
   panel.first_focus = true;
   panel.last_seen = null;
-  panel.path = window.location.pathname + "#/" + connection.id + "/" + encodeURIComponent(name);
   panel.oldest_message = null;
-
   panel.mode = "";
-  panel.network = connection.host;
-  panel.mobile = mobile;
 
   panel.change_name = function(name) {
     panel.name = name;
     panel.update_nav();
   };
-
-  function determine_panel_type(name, chantypes) {
-    if (name == "status") return "status";
-    if (chantypes.indexOf(name[0]) != -1) return "channel";
-    return "private";
-  }
 
   panel.update_mode = function(mode) {
     panel.mode = mode;
@@ -157,15 +155,14 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.build_nav = function() {
-    var log_url = "/search/#!"
-      + "/connection/" + encodeURIComponent(panel.connection)
-      + "/channel/" + encodeURIComponent(panel.name);
     var html = Template('nav_item', {
       name: panel.name,
-      status: panel.type == "status",
+      closable: panel.closable,
+      editable: panel.editable,
+      log_url: panel.log_url,
       id: panel.id,
-      logs: log_url
     });
+
     var el = document.createElement('DIV');
     el.innerHTML = html;
     return el.firstChild;
@@ -195,17 +192,20 @@ var Panel = function(name, id, connection, mobile) {
         panel.elem.nav.classList.add('disconnected');
     }
 
-    var prefix = panel.name;
-    var title = panel.network;
+    if (panel.network) {
+      var prefix = panel.name;
+      var title = panel.network;
 
-    if (panel.mode) {
-      prefix += " (+" + panel.mode + ")";
-      title += " (+" + panel.mode + ")";
+      if (panel.mode) {
+        prefix += " (+" + panel.mode + ")";
+        title += " (+" + panel.mode + ")";
+      }
+
+      panel.elem.prefix.textContent = prefix;
+      panel.elem.prefix.setAttribute("title", panel.network);
+      panel.elem.nav.setAttribute("title", title);
     }
 
-    panel.elem.prefix.textContent = prefix;
-    panel.elem.prefix.setAttribute("title", panel.network);
-    panel.elem.nav.setAttribute("title", title);
     panel.elem.nav.setAttribute("data-name", panel.name);
   };
 
@@ -619,7 +619,7 @@ var Panel = function(name, id, connection, mobile) {
   };
 
   panel.elem.input.setAttribute('contenteditable', 'true');
-  panel.elem.input.setAttribute('data-panel-id', id);
+  panel.elem.input.setAttribute('data-panel-id', panel.id);
   panel.elem.input.classList.add('input');
   panel.elem.filler.classList.add('filler');
   panel.elem.prefix.textContent = panel.name;
