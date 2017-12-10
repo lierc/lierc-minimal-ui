@@ -516,12 +516,9 @@ a:hover {
   background: #efefef;
 }
 
-.nav li[data-panel-id=highlights].active:before,
-.nav li[data-panel-id=highlights]:hover:before {
-  color: #999;
-}
 .nav li[data-panel-id=highlights].highlighted:before,
 .nav li[data-panel-id=highlights].unread:before {
+  opacity: 1;
   color: #02c702;
   content: "\f075";
 }
@@ -531,6 +528,7 @@ a:hover {
 }
 
 .nav li[data-panel-id=highlights]:before {
+  opacity: 0;
   content: "\f0e5";
   font-family: FontAwesome;
   color: #ccc;
