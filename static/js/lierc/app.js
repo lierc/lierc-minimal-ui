@@ -605,6 +605,7 @@ var App = function(url, user) {
 
         var list = [];
         var reactions = [];
+        var is_search = panel.type == "search";
 
         events.forEach( function (e) {
           var message = e.Message;
@@ -617,7 +618,10 @@ var App = function(url, user) {
           if (app.is_reaction(message))
             reactions.push(message);
           else {
-            var el = Render(message, {show_channel: panel.type == "search"});
+            var el = Render(message, {
+              show_channel: is_search,
+              controls: !is_search
+            });
             if (el)
               list.push(el);
           }
