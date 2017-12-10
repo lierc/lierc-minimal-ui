@@ -480,7 +480,7 @@ var App = function(url, user) {
       panel.missed = true;
       panel.update_nav();
     }
-    else if (missed.highlights > 0) {
+    if (missed.highlights > 0) {
       panel.highlighted = true;
       app.highlights.unread = true;
       app.highlights.update_nav();
@@ -1025,6 +1025,9 @@ var App = function(url, user) {
   };
 
   app.save_seen = function(panel, force) {
+    if (panel.type == "search")
+      return;
+
     var diffs = 0;
     var id = panel.id;
     var last_seen = panel.last_seen;
