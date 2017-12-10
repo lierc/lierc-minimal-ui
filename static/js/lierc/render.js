@@ -11,7 +11,7 @@ var Render = function(message, opts) {
       [
         make_text(old + " is now known as "),
         make_nick(message),
-        timestamp(message, opts)
+        timestamp(message)
       ]
     );
 
@@ -22,9 +22,9 @@ var Render = function(message, opts) {
     return append(
       make("event", message),
       [
-        make_nick(message),
+        make_nick(message, name),
         make_text(' has left' + (msg ? " ("+msg+")" : "")),
-        timestamp(message, opts)
+        timestamp(message)
       ]
     );
 
@@ -39,7 +39,7 @@ var Render = function(message, opts) {
         [
           make_text(message.Params.slice(1).join(" ")),
           make_text(" by " + message.Prefix.Name),
-          timestamp(message, opts)
+          timestamp(message)
         ]
       );
     }
@@ -52,7 +52,7 @@ var Render = function(message, opts) {
       [
         make_nick(message),
         make_text(' has quit' + (msg ? " ("+msg+")" : "")),
-        timestamp(message, opts)
+        timestamp(message)
       ]
     );
 
@@ -62,9 +62,9 @@ var Render = function(message, opts) {
     return append(
       make("event", message),
       [
-        make_nick(message),
+        make_nick(message, name),
         make_text(' has joined the channel'),
-        timestamp(message, opts)
+        timestamp(message)
       ]
     );
 
@@ -92,7 +92,7 @@ var Render = function(message, opts) {
     var span = append(
       make_text(),
       [
-        make_nick(message),
+        make_nick(message, name),
         make_text(" changed the topic: "),
       ].concat(Format(text))
     );
@@ -101,7 +101,7 @@ var Render = function(message, opts) {
       make("event", message),
       [
         span,
-        timestamp(message, opts)
+        timestamp(message)
       ]
     );
 
@@ -117,7 +117,7 @@ var Render = function(message, opts) {
     if (!name.length || !text.length)
       return raw(message);
 
-    var from = make_nick(message);
+    var from = make_nick(message, name);
     var color = string_to_color(message.Prefix.User || nick);
     var wrap = make_text();
     wrap.setAttribute('class', 'message-text');
@@ -137,7 +137,7 @@ var Render = function(message, opts) {
       }
     }
     else {
-      from.textContent = '< '+nick+'> ';
+      from.textContent = '< '+from.textContent+'> ';
       append(msg, Format(text));
     }
 
@@ -148,7 +148,7 @@ var Render = function(message, opts) {
     return append(
       li,
       [
-        flex(from, wrap, timestamp(message, opts)),
+        flex(from, wrap, timestamp(message)),
         opts['controls'] !== false ? controls(message) : null
       ]
     );
@@ -225,7 +225,7 @@ var Render = function(message, opts) {
     return el;
   }
 
-  function make_nick(message) {
+  function make_nick(message, channel) {
     var prefix = message.Prefix.Name
       + "!" + message.Prefix.User
       + "@" + message.Prefix.Server;
@@ -235,6 +235,10 @@ var Render = function(message, opts) {
     el.setAttribute('title', prefix);
     el.classList.add('message-nick');
     el.textContent = message.Prefix.Name;
+
+    if (channel && opts['show_channel']) {
+      el.textContent = channel + ":" + el.textContent;
+    }
 
     return el;
   }
@@ -254,7 +258,7 @@ var Render = function(message, opts) {
     return raw;
   }
 
-  function timestamp (message, opts) {
+  function timestamp (message) {
     var date = new Date(message.Time * 1000);
     var h = String(date.getHours());
     if (h.length < 2)

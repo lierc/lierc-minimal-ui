@@ -617,7 +617,7 @@ var App = function(url, user) {
           if (app.is_reaction(message))
             reactions.push(message);
           else {
-            var el = Render(message);
+            var el = Render(message, {show_channel: panel.type == "search"});
             if (el)
               list.push(el);
           }
