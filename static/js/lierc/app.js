@@ -474,12 +474,16 @@ var App = function(url, user) {
   app.apply_missed = function(panel, missed) {
     if (missed.messages) {
       panel.unread = true;
-      if (panel.type == "private")
-        panel.highlighted = true;
       panel.update_nav();
     }
     else if (missed.events) {
       panel.missed = true;
+      panel.update_nav();
+    }
+    else if (missed.highlights > 0) {
+      panel.highlighted = true;
+      app.highlights.unread = true;
+      app.highlights.update_nav();
       panel.update_nav();
     }
     app.update_title();
@@ -1121,7 +1125,7 @@ var App = function(url, user) {
     else {
       app.elem.switcher.classList.add('open');
       app.elem.nav.classList.add('filtering');
-      app.elem.nav.querySelectorAll('#channels li[data-name], #privates li[data-name]').forEach(function(li) {
+      app.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]').forEach(function(li) {
         li.classList.add('candidate');
         if (li.classList.contains("unread"))
           li.classList.add("match");
@@ -1239,6 +1243,7 @@ var App = function(url, user) {
     connected: true,
     type: "search"
   });
+  app.highlights.update_nav();
 
   document.getElementById("meta-channels").appendChild(app.highlights.elem.nav);
 
