@@ -1240,7 +1240,7 @@ var App = function(url, user) {
   setInterval(app.ping_server, 1000 * 15);
 
   app.highlights = new Panel({
-    name: "highlights",
+    name: "All Highlights",
     id: "highlights",
     closable: false,
     editable: false,
