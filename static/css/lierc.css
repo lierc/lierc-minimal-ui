@@ -482,7 +482,7 @@ a:hover {
 }
 
 .nav#meta-channels {
-  padding: 5px 0;
+  padding: 10px 0 0 0;
 }
 
 .nav li[data-panel-id=highlights] {
@@ -558,11 +558,6 @@ a:hover {
   transition: height 0.5s;
 }
 
-.nav-title.collapsed:before {
-  content: "\f0da";
-  font-family: FontAwesome;
-}
-
 .nav-title .count {
   font-size: 10px;
 }
@@ -574,29 +569,12 @@ a:hover {
   content: ")";
 }
 
-.nav-title:before {
-  content: "\f0d7";
-  font-family: FontAwesome;
-  font-size: 16px;
-  line-height:15px;
-  height: 15px;
-  float: left;
-  padding-top: 1px;
-  width: 16px;
-  display: inline-block;
-  text-align: center;
-}
-
-.nav-title:hover:before {
-  color: #fff;
-}
-
-.nav-title.collapsed + .nav li {
+.nav-title.expandable.collapsed + .nav li {
   display: none;
 }
 
-.nav-title.collapsed + #status li.active,
-.nav-title.collapsed + #status li.disconnected {
+.nav-title.expandable.collapsed + #status li.active,
+.nav-title.expandable.collapsed + #status li.disconnected {
   display: block;
 }
 
@@ -606,10 +584,13 @@ a:hover {
 
 .nav-title {
   padding: 10px 10px 0 5px;
-  font-size: 12px;
+  font-size: 15px;
   color: rgb(202,196,201);
   font-weight: normal;
   margin: 0;
+}
+
+.nav-title.expandable {
   cursor: pointer;
 }
 
@@ -618,7 +599,7 @@ a:hover {
   padding-left: 4px;
 }
 
-.nav-title:hover {
+.nav-title.expandable:hover {
   color: #fff;
 }
 
@@ -643,7 +624,7 @@ a:hover {
 .nav li.active a.panel-log,
 .nav li.active a.edit-panel,
 .nav li.active a.close-panel {
-  color: #777;
+  color: #eee;
 }
 
 .nav li:hover a.panel-log,
@@ -677,7 +658,7 @@ a:hover {
   font-family: FontAwesome;
   font-size: 12px;
   line-height: 12px;
-  width: 16px;
+  width: 14px;
   text-align: center;
   display: inline-block;
 }
@@ -712,7 +693,6 @@ a:hover {
 
 .nav li a {
   color: rgb(202,196,201);
-  padding-left: 4px;
 }
 
 .nav li.disconnected a {
@@ -953,8 +933,9 @@ div.header-right {
   display: inline-block;
   cursor: pointer;
   float: right;
-  margin-top: 4px;
+  margin-top: 8px;
   color: #ccc;
+  font-size: 12px;
 }
 
 #web-notify.broken {
