@@ -6,7 +6,7 @@ body {
   margin: 0;
   padding: 0;
   text-rendering: optimizeLegibility;
-  font-size: 14px;
+  font-size: 15px;
   overflow-x: hidden;
   -webkit-text-size-adjust: none;
   -moz-text-size-adjust: none;
@@ -52,7 +52,7 @@ a:hover {
   color: #555;
   font-family: FontAwesome;
   padding: 3px 0;
-  width: 14px;
+  width: 15px;
   margin: 0 auto;
 }
 
@@ -73,7 +73,7 @@ a:hover {
   color: #333;
   font-family: "Menlo", "Inconsolata", "Consolas",
     "Droid Sans Mono", "Monaco", monospace;
-  font-size: 14px;
+  font-size: 15px;
   padding
 }
 
@@ -435,25 +435,6 @@ a:hover {
   position: relative;
 }
 
-#prefix {
-  flex-shrink: 0;
-  box-sizing: border-box;
-  padding: 5px 0;
-  color: rgb(202,196,201);
-  -webkit-user-select: none;
-  background: #4d394b;
-  text-align: right;
-}
-
-#prefix span {
-  font-size: 14px;
-  line-height: 1.4em;
-  border: 1px solid transparent;
-  min-height: 19px;
-  display: block;
-  padding: 5px;
-}
-
 .invert {
   filter: invert(100%);
   background: #fff;
@@ -470,7 +451,7 @@ a:hover {
   display: block;
   overflow: hidden;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
   line-height: 1.4em;
   min-height: 19px;
   border: 1px solid #ccc;
@@ -507,8 +488,8 @@ a:hover {
 .nav li[data-panel-id=highlights] {
   padding: 6px 0 6px 5px;
   margin: 0;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 15px;
   color: #555;
   font-weight: normal;
   cursor: pointer;
@@ -647,8 +628,8 @@ a:hover {
   display: block;
   float: right;
   margin-right: 10px;
-  font-size: 14px;
-  height: 14px;
+  font-size: 15px;
+  height: 15px;
   opacity: 0;
   color: #999;
 }
@@ -705,8 +686,8 @@ a:hover {
   cursor: pointer;
   padding: 6px 0px 6px 5px;
   color: rgb(202,196,201);
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 15px;
   list-style: none;
 }
 
@@ -749,8 +730,8 @@ body.disconnected #reconnect {
   background: #ffa130;
   color: #fff;
   padding: 8px 10px;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 15px;
   box-sizing: border-box;
   z-index: 99;
 }
@@ -762,7 +743,7 @@ body.disconnected #reconnect {
   margin: 0;
   background: #fff;
   white-space: pre;
-  min-height: 14px;
+  min-height: 15px;
   display: flex;
   border-bottom: 1px solid #eee;
   box-sizing: border-box;
@@ -775,8 +756,8 @@ body.disconnected #reconnect {
 #topic p {
   margin: 0;
   padding: 0;
-  line-height: 14px;
-  font-size: 14px;
+  line-height: 15px;
+  font-size: 15px;
   color: #555;
 }
 
@@ -908,7 +889,7 @@ p.note {
 }
 
 .overlay input {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .dialog a.close {
@@ -927,8 +908,8 @@ p.note {
 
 #panel-name {
   display: none;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 15px;
   text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
   font-weight: bold;
   margin: 0;
@@ -941,9 +922,9 @@ div.header-right {
 
 .flex-wrap-left header h1 {
   margin: 0;
-  padding: 8px 0 8px 25px;
-  font-size: 14px;
-  line-height: 14px;
+  padding: 8px 0 8px 10px;
+  font-size: 15px;
+  line-height: 15px;
   color: #fff;
   text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
   font-weight: bold;
@@ -956,8 +937,8 @@ div.header-right {
   flex-shrink: 0;
   box-sizing: border-box;
   background: #4D394B;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 15px;
   color: #fff;
   position: relative;
   cursor: pointer;
@@ -1161,7 +1142,7 @@ header:hover #global-controls-toggle {
   display: block;
   margin: 0;
   padding: 8px 25px;
-  font-size: 14px;
+  font-size: 15px;
   box-sizing: border-box;
   cursor: pointer;
   list-style: none;
@@ -1191,7 +1172,7 @@ header:hover #global-controls-toggle {
   width: 350px;
   background: #eee;
   margin: 20px auto;
-  font-size: 14px;
+  font-size: 15px;
   background: #eee;
   padding: 20px;
   border-radius: 2px;
@@ -1309,7 +1290,7 @@ ul.channel-controls li a {
 #toggle-hideevents .checkbox:before {
   content: "\f096";
   font-family: FontAwesome;
-  width: 14px;
+  width: 15px;
   text-align: left;
   display: inline-block;
   padding-right: 4px;
@@ -1446,7 +1427,7 @@ ul.channel-controls li a:hover {
 }
 
 .upload-popup input {
-  font-size: 14px;
+  font-size: 15px;
 }
 
 .upload-popup input[type=submit] {
@@ -1472,7 +1453,7 @@ ul.channel-controls li a:hover {
 }
 
 #gist-upload-extension {
-  font-size: 14px;
+  font-size: 15px;
   float: right;
   margin-top: 10px;
   padding: 4px;
@@ -1493,7 +1474,7 @@ ul.channel-controls li a:hover {
   display: block;
   overflow: hidden;
   outline: none;
-  font-size: 14px;
+  font-size: 15px;
   border: 1px solid #ccc;
   padding: 5px;
   margin: 0;
@@ -1630,7 +1611,7 @@ ul.channel-controls li a:hover {
 
 .emoji-search input {
   display: block;
-  font-size: 14px;
+  font-size: 15px;
   width: 100%;
   box-sizing: border-box;
   padding: 5px;
@@ -1695,7 +1676,7 @@ ul.channel-controls li a:hover {
 
 .embed-wrap p,
 .embed-wrap h2 {
-  font-size: 14px;
+  font-size: 15px;
   margin: 5px 15px;
 }
 .embed-wrap p.description {
@@ -1751,8 +1732,8 @@ p.embed-source {
   top: 2px;
   right: 39px;
   padding: 2px;
-  font-size: 14px;
-  line-height: 14px;
+  font-size: 15px;
+  line-height: 15px;
   background: #fff;
   border: 1px solid #ccc;
   border-radius: 4px;
@@ -1883,10 +1864,6 @@ li.message:hover .message-controls,
     width: auto;
   }
 
-  #prefix {
-    display: none;
-  }
-
   .message-flex {
     display: block;
     position: relative;
@@ -1945,7 +1922,7 @@ li.message:hover .message-controls,
   bottom: 0px;
   right: 0px;
   margin: 0;
-  font-size: 14px;
+  font-size: 15px;
   background: #eee;
   border-top: none;
   border-left: none;

@@ -35,7 +35,6 @@ var App = function(url, user) {
     input: document.getElementById('input'),
     topic: document.getElementById('topic'),
     filler: document.getElementById('filler'),
-    prefix: document.getElementById('prefix'),
     scroll: document.getElementById('panel-scroll'),
     title: document.getElementsByTagName('title')[0],
     nicks: document.getElementById('nicks'),
@@ -736,7 +735,6 @@ var App = function(url, user) {
     app.replace_child("input", panel.elem.input);
     app.replace_child("topic", panel.elem.topic);
     app.replace_child("filler", panel.elem.filler);
-    app.replace_child("prefix", panel.elem.prefix);
 
     app.elem.body.setAttribute("data-panel-type", panel.type);
     app.replace_child("nicks", panel.elem.nicks);

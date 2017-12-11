@@ -193,16 +193,12 @@ var Panel = function(opts) {
     }
 
     if (panel.network) {
-      var prefix = panel.name;
       var title = panel.network;
 
       if (panel.mode) {
-        prefix += " (+" + panel.mode + ")";
         title += " (+" + panel.mode + ")";
       }
 
-      panel.elem.prefix.textContent = prefix;
-      panel.elem.prefix.setAttribute("title", panel.network);
       panel.elem.nav.setAttribute("title", title);
     }
 
@@ -225,7 +221,7 @@ var Panel = function(opts) {
   };
 
   panel.remove_elems = function() {
-    ['nav','prefix','filler','topic','nicks','input','list']
+    ['nav','filler','topic','nicks','input','list']
       .forEach(function(el) {
         if (panel.elem[el].parentNode)
           panel.elem[el].parentNode.removeChild(
@@ -613,7 +609,6 @@ var Panel = function(opts) {
     nicks: document.createElement('UL'),
     topic: document.createElement('P'),
     filler: document.createElement('DIV'),
-    prefix: document.createElement('SPAN'),
     nav: panel.build_nav(),
     body: document.body
   };
@@ -622,7 +617,6 @@ var Panel = function(opts) {
   panel.elem.input.setAttribute('data-panel-id', panel.id);
   panel.elem.input.classList.add('input');
   panel.elem.filler.classList.add('filler');
-  panel.elem.prefix.textContent = panel.name;
 
   switch (panel.type) {
   case "channel":
