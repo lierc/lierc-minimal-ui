@@ -153,11 +153,9 @@ var UIEvents = function(app) {
     if (val) {
       for (var i=0; i < items.length; i++) {
         var item = items[i];
-        var text = item.getAttribute("data-name")
-          .toLowerCase()
-          .replace(/^[#&]/, "");
+        var text = item.getAttribute("data-name").toLowerCase()
 
-        if (text.substring(0, val.length) == val) {
+        if (text.indexOf(val) != -1) {
           matches.push(item);
         }
         else {
