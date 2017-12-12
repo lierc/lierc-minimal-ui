@@ -42,15 +42,15 @@ body,input {
 }
 
 a:link {
-  color: #0093ff;
+  color: var(--blue);
 }
 
 a:visited {
-  color: #7600bd;
+  color: var(--violet);
 }
 
 a:hover {
-  color: #18df00;
+  color: var(--violet);
 }
 
 #panel {
@@ -509,7 +509,6 @@ a:hover {
   margin: 0;
   font-size: 15px;
   line-height: 15px;
-  color: #555;
   font-weight: normal;
   cursor: pointer;
 }
@@ -544,7 +543,7 @@ a:hover {
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-  background: var(--base03);
+  background: var(--base02);
   overflow: auto;
 }
 
@@ -631,11 +630,11 @@ a:hover {
   font-size: 15px;
   height: 15px;
   opacity: 0;
-  color: var(--base00);
+  color: var(--base1);
 }
 
 .nav li a.panel-log {
-  margin-right: 1px;
+  margin-right: 4px;
   padding-top: 2px;
   font-size: 12px;
 }
@@ -655,10 +654,10 @@ a:hover {
 .nav li a.panel-log:hover,
 .nav li a.edit-panel:hover,
 .nav li a.close-panel:hover {
-  color: var(--base1);
+  color: #fff;
 }
 
-.nav li.unread a {
+.nav li.unread a.panel-name {
   font-weight: bold;
   color: #fff;
 }
@@ -708,7 +707,7 @@ a:hover {
 }
 
 .nav li:hover {
-  background: var(--base02);
+  background: var(--base03);
 }
 
 .nav li a {
@@ -934,7 +933,7 @@ div.header-right {
   flex-grow: 0;
   flex-shrink: 0;
   box-sizing: border-box;
-  background: var(--base03);
+  background: var(--base02);
   font-size: 15px;
   line-height: 15px;
   color: var(--base00);
@@ -943,7 +942,7 @@ div.header-right {
 }
 
 .flex-wrap-left header:hover {
-  background: var(--base02);
+  background: var(--base03);
 }
 
 .nav-title .join-channel,
@@ -1074,12 +1073,12 @@ li.event time,
 #global-controls-toggle {
   display: inline-block;
   -webkit-user-select: none;
-  color: rgb(202,196,201);
+  color: var(--base00);
 }
 
 header:hover #panel-name,
 header:hover #global-controls-toggle {
-  color: #fff;
+  color: var(--base1);
 }
 
 #global-controls sup {
