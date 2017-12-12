@@ -145,7 +145,7 @@ var UIEvents = function(app) {
 
   app.elem.switcher.addEventListener("input", function(e) {
     var val = app.elem.switcher.querySelector('input').value;
-    var items = app.elem.nav.querySelectorAll('li[data-name]');
+    var items = app.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]');
 
     val = val.toLowerCase();
     matches = [];
