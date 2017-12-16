@@ -543,7 +543,7 @@ a:hover {
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-  background: var(--base02);
+  background: var(--base03);
   overflow: auto;
 }
 
@@ -587,6 +587,10 @@ a:hover {
   content: ")";
 }
 
+.nav-title.expandable.collapsed {
+  padding-bottom: 0;
+}
+
 .nav-title.expandable.collapsed + .nav li {
   display: none;
 }
@@ -601,7 +605,7 @@ a:hover {
 }
 
 .nav-title {
-  padding: 10px 10px 0 5px;
+  padding: 10px 10px 5px 5px;
   font-size: 15px;
   color: var(--base1);
   font-weight: normal;
@@ -707,7 +711,7 @@ a:hover {
 }
 
 .nav li:hover {
-  background: var(--base03);
+  background: var(--base02);
 }
 
 .nav li a {
@@ -743,7 +747,6 @@ body.disconnected #reconnect {
   white-space: pre;
   min-height: 15px;
   display: flex;
-  box-sizing: border-box;
   box-shadow: 0 0px 6px rgba(0,0,0,0.2);
 }
 
@@ -907,7 +910,6 @@ p.note {
   display: none;
   font-size: 15px;
   line-height: 15px;
-  text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
   font-weight: bold;
   margin: 0;
   padding: 8px 0 8px 25px;
@@ -923,7 +925,6 @@ div.header-right {
   font-size: 15px;
   line-height: 15px;
   color: #fff;
-  text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
   font-weight: bold;
   -webkit-user-select: none;
   display: inline-block;
@@ -933,7 +934,7 @@ div.header-right {
   flex-grow: 0;
   flex-shrink: 0;
   box-sizing: border-box;
-  background: var(--base02);
+  background: var(--base03);
   font-size: 15px;
   line-height: 15px;
   color: var(--base00);
@@ -942,7 +943,7 @@ div.header-right {
 }
 
 .flex-wrap-left header:hover {
-  background: var(--base03);
+  background: var(--base02);
 }
 
 .nav-title .join-channel,
@@ -951,7 +952,7 @@ div.header-right {
   cursor: pointer;
   float: right;
   margin-top: 8px;
-  color: #ccc;
+  color: var(--base1);
   font-size: 12px;
 }
 
@@ -1078,7 +1079,7 @@ li.event time,
 
 header:hover #panel-name,
 header:hover #global-controls-toggle {
-  color: var(--base1);
+  color: #fff;
 }
 
 #global-controls sup {
@@ -1086,28 +1087,20 @@ header:hover #global-controls-toggle {
   line-height: 0px;
 }
 
-#global-controls li {
-  border-bottom: 1px solid rgba(0,0,0,0.05);
+#global-controls li:hover {
+  background: var(--base2);
 }
 
 #panel-name {
   text-shadow: none;
   padding: 8px 0px 8px 15px;
   cursor: pointer;
+  color: #fff;
 }
 
 #global-controls-toggle {
   padding: 8px 10px 8px 10px;
   cursor: pointer;
-}
-
-#global-controls-toggle:hover {
-  text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
-}
-
-.flex-wrap.open #panel-name:hover,
-.flex-wrap.open #global-controls-toggle:hover {
-  text-shadow: none;
 }
 
 #global-controls {
@@ -1118,22 +1111,12 @@ header:hover #global-controls-toggle {
   text-align: right;
   margin: 0px;
   padding: 0px;
-  background: #fff;
-  box-shadow: -3px 3px 3px rgba(0,0,0,0.05);
+  background: var(--base3);
   width: 100%;
-  box-sizing: border-box;
-}
-
-.flex-wrap.open .header-right,
-.flex-wrap.open #panel-name,
-.flex-wrap.open #global-controls-toggle {
-  background: #fff;
-  color: var(--magenta);
 }
 
 .flex-wrap.open #global-controls {
   display: block;
-  border-bottom: 1px solid #ccc;
 }
 
 #global-controls li {
@@ -1262,6 +1245,7 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
   color: var(--magenta);
   font-size: 18px;
   cursor: pointer;
+  background: #fff;
 }
 
 .show-nicklist #toggle-nicks,
@@ -1896,7 +1880,6 @@ li.message:hover .message-controls,
   text-align: left;
   margin: 0px;
   padding: 0px;
-  background: #fff;
   box-shadow: none;
 }
 
