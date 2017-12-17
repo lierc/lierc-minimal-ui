@@ -167,8 +167,20 @@ var Commands = function(app) {
     return ["PRIVMSG", panel.name, ":" + line].join(" ");
   });
 
-  add_command("solarized", [], function(panel, line) {
-    document.body.classList.toggle("solarized");
+  add_command("theme", [], function(panel, line) {
+    document.body.classList.remove("solarized-dark", "solarized");
+
+    switch (line) {
+    case "solarized dark":
+      document.body.classList.add("solarized-dark");
+      break;
+    case "solarized":
+    case "solarized light":
+      document.body.classList.add("solarized");
+      break;
+    default:
+      break;
+    }
   });
 
   add_command("query", ["q","msg"], function(panel, line) {
