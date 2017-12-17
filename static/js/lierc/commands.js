@@ -167,6 +167,10 @@ var Commands = function(app) {
     return ["PRIVMSG", panel.name, ":" + line].join(" ");
   });
 
+  add_command("solarized", [], function(panel, line) {
+    document.body.classList.toggle("solarized");
+  });
+
   add_command("query", ["q","msg"], function(panel, line) {
     var args = line.split(" ", 1);
     var rest = line.substring(args[0].length).trim();

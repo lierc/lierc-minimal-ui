@@ -476,7 +476,6 @@ a:hover {
   border: 1px solid #ccc;
   padding: 5px;
   margin: 0;
-  background: #fff;
   white-space: pre-wrap;
   font-family: -apple-system, BlinkMacSystemFont,
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
@@ -748,6 +747,10 @@ body.disconnected #reconnect {
   min-height: 15px;
   display: flex;
   box-shadow: 0 0px 6px rgba(0,0,0,0.2);
+}
+
+body.solarized #topic {
+  background: var(--base2);
 }
 
 #topic.expanded {
@@ -1224,6 +1227,10 @@ div.flex-wrap {
   background: #fff;
 }
 
+body.solarized .flex-wrap-right {
+  background: var(--base3);
+}
+
 body[data-panel-type=channel] .channel-meta {
   display: none;
 }
@@ -1245,12 +1252,15 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
   color: var(--magenta);
   font-size: 18px;
   cursor: pointer;
-  background: #fff;
 }
 
 .show-nicklist #toggle-nicks,
 #toggle-nicks:hover {
   background: #fff;
+}
+
+body.solarized #toggle-nicks:hover {
+  background: var(--base3);
 }
 
 ul.channel-controls {
