@@ -288,6 +288,12 @@ var Connection = function(id, host, nick) {
       }
       break;
 
+    case "401":
+    case "403":
+      var name = message.Params[1];
+      fire("channel:error", conn.id, name,  message);
+      break;
+
     case "NOTICE":
       var nick = message.Prefix.Name;
       var name = message.Params[0];

@@ -153,6 +153,13 @@ var Render = function(message, opts) {
       ]
     );
 
+  case "401":
+  case "403":
+    var text = message.Params[2] + " '" + message.Params[1] + "'";
+    var raw = make("raw", message);
+    raw.textContent = text;
+    return raw;
+
   case "NOTICE":
     var name = message.Prefix.Name;
     var text = message.Params[1];
