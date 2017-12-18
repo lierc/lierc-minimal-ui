@@ -90,6 +90,12 @@ var App = function(url, user) {
         app.elem.audio.play();
     });
 
+    connection.on("channel:error", function(conn, channel, message) {
+      var panel = app.get_panel(channel, conn);
+      var html = Render(message);
+      panel.append(html);
+    });
+
     connection.on("channel:msg", function(conn, channel, message) {
       var panel = app.get_panel(channel, conn);
       var html = Render(message);
