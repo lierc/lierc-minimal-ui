@@ -890,11 +890,6 @@ var UIEvents = function(app) {
       e.target.classList.remove('loading', 'loaded');
   });
 
-  app.highlights.elem.nav.addEventListener('click', function(e) {
-    e.preventDefault();
-    app.focus_panel(app.highlights.id);
-  });
-
   document.onselectionchange = function(e) {
     if (app.focused && app.focused.editor.focused) {
       app.focused.editor.save_selection();

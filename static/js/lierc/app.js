@@ -45,7 +45,8 @@ var App = function(url, user) {
     panel_name: document.getElementById('panel-name'),
     flex_wrap: document.querySelector('.flex-wrap'),
     reconnect: document.getElementById('reconnect-status'),
-    images: document.getElementById('image-uploads')
+    images: document.getElementById('image-uploads'),
+    meta: document.getElementById('meta-channels')
   };
 
   app.set_connected = function(conn_id, status, message) {
@@ -1195,6 +1196,31 @@ var App = function(url, user) {
     return dialog;
   };
 
+  app.setup_highlights = function() {
+    if (app.panels['highlights']) {
+      app.remove_panel('highlights');
+    }
+
+    app.highlights = new Panel({
+      name: "All Highlights",
+      id: "highlights",
+      closable: false,
+      editable: false,
+      backlog_url: "/highlight",
+      path: window.location.pathname + "#/highlights",
+      mobile: app.mobile,
+      connected: true,
+      type: "search"
+    });
+    app.highlights.update_nav();
+    app.highlights.elem.nav.addEventListener('click', function() {
+      app.focus_panel('highlights');
+    });
+    app.elem.meta.appendChild(app.highlights.elem.nav);
+    app.panels[app.highlights.id] = app.highlights;
+  };
+
+
   app.reset = function() {
     var path = app.focused ? app.focused.path : "";
 
@@ -1208,6 +1234,7 @@ var App = function(url, user) {
     app.last_seen = {};
     app.missed = {};
     app.focused = null;
+    app.setup_highlights();
 
     app.load_seen(function() {
       app.load_token(function() {
@@ -1242,23 +1269,7 @@ var App = function(url, user) {
 
   setInterval(app.check_scroll, 250);
   setInterval(app.ping_server, 1000 * 15);
-
-  app.highlights = new Panel({
-    name: "All Highlights",
-    id: "highlights",
-    closable: false,
-    editable: false,
-    backlog_url: "/highlight",
-    path: window.location.pathname + "#/highlights",
-    mobile: app.mobile,
-    connected: true,
-    type: "search"
-  });
-  app.highlights.update_nav();
-
-  document.getElementById("meta-channels").appendChild(app.highlights.elem.nav);
-
-  app.panels[app.highlights.id] = app.highlights;
+  app.setup_highlights();
 
   app.get_prefs(function(prefs) {
     app.prefs = prefs;
