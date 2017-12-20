@@ -462,6 +462,10 @@ body.solarized-dark .image-wrap a:hover {
   position: relative;
 }
 
+body.solarized #foot {
+  background: var(--base2);
+}
+
 .invert {
   filter: invert(100%);
   background: #fff;
@@ -489,6 +493,10 @@ body.solarized-dark .image-wrap a:hover {
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
+}
+
+body.solarized #input .input {
+  background: var(--base3);
 }
 
 #input .input.disabled {
@@ -534,7 +542,7 @@ body.solarized-dark .image-wrap a:hover {
   opacity: 1;
   content: "\f006";
   font-family: FontAwesome;
-  color: #ccc;
+  color: var(--base00);
   font-size: 12px;
   line-height:12px;
   width: 16px;
@@ -611,12 +619,29 @@ body.solarized-dark .image-wrap a:hover {
   flex-grow: 1;
 }
 
+.nav-title.networks:before {
+  content: "\f1e6";
+  opacity: 1;
+  font-family: FontAwesome;
+  color: var(--base00);
+  font-size: 12px;
+  line-height: 12px;
+  width: 16px;
+  display: inline-block;
+  text-align: center;
+}
+
+.nav-title.networks {
+  padding: 5px 10px 5px 5px;
+  margin: 0;
+}
+
 .nav-title {
-  padding: 10px 10px 5px 5px;
+  padding: 0 10px 0 5px;
+  margin: 15px 0 5px 0;
   font-size: 15px;
   color: var(--base1);
   font-weight: normal;
-  margin: 0;
 }
 
 .nav-title.expandable {
@@ -626,6 +651,10 @@ body.solarized-dark .image-wrap a:hover {
 .nav-title-text {
   display: inline-block;
   padding-left: 4px;
+}
+
+.nav-title.networks .nav-title-text {
+  padding-left: 0;
 }
 
 .nav-title.expandable:hover {
@@ -695,7 +724,7 @@ body.solarized-dark .image-wrap a:hover {
 
 .nav li {
   cursor: pointer;
-  padding: 6px 0px 6px 5px;
+  padding: 5px 0px 5px 5px;
   color: var(--base01);
   font-size: 15px;
   line-height: 15px;
@@ -966,7 +995,7 @@ div.header-right {
   display: inline-block;
   cursor: pointer;
   float: right;
-  margin-top: 8px;
+  margin-top: 6px;
   color: var(--base1);
   font-size: 12px;
 }
