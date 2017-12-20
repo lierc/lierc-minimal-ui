@@ -290,6 +290,7 @@ var Connection = function(id, host, nick) {
 
     case "401":
     case "403":
+    case "482":
       var name = message.Params[1];
       fire("channel:error", conn.id, name,  message);
       break;
