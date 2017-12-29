@@ -192,7 +192,7 @@ a:hover {
 
 #panel ol .date-separator time {
   font-weight: bold;
-  color: #444;
+  color: var(--base01);
   font-size: 12px;
   height: 12px;
   line-height: 12px;
@@ -204,13 +204,22 @@ a:hover {
   cursor: default;
 }
 
+body.solarized #panel ol .date-separator time {
+  background: var(--base3);
+}
+
+body.solarized-dark #panel ol .date-separator time {
+  background: var(--base02);
+  color: var(--base1);
+}
+
 #panel ol .date-separator hr {
   position: absolute;
   top: 50%;
   width: 100%;
   height: 0px;
   border: 0;
-  border-top: 1px solid #ddd;
+  border-top: 1px solid var(--base1);
   margin: 0;
   padding: 0;
   z-index: 1;
@@ -262,6 +271,16 @@ a:hover {
   position: relative;
   z-index: 9;
   background: #fff;
+}
+
+body.solarized #panel ol .last-read:before,
+body.solarized #panel ol .last-read {
+  background: var(--base3);
+}
+
+body.solarized-dark #panel ol .last-read:before,
+body.solarized-dark #panel ol .last-read {
+  background: var(--base02);
 }
 
 #panel ol .last-read + li.chat {
@@ -682,7 +701,7 @@ body.solarized #input .input {
 .nav li.active a.panel-log,
 .nav li.active a.edit-panel,
 .nav li.active a.close-panel {
-  color: var(--base3);
+  color: #fff;
 }
 
 .nav li:hover a.panel-log,
@@ -736,6 +755,7 @@ body.solarized #input .input {
   background: var(--cyan);
 }
 
+.nav li.active.disconnected a,
 .nav li.active a {
   color: #fff;
 }

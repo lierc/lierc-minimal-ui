@@ -346,7 +346,7 @@ var Render = function(message, opts) {
       "DeepPink",
       "HotPink",
       "Red",
-      "DarkRed",
+      "#da1717", // "DarkRed",
       "FireBrick",
       "Crimson",
       "IndianRed",
@@ -356,16 +356,16 @@ var Render = function(message, opts) {
       "Tomato",
       "OrangeRed",
       "Maroon",
-      "Brown",
-      "Sienna",
+      "#bb4545", // "Brown",
+      "#c56232", // "Sienna",
       "SaddleBrown",
       "Chocolate",
       "Peru",
       "DarkGoldenrod",
       "Goldenrod",
-      "MidnightBlue",
+      "#6363b3", // "MidnightBlue",
       "MediumBlue",
-      "Blue",
+      "#4040ff", // "Blue",
       "RoyalBlue",
       "SteelBlue",
       "CornflowerBlue",
@@ -377,11 +377,12 @@ var Render = function(message, opts) {
       "SlateBlue",
       "DarkSlateBlue",
       "Indigo",
-      "Purple",
+      "#bd0bbd", // "Purple",
       "DarkMagenta",
       "DarkOrchid",
       "DarkViolet"
     ];
+    //colors = [ 'var(--yellow)', 'var(--orange)', 'var(--red)', 'var(--magenta)', 'var(--violet)', 'var(--blue)', 'var(--cyan)', 'var(--green)' ];
 
     var c = 0;
     var m = colors.length;
