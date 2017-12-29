@@ -87,8 +87,14 @@ var App = function(url, user) {
       panel.append(Render(message));
       app.update_title(true);
 
-      if (from && (!app.is_focused(panel) || !panel.is_scrolled()))
+      var unfocused = !app.is_focused(panel);
+      if (from && (unfocused || !panel.is_scrolled())) {
         app.elem.audio.play();
+      }
+      if (message.Highlight && unfocused) {
+        app.highlights.unread = true;
+        app.highlights.update_nav();
+      }
     });
 
     connection.on("channel:error", function(conn, channel, message) {
@@ -108,8 +114,16 @@ var App = function(url, user) {
         panel.append(html);
         app.update_title(true);
 
-        if (message.Highlight && (!app.is_focused(panel) || !panel.is_scrolled()))
-          app.elem.audio.play();
+        if (message.Highlight) {
+          var unfocused = !app.is_focused(panel);
+          if (unfocused || !panel.is_scrolled()) {
+            app.elem.audio.play();
+          }
+          if (unfocused) {
+            app.highlights.unread = true;
+            app.highlights.update_nav();
+          }
+        }
       }
     });
 
@@ -1219,7 +1233,6 @@ var App = function(url, user) {
     app.elem.meta.appendChild(app.highlights.elem.nav);
     app.panels[app.highlights.id] = app.highlights;
   };
-
 
   app.reset = function() {
     var path = app.focused ? app.focused.path : "";

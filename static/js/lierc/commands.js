@@ -2,8 +2,10 @@ var Commands = function(app) {
   var app = app;
   var commands = this;
   var handlers = {};
+  var names    = [];
 
   function add_command(name, aliases, handler) {
+    names.push(name);
     handlers[name] = handler;
     aliases.forEach(function(alias) {
       handlers[alias] = handler;
@@ -11,8 +13,16 @@ var Commands = function(app) {
   }
 
   commands.completions = function() {
-    return Object.keys(handlers).map(function(k) {
+    return names.map(function(k) {
       return "/" + k;
+    }).sort(function(a, b) {
+      if (a.length == b.length) {
+        return 0;
+      }
+      if (a.length < b.length) {
+        return -1;
+      }
+      return 1;
     });
   };
 
@@ -167,7 +177,7 @@ var Commands = function(app) {
     return ["PRIVMSG", panel.name, ":" + line].join(" ");
   });
 
-  add_command("theme", [], function(panel, line) {
+  add_command("theme", ["color", "colors"], function(panel, line) {
     document.body.classList.remove("solarized-dark", "solarized");
 
     switch (line) {
@@ -222,12 +232,12 @@ var Commands = function(app) {
     return line;
   });
 
-  add_command("collapse", [], function(panel, line) {
+  add_command("collapse", ["hide"], function(panel, line) {
       panel.set_collapse_embeds(true);
       return;
   });
 
-  add_command("expand", [], function(panel, line) {
+  add_command("expand", ["show"], function(panel, line) {
       panel.set_collapse_embeds(false);
       return;
   });
