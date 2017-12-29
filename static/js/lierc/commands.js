@@ -232,6 +232,18 @@ var Commands = function(app) {
     return line;
   });
 
+  add_command("pause", [], function(panel, line) {
+    panel.pause_gifs = true;
+    panel.set_pause_gifs(true);
+    return;
+  });
+
+  add_command("unpause", ["play"], function(panel, line) {
+    panel.pause_gifs = false;
+    panel.set_pause_gifs(false);
+    return;
+  });
+
   add_command("collapse", ["hide"], function(panel, line) {
       panel.set_collapse_embeds(true);
       return;

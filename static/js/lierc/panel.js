@@ -24,6 +24,7 @@ var Panel = function(opts) {
   panel.ignore_nicks = [];
   panel.ignore_events = false;
   panel.collapse_embeds = false;
+  panel.pause_gifs = false;
   panel.show_nicklist = false;
   panel.first_focus = true;
   panel.last_seen = null;
@@ -704,7 +705,12 @@ var Panel = function(opts) {
               });
             };
         })(image, link);
-        image.src = "https://noembed.com/i/0/600/" + link.href;
+        if (panel.pause_gifs) {
+          image.src = "https://noembed.com/i/still/0/600/" + link.href;
+        }
+        else {
+          image.src = "https://noembed.com/i/0/600/" + link.href;
+        }
       }
     }
   };
@@ -877,6 +883,20 @@ var Panel = function(opts) {
     else {
       panel.elem.list.classList.remove("loading");
     }
+  };
+
+  panel.set_pause_gifs = function(bool) {
+    var els = panel.elem.list.querySelectorAll(".image-wrap");
+    els.forEach(function(wrap) {
+      var a = wrap.querySelector("a");
+      var img = a.querySelector("img");
+      if (bool) {
+        img.src = "https://noembed.com/i/still/0/600/" + a.href;
+      }
+      else {
+        img.src = "https://noembed.com/i/0/600/" + a.href;
+      }
+    });
   };
 
   panel.set_collapse_embeds = function(bool) {
