@@ -889,7 +889,10 @@ var Panel = function(opts) {
     var els = panel.elem.list.querySelectorAll(".image-wrap");
     els.forEach(function(wrap) {
       var a = wrap.querySelector("a");
+      if (!a) return;
+
       var img = a.querySelector("img");
+
       if (bool) {
         img.src = "https://noembed.com/i/still/0/600/" + a.href;
       }
