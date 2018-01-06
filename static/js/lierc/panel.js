@@ -314,8 +314,8 @@ var Panel = function(opts) {
 
 
     for (var i=0; i < els.length; i++) {
-      panel.imagify(els[i])
       panel.vidify(els[i])
+      panel.imagify(els[i])
       panel.audify(els[i])
       panel.emojify(els[i])
     }
@@ -494,8 +494,8 @@ var Panel = function(opts) {
           }
 
           if (el.classList.contains('message')) {
-            panel.imagify(el)
             panel.vidify(el)
+            panel.imagify(el)
             panel.audify(el)
             panel.emojify(el)
             Embed.embed_all([el], panel);
