@@ -359,6 +359,7 @@ var UIEvents = function(app) {
           send.push(val);
       }
       catch (e) {
+        console.error(e);
         alert(e);
         return;
       }
