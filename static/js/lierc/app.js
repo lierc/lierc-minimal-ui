@@ -115,11 +115,10 @@ var App = function(url, user) {
         app.update_title(true);
 
         if (message.Highlight) {
-          var unfocused = !app.is_focused(panel);
-          if (unfocused || !panel.is_scrolled()) {
+          if (!app.is_focused(panel) || !panel.is_scrolled()) {
             app.elem.audio.play();
           }
-          if (unfocused) {
+          if (app.focused && app.focused.id != panel.id) {
             app.highlights.unread = true;
             app.highlights.update_nav();
           }
