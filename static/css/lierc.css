@@ -1186,7 +1186,7 @@ header:hover #global-controls-toggle {
 #global-controls li {
   display: block;
   margin: 0;
-  padding: 8px 25px;
+  padding: 8px 20px;
   font-size: 15px;
   box-sizing: border-box;
   cursor: pointer;
@@ -1202,8 +1202,26 @@ header:hover #global-controls-toggle {
   cursor: default;
 }
 
+#global-controls li.select select {
+  width: 100%;
+  font-size: 15px;
+  box-sizing: border-box;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
+#global-controls li.select option {
+  font-size: 15px;
+  font-family: -apple-system, BlinkMacSystemFont,
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+}
+
 #global-controls li.link a {
-  padding: 8px 25px;
+  padding: 8px 20px;
   display: block;
 }
 
