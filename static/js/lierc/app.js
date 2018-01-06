@@ -25,6 +25,7 @@ var App = function(url, user) {
   app.touchstart = "ontouchstart" in document.documentElement;
   app.mobile = App.detect_mobile();
   app.post_tokens = [];
+  app.theme = 'default';
 
   app.elem = {
     panel: document.getElementById('panel'),
@@ -46,7 +47,8 @@ var App = function(url, user) {
     flex_wrap: document.querySelector('.flex-wrap'),
     reconnect: document.getElementById('reconnect-status'),
     images: document.getElementById('image-uploads'),
-    meta: document.getElementById('meta-channels')
+    meta: document.getElementById('meta-channels'),
+    themes: document.getElementById('themes')
   };
 
   app.set_connected = function(conn_id, status, message) {
@@ -1266,6 +1268,21 @@ var App = function(url, user) {
     });
   };
 
+  var themes = ["solarized-dark", "solarized"];
+  app.set_theme = function(theme) {
+    themes.forEach(function(t) {
+      document.body.classList.remove(t);
+    });
+    if (themes.indexOf(theme) != -1) {
+      document.body.classList.add(theme);
+    }
+    if (app.theme != theme) {
+      app.theme = theme;
+      app.update_pref("theme", theme);
+      app.elem.themes.value = theme;
+    }
+  };
+
   // setup
 
   if (!app.mobile) {
@@ -1291,6 +1308,9 @@ var App = function(url, user) {
     if (app.prefs['email'] === true) {
       document.getElementById('email-notify')
         .classList.add('enabled');
+    }
+    if (app.prefs['theme']) {
+      app.set_theme(app.prefs['theme']);
     }
 
     app.load_seen(function() {

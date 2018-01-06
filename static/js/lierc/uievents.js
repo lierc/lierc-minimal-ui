@@ -891,6 +891,11 @@ var UIEvents = function(app) {
       e.target.classList.remove('loading', 'loaded');
   });
 
+  app.elem.themes.addEventListener('change', function(e) {
+    var val = app.elem.themes.value;
+    app.set_theme(val);
+  });
+
   document.onselectionchange = function(e) {
     if (app.focused && app.focused.editor.focused) {
       app.focused.editor.save_selection();

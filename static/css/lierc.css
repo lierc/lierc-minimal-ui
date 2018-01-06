@@ -1198,6 +1198,10 @@ header:hover #global-controls-toggle {
   padding: 0;
 }
 
+#global-controls li.select {
+  cursor: default;
+}
+
 #global-controls li.link a {
   padding: 8px 25px;
   display: block;

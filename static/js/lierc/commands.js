@@ -178,17 +178,16 @@ var Commands = function(app) {
   });
 
   add_command("theme", ["color", "colors"], function(panel, line) {
-    document.body.classList.remove("solarized-dark", "solarized");
-
     switch (line) {
     case "solarized dark":
-      document.body.classList.add("solarized-dark");
+      app.set_theme("solarized-dark");
       break;
     case "solarized":
     case "solarized light":
-      document.body.classList.add("solarized");
+      app.set_theme("solarized");
       break;
     default:
+      app.set_theme("default");
       break;
     }
   });
