@@ -1351,6 +1351,7 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
 
 #toggle-nicks {
   color: #fff;
+  background: #fff;
   position: absolute;
   top: 0px;
   right: 0px;
@@ -1360,6 +1361,14 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
   cursor: pointer;
 }
 
+body.solarized #toggle-nicks {
+  background: var(--base2);
+}
+
+body.solarized-dark #toggle-nicks {
+  background: var(--base03);
+}
+
 .show-nicklist #toggle-nicks,
 #toggle-nicks:hover {
   background: #fff;
@@ -1367,6 +1376,10 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
 
 body.solarized #toggle-nicks:hover {
   background: var(--base3);
+}
+
+body.solarized-dark #toggle-nicks:hover {
+  background: var(--base02);
 }
 
 ul.channel-controls {
@@ -1956,6 +1969,10 @@ li.message:hover .message-controls,
     height: 100%;
   }
 
+.flex-wrap-left header h1 {
+  padding: 10px 0 10px 10px;
+}
+
   div.flex-wrap.open .flex-wrap-right {
     display: none;
   }
@@ -1996,7 +2013,18 @@ li.message:hover .message-controls,
   .nav li a.edit-panel,
   .nav li a.close-panel {
     opacity: 1;
+    margin-right: 15px;
   }
+
+.nav li {
+  cursor: pointer;
+  padding: 10px 0px 10px 5px;
+}
+
+
+.nav li[data-panel-id=highlights] {
+  padding: 10px 0 10px 5px;
+}
 
 #global-controls {
   display: none;
@@ -2049,7 +2077,7 @@ body[data-panel-type=channel] #panel-scroll {
 }
 
 #global-controls-toggle {
-  padding: 8px 10px 8px 10px;
+  padding: 10px 10px 10px 10px;
 }
 
 .emoji-popup,
