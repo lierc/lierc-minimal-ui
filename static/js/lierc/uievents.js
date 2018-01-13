@@ -745,6 +745,25 @@ var UIEvents = function(app) {
     }
   });
 
+  app.elem.panel.addEventListener('click', function(e) {
+    if (!e.target.matches('.image-wrap img'))
+      return;
+
+    e.preventDefault();
+    var img  = e.target;
+    var link = e.target.parentNode;
+    var href = link.href;
+
+    var dialog = app.new_dialog("image_popup", {
+      href: href
+    });
+
+    clickTouchEvent(dialog.el, function(e) {
+      e.preventDefault();
+      dialog.close();
+    });
+  });
+
   app.elem.topic.addEventListener('click', function(e) {
     if (app.focused) {
       if (e.target.nodeName != 'A') {
