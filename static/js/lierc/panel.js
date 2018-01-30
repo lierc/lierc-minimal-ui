@@ -668,6 +668,7 @@ var Panel = function(opts) {
         image.setAttribute("title", link.href);
         image.onload = (function(image, link) {
             return function(e) {
+              image.onload = null;
               var s = panel.scroller;
               var wrap = document.createElement('DIV');
               var a = link.cloneNode(false);
