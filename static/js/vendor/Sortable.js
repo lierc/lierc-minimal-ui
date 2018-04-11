@@ -282,6 +282,7 @@
 			dragoverBubble: false,
 			dataIdAttr: 'data-id',
 			delay: 0,
+			touchStartThreshold: parseInt(window.devicePixelRatio, 10) || 1,
 			forceFallback: false,
 			fallbackClass: 'sortable-fallback',
 			fallbackOnBody: false,
@@ -463,8 +464,8 @@
 					_on(ownerDocument, 'touchend', _this._disableDelayedDrag);
 					_on(ownerDocument, 'touchcancel', _this._disableDelayedDrag);
 					_on(ownerDocument, 'mousemove', _this._disableDelayedDrag);
-					_on(ownerDocument, 'touchmove', _this._disableDelayedDrag);
-					options.supportPointer && _on(ownerDocument, 'pointermove', _this._disableDelayedDrag);
+					_on(ownerDocument, 'touchmove', _this._delayedDragTouchMoveHandler);
+					options.supportPointer && _on(ownerDocument, 'pointermove', _this._delayedDragTouchMoveHandler);
 
 					_this._dragStartTimer = setTimeout(dragStartFn, options.delay);
 				} else {
@@ -472,6 +473,12 @@
 				}
 
 
+			}
+		},
+
+		_delayedDragTouchMoveHandler: function (/** TouchEvent|PointerEvent **/e) {
+			if (min(abs(e.clientX - this._lastX), abs(e.clientY - this._lastY)) >= this.options.touchStartThreshold) {
+				this._disableDelayedDrag();
 			}
 		},
 
@@ -555,7 +562,7 @@
 				var parent = target;
 				var i = touchDragOverListeners.length;
 
-				if (target && target.shadowRoot) {
+				while (target && target.shadowRoot) {
 					target = target.shadowRoot.elementFromPoint(touchEvt.clientX, touchEvt.clientY);
 					parent = target;
 				}
