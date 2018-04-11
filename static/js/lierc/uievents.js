@@ -782,6 +782,8 @@ var UIEvents = function(app) {
     ))
       return;
 
+    e.preventDefault();
+
     var p = e.target;
     while (p && !p.matches('.embed-wrap[data-embed-id]')) {
       p = p.parentNode;
