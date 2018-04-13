@@ -40,7 +40,7 @@ Emoji.load = function() {
     return res.json();
   }).then(function(res) {
     var codepoints = [];
-    var length = safari ? Math.min(res.length, 100) : res.length;
+    var length = res.length;
     var data = [];
     for (var i=0; i < length; i++) {
       var annotations = res[i]['annotations'] || [];
