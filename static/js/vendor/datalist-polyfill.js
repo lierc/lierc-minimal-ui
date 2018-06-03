@@ -1,7 +1,7 @@
 /*
 * datalist-polyfill.js - https://github.com/mfranzke/datalist-polyfill
 * @license Copyright(c) 2017 by Maximilian Franzke
-* Supported by Christian, Johannes, @mitchhentges, @mertenhanisch, @ailintom, @Kravimir, Michael, @hryamzik and @ottoville - many thanks for that !
+* Supported by Christian, Johannes, @mitchhentges, @mertenhanisch, @ailintom, @Kravimir, Michael, @hryamzik, @ottoville, @IceCreamYou and @wlekin - many thanks for that !
 */
 /*
 * A lightweight and library dependency free vanilla JavaScript datalist polyfill.
@@ -269,7 +269,7 @@
               dataListSelect.style.marginLeft = '-' + (rects[0].width + inputStyleMarginRight) + 'px';
             }
 
-            dataListSelect.style.marginTop = rects[0].height + 'px';
+            dataListSelect.style.marginTop = parseInt((rects[0].height + (eventTarget.offsetTop - dataList.offsetTop)), 10) + 'px';
           }
 
           // set the polyfilling selects border-radius equally as the one by the polyfilled input
@@ -326,12 +326,12 @@
           case 'focus':
             eventTarget.addEventListener('keyup', inputInputList);
 
-            eventTarget.addEventListener('focusOut', changesInputList, true);
+            eventTarget.addEventListener('focusout', changesInputList, true);
             break;
           case 'blur':
             eventTarget.removeEventListener('keyup', inputInputList);
 
-            eventTarget.removeEventListener('focusOut', changesInputList, true);
+            eventTarget.removeEventListener('focusout', changesInputList, true);
             break;
         }
       }
