@@ -608,6 +608,11 @@ var UIEvents = function(app) {
     var items = clipboard.items;
     for (i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
+        var span = document.createElement('SPAN');
+        span.classList.add('uploading');
+        span.textContent = '[Uploading image...]';
+        app.focused.editor.append_elem(span);
+
         app.focus_input();
         var blob = items[i].getAsFile();
         var fd = new FormData();
@@ -618,11 +623,12 @@ var UIEvents = function(app) {
           if (xhr.status != 200) {
             var err = res['data'] ? res['data']['error'] : res['error'];
             alert(err);
+            span.parentNode.removeChild(span);
             return;
           }
           else {
-            app.focus_input(true);
-            document.execCommand("insertText", false, res.data.link);
+            span.textContent = res.data.link;
+            app.focused.editor.move_cursor_after(span);
           }
         });
 

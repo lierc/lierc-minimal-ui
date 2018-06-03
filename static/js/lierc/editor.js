@@ -220,6 +220,20 @@ var Editor = function(element) {
     }
   };
 
+  editor.append_elem = function(el) {
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
+    range.insertNode(el);
+    editor.move_cursor_after(el);
+  };
+
+  editor.move_cursor_after = function(el) {
+    var sel = window.getSelection();
+    var range = sel.getRangeAt(0);
+    range.setStart(el, 1);
+    range.setEnd(el, 1);
+  };
+
   editor.save_selection = function() {
     var s = window.getSelection();
     if (s.rangeCount == 0) {
