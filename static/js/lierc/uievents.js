@@ -338,6 +338,13 @@ var UIEvents = function(app) {
   function send_submit() {
     var input = app.elem.input.querySelector(".input");
     var panel = app.panels[input.getAttribute('data-panel-id')];
+
+    var uploading = input.querySelector('.uploading');
+    if (uploading) {
+      alert("Please wait for upload to complete.");
+      return;
+    }
+
     var text = input.textContent.trim();
     if (text == "") return;
 
@@ -628,6 +635,7 @@ var UIEvents = function(app) {
           }
           else {
             span.textContent = res.data.link;
+            span.classList.remove('uploading');
             app.focused.editor.move_cursor_after(span);
           }
         });
