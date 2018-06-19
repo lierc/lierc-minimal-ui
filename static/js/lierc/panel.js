@@ -726,6 +726,7 @@ var Panel = function(opts) {
       var link = links[i];
       if (link.href.match(panel.vid_re)) {
         link.classList.add("processed");
+        if (link.href.match(/#(nsfw|hide)/)) continue;
         if (link.href.match(/(i\.)?imgur\.com\/[^\/\.]+\.gifv/))
           link.href = link.href.replace('.gifv', '.mp4');
         if (link.href.match(/http:\/\/(i\.)?imgur\.com/))
@@ -788,6 +789,7 @@ var Panel = function(opts) {
       var link = links[i];
       if (link.href.match(panel.aud_re)) {
         link.classList.add("processed");
+        if (link.href.match(/#(nsfw|hide)/)) continue;
         var audio = document.createElement('AUDIO');
         audio.controls = "controls";
 
