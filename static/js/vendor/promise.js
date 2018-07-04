@@ -1,8 +1,24 @@
 (function (global, factory) {
-	typeof exports === 'object' && typeof module !== 'undefined' ? module.exports = factory() :
+	typeof exports === 'object' && typeof module !== 'undefined' ? factory() :
 	typeof define === 'function' && define.amd ? define(factory) :
-	(global.Promise = factory());
+	(factory());
 }(this, (function () { 'use strict';
+
+var promiseFinally = function(callback) {
+  var constructor = this.constructor;
+  return this.then(
+    function(value) {
+      return constructor.resolve(callback()).then(function() {
+        return value;
+      });
+    },
+    function(reason) {
+      return constructor.resolve(callback()).then(function() {
+        return constructor.reject(reason);
+      });
+    }
+  );
+};
 
 // Store setTimeout reference so promise-polyfill will be unaffected by
 // other code modifying setTimeout (like sinon.useFakeTimers())
@@ -149,21 +165,7 @@ Promise.prototype.then = function(onFulfilled, onRejected) {
   return prom;
 };
 
-Promise.prototype['finally'] = function(callback) {
-  var constructor = this.constructor;
-  return this.then(
-    function(value) {
-      return constructor.resolve(callback()).then(function() {
-        return value;
-      });
-    },
-    function(reason) {
-      return constructor.resolve(callback()).then(function() {
-        return constructor.reject(reason);
-      });
-    }
-  );
-};
+Promise.prototype['finally'] = promiseFinally;
 
 Promise.all = function(arr) {
   return new Promise(function(resolve, reject) {
@@ -243,6 +245,26 @@ Promise._unhandledRejectionFn = function _unhandledRejectionFn(err) {
   }
 };
 
-return Promise;
+var globalNS = (function() {
+  // the only reliable means to get the global object is
+  // `Function('return this')()`
+  // However, this causes CSP violations in Chrome apps.
+  if (typeof self !== 'undefined') {
+    return self;
+  }
+  if (typeof window !== 'undefined') {
+    return window;
+  }
+  if (typeof global !== 'undefined') {
+    return global;
+  }
+  throw new Error('unable to locate global object');
+})();
+
+if (!globalNS.Promise) {
+  globalNS.Promise = Promise;
+} else if (!globalNS.Promise.prototype['finally']) {
+  globalNS.Promise.prototype['finally'] = promiseFinally;
+}
 
 })));

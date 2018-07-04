@@ -20,6 +20,6 @@ emoji:
 vendor:
 	curl https://raw.githubusercontent.com/Yaffle/EventSource/master/src/eventsource.js > static/js/vendor/eventsource.js
 	curl https://raw.githubusercontent.com/github/fetch/master/fetch.js > static/js/vendor/fetch.js
-	curl https://raw.githubusercontent.com/taylorhakes/promise-polyfill/master/dist/promise.js > static/js/vendor/promise.js
+	curl https://raw.githubusercontent.com/taylorhakes/promise-polyfill/master/dist/polyfill.js > static/js/vendor/promise.js
 	curl https://raw.githubusercontent.com/RubaXa/Sortable/master/Sortable.js > static/js/vendor/Sortable.js
 	curl https://raw.githubusercontent.com/mfranzke/datalist-polyfill/master/datalist-polyfill.js > static/js/vendor/datalist-polyfill.js
