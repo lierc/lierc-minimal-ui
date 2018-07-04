@@ -783,6 +783,18 @@ var App = function(url, user) {
         conn.nicks(conn.channel(panel.name))
       );
     }
+
+    var highlight = false;
+    for (id in app.panels) {
+      if (app.panels[id].highlighted && id != 'highlights') {
+        highlight = true;
+        break;
+      }
+    }
+    if (!highlight) {
+      app.highlights.unread = false;
+      app.highlights.update_nav();
+    }
   };
 
   app.replace_child = function(p, c) {

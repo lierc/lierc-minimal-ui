@@ -171,10 +171,10 @@ var Panel = function(opts) {
 
   panel.update_nav = function() {
     panel.elem.nav.querySelector('.panel-name').textContent = panel.name;
+    panel.elem.nav.classList.remove('unread', 'missed', 'highlighted', 'disconnected');
 
     if (panel.focused) {
       panel.elem.nav.classList.add('active');
-      panel.elem.nav.classList.remove('unread', 'missed', 'highlighted', 'disconnected');
       if (! panel.connected)
         panel.elem.nav.classList.add('disconnected');
     }
@@ -187,9 +187,7 @@ var Panel = function(opts) {
       if (panel.highlighted)
         panel.elem.nav.classList.add('highlighted');
 
-      if (panel.connected)
-        panel.elem.nav.classList.remove('disconnected');
-      else
+      if (! panel.connected)
         panel.elem.nav.classList.add('disconnected');
     }
 
