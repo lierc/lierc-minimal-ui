@@ -631,7 +631,7 @@ var App = function(url, user) {
         events.forEach( function (e) {
           var message = e.Message;
           message.Id = e.MessageId;
-          message.Highlight = e.Highlight;
+          message.Highlight = e.Highlight && panel.id != 'highlights';
 
           if (app.is_ignore(panel, message))
             return;
