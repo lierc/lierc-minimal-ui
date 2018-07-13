@@ -647,8 +647,22 @@ var Panel = function(opts) {
     }
   };
 
+  panel.watch_editor = function() {
+    var elem = panel.elem.input;
+    var prev = elem.clientHeight;
+    var resize = function() {
+      var now = elem.clientHeight;
+      var diff = now - prev;
+      panel.scroller.scrollTop += diff;
+      panel.resize_filler();
+      prev = now;
+    };
+    new ResizeObserver(resize).observe(elem);
+  };
+
   panel.editor = new Editor(panel.elem.input);
   setInterval(panel.prune, 1000 * 60);
+  panel.watch_editor();
 
   panel.img_re = /^http[^\s]*(?:\.|format=)(?:jpe?g|gif|png|bmp|svg)[^\/]*$/i;
   panel.imagify = function (elem) {
