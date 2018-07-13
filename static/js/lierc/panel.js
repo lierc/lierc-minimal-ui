@@ -654,7 +654,12 @@ var Panel = function(opts) {
       if (panel.focused) {
         var now = elem.clientHeight;
         var diff = now - prev;
-        panel.scroller.scrollTop += diff;
+        if ( diff < 0 ) {
+          panel.scroller.scrollTop -= diff;
+        }
+        else {
+          panel.scroller.scrollTop += diff;
+        }
         panel.resize_filler();
         prev = now;
       }
