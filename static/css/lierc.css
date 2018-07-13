@@ -521,6 +521,9 @@ body.solarized #foot {
 body.solarized #input .input {
   background: var(--base3);
 }
+body.solarized-dark #input .input {
+  border: 1px solid var(--base01);
+}
 
 #input .input.disabled {
   background: #eee;
@@ -536,6 +539,11 @@ body.solarized #input .input {
   border: 1px solid #7a9cd3;
   box-shadow: 0 0 0 1px #9ec0f7;
   border-radius: 2px;
+}
+
+body.solarized-dark #input .input:focus {
+  border: 1px solid var(--base0);
+  box-shadow: 0 0 0 1px var(--base0);
 }
 
 .nav#meta-channels {
@@ -1434,6 +1442,10 @@ ul.channel-controls li a:hover {
   color: #555;
 }
 
+body.solarized-dark .channel-meta {
+  color: var(--base1);
+}
+
 #nicks {
   flex-grow: 1;
   flex-shrink: 1;
@@ -1458,8 +1470,16 @@ ul.channel-controls li a:hover {
   color: #555;
 }
 
+body.solarized-dark #nicks ul li a {
+  color: var(--base1);
+}
+
 #nicks ul li a:hover {
   color: #000;
+}
+
+body.solarized-dark #nicks ul li a:hover {
+  color: #fff;
 }
 
 .flex-wrap-panel {
