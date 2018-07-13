@@ -151,7 +151,7 @@ var Completion = function(element) {
     var next = text.slice(end, end + 1);
     var append = ' ';
 
-    if (start == 0 && end == text.length) {
+    if (start == 0 && end == text.length && word[0] != '/') {
       append = ': ';
     }
     else if (next && BREAK.indexOf(next) != -1) {
