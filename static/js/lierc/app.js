@@ -1241,6 +1241,7 @@ var App = function(url, user) {
     });
     app.highlights.update_nav();
     app.highlights.elem.nav.addEventListener('click', function() {
+      app.elem.flex_wrap.classList.remove("open");
       app.focus_panel('highlights');
     });
     app.elem.meta.appendChild(app.highlights.elem.nav);
