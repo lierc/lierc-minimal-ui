@@ -651,11 +651,13 @@ var Panel = function(opts) {
     var elem = panel.elem.input;
     var prev = elem.clientHeight;
     var resize = function() {
-      var now = elem.clientHeight;
-      var diff = now - prev;
-      panel.scroller.scrollTop += diff;
-      panel.resize_filler();
-      prev = now;
+      if (panel.focused) {
+        var now = elem.clientHeight;
+        var diff = now - prev;
+        panel.scroller.scrollTop += diff;
+        panel.resize_filler();
+        prev = now;
+      }
     };
     new ResizeObserver(resize).observe(elem);
   };
