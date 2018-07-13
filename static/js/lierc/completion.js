@@ -127,21 +127,21 @@ var Completion = function(element) {
       end = text.length;
     }
 		else {
-			for (var i=pos; i < text.length; i++) {
-				if (BREAK.indexOf(text[i]) != -1) {
-					end = i;
-					break;
-				}
-			}
+      for (var i=pos; i < text.length; i++) {
+        if (BREAK.indexOf(text[i]) != -1) {
+          end = i;
+          break;
+        }
+      }
     }
 
     /* find start of word */
-		for (var i=pos - 1; i >= 0; i--) {
-			if (BREAK.indexOf(text[i]) != -1) {
-				start = i + 1;
-				break;
-			}
-		}
+    for (var i=pos - 1; i >= 0; i--) {
+      if (BREAK.indexOf(text[i]) != -1) {
+        start = i + 1;
+        break;
+      }
+    }
 
     if (start === null || end === null) {
       return null;
