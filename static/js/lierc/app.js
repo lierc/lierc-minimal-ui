@@ -48,7 +48,8 @@ var App = function(url, user) {
     reconnect: document.getElementById('reconnect-status'),
     images: document.getElementById('image-uploads'),
     meta: document.getElementById('meta-channels'),
-    themes: document.getElementById('themes')
+    themes: document.getElementById('themes'),
+    title_top: document.getElementById('title-top')
   };
 
   app.set_connected = function(conn_id, status, message) {
@@ -94,8 +95,7 @@ var App = function(url, user) {
         app.elem.audio.play();
       }
       if (message.Highlight && unfocused) {
-        app.highlights.unread = true;
-        app.highlights.update_nav();
+        app.update_highlights(true);
       }
     });
 
@@ -121,8 +121,7 @@ var App = function(url, user) {
             app.elem.audio.play();
           }
           if (app.focused && app.focused.id != panel.id) {
-            app.highlights.unread = true;
-            app.highlights.update_nav();
+            app.update_highlights(true);
           }
         }
       }
@@ -492,6 +491,17 @@ var App = function(url, user) {
     return app.panels[id];
   };
 
+  app.update_highlights = function(bool) {
+    app.highlights.unread = bool;
+    app.highlights.update_nav();
+    if (bool) {
+      app.elem.title_top.classList.add('unread');
+    }
+    else {
+      app.elem.title_top.classList.remove('unread');
+    }
+  };
+
   app.apply_missed = function(panel, missed) {
     if (missed.messages) {
       panel.unread = true;
@@ -503,8 +513,7 @@ var App = function(url, user) {
     }
     if (missed.highlights > 0) {
       panel.highlighted = true;
-      app.highlights.unread = true;
-      app.highlights.update_nav();
+      app.update_highlights(true);
       panel.update_nav();
     }
     app.update_title();
@@ -792,8 +801,7 @@ var App = function(url, user) {
       }
     }
     if (!highlight) {
-      app.highlights.unread = false;
-      app.highlights.update_nav();
+      app.update_highlights(false);
     }
   };
 

@@ -461,6 +461,21 @@ body.solarized-dark .image-wrap a:hover {
   border: 1px solid var(--base00);
 }
 
+#title-top.unread:before {
+  opacity: 1;
+  font-family: FontAwesome;
+  font-size: 12px;
+  line-height:12px;
+  width: 16px;
+  display: inline-block;
+  text-align: center;
+  color: var(--orange);
+  content: "\f005";
+  position: absolute;
+  top: 7px;
+  right: -15px;
+}
+
 .image-wrap audio,
 .image-wrap video,
 .image-wrap img {
@@ -1019,6 +1034,7 @@ div.header-right {
   font-weight: bold;
   -webkit-user-select: none;
   display: inline-block;
+  position: relative;
 }
 
 .flex-wrap-left header {
