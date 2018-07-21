@@ -97,6 +97,9 @@ var App = function(url, user) {
       if (message.Highlight && unfocused) {
         app.update_highlights(true);
       }
+      else if (unfocused) {
+        app.elem.title_top.classList.add('unread');
+      }
     });
 
     connection.on("channel:error", function(conn, channel, message) {
@@ -215,7 +218,7 @@ var App = function(url, user) {
     });
   };
 
-  app.add_recent_privates = function() {
+  app.add_recent_privates = function(cb) {
     app.api.get("/privates", {
       success: function(privates) {
         privates.forEach(function(priv) {
@@ -224,6 +227,9 @@ var App = function(url, user) {
             dont_save: true
           });
         });
+        if (cb) {
+          cb();
+        }
       }
     });;
   };
@@ -306,9 +312,11 @@ var App = function(url, user) {
       }
     });
 
-    app.sync_missed();
-    app.add_recent_privates();
-    app.stream = stream;
+    app.sync_missed(function() {
+      app.add_recent_privates(function() {
+        app.stream = stream;
+      });
+    });
   };
 
   app.get_panel = function(name, connection) {
@@ -506,6 +514,9 @@ var App = function(url, user) {
     if (missed.messages) {
       panel.unread = true;
       panel.update_nav();
+      if (panel.type == 'private') {
+        app.elem.title_top.classList.add('unread');
+      }
     }
     else if (missed.events) {
       panel.missed = true;
@@ -1091,7 +1102,7 @@ var App = function(url, user) {
     }
   };
 
-  app.sync_missed = function() {
+  app.sync_missed = function(cb) {
     if (app.focused) {
       app.focused.update_seen();
       if (app.focused.last_seen)
@@ -1112,6 +1123,9 @@ var App = function(url, user) {
               app.missed[id] = res[connection][channel];
             }
           }
+        }
+        if (cb) {
+          cb();
         }
       }
     });
