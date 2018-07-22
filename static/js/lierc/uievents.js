@@ -206,12 +206,20 @@ var UIEvents = function(app) {
 
   window.addEventListener("blur", function(e) {
     app.window_focused = false;
+
+    if (app.focused) {
+      app.save_seen(app.focused);
+    }
   });
 
   window.addEventListener("focus", function(e) {
     app.window_focused = true;
     app.focus_input();
     app.update_title();
+
+    if (app.focused) {
+      app.save_seen(app.focused);
+    }
   });
 
   document.addEventListener('click', function(e) {
