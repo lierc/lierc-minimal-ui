@@ -49,9 +49,14 @@ var Completion = function(element) {
       return;
     this.completions = word.text[0] == "/" ? this.commands : this.nicks;
     var sel = window.getSelection();
+    var matches = this.find_matches(word.text);
+
+    if (matches.length == 0)
+      return;
+
+    this.matches = matches.concat(['']);
     this.word = word;
     this.completing = true;
-    this.matches = this.find_matches(word.text).concat(['']);
     this.index = 0;
   };
 
