@@ -60,17 +60,18 @@ var Completion = function(element) {
       this.index = 0;
 
     var node = this.word.node;
-    var end = this.matches[this.index++];
+    var word = this.matches[this.index++];
 
     if (this.index != this.matches.length) {
       if (this.word.append) {
-        end += this.word.append;
+        word += this.word.append;
       }
     }
 
     var text = node.textContent;
-    node.textContent = text.splice(this.word.end, this.word.tail, end);
-    this.word.tail = end.length;
+    node.textContent = text.splice(this.word.start, this.word.length, word);
+    this.word.tail = word.length;
+    this.word.length = word.length;
     this.move_cursor();
   };
 
@@ -82,7 +83,7 @@ var Completion = function(element) {
       else
         return;
     }
-    var length = this.word.end + this.word.tail;
+    var length = this.word.start + this.word.length;
     var range = document.createRange();
     range.setStart(node, length);
     range.setEnd(node, length);
@@ -101,7 +102,7 @@ var Completion = function(element) {
       if (w.length < length)
         continue;
       if (w.substring(0, length).toLowerCase() == word)
-        matches.push(w.slice(word.length));
+        matches.push(w);
     }
 
     return matches;
