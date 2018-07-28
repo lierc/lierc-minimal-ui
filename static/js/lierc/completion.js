@@ -45,7 +45,7 @@ var Completion = function(element) {
 
   this.start = function() {
     var word = this.find_word();
-    if (!word)
+    if (!word || word.length == 0)
       return;
     this.completions = word.text[0] == "/" ? this.commands : this.nicks;
     var sel = window.getSelection();
@@ -54,7 +54,7 @@ var Completion = function(element) {
     if (matches.length == 0)
       return;
 
-    this.matches = matches.concat(['']);
+    this.matches = matches.concat([word.text]);
     this.word = word;
     this.completing = true;
     this.index = 0;
