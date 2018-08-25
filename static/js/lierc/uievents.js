@@ -798,6 +798,50 @@ var UIEvents = function(app) {
   });
 
   app.elem.panel.addEventListener('click', function(e) {
+    if (!e.target.matches('li.message time'))
+        return;
+
+    var msg = e.target;
+    var panel = app.focused;
+    var from = new Date(msg.getAttribute('data-time') * 1000);
+    var to = new Date((msg.getAttribute('data-time') + (60 * 60 * 24)) * 1000);
+    var href = panel.log_url + '/date/';
+
+    var from_year = from.getYear() + 1900;
+    var from_month = String(from.getMonth() + 1);
+    if (from_month.length == 1) {
+      from_month = "0" + from_month;
+    }
+
+    var to_year = to.getYear() + 1900;
+    var to_month = String(to.getMonth() + 1);
+    if (to_month.length == 1) {
+      to_month = "0" + to_month;
+    }
+
+    var from_day = String(from.getDate());
+    if (from_day.length == 1) {
+      from_day = "0" + from_day;
+    }
+
+    var to_day = String(to.getDate());
+    if (to_day.length == 1) {
+      to_day = "0" + to_day;
+    }
+
+    href += from_year + "-" + from_month + "-" + from_day + "/";
+    href += to_year + "-" + to_month + "-" + to_day + "/";
+
+    var p = msg;
+    while ( p && !p.matches('li.message')) {
+      p = p.parentNode;
+    }
+
+    href += "message/" + p.getAttribute('data-message-id');
+    window.open(href);
+  });
+
+  app.elem.panel.addEventListener('click', function(e) {
     if (!e.target.matches(
       '.embed-wrap[data-embed-id]:not(.open),' +
       '.embed-wrap[data-embed-id]:not(.open) *'

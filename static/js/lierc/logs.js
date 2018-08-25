@@ -291,6 +291,9 @@ var Logs = function(url) {
         logs.from.value = decodeURIComponent(path_parts.shift());
         logs.to.value = decodeURIComponent(path_parts.shift());
       }
+      else if (name == "message") {
+        logs.highlight = path_parts.shift();
+      }
     }
 
     logs.submit.click();
