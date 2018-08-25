@@ -345,6 +345,11 @@ body.solarized-dark #panel ol .last-read {
   font-style: normal;
 }
 
+#panel ol li.message time:hover {
+  text-decoration: underline;
+  cursor: pointer;
+}
+
 #panel ol li.message.monospace time {
   padding-top: 2px;
 }
