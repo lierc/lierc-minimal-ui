@@ -210,7 +210,7 @@ var Commands = function(app) {
 
   add_command("me", [], function(panel, line) {
     var parts = ["PRIVMSG", panel.name];
-    parts.push(":" + "\x01" + "ACTION " + line);
+    parts.push(":" + "\x01" + "ACTION " + line + "\x01");
     return parts.join(" ");
   });
 
