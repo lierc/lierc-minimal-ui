@@ -89,6 +89,7 @@ var Logs = function(url) {
       }
       else if (el) {
         el.scrollIntoView();
+        el.classList.add('focused');
       }
     });
 
@@ -246,6 +247,7 @@ var Logs = function(url) {
           var el = logs.results.querySelector('li[data-message-id="' + logs.highlight + '"]');
           if (el) {
             el.scrollIntoView();
+            el.classList.add('focused');
           }
         }
       });

@@ -133,6 +133,7 @@ a:hover {
   background: rgba(118, 49, 255, 0.15);
 }
 
+#panel ol li.chat.focused,
 #panel ol li.chat.search {
   background: rgba(255, 239, 49, 0.2);
 }
