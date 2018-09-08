@@ -120,6 +120,10 @@ var UIEvents = function(app) {
       }
     }
 
+    if (!mac && (mods['cmd'] || (!mods['ctrl'] && mods['meta'])) && c == '0') {
+      app.focus_panel('highlights');
+    }
+
     if (app.focused) {
       /* send to editor (bold, italic, tab complete) */
       if (app.focused.editor.focused) {
