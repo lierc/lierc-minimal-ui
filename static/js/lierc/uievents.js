@@ -802,7 +802,21 @@ var UIEvents = function(app) {
         return;
 
     var msg = e.target;
-    var panel = app.focused;
+    var panel;
+
+    var p = msg;
+    while ( p && !p.matches('li.message')) {
+      p = p.parentNode;
+    }
+
+    if (p.getAttribute('data-panel-id')) {
+      var panel_id = p.getAttribute('data-panel-id');
+      panel = app.panels[panel_id];
+    }
+    else {
+      panel = app.focused;
+    }
+
     var from = new Date(msg.getAttribute('data-time') * 1000);
     var to = new Date((msg.getAttribute('data-time') + (60 * 60 * 24)) * 1000);
     var href = panel.log_url + '/date/';
@@ -831,11 +845,6 @@ var UIEvents = function(app) {
 
     href += from_year + "-" + from_month + "-" + from_day + "/";
     href += to_year + "-" + to_month + "-" + to_day + "/";
-
-    var p = msg;
-    while ( p && !p.matches('li.message')) {
-      p = p.parentNode;
-    }
 
     href += "message/" + p.getAttribute('data-message-id');
     window.open(href);

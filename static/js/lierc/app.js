@@ -631,6 +631,7 @@ var App = function(url, user) {
 
     panel.set_loading(true);
 
+    var highlight = panel.id == 'highlights';
     var limit = panel.ignore_events ? 150 : 50;
     var name = panel.type == "status" ? "status" : panel.name;
     var url = panel.backlog_url;
@@ -665,6 +666,10 @@ var App = function(url, user) {
             });
             if (el)
               list.push(el);
+            if (highlight) {
+              var panel_id = App.panel_id(message.Params[0], e.ConnectionId);
+              el.setAttribute('data-panel-id', panel_id);
+            }
           }
         });
 
