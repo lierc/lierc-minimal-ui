@@ -130,6 +130,8 @@ var Render = function(message, opts) {
       if (text.substring(1,7) == "ACTION") {
         from.textContent = '* ' + nick + ' ';
         var action = text.substring(8).replace(/\x01$/, "");
+        msg.style.fontStyle = 'italic';
+        from.style.fontStyle = 'italic';
         append(msg, Format(action));
       }
       else {
