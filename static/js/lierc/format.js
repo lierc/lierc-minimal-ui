@@ -73,6 +73,27 @@ var Format = function(text) {
 Format.url_re = /https?:\/\/[^\s<"]*/ig;
 Format.token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
 
+Format.emojify = function(node) {
+  var tmp = document.createElement('SPAN');
+  if ( node.nodeName != '#text' ) {
+    return node;
+  }
+  if (node.nodeValue && Emoji.regex.test(node.nodeValue)) {
+    var chars = node.nodeValue.match(Emoji.regex);
+    var span = document.createElement("SPAN");
+    tmp.textContent = node.nodeValue;
+    var escaped = tmp.innerHTML;
+
+    for (var j=0; j < chars.length; j++) {
+      var title = Emoji.names[chars[j]];
+      escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span class="emoji" title="'+title+'">' + chars[j] + '</span>');
+    }
+    span.innerHTML = escaped;
+    return span;
+  }
+  return node;
+};
+
 Format.linkify = function(elem) {
   var children = elem.childNodes;
   var length = children.length;
@@ -99,45 +120,48 @@ Format.linkify = function(elem) {
       var pos = 0;
 
       while ((match = Format.url_re.exec(text)) !== null) {
-          var url = match[0];
-          var i = match.index;
-          var before = text.substring(pos, i);
-          var after;
+        var url = match[0];
+        var i = match.index;
+        var before = text.substring(pos, i);
+        var after;
 
-          if ( i > 0 && before[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
-              url = url.substring(0, url.length - 1);
-              after = ')';
-          }
+        if ( i > 0 && before[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
+          url = url.substring(0, url.length - 1);
+          after = ')';
+        }
 
-          var link = document.createElement('A');
-          link.setAttribute('href', url);
-          link.setAttribute('target', '_blank');
-          link.setAttribute('rel', 'noreferrer');
-          link.textContent = url;
+        var link = document.createElement('A');
+        link.setAttribute('href', url);
+        link.setAttribute('target', '_blank');
+        link.setAttribute('rel', 'noreferrer');
+        link.textContent = url;
 
-          replace.push(document.createTextNode(before));
-          replace.push(link);
-          if (after) {
-            replace.push(document.createTextNode(after));
-          }
+        replace.push(document.createTextNode(before));
+        replace.push(link);
+        if (after) {
+          replace.push(document.createTextNode(after));
+        }
 
-          pos = Format.url_re.lastIndex;
+        pos = Format.url_re.lastIndex;
       }
 
       if ( pos < text.length ) {
-          replace.push(document.createTextNode(text.substring(pos)));
+        replace.push(document.createTextNode(text.substring(pos)));
       }
 
+      var parent = node.parentNode;
       if ( replace.length ) {
-        var parent = node.parentNode;
         var n = replace.pop();
-        parent.replaceChild(n, node);
+        parent.replaceChild(Format.emojify(n), node);
 
         var o;
         while ( o = replace.pop() ) {
-            parent.insertBefore( o, n );
-            n = o;
+          parent.insertBefore( Format.emojify(o), n );
+          n = o;
         }
+      }
+      else {
+        parent.replaceChild(node, Format.emojify(node));
       }
     }
   }
