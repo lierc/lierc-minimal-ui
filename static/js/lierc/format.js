@@ -70,7 +70,7 @@ var Format = function(text) {
   });
 };
 
-Format.url_re = /(https?:\/\/[^\s<"]*)/ig;
+Format.url_re = /https?:\/\/[^\s<"]*/ig;
 Format.token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
 
 Format.linkify = function(elem) {
@@ -94,26 +94,52 @@ Format.linkify = function(elem) {
       console.log(node);
     }
     if (node.nodeValue && node.nodeValue.match(Format.url_re)) {
-      var span = document.createElement("SPAN");
-      tmp.textContent = node.nodeValue;
-      var escaped = tmp.innerHTML;
-      span.innerHTML = escaped.replace(
-        Format.url_re, '<a href="$1" target="_blank" rel="noreferrer">$1</a>');
-      node.parentNode.replaceChild(span, node);
-      node = span;
-    }
-    if (node.nodeValue && Emoji.regex.test(node.nodeValue)) {
-      var chars = node.nodeValue.match(Emoji.regex);
-      var span = document.createElement("SPAN");
-      tmp.textContent = node.nodeValue;
-      var escaped = tmp.innerHTML;
+      var replace = [];
+      var text = node.nodeValue;
+      var match;
+      var pos = 0;
 
-      for (var j=0; j < chars.length; j++) {
-        var title = Emoji.names[chars[j]];
-        escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span class="emoji" title="'+title+'">' + chars[j] + '</span>');
+      while ((match = Format.url_re.exec(text)) !== null) {
+          var url = match[0];
+          var i = match.index;
+          var before = text.substring(pos, i);
+          var after;
+
+          if ( i > 0 && before[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
+              url = url.substring(0, url.length - 1);
+              after = ')';
+          }
+
+          var link = document.createElement('A');
+          link.setAttribute('href', url);
+          link.setAttribute('target', '_blank');
+          link.setAttribute('rel', 'noreferrer');
+          link.textContent = url;
+
+          replace.push(document.createTextNode(before));
+          replace.push(link);
+          if (after) {
+            replace.push(document.createTextNode(after));
+          }
+
+          pos = Format.url_re.lastIndex;
       }
-      span.innerHTML = escaped;
-      node.parentNode.replaceChild(span, node);
+
+      if ( pos < text.length ) {
+          replace.push(document.createTextNode(text.substring(pos)));
+      }
+
+      if ( replace.length ) {
+        var parent = node.parentNode;
+        var n = replace.pop();
+        parent.replaceChild(n, node);
+
+        var o;
+        while ( o = replace.pop() ) {
+            parent.insertBefore( o, n );
+            n = o;
+        }
+      }
     }
   }
 
