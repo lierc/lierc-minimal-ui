@@ -1091,16 +1091,6 @@ div.header-right {
   white-space: pre;
 }
 
-#panel ol li.message.monospace:hover,
-#panel ol li.message.monospace {
-  background: #222;
-  color: #eee;
-}
-
-li.message.monospace .message-flex .message-nick {
-  filter: brightness(250%);
-}
-
 li.message.monospace .message-flex .message-text,
 li.message.monospace .message-flex .message-nick {
   line-height: 1.1em;
@@ -1109,10 +1099,6 @@ li.message.monospace .message-flex .message-nick {
 #panel ol li.message.monospace.consecutive {
   padding-top: 0px;
   padding-bottom: 0px;
-}
-
-li.message.monospace.consecutive .message-nick {
-  opacity: 0;
 }
 
 #panel ol li.message:not(.monospace) + li.message.monospace,
