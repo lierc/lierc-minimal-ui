@@ -149,20 +149,24 @@ Format.linkify = function(elem) {
         replace.push(document.createTextNode(text.substring(pos)));
       }
 
-      var parent = node.parentNode;
+      var p = node.parentNode;
       if ( replace.length ) {
-        var n = replace.pop();
-        parent.replaceChild(Format.emojify(n), node);
+        var n = Format.emojify(replace.pop());
+        p.replaceChild(n, node);
 
         var o;
         while ( o = replace.pop() ) {
-          parent.insertBefore( Format.emojify(o), n );
+          o = Format.emojify(o);
+          p.insertBefore( o, n );
           n = o;
         }
       }
       else {
-        parent.replaceChild(node, Format.emojify(node));
+        p.replaceChild(Format.emojify(node), node);
       }
+    }
+    else if (node.nodeValue) {
+      node.parentNode.replaceChild(Format.emojify(node), node);
     }
   }
 
