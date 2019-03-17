@@ -76,7 +76,6 @@ Format.token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
 Format.linkify = function(elem) {
   var children = elem.childNodes;
   var length = children.length;
-  var tmp = document.createElement('SPAN');
 
   for (var i=0; i < length; i++) {
     var node = children[i];
