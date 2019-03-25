@@ -254,6 +254,13 @@ var Commands = function(app) {
   });
 
   commands.handle = function(panel, line) {
+    line = line.replace(/^[\r\n]+/, "");
+    line = line.replace(/[\r\n]+$/, "");
+
+    if ( line.match(/[\r\n]/) ) {
+      throw "Newline not allowed in commands";
+    }
+
     var parts = line.split(" ", 1);
     var command = parts[0].toLowerCase();
 
