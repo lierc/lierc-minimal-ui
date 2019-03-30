@@ -511,6 +511,10 @@ var App = function(url, user) {
   };
 
   app.apply_missed = function(panel, missed) {
+    if (app.focused && app.focused.id == panel.id) {
+      return;
+    }
+
     if (missed.messages) {
       panel.unread = true;
       panel.update_nav();
