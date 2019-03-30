@@ -19,6 +19,7 @@
 
 html,body {
   overflow: hidden;
+  background: var(--base03);
 }
 
 body {
