@@ -615,6 +615,7 @@ var Panel = function(opts) {
   panel.elem.input.setAttribute('contenteditable', 'true');
   panel.elem.input.setAttribute('data-panel-id', panel.id);
   panel.elem.input.classList.add('input');
+  panel.elem.input.setAttribute('autocapitalize', 'none');
   panel.elem.filler.classList.add('filler');
 
   switch (panel.type) {
