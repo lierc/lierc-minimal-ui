@@ -35,6 +35,7 @@ Unformat.descend = function(node, string) {
 };
 
 Unformat.block = [
+  "BR",
   "DIV",
 ];
 
