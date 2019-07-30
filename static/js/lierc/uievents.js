@@ -513,6 +513,7 @@ var UIEvents = function(app) {
       submit.removeAttribute('disabled');
 
       if (xhr.status != 200) {
+        submit.removeAttribute('disabled');
         var err = res['data'] ? res['data']['error'] : res['error'];
         alert(err);
         return;
@@ -526,9 +527,8 @@ var UIEvents = function(app) {
     });
 
     xhr.addEventListener("error", function(e) {
-      var res = JSON.parse(xhr.responseText);
-      app.focus_input(true);
       submit.removeAttribute('disabled');
+      app.focus_input(true);
     });
 
     xhr.open("POST", app.api.baseurl + "/image");
