@@ -1958,7 +1958,7 @@ li.message:hover .message-controls,
   text-shadow: -1px -1px 0px rgba(0,0,0,0.75);
 }
 
-@media (max-width: 500px) {
+@media (max-width: 800px) {
   div.flex-wrap {
     flex-direction: column;
   }
