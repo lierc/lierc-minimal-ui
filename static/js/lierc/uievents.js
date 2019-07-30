@@ -509,7 +509,13 @@ var UIEvents = function(app) {
     submit.setAttribute('disabled','disabled');
 
     xhr.addEventListener("load", function() {
-      var res = JSON.parse(xhr.responseText);
+      var res;
+      try {
+        res = JSON.parse(xhr.responseText);
+      } catch (error) {
+        res = { error: error };
+      }
+
       submit.removeAttribute('disabled');
 
       if (xhr.status != 200) {
