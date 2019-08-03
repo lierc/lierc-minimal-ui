@@ -1313,7 +1313,7 @@ var App = function(url, user) {
   };
 
   var themes = ["solarized-dark", "solarized"];
-  app.set_theme = function(theme) {
+  app.set_theme = function(theme, skip_save) {
     themes.forEach(function(t) {
       document.body.classList.remove(t);
     });
@@ -1322,8 +1322,10 @@ var App = function(url, user) {
     }
     if (app.theme != theme) {
       app.theme = theme;
-      app.update_pref("theme", theme);
       app.elem.themes.value = theme;
+      if (!skip_save) {
+        app.update_pref("theme", theme);
+      }
     }
   };
 
@@ -1354,7 +1356,7 @@ var App = function(url, user) {
         .classList.add('enabled');
     }
     if (app.prefs['theme']) {
-      app.set_theme(app.prefs['theme']);
+      app.set_theme(app.prefs['theme'], true);
     }
 
     app.load_seen(function() {
