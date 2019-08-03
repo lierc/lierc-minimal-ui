@@ -1,7 +1,7 @@
 /*
  * Datalist polyfill - https://github.com/mfranzke/datalist-polyfill
  * @license Copyright(c) 2017 by Maximilian Franzke
- * Supported by Christian, Johannes, @mitchhentges, @mertenhanisch, @ailintom, @Kravimir, @mischah, @hryamzik, @ottoville, @IceCreamYou, @wlekin, @eddr, @beebee1987 and @mricherzhagen - many thanks for that !
+ * Supported by Christian, Johannes, @mitchhentges, @mertenhanisch, @ailintom, @Kravimir, @mischah, @hryamzik, @ottoville, @IceCreamYou, @wlekin, @eddr, @beebee1987, @mricherzhagen, @acespace90, @damien-git, @nexces, @Sora2455 and @jscho13 - many thanks for that !
  */
 /*
  * A minimal and dependency-free vanilla JavaScript datalist polyfill.
@@ -23,11 +23,11 @@
 		// IE & EDGE browser detection via UserAgent
 		// TODO: obviously ugly. But sadly necessary until Microsoft enhances the UX within EDGE (compare to https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/9573654/)
 		// adapted out of https://gist.github.com/gaboratorium/25f08b76eb82b1e7b91b01a0448f8b1d :
-		isGteIE11 = Boolean(ua.indexOf('Trident/') !== -1),
+		isGteIE10 = Boolean(ua.match(/Trident\/[6-7]\./)),
 		isEDGE = Boolean(ua.indexOf('Edge/') !== -1);
 
-	// Let's break here, if it's even already supported ... and not IE11+ or EDGE
-	if (datalistSupported && !isGteIE11 && !isEDGE) {
+	// Let's break here, if it's even already supported ... and not IE10+ or EDGE
+	if (datalistSupported && !isGteIE10 && !isEDGE) {
 		return false;
 	}
 
@@ -73,11 +73,11 @@
 
 			// Look through all mutations that just occured
 			mutations.forEach(function(mutation) {
-				// Look through all added nodes of this mutation
-				for (var j = 0; j < mutation.addedNodes.length; ++j) {
-					if (mutation.target.tagName.toLowerCase() === 'datalist') {
-						datalistNeedsAnUpdate = mutation.target;
-					}
+				// Check if any of the mutated nodes was a datalist
+				if (mutation.target instanceof HTMLElement &&
+				    mutation.target.tagName.toLowerCase() === "datalist" &&
+                    		    mutation.addedNodes.length > 1) {
+				    datalistNeedsAnUpdate = mutation.target;
 				}
 			});
 
@@ -86,7 +86,7 @@
 					'input[list="' + datalistNeedsAnUpdate.id + '"]'
 				);
 
-				if (input.value !== '') {
+				if (getInputValue(input) !== '') {
 					// Prepare the options and toggle the visiblity afterwards
 					toggleVisibility(
 						prepOptions(datalistNeedsAnUpdate, input).length,
@@ -110,20 +110,23 @@
 			return;
 		}
 
-		// Handling IE11+ & EDGE
-		if (isGteIE11 || isEDGE) {
+		// Handling IE10+ & EDGE
+		if (isGteIE10 || isEDGE) {
 			// On keypress check for value
 			if (
-				input.value !== '' &&
+				getInputValue(input) !== '' &&
 				!keyOpen &&
 				event.keyCode !== keyENTER &&
-				event.keyCode !== keyESC
+				event.keyCode !== keyESC &&
+				// As only EDGE doesn't trigger the input event after selecting an item via mouse, we need to differentiate here
+				(isGteIE10 || input.type === 'text')
 			) {
 				updateIEOptions(input, datalist);
 
 				// TODO: Check whether this update is necessary depending on the options values
 				input.focus();
 			}
+
 			return;
 		}
 
@@ -137,7 +140,7 @@
 		if (
 			event.keyCode !== keyESC &&
 			event.keyCode !== keyENTER &&
-			(input.value !== '' || keyOpen) &&
+			(getInputValue(input) !== '' || keyOpen) &&
 			datalistSelect !== undefined
 		) {
 			// ... prepare the options
@@ -166,13 +169,18 @@
 
 	// On keypress check all options for that as a substring, save the original value as a data-attribute and preset that inputs value (for sorting) for all option values (probably as well enhanced by a token)
 	var updateIEOptions = function(input, datalist) {
+		var inputValue = getInputValue(input);
+
 		// Loop through the options
 		Array.prototype.slice.call(datalist.options, 0).forEach(function(option) {
-			var originalValue = option.dataset.originalvalue || option.value;
+			// We're using .getAttribute instead of .dataset here for IE10
+			var dataOriginalvalue = option.getAttribute('data-originalvalue'),
+				originalValue = dataOriginalvalue || option.value;
 
 			// In case of that the original value hasn't been saved as data so far, do that now
-			if (!option.dataset.originalvalue) {
-				option.dataset.originalvalue = originalValue;
+			if (!dataOriginalvalue) {
+				// We're using .setAttribute instead of .dataset here for IE10
+				option.setAttribute('data-originalvalue', originalValue);
 			}
 
 			// As we'd manipulate the value in the next step, we'd like to put in that value as either a label or text if none of those exist
@@ -182,13 +190,13 @@
 
 			/*
 			Check for whether the current option is a valid suggestion and replace its value by
-				- the current input string, as IE11+ and EDGE don't do substring, but only prefix matching
+				- the current input string, as IE10+ and EDGE don't do substring, but only prefix matching
 				- followed by a unique string that should prevent any interferance
 				- and the original string, that is still necessary e.g. for sorting within the suggestions list
 			As the value is being inserted on users selection, we'll replace that one within the upfollowing inputInputListIE function
 			*/
-			option.value = isValidSuggestion(option, input.value)
-				? input.value + uniquePolyfillString + originalValue.toLowerCase()
+			option.value = isValidSuggestion(option, inputValue)
+				? inputValue + uniquePolyfillString + originalValue.toLowerCase()
 				: originalValue;
 		});
 	};
@@ -208,11 +216,14 @@
 
 		// Query for related option - and escaping the value as doublequotes wouldn't work
 		var option = datalist.querySelector(
-			'option[value="' + input.value.replace(/\\([\s\S])|(")/g, '\\$1$2') + '"]'
+			'option[value="' +
+				getInputValue(input).replace(/\\([\s\S])|(")/g, '\\$1$2') +
+				'"]'
 		);
 
-		if (option && option.dataset.originalvalue) {
-			input.value = option.dataset.originalvalue;
+		// We're using .getAttribute instead of .dataset here for IE10
+		if (option && option.getAttribute('data-originalvalue')) {
+			setInputValue(input, option.getAttribute('data-originalvalue'));
 		}
 	};
 
@@ -263,8 +274,8 @@
 			firstOption.value = firstOption.value;
 		}
 
-		// Break here for IE11+ & EDGE
-		if (isGteIE11 || isEDGE) {
+		// Break here for IE10+ & EDGE
+		if (isGteIE10 || isEDGE) {
 			return;
 		}
 
@@ -276,7 +287,7 @@
 			visible =
 				datalistSelect &&
 				datalistSelect.querySelector('option:not(:disabled)') &&
-				((event.type === 'focusin' && input.value !== '') ||
+				((event.type === 'focusin' && getInputValue(input) !== '') ||
 					(event.relatedTarget && event.relatedTarget === datalistSelect));
 
 		// Toggle the visibility of the datalist select according to previous checks
@@ -300,7 +311,8 @@
 
 			input.addEventListener('focusout', changesInputList, true);
 
-			if (isGteIE11 || isEDGE) {
+			// As only EDGE doesn't trigger the input event after selecting an item via mouse, we need to differentiate here
+			if (isGteIE10 || (isEDGE && input.type === 'text')) {
 				input.addEventListener('input', inputInputListIE);
 			}
 		} else if (eventType === 'blur') {
@@ -308,7 +320,8 @@
 
 			input.removeEventListener('focusout', changesInputList, true);
 
-			if (isGteIE11 || isEDGE) {
+			// As only EDGE doesn't trigger the input event after selecting an item via mouse, we need to differentiate here
+			if (isGteIE10 || (isEDGE && input.type === 'text')) {
 				input.removeEventListener('input', inputInputListIE);
 			}
 		}
@@ -317,11 +330,35 @@
 		input.className += ' ' + classNameInput;
 	};
 
+	// Get the input value for dividing regular and mail types
+	var getInputValue = function(input) {
+		// In case of type=email and multiple attribute, we would need to grab the last piece
+		// Using .getAttribute here for IE9 purpose - elsewhere it wouldn't return the newer HTML5 values correctly
+		return input.getAttribute('type') === 'email' &&
+			input.getAttribute('multiple') !== null
+			? input.value.substring(input.value.lastIndexOf(',') + 1)
+			: input.value;
+	};
+
+	// Set the input value for dividing regular and mail types
+	var setInputValue = function(input, datalistSelectValue) {
+		var lastSeperator;
+
+		// In case of type=email and multiple attribute, we need to set up the resulting inputs value differently
+		input.value =
+			// Using .getAttribute here for IE9 purpose - elsewhere it wouldn't return the newer HTML5 values correctly
+			input.getAttribute('type') === 'email' &&
+			input.getAttribute('multiple') !== null &&
+			(lastSeperator = input.value.lastIndexOf(',')) > -1
+				? input.value.slice(0, lastSeperator) + ',' + datalistSelectValue
+				: datalistSelectValue;
+	};
+
 	// Binding the focus event - matching the input[list]s happens in the function afterwards
 	dcmnt.addEventListener('focusin', changesInputList, true);
 
-	// Break here for IE11+ & EDGE
-	if (isGteIE11 || isEDGE) {
+	// Break here for IE10+ & EDGE
+	if (isGteIE10 || isEDGE) {
 		return;
 	}
 
@@ -335,18 +372,9 @@
 			datalistSelect =
 				datalist.getElementsByClassName(classNamePolyfillingSelect)[0] ||
 				setUpPolyfillingSelect(input, datalist),
-			inputValue = input.value,
+			inputValue = getInputValue(input),
 			newSelectValues = dcmnt.createDocumentFragment(),
 			disabledValues = dcmnt.createDocumentFragment();
-
-		// In case of type=email and multiple attribute, we would need to grab the last piece
-		// Using .getAttribute here for IE9 purpose - elsewhere it wouldn't return the newer HTML5 values correctly
-		if (
-			input.getAttribute('type') === 'email' &&
-			input.getAttribute('multiple') !== null
-		) {
-			inputValue = inputValue.substring(inputValue.lastIndexOf(',') + 1);
-		}
 
 		// Create an array out of the options list
 		Array.prototype.slice
@@ -506,6 +534,7 @@
 		} else {
 			datalistSelect.addEventListener('click', changeDataListSelect);
 		}
+
 		datalistSelect.addEventListener('blur', changeDataListSelect);
 		datalistSelect.addEventListener('keydown', changeDataListSelect);
 		datalistSelect.addEventListener('keypress', datalistSelectKeyPress);
@@ -567,16 +596,7 @@
 			datalistSelect.value.length > 0 &&
 			datalistSelect.value !== datalist.title
 		) {
-			var lastSeperator;
-
-			// In case of type=email and multiple attribute, we need to set up the resulting inputs value differently
-			input.value =
-				// Using .getAttribute here for IE9 purpose - elsewhere it wouldn't return the newer HTML5 values correctly
-				input.getAttribute('type') === 'email' &&
-				input.getAttribute('multiple') !== null &&
-				(lastSeperator = input.value.lastIndexOf(',')) > -1
-					? input.value.slice(0, lastSeperator) + ',' + datalistSelect.value
-					: (input.value = datalistSelect.value);
+			setInputValue(input, datalistSelect.value);
 
 			// Dispatch the input event on the related input[list]
 			dispatchInputEvent(input);
@@ -584,6 +604,11 @@
 			// Finally focusing the input, as other browser do this as well
 			if (event.key !== 'Tab') {
 				input.focus();
+			}
+
+			// #GH-51 / Prevent the form to be submitted on selecting a value via ENTER key within the select
+			if (event.keyCode === keyENTER) {
+				event.preventDefault();
 			}
 
 			// Set the visibility to false afterwards, as we're done here
@@ -609,6 +634,7 @@
 			evt = dcmnt.createEvent('Event');
 			evt.initEvent('input', true, false);
 		}
+
 		input.dispatchEvent(evt);
 	};
 
@@ -619,6 +645,7 @@
 		} else {
 			datalistSelect.setAttributeNode(dcmnt.createAttribute('hidden'));
 		}
+
 		datalistSelect.setAttribute('aria-hidden', (!visible).toString());
 	};
 
@@ -649,6 +676,7 @@
 			});
 		}
 	})(window.HTMLInputElement);
+
 	// Options property / https://developer.mozilla.org/en/docs/Web/API/HTMLDataListElement
 	(function(constructor) {
 		if (
