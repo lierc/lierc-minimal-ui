@@ -872,7 +872,7 @@ var Panel = function(opts) {
       return;
     }
 
-    var li = panel.elem.list.querySelector('li[data-message-hash="' + hash + '"]');
+    var li = panel.elem.list.querySelector('li[data-message-hash="' + hash + '"] .message-text');
 
     if (li) {
       panel.scroll(function() {
