@@ -1331,7 +1331,7 @@ var App = function(url, user) {
 
   // setup
 
-  if (!app.mobile) {
+  if (!app.mobile && !app.touchstart) {
     document.querySelectorAll('.sortable').forEach(function(el) {
       Sortable.create(el, {
         delay: 0,
