@@ -799,7 +799,7 @@ var Panel = function(opts) {
     }
   };
 
-  panel.aud_re = /^http[^\s]*\.(?:mp3|wav|aac|m4a)[^\/]*$/i;
+  panel.aud_re = /^http[^\s]*\.(?:mp3|wav|aac|m4a|flac)[^\/]*$/i;
   panel.audify = function(elem) {
     var links = elem.querySelectorAll("a[href]:not(.processed)");
     var message = elem.querySelector('.message-text');
