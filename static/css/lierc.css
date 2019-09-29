@@ -36,7 +36,7 @@ body {
 }
 
 body,input {
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
     "Fira Sans", "Droid Sans", "Helvetica Neue", 
     sans-serif, FontAwesome;
@@ -519,7 +519,7 @@ body.solarized #foot {
   padding: 5px;
   margin: 0;
   white-space: pre-wrap;
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -1227,7 +1227,7 @@ header:hover #global-controls-toggle {
   width: 100%;
   font-size: 15px;
   box-sizing: border-box;
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -1235,7 +1235,7 @@ header:hover #global-controls-toggle {
 
 #global-controls li.select option {
   font-size: 15px;
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
@@ -1606,7 +1606,7 @@ body.solarized-dark #nicks ul li a:hover {
   margin: 0;
   white-space: pre;
   background: #fff;
-  font-family: -apple-system, BlinkMacSystemFont,
+  font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
     sans-serif;
