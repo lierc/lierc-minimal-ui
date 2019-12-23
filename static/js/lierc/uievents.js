@@ -497,13 +497,18 @@ var UIEvents = function(app) {
     var image = e.target.querySelector('input[name="image"]');
     var files = image.files;
 
-    if (files.length == 0 || !files[0].type.match(/^image/)) {
-      alert("Must select an image file");
+    if (files.length == 0 || !files[0].type.match(/^(?:image|video)/)) {
+      alert("Must select an image or video file");
       return;
     }
 
     var fd = new FormData();
-    fd.append("image", files[0]);
+    if (files[0].type.match(/^video/)) {
+      fd.append("video", files[0]);
+    }
+    else {
+      fd.append("image", files[0]);
+    }
     var xhr = new XMLHttpRequest();
 
     submit.setAttribute('disabled','disabled');
