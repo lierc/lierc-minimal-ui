@@ -114,8 +114,11 @@ var Render = function(message, opts) {
     var name = message.Params[0];
     var text = message.Params[1];
 
-    if (!name.length || !text.length)
+    if (!name.length)
       return raw(message);
+
+    if (!text)
+      text = "";
 
     var from = make_nick(message, name);
     var color = string_to_color(message.Prefix.User || nick);
