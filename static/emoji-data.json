@@ -180,14 +180,15 @@
       "annotations" : [
          "adore",
          "crush",
+         "hearts",
          "in love",
-         "smiling face with 3 hearts"
+         "smiling face with hearts"
       ],
       "chars" : "🥰",
       "codes" : [
          "1F970"
       ],
-      "name" : "Smiling face with 3 hearts"
+      "name" : "Smiling face with hearts"
    },
    {
       "annotations" : [
@@ -282,6 +283,22 @@
          "1F619"
       ],
       "name" : "Kissing face with smiling eyes"
+   },
+   {
+      "annotations" : [
+         "grateful",
+         "proud",
+         "relieved",
+         "smiling",
+         "smiling face with tear",
+         "tear",
+         "touched"
+      ],
+      "chars" : "🥲",
+      "codes" : [
+         "1F972"
+      ],
+      "name" : "Smiling face with tear"
    },
    {
       "annotations" : [
@@ -740,6 +757,7 @@
    {
       "annotations" : [
          "exploding head",
+         "mind blown",
          "shocked"
       ],
       "chars" : "🤯",
@@ -774,6 +792,21 @@
          "1F973"
       ],
       "name" : "Partying face"
+   },
+   {
+      "annotations" : [
+         "disguise",
+         "disguised face",
+         "face",
+         "glasses",
+         "incognito",
+         "nose"
+      ],
+      "chars" : "🥸",
+      "codes" : [
+         "1F978"
+      ],
+      "name" : "Disguised face"
    },
    {
       "annotations" : [
@@ -1107,12 +1140,17 @@
       "name" : "Tired face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bored",
+         "tired",
+         "yawn",
+         "yawning face"
+      ],
       "chars" : "🥱",
       "codes" : [
          "1F971"
       ],
-      "name" : ""
+      "name" : "Yawning face"
    },
    {
       "annotations" : [
@@ -1335,13 +1373,13 @@
       "codes" : [
          "1F916"
       ],
-      "name" : "Robot face"
+      "name" : "Robot"
    },
    {
       "annotations" : [
          "cat",
          "face",
-         "grinning cat face",
+         "grinning",
          "mouth",
          "open",
          "smile"
@@ -1350,7 +1388,7 @@
       "codes" : [
          "1F63A"
       ],
-      "name" : "Grinning cat face"
+      "name" : "Grinning cat"
    },
    {
       "annotations" : [
@@ -1358,19 +1396,19 @@
          "eye",
          "face",
          "grin",
-         "grinning cat face with smiling eyes",
+         "grinning cat with smiling eyes",
          "smile"
       ],
       "chars" : "😸",
       "codes" : [
          "1F638"
       ],
-      "name" : "Grinning cat face with smiling eyes"
+      "name" : "Grinning cat with smiling eyes"
    },
    {
       "annotations" : [
          "cat",
-         "cat face with tears of joy",
+         "cat with tears of joy",
          "face",
          "joy",
          "tear"
@@ -1379,27 +1417,28 @@
       "codes" : [
          "1F639"
       ],
-      "name" : "Cat face with tears of joy"
+      "name" : "Cat with tears of joy"
    },
    {
       "annotations" : [
          "cat",
          "eye",
          "face",
+         "heart",
          "love",
          "smile",
-         "smiling cat face with heart-eyes"
+         "smiling cat with heart-eyes"
       ],
       "chars" : "😻",
       "codes" : [
          "1F63B"
       ],
-      "name" : "Smiling cat face with heart-eyes"
+      "name" : "Smiling cat with heart-eyes"
    },
    {
       "annotations" : [
          "cat",
-         "cat face with wry smile",
+         "cat with wry smile",
          "face",
          "ironic",
          "smile",
@@ -1409,7 +1448,7 @@
       "codes" : [
          "1F63C"
       ],
-      "name" : "Cat face with wry smile"
+      "name" : "Cat with wry smile"
    },
    {
       "annotations" : [
@@ -1417,13 +1456,13 @@
          "eye",
          "face",
          "kiss",
-         "kissing cat face"
+         "kissing cat"
       ],
       "chars" : "😽",
       "codes" : [
          "1F63D"
       ],
-      "name" : "Kissing cat face"
+      "name" : "Kissing cat"
    },
    {
       "annotations" : [
@@ -1437,13 +1476,13 @@
       "codes" : [
          "1F640"
       ],
-      "name" : "Weary cat face"
+      "name" : "Weary cat"
    },
    {
       "annotations" : [
          "cat",
          "cry",
-         "crying cat face",
+         "crying cat",
          "face",
          "sad",
          "tear"
@@ -1452,7 +1491,7 @@
       "codes" : [
          "1F63F"
       ],
-      "name" : "Crying cat face"
+      "name" : "Crying cat"
    },
    {
       "annotations" : [
@@ -1464,7 +1503,7 @@
       "codes" : [
          "1F63E"
       ],
-      "name" : "Pouting cat face"
+      "name" : "Pouting cat"
    },
    {
       "annotations" : [
@@ -1635,7 +1674,7 @@
    {
       "annotations" : [
          "exclamation",
-         "heavy heart exclamation",
+         "heart exclamation",
          "mark",
          "punctuation"
       ],
@@ -1643,7 +1682,7 @@
       "codes" : [
          "2763"
       ],
-      "name" : "Heavy heart exclamation"
+      "name" : "Heart exclamation"
    },
    {
       "annotations" : [
@@ -1725,6 +1764,17 @@
    },
    {
       "annotations" : [
+         "brown",
+         "heart"
+      ],
+      "chars" : "🤎",
+      "codes" : [
+         "1F90E"
+      ],
+      "name" : "Brown heart"
+   },
+   {
+      "annotations" : [
          "black",
          "black heart",
          "evil",
@@ -1737,20 +1787,15 @@
       "name" : "Black heart"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "heart",
+         "white"
+      ],
       "chars" : "🤍",
       "codes" : [
          "1F90D"
       ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🤎",
-      "codes" : [
-         "1F90E"
-      ],
-      "name" : ""
+      "name" : "White heart"
    },
    {
       "annotations" : [
@@ -2007,12 +2052,29 @@
       "name" : "OK hand"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "fingers",
+         "hand gesture",
+         "interrogation",
+         "pinched",
+         "sarcastic"
+      ],
+      "chars" : "🤌",
+      "codes" : [
+         "1F90C"
+      ],
+      "name" : "Pinched fingers"
+   },
+   {
+      "annotations" : [
+         "pinching hand",
+         "small amount"
+      ],
       "chars" : "🤏",
       "codes" : [
          "1F90F"
       ],
-      "name" : ""
+      "name" : "Pinching hand"
    },
    {
       "annotations" : [
@@ -2377,20 +2439,28 @@
       "name" : "Flexed biceps"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "mechanical arm",
+         "prosthetic"
+      ],
       "chars" : "🦾",
       "codes" : [
          "1F9BE"
       ],
-      "name" : ""
+      "name" : "Mechanical arm"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "mechanical leg",
+         "prosthetic"
+      ],
       "chars" : "🦿",
       "codes" : [
          "1F9BF"
       ],
-      "name" : ""
+      "name" : "Mechanical leg"
    },
    {
       "annotations" : [
@@ -2428,12 +2498,16 @@
       "name" : "Ear"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "ear with hearing aid",
+         "hard of hearing"
+      ],
       "chars" : "🦻",
       "codes" : [
          "1F9BB"
       ],
-      "name" : ""
+      "name" : "Ear with hearing aid"
    },
    {
       "annotations" : [
@@ -2456,6 +2530,35 @@
          "1F9E0"
       ],
       "name" : "Brain"
+   },
+   {
+      "annotations" : [
+         "anatomical",
+         "cardiology",
+         "heart",
+         "organ",
+         "pulse"
+      ],
+      "chars" : "🫀",
+      "codes" : [
+         "1FAC0"
+      ],
+      "name" : "Anatomical heart"
+   },
+   {
+      "annotations" : [
+         "breath",
+         "exhalation",
+         "inhalation",
+         "lungs",
+         "organ",
+         "respiration"
+      ],
+      "chars" : "🫁",
+      "codes" : [
+         "1FAC1"
+      ],
+      "name" : "Lungs"
    },
    {
       "annotations" : [
@@ -2589,6 +2692,7 @@
       "annotations" : [
          "blond",
          "blond-haired person",
+         "hair",
          "person: blond hair"
       ],
       "chars" : "👱",
@@ -2611,6 +2715,7 @@
    {
       "annotations" : [
          "beard",
+         "man",
          "man: beard",
          "person"
       ],
@@ -2619,23 +2724,6 @@
          "1F9D4"
       ],
       "name" : "Man: beard"
-   },
-   {
-      "annotations" : [
-         "blond",
-         "blond-haired person",
-         "person: blond hair",
-         "male sign",
-         "man"
-      ],
-      "chars" : "👱‍♂️",
-      "codes" : [
-         "1F471",
-         "200D",
-         "2642",
-         "FE0F"
-      ],
-      "name" : "Person: blond hair male sign"
    },
    {
       "annotations" : [
@@ -2718,23 +2806,6 @@
    },
    {
       "annotations" : [
-         "blond",
-         "blond-haired person",
-         "person: blond hair",
-         "female sign",
-         "woman"
-      ],
-      "chars" : "👱‍♀️",
-      "codes" : [
-         "1F471",
-         "200D",
-         "2640",
-         "FE0F"
-      ],
-      "name" : "Person: blond hair female sign"
-   },
-   {
-      "annotations" : [
          "adult",
          "woman",
          "ginger",
@@ -2748,6 +2819,24 @@
          "1F9B0"
       ],
       "name" : "Woman red hair"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "ginger",
+         "red hair",
+         "redhead"
+      ],
+      "chars" : "🧑‍🦰",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9B0"
+      ],
+      "name" : "Person red hair"
    },
    {
       "annotations" : [
@@ -2769,6 +2858,25 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "afro",
+         "curly",
+         "curly hair",
+         "ringlets"
+      ],
+      "chars" : "🧑‍🦱",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9B1"
+      ],
+      "name" : "Person curly hair"
+   },
+   {
+      "annotations" : [
+         "adult",
          "woman",
          "gray",
          "hair",
@@ -2782,6 +2890,25 @@
          "1F9B3"
       ],
       "name" : "Woman white hair"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "gray",
+         "hair",
+         "old",
+         "white"
+      ],
+      "chars" : "🧑‍🦳",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9B3"
+      ],
+      "name" : "Person white hair"
    },
    {
       "annotations" : [
@@ -2800,6 +2927,62 @@
          "1F9B2"
       ],
       "name" : "Woman bald"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "bald",
+         "chemotherapy",
+         "hairless",
+         "no hair",
+         "shaven"
+      ],
+      "chars" : "🧑‍🦲",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9B2"
+      ],
+      "name" : "Person bald"
+   },
+   {
+      "annotations" : [
+         "blond",
+         "blond-haired person",
+         "hair",
+         "person: blond hair",
+         "female sign",
+         "woman"
+      ],
+      "chars" : "👱‍♀️",
+      "codes" : [
+         "1F471",
+         "200D",
+         "2640",
+         "FE0F"
+      ],
+      "name" : "Person: blond hair female sign"
+   },
+   {
+      "annotations" : [
+         "blond",
+         "blond-haired person",
+         "hair",
+         "person: blond hair",
+         "male sign",
+         "man"
+      ],
+      "chars" : "👱‍♂️",
+      "codes" : [
+         "1F471",
+         "200D",
+         "2642",
+         "FE0F"
+      ],
+      "name" : "Person: blond hair male sign"
    },
    {
       "annotations" : [
@@ -3140,15 +3323,26 @@
       "name" : "Person raising hand female sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "deaf",
+         "deaf person",
+         "ear",
+         "hear"
+      ],
       "chars" : "🧏",
       "codes" : [
          "1F9CF"
       ],
-      "name" : ""
+      "name" : "Deaf person"
    },
    {
       "annotations" : [
+         "accessibility",
+         "deaf",
+         "deaf person",
+         "ear",
+         "hear",
          "male sign",
          "man"
       ],
@@ -3159,10 +3353,15 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Deaf person male sign"
    },
    {
       "annotations" : [
+         "accessibility",
+         "deaf",
+         "deaf person",
+         "ear",
+         "hear",
          "female sign",
          "woman"
       ],
@@ -3173,7 +3372,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Deaf person female sign"
    },
    {
       "annotations" : [
@@ -3334,6 +3533,26 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "aesculapius",
+         "medical symbol",
+         "medicine",
+         "staff"
+      ],
+      "chars" : "🧑‍⚕️",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "2695",
+         "FE0F"
+      ],
+      "name" : "Person medical symbol"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "aesculapius",
          "medical symbol",
@@ -3366,6 +3585,26 @@
          "FE0F"
       ],
       "name" : "Woman medical symbol"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "cap",
+         "celebration",
+         "clothing",
+         "graduation",
+         "hat"
+      ],
+      "chars" : "🧑‍🎓",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F393"
+      ],
+      "name" : "Person graduation cap"
    },
    {
       "annotations" : [
@@ -3406,6 +3645,23 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "building",
+         "school"
+      ],
+      "chars" : "🧑‍🏫",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F3EB"
+      ],
+      "name" : "Person school"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "building",
          "school"
@@ -3432,6 +3688,27 @@
          "1F3EB"
       ],
       "name" : "Woman school"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "balance",
+         "justice",
+         "Libra",
+         "scale",
+         "zodiac"
+      ],
+      "chars" : "🧑‍⚖️",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "2696",
+         "FE0F"
+      ],
+      "name" : "Person balance scale"
    },
    {
       "annotations" : [
@@ -3474,6 +3751,25 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "ear",
+         "grain",
+         "rice",
+         "sheaf of rice"
+      ],
+      "chars" : "🧑‍🌾",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F33E"
+      ],
+      "name" : "Person sheaf of rice"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "ear",
          "grain",
@@ -3508,7 +3804,28 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "breakfast",
+         "cooking",
+         "egg",
+         "frying",
+         "pan"
+      ],
+      "chars" : "🧑‍🍳",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F373"
+      ],
+      "name" : "Person cooking"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
+         "breakfast",
          "cooking",
          "egg",
          "frying",
@@ -3526,6 +3843,7 @@
       "annotations" : [
          "adult",
          "woman",
+         "breakfast",
          "cooking",
          "egg",
          "frying",
@@ -3538,6 +3856,24 @@
          "1F373"
       ],
       "name" : "Woman cooking"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "spanner",
+         "tool",
+         "wrench"
+      ],
+      "chars" : "🧑‍🔧",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F527"
+      ],
+      "name" : "Person wrench"
    },
    {
       "annotations" : [
@@ -3574,6 +3910,23 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "building",
+         "factory"
+      ],
+      "chars" : "🧑‍🏭",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F3ED"
+      ],
+      "name" : "Person factory"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "building",
          "factory"
@@ -3604,6 +3957,22 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "briefcase"
+      ],
+      "chars" : "🧑‍💼",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F4BC"
+      ],
+      "name" : "Person briefcase"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "briefcase"
       ],
@@ -3628,6 +3997,24 @@
          "1F4BC"
       ],
       "name" : "Woman briefcase"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "microscope",
+         "science",
+         "tool"
+      ],
+      "chars" : "🧑‍🔬",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F52C"
+      ],
+      "name" : "Person microscope"
    },
    {
       "annotations" : [
@@ -3664,9 +4051,28 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "computer",
+         "laptop",
+         "pc",
+         "personal"
+      ],
+      "chars" : "🧑‍💻",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F4BB"
+      ],
+      "name" : "Person laptop"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "computer",
-         "laptop computer",
+         "laptop",
          "pc",
          "personal"
       ],
@@ -3676,14 +4082,14 @@
          "200D",
          "1F4BB"
       ],
-      "name" : "Man laptop computer"
+      "name" : "Man laptop"
    },
    {
       "annotations" : [
          "adult",
          "woman",
          "computer",
-         "laptop computer",
+         "laptop",
          "pc",
          "personal"
       ],
@@ -3693,7 +4099,25 @@
          "200D",
          "1F4BB"
       ],
-      "name" : "Woman laptop computer"
+      "name" : "Woman laptop"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "karaoke",
+         "mic",
+         "microphone"
+      ],
+      "chars" : "🧑‍🎤",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F3A4"
+      ],
+      "name" : "Person microphone"
    },
    {
       "annotations" : [
@@ -3726,6 +4150,26 @@
          "1F3A4"
       ],
       "name" : "Woman microphone"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "art",
+         "artist palette",
+         "museum",
+         "painting",
+         "palette"
+      ],
+      "chars" : "🧑‍🎨",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F3A8"
+      ],
+      "name" : "Person artist palette"
    },
    {
       "annotations" : [
@@ -3766,6 +4210,24 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "aeroplane",
+         "airplane"
+      ],
+      "chars" : "🧑‍✈️",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "2708",
+         "FE0F"
+      ],
+      "name" : "Person airplane"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "aeroplane",
          "airplane"
@@ -3798,6 +4260,23 @@
    {
       "annotations" : [
          "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "rocket",
+         "space"
+      ],
+      "chars" : "🧑‍🚀",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F680"
+      ],
+      "name" : "Person rocket"
+   },
+   {
+      "annotations" : [
+         "adult",
          "man",
          "rocket",
          "space"
@@ -3824,6 +4303,24 @@
          "1F680"
       ],
       "name" : "Woman rocket"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "engine",
+         "fire",
+         "truck"
+      ],
+      "chars" : "🧑‍🚒",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F692"
+      ],
+      "name" : "Person fire engine"
    },
    {
       "annotations" : [
@@ -3993,6 +4490,19 @@
    },
    {
       "annotations" : [
+         "fighter",
+         "hidden",
+         "ninja",
+         "stealth"
+      ],
+      "chars" : "🥷",
+      "codes" : [
+         "1F977"
+      ],
+      "name" : "Ninja"
+   },
+   {
+      "annotations" : [
          "construction",
          "hat",
          "worker"
@@ -4104,16 +4614,18 @@
    },
    {
       "annotations" : [
+         "cap",
          "gua pi mao",
          "hat",
          "man",
-         "man with Chinese cap"
+         "man with skullcap",
+         "skullcap"
       ],
       "chars" : "👲",
       "codes" : [
          "1F472"
       ],
-      "name" : "Man with Chinese cap"
+      "name" : "Man with skullcap"
    },
    {
       "annotations" : [
@@ -4144,6 +4656,42 @@
    },
    {
       "annotations" : [
+         "groom",
+         "man",
+         "man in tuxedo",
+         "tuxedo",
+         "male sign",
+         "man"
+      ],
+      "chars" : "🤵‍♂️",
+      "codes" : [
+         "1F935",
+         "200D",
+         "2642",
+         "FE0F"
+      ],
+      "name" : "Man in tuxedo male sign"
+   },
+   {
+      "annotations" : [
+         "groom",
+         "man",
+         "man in tuxedo",
+         "tuxedo",
+         "female sign",
+         "woman"
+      ],
+      "chars" : "🤵‍♀️",
+      "codes" : [
+         "1F935",
+         "200D",
+         "2640",
+         "FE0F"
+      ],
+      "name" : "Man in tuxedo female sign"
+   },
+   {
+      "annotations" : [
          "bride",
          "bride with veil",
          "veil",
@@ -4154,6 +4702,42 @@
          "1F470"
       ],
       "name" : "Bride with veil"
+   },
+   {
+      "annotations" : [
+         "bride",
+         "bride with veil",
+         "veil",
+         "wedding",
+         "male sign",
+         "man"
+      ],
+      "chars" : "👰‍♂️",
+      "codes" : [
+         "1F470",
+         "200D",
+         "2642",
+         "FE0F"
+      ],
+      "name" : "Bride with veil male sign"
+   },
+   {
+      "annotations" : [
+         "bride",
+         "bride with veil",
+         "veil",
+         "wedding",
+         "female sign",
+         "woman"
+      ],
+      "chars" : "👰‍♀️",
+      "codes" : [
+         "1F470",
+         "200D",
+         "2640",
+         "FE0F"
+      ],
+      "name" : "Bride with veil female sign"
    },
    {
       "annotations" : [
@@ -4178,6 +4762,59 @@
          "1F931"
       ],
       "name" : "Breast-feeding"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "woman",
+         "baby",
+         "bottle",
+         "drink",
+         "milk"
+      ],
+      "chars" : "👩‍🍼",
+      "codes" : [
+         "1F469",
+         "200D",
+         "1F37C"
+      ],
+      "name" : "Woman baby bottle"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "man",
+         "baby",
+         "bottle",
+         "drink",
+         "milk"
+      ],
+      "chars" : "👨‍🍼",
+      "codes" : [
+         "1F468",
+         "200D",
+         "1F37C"
+      ],
+      "name" : "Man baby bottle"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "baby",
+         "bottle",
+         "drink",
+         "milk"
+      ],
+      "chars" : "🧑‍🍼",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F37C"
+      ],
+      "name" : "Person baby bottle"
    },
    {
       "annotations" : [
@@ -4222,6 +4859,24 @@
          "1F936"
       ],
       "name" : "Mrs. Claus"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "celebration",
+         "Christmas",
+         "tree"
+      ],
+      "chars" : "🧑‍🎄",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F384"
+      ],
+      "name" : "Person Christmas tree"
    },
    {
       "annotations" : [
@@ -4806,15 +5461,22 @@
       "name" : "Person walking female sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "person standing",
+         "stand",
+         "standing"
+      ],
       "chars" : "🧍",
       "codes" : [
          "1F9CD"
       ],
-      "name" : ""
+      "name" : "Person standing"
    },
    {
       "annotations" : [
+         "person standing",
+         "stand",
+         "standing",
          "male sign",
          "man"
       ],
@@ -4825,10 +5487,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Person standing male sign"
    },
    {
       "annotations" : [
+         "person standing",
+         "stand",
+         "standing",
          "female sign",
          "woman"
       ],
@@ -4839,18 +5504,25 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Person standing female sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "kneel",
+         "kneeling",
+         "person kneeling"
+      ],
       "chars" : "🧎",
       "codes" : [
          "1F9CE"
       ],
-      "name" : ""
+      "name" : "Person kneeling"
    },
    {
       "annotations" : [
+         "kneel",
+         "kneeling",
+         "person kneeling",
          "male sign",
          "man"
       ],
@@ -4861,10 +5533,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Male sign"
+      "name" : "Person kneeling male sign"
    },
    {
       "annotations" : [
+         "kneel",
+         "kneeling",
+         "person kneeling",
          "female sign",
          "woman"
       ],
@@ -4875,12 +5550,33 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Female sign"
+      "name" : "Person kneeling female sign"
    },
    {
       "annotations" : [
          "adult",
-         "man"
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "accessibility",
+         "blind",
+         "probing cane"
+      ],
+      "chars" : "🧑‍🦯",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9AF"
+      ],
+      "name" : "Person probing cane"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "man",
+         "accessibility",
+         "blind",
+         "probing cane"
       ],
       "chars" : "👨‍🦯",
       "codes" : [
@@ -4888,12 +5584,15 @@
          "200D",
          "1F9AF"
       ],
-      "name" : "Man"
+      "name" : "Man probing cane"
    },
    {
       "annotations" : [
          "adult",
-         "woman"
+         "woman",
+         "accessibility",
+         "blind",
+         "probing cane"
       ],
       "chars" : "👩‍🦯",
       "codes" : [
@@ -4901,12 +5600,31 @@
          "200D",
          "1F9AF"
       ],
-      "name" : "Woman"
+      "name" : "Woman probing cane"
    },
    {
       "annotations" : [
          "adult",
-         "man"
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "accessibility",
+         "motorized wheelchair"
+      ],
+      "chars" : "🧑‍🦼",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9BC"
+      ],
+      "name" : "Person motorized wheelchair"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "man",
+         "accessibility",
+         "motorized wheelchair"
       ],
       "chars" : "👨‍🦼",
       "codes" : [
@@ -4914,12 +5632,14 @@
          "200D",
          "1F9BC"
       ],
-      "name" : "Man"
+      "name" : "Man motorized wheelchair"
    },
    {
       "annotations" : [
          "adult",
-         "woman"
+         "woman",
+         "accessibility",
+         "motorized wheelchair"
       ],
       "chars" : "👩‍🦼",
       "codes" : [
@@ -4927,12 +5647,31 @@
          "200D",
          "1F9BC"
       ],
-      "name" : "Woman"
+      "name" : "Woman motorized wheelchair"
    },
    {
       "annotations" : [
          "adult",
-         "man"
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "accessibility",
+         "manual wheelchair"
+      ],
+      "chars" : "🧑‍🦽",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F9BD"
+      ],
+      "name" : "Person manual wheelchair"
+   },
+   {
+      "annotations" : [
+         "adult",
+         "man",
+         "accessibility",
+         "manual wheelchair"
       ],
       "chars" : "👨‍🦽",
       "codes" : [
@@ -4940,12 +5679,14 @@
          "200D",
          "1F9BD"
       ],
-      "name" : "Man"
+      "name" : "Man manual wheelchair"
    },
    {
       "annotations" : [
          "adult",
-         "woman"
+         "woman",
+         "accessibility",
+         "manual wheelchair"
       ],
       "chars" : "👩‍🦽",
       "codes" : [
@@ -4953,7 +5694,7 @@
          "200D",
          "1F9BD"
       ],
-      "name" : "Woman"
+      "name" : "Woman manual wheelchair"
    },
    {
       "annotations" : [
@@ -5911,46 +6652,76 @@
    },
    {
       "annotations" : [
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender",
+         "agreement",
+         "hand",
+         "handshake",
+         "meeting",
+         "shake",
+         "adult",
+         "gender-neutral",
+         "person",
+         "unspecified gender"
+      ],
+      "chars" : "🧑‍🤝‍🧑",
+      "codes" : [
+         "1F9D1",
+         "200D",
+         "1F91D",
+         "200D",
+         "1F9D1"
+      ],
+      "name" : "Person handshake person"
+   },
+   {
+      "annotations" : [
          "couple",
          "hand",
-         "two women holding hands",
-         "woman"
+         "holding hands",
+         "women",
+         "women holding hands"
       ],
       "chars" : "👭",
       "codes" : [
          "1F46D"
       ],
-      "name" : "Two women holding hands"
+      "name" : "Women holding hands"
    },
    {
       "annotations" : [
          "couple",
          "hand",
          "hold",
+         "holding hands",
          "man",
-         "man and woman holding hands",
-         "woman"
+         "woman",
+         "woman and man holding hands"
       ],
       "chars" : "👫",
       "codes" : [
          "1F46B"
       ],
-      "name" : "Man and woman holding hands"
+      "name" : "Woman and man holding hands"
    },
    {
       "annotations" : [
          "couple",
          "Gemini",
+         "holding hands",
          "man",
+         "men",
+         "men holding hands",
          "twins",
-         "two men holding hands",
          "zodiac"
       ],
       "chars" : "👬",
       "codes" : [
          "1F46C"
       ],
-      "name" : "Two men holding hands"
+      "name" : "Men holding hands"
    },
    {
       "annotations" : [
@@ -6695,6 +7466,20 @@
    },
    {
       "annotations" : [
+         "goodbye",
+         "hello",
+         "hug",
+         "people hugging",
+         "thanks"
+      ],
+      "chars" : "🫂",
+      "codes" : [
+         "1FAC2"
+      ],
+      "name" : "People hugging"
+   },
+   {
+      "annotations" : [
          "clothing",
          "footprint",
          "footprints",
@@ -6791,6 +7576,17 @@
    },
    {
       "annotations" : [
+         "ape",
+         "orangutan"
+      ],
+      "chars" : "🦧",
+      "codes" : [
+         "1F9A7"
+      ],
+      "name" : "Orangutan"
+   },
+   {
+      "annotations" : [
          "dog",
          "face",
          "pet"
@@ -6813,17 +7609,25 @@
       "name" : "Dog"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "blind",
+         "guide",
+         "guide dog"
+      ],
       "chars" : "🦮",
       "codes" : [
          "1F9AE"
       ],
-      "name" : ""
+      "name" : "Guide dog"
    },
    {
       "annotations" : [
          "dog",
-         "pet"
+         "pet",
+         "emergency",
+         "safety",
+         "vest"
       ],
       "chars" : "🐕‍🦺",
       "codes" : [
@@ -6831,7 +7635,7 @@
          "200D",
          "1F9BA"
       ],
-      "name" : "Dog"
+      "name" : "Dog safety vest"
    },
    {
       "annotations" : [
@@ -6853,7 +7657,7 @@
       "codes" : [
          "1F43A"
       ],
-      "name" : "Wolf face"
+      "name" : "Wolf"
    },
    {
       "annotations" : [
@@ -6864,7 +7668,7 @@
       "codes" : [
          "1F98A"
       ],
-      "name" : "Fox face"
+      "name" : "Fox"
    },
    {
       "annotations" : [
@@ -6903,6 +7707,22 @@
    },
    {
       "annotations" : [
+         "cat",
+         "pet",
+         "black large square",
+         "geometric",
+         "square"
+      ],
+      "chars" : "🐈‍⬛",
+      "codes" : [
+         "1F408",
+         "200D",
+         "2B1B"
+      ],
+      "name" : "Cat black large square"
+   },
+   {
+      "annotations" : [
          "face",
          "Leo",
          "lion",
@@ -6912,7 +7732,7 @@
       "codes" : [
          "1F981"
       ],
-      "name" : "Lion face"
+      "name" : "Lion"
    },
    {
       "annotations" : [
@@ -6978,7 +7798,7 @@
       "codes" : [
          "1F984"
       ],
-      "name" : "Unicorn face"
+      "name" : "Unicorn"
    },
    {
       "annotations" : [
@@ -7000,6 +7820,19 @@
          "1F98C"
       ],
       "name" : "Deer"
+   },
+   {
+      "annotations" : [
+         "bison",
+         "buffalo",
+         "herd",
+         "wisent"
+      ],
+      "chars" : "🦬",
+      "codes" : [
+         "1F9AC"
+      ],
+      "name" : "Bison"
    },
    {
       "annotations" : [
@@ -7191,6 +8024,20 @@
    },
    {
       "annotations" : [
+         "extinction",
+         "large",
+         "mammoth",
+         "tusk",
+         "woolly"
+      ],
+      "chars" : "🦣",
+      "codes" : [
+         "1F9A3"
+      ],
+      "name" : "Mammoth"
+   },
+   {
+      "annotations" : [
          "rhinoceros"
       ],
       "chars" : "🦏",
@@ -7251,7 +8098,7 @@
       "codes" : [
          "1F439"
       ],
-      "name" : "Hamster face"
+      "name" : "Hamster"
    },
    {
       "annotations" : [
@@ -7291,6 +8138,17 @@
    },
    {
       "annotations" : [
+         "beaver",
+         "dam"
+      ],
+      "chars" : "🦫",
+      "codes" : [
+         "1F9AB"
+      ],
+      "name" : "Beaver"
+   },
+   {
+      "annotations" : [
          "hedgehog",
          "spiny"
       ],
@@ -7320,7 +8178,24 @@
       "codes" : [
          "1F43B"
       ],
-      "name" : "Bear face"
+      "name" : "Bear"
+   },
+   {
+      "annotations" : [
+         "bear",
+         "face",
+         "cold",
+         "snow",
+         "snowflake"
+      ],
+      "chars" : "🐻‍❄️",
+      "codes" : [
+         "1F43B",
+         "200D",
+         "2744",
+         "FE0F"
+      ],
+      "name" : "Bear snowflake"
    },
    {
       "annotations" : [
@@ -7342,39 +8217,42 @@
       "codes" : [
          "1F43C"
       ],
-      "name" : "Panda face"
+      "name" : "Panda"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "lazy",
+         "sloth",
+         "slow"
+      ],
       "chars" : "🦥",
       "codes" : [
          "1F9A5"
       ],
-      "name" : ""
+      "name" : "Sloth"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "fishing",
+         "otter",
+         "playful"
+      ],
       "chars" : "🦦",
       "codes" : [
          "1F9A6"
       ],
-      "name" : ""
+      "name" : "Otter"
    },
    {
-      "annotations" : [],
-      "chars" : "🦧",
-      "codes" : [
-         "1F9A7"
+      "annotations" : [
+         "skunk",
+         "stink"
       ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
       "chars" : "🦨",
       "codes" : [
          "1F9A8"
       ],
-      "name" : ""
+      "name" : "Skunk"
    },
    {
       "annotations" : [
@@ -7568,12 +8446,43 @@
       "name" : "Owl"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "dodo",
+         "extinction",
+         "large",
+         "Mauritius"
+      ],
+      "chars" : "🦤",
+      "codes" : [
+         "1F9A4"
+      ],
+      "name" : "Dodo"
+   },
+   {
+      "annotations" : [
+         "bird",
+         "feather",
+         "flight",
+         "light",
+         "plumage"
+      ],
+      "chars" : "🪶",
+      "codes" : [
+         "1FAB6"
+      ],
+      "name" : "Feather"
+   },
+   {
+      "annotations" : [
+         "flamboyant",
+         "flamingo",
+         "tropical"
+      ],
       "chars" : "🦩",
       "codes" : [
          "1F9A9"
       ],
-      "name" : ""
+      "name" : "Flamingo"
    },
    {
       "annotations" : [
@@ -7611,7 +8520,7 @@
       "codes" : [
          "1F438"
       ],
-      "name" : "Frog face"
+      "name" : "Frog"
    },
    {
       "annotations" : [
@@ -7742,6 +8651,17 @@
    },
    {
       "annotations" : [
+         "sea Lion",
+         "seal"
+      ],
+      "chars" : "🦭",
+      "codes" : [
+         "1F9AD"
+      ],
+      "name" : "Seal"
+   },
+   {
+      "annotations" : [
          "fish",
          "Pisces",
          "zodiac"
@@ -7865,6 +8785,18 @@
    {
       "annotations" : [
          "beetle",
+         "bug",
+         "insect"
+      ],
+      "chars" : "🪲",
+      "codes" : [
+         "1FAB2"
+      ],
+      "name" : "Beetle"
+   },
+   {
+      "annotations" : [
+         "beetle",
          "insect",
          "lady beetle",
          "ladybird",
@@ -7886,6 +8818,19 @@
          "1F997"
       ],
       "name" : "Cricket"
+   },
+   {
+      "annotations" : [
+         "cockroach",
+         "insect",
+         "pest",
+         "roach"
+      ],
+      "chars" : "🪳",
+      "codes" : [
+         "1FAB3"
+      ],
+      "name" : "Cockroach"
    },
    {
       "annotations" : [
@@ -7926,9 +8871,9 @@
       "annotations" : [
          "disease",
          "fever",
-         "insect",
          "malaria",
          "mosquito",
+         "pest",
          "virus"
       ],
       "chars" : "🦟",
@@ -7936,6 +8881,33 @@
          "1F99F"
       ],
       "name" : "Mosquito"
+   },
+   {
+      "annotations" : [
+         "disease",
+         "fly",
+         "maggot",
+         "pest",
+         "rotting"
+      ],
+      "chars" : "🪰",
+      "codes" : [
+         "1FAB0"
+      ],
+      "name" : "Fly"
+   },
+   {
+      "annotations" : [
+         "annelid",
+         "earthworm",
+         "parasite",
+         "worm"
+      ],
+      "chars" : "🪱",
+      "codes" : [
+         "1FAB1"
+      ],
+      "name" : "Worm"
    },
    {
       "annotations" : [
@@ -8072,6 +9044,22 @@
          "1F331"
       ],
       "name" : "Seedling"
+   },
+   {
+      "annotations" : [
+         "boring",
+         "grow",
+         "house",
+         "nurturing",
+         "plant",
+         "potted plant",
+         "useless"
+      ],
+      "chars" : "🪴",
+      "codes" : [
+         "1FAB4"
+      ],
+      "name" : "Potted plant"
    },
    {
       "annotations" : [
@@ -8371,6 +9359,20 @@
    },
    {
       "annotations" : [
+         "berry",
+         "bilberry",
+         "blue",
+         "blueberries",
+         "blueberry"
+      ],
+      "chars" : "🫐",
+      "codes" : [
+         "1FAD0"
+      ],
+      "name" : "Blueberries"
+   },
+   {
+      "annotations" : [
          "food",
          "fruit",
          "kiwi"
@@ -8392,6 +9394,17 @@
          "1F345"
       ],
       "name" : "Tomato"
+   },
+   {
+      "annotations" : [
+         "food",
+         "olive"
+      ],
+      "chars" : "🫒",
+      "codes" : [
+         "1FAD2"
+      ],
+      "name" : "Olive"
    },
    {
       "annotations" : [
@@ -8480,6 +9493,19 @@
    },
    {
       "annotations" : [
+         "bell pepper",
+         "capsicum",
+         "pepper",
+         "vegetable"
+      ],
+      "chars" : "🫑",
+      "codes" : [
+         "1FAD1"
+      ],
+      "name" : "Bell pepper"
+   },
+   {
+      "annotations" : [
          "cucumber",
          "food",
          "pickle",
@@ -8517,20 +9543,26 @@
       "name" : "Broccoli"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "flavoring",
+         "garlic"
+      ],
       "chars" : "🧄",
       "codes" : [
          "1F9C4"
       ],
-      "name" : ""
+      "name" : "Garlic"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "flavoring",
+         "onion"
+      ],
       "chars" : "🧅",
       "codes" : [
          "1F9C5"
       ],
-      "name" : ""
+      "name" : "Onion"
    },
    {
       "annotations" : [
@@ -8582,10 +9614,11 @@
    {
       "annotations" : [
          "bread",
-         "crescent roll",
+         "breakfast",
          "croissant",
          "food",
-         "french"
+         "french",
+         "roll"
       ],
       "chars" : "🥐",
       "codes" : [
@@ -8608,6 +9641,20 @@
    },
    {
       "annotations" : [
+         "arepa",
+         "flatbread",
+         "lavash",
+         "naan",
+         "pita"
+      ],
+      "chars" : "🫓",
+      "codes" : [
+         "1FAD3"
+      ],
+      "name" : "Flatbread"
+   },
+   {
+      "annotations" : [
          "pretzel",
          "twisted"
       ],
@@ -8621,6 +9668,7 @@
       "annotations" : [
          "bagel",
          "bakery",
+         "breakfast",
          "schmear"
       ],
       "chars" : "🥯",
@@ -8631,6 +9679,7 @@
    },
    {
       "annotations" : [
+         "breakfast",
          "crêpe",
          "food",
          "hotcake",
@@ -8644,12 +9693,17 @@
       "name" : "Pancakes"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "breakfast",
+         "indecisive",
+         "iron",
+         "waffle"
+      ],
       "chars" : "🧇",
       "codes" : [
          "1F9C7"
       ],
-      "name" : ""
+      "name" : "Waffle"
    },
    {
       "annotations" : [
@@ -8705,6 +9759,7 @@
    {
       "annotations" : [
          "bacon",
+         "breakfast",
          "food",
          "meat"
       ],
@@ -8797,6 +9852,18 @@
    },
    {
       "annotations" : [
+         "mexican",
+         "tamale",
+         "wrapped"
+      ],
+      "chars" : "🫔",
+      "codes" : [
+         "1FAD4"
+      ],
+      "name" : "Tamale"
+   },
+   {
+      "annotations" : [
          "falafel",
          "flatbread",
          "food",
@@ -8811,15 +9878,20 @@
       "name" : "Stuffed flatbread"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "chickpea",
+         "falafel",
+         "meatball"
+      ],
       "chars" : "🧆",
       "codes" : [
          "1F9C6"
       ],
-      "name" : ""
+      "name" : "Falafel"
    },
    {
       "annotations" : [
+         "breakfast",
          "egg",
          "food"
       ],
@@ -8831,6 +9903,7 @@
    },
    {
       "annotations" : [
+         "breakfast",
          "cooking",
          "egg",
          "frying",
@@ -8871,6 +9944,21 @@
    },
    {
       "annotations" : [
+         "cheese",
+         "chocolate",
+         "fondue",
+         "melted",
+         "pot",
+         "Swiss"
+      ],
+      "chars" : "🫕",
+      "codes" : [
+         "1FAD5"
+      ],
+      "name" : "Fondue"
+   },
+   {
+      "annotations" : [
          "bowl with spoon",
          "breakfast",
          "cereal",
@@ -8905,12 +9993,15 @@
       "name" : "Popcorn"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "butter",
+         "dairy"
+      ],
       "chars" : "🧈",
       "codes" : [
          "1F9C8"
       ],
-      "name" : ""
+      "name" : "Butter"
    },
    {
       "annotations" : [
@@ -9194,12 +10285,16 @@
       "name" : "Squid"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "diving",
+         "oyster",
+         "pearl"
+      ],
       "chars" : "🦪",
       "codes" : [
          "1F9AA"
       ],
-      "name" : ""
+      "name" : "Oyster"
    },
    {
       "annotations" : [
@@ -9244,6 +10339,7 @@
    },
    {
       "annotations" : [
+         "breakfast",
          "dessert",
          "donut",
          "doughnut",
@@ -9428,6 +10524,19 @@
    },
    {
       "annotations" : [
+         "drink",
+         "pot",
+         "tea",
+         "teapot"
+      ],
+      "chars" : "🫖",
+      "codes" : [
+         "1FAD6"
+      ],
+      "name" : "Teapot"
+   },
+   {
+      "annotations" : [
          "beverage",
          "cup",
          "drink",
@@ -9579,28 +10688,55 @@
       "name" : "Cup with straw"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bubble",
+         "milk",
+         "pearl",
+         "tea"
+      ],
+      "chars" : "🧋",
+      "codes" : [
+         "1F9CB"
+      ],
+      "name" : "Bubble tea"
+   },
+   {
+      "annotations" : [
+         "beverage",
+         "box",
+         "juice",
+         "straw",
+         "sweet"
+      ],
       "chars" : "🧃",
       "codes" : [
          "1F9C3"
       ],
-      "name" : ""
+      "name" : "Beverage box"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "drink",
+         "mate"
+      ],
       "chars" : "🧉",
       "codes" : [
          "1F9C9"
       ],
-      "name" : ""
+      "name" : "Mate"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "cold",
+         "ice",
+         "ice cube",
+         "iceberg"
+      ],
       "chars" : "🧊",
       "codes" : [
          "1F9CA"
       ],
-      "name" : ""
+      "name" : "Ice"
    },
    {
       "annotations" : [
@@ -9925,6 +11061,46 @@
    },
    {
       "annotations" : [
+         "boulder",
+         "heavy",
+         "rock",
+         "solid",
+         "stone"
+      ],
+      "chars" : "🪨",
+      "codes" : [
+         "1FAA8"
+      ],
+      "name" : "Rock"
+   },
+   {
+      "annotations" : [
+         "log",
+         "lumber",
+         "timber",
+         "wood"
+      ],
+      "chars" : "🪵",
+      "codes" : [
+         "1FAB5"
+      ],
+      "name" : "Wood"
+   },
+   {
+      "annotations" : [
+         "house",
+         "hut",
+         "roundhouse",
+         "yurt"
+      ],
+      "chars" : "🛖",
+      "codes" : [
+         "1F6D6"
+      ],
+      "name" : "Hut"
+   },
+   {
+      "annotations" : [
          "houses"
       ],
       "chars" : "🏘",
@@ -10176,12 +11352,15 @@
       "name" : "Mosque"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "hindu",
+         "temple"
+      ],
       "chars" : "🛕",
       "codes" : [
          "1F6D5"
       ],
-      "name" : ""
+      "name" : "Hindu temple"
    },
    {
       "annotations" : [
@@ -10354,17 +11533,6 @@
          "2668"
       ],
       "name" : "Hot springs"
-   },
-   {
-      "annotations" : [
-         "milky way",
-         "space"
-      ],
-      "chars" : "🌌",
-      "codes" : [
-         "1F30C"
-      ],
-      "name" : "Milky way"
    },
    {
       "annotations" : [
@@ -10724,6 +11892,18 @@
    },
    {
       "annotations" : [
+         "pick-up",
+         "pickup",
+         "truck"
+      ],
+      "chars" : "🛻",
+      "codes" : [
+         "1F6FB"
+      ],
+      "name" : "Pickup truck"
+   },
+   {
+      "annotations" : [
          "delivery",
          "truck"
       ],
@@ -10791,28 +11971,37 @@
       "name" : "Motor scooter"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "manual wheelchair"
+      ],
       "chars" : "🦽",
       "codes" : [
          "1F9BD"
       ],
-      "name" : ""
+      "name" : "Manual wheelchair"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "motorized wheelchair"
+      ],
       "chars" : "🦼",
       "codes" : [
          "1F9BC"
       ],
-      "name" : ""
+      "name" : "Motorized wheelchair"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "auto rickshaw",
+         "tuk tuk"
+      ],
       "chars" : "🛺",
       "codes" : [
          "1F6FA"
       ],
-      "name" : ""
+      "name" : "Auto rickshaw"
    },
    {
       "annotations" : [
@@ -10846,6 +12035,17 @@
          "1F6F9"
       ],
       "name" : "Skateboard"
+   },
+   {
+      "annotations" : [
+         "roller",
+         "skate"
+      ],
+      "chars" : "🛼",
+      "codes" : [
+         "1F6FC"
+      ],
+      "name" : "Roller skate"
    },
    {
       "annotations" : [
@@ -11120,12 +12320,17 @@
       "name" : "Airplane arrival"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "hang-glide",
+         "parachute",
+         "parasail",
+         "skydive"
+      ],
       "chars" : "🪂",
       "codes" : [
          "1FA82"
       ],
-      "name" : ""
+      "name" : "Parachute"
    },
    {
       "annotations" : [
@@ -11879,12 +13084,16 @@
       "name" : "Sun with face"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "ringed planet",
+         "saturn",
+         "saturnine"
+      ],
       "chars" : "🪐",
       "codes" : [
          "1FA90"
       ],
-      "name" : ""
+      "name" : "Ringed planet"
    },
    {
       "annotations" : [
@@ -11922,6 +13131,17 @@
          "1F320"
       ],
       "name" : "Shooting star"
+   },
+   {
+      "annotations" : [
+         "milky way",
+         "space"
+      ],
+      "chars" : "🌌",
+      "codes" : [
+         "1F30C"
+      ],
+      "name" : "Milky way"
    },
    {
       "annotations" : [
@@ -12312,6 +13532,7 @@
    },
    {
       "annotations" : [
+         "*",
          "sparkle",
          "sparkles",
          "star"
@@ -12861,12 +14082,17 @@
       "name" : "Fishing pole"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "diving",
+         "diving mask",
+         "scuba",
+         "snorkeling"
+      ],
       "chars" : "🤿",
       "codes" : [
          "1F93F"
       ],
-      "name" : ""
+      "name" : "Diving mask"
    },
    {
       "annotations" : [
@@ -12933,20 +14159,28 @@
       "name" : "Direct hit"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "fluctuate",
+         "toy",
+         "yo-yo"
+      ],
       "chars" : "🪀",
       "codes" : [
          "1FA80"
       ],
-      "name" : ""
+      "name" : "Yo-yo"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "fly",
+         "kite",
+         "soar"
+      ],
       "chars" : "🪁",
       "codes" : [
          "1FA81"
       ],
-      "name" : ""
+      "name" : "Kite"
    },
    {
       "annotations" : [
@@ -12977,6 +14211,19 @@
          "1F52E"
       ],
       "name" : "Crystal ball"
+   },
+   {
+      "annotations" : [
+         "magic",
+         "magic wand",
+         "witch",
+         "wizard"
+      ],
+      "chars" : "🪄",
+      "codes" : [
+         "1FA84"
+      ],
+      "name" : "Magic wand"
    },
    {
       "annotations" : [
@@ -13053,7 +14300,7 @@
       "codes" : [
          "1F9E9"
       ],
-      "name" : "Jigsaw"
+      "name" : "Puzzle piece"
    },
    {
       "annotations" : [
@@ -13068,6 +14315,31 @@
          "1F9F8"
       ],
       "name" : "Teddy bear"
+   },
+   {
+      "annotations" : [
+         "celebration",
+         "party",
+         "piñata"
+      ],
+      "chars" : "🪅",
+      "codes" : [
+         "1FA85"
+      ],
+      "name" : "Piñata"
+   },
+   {
+      "annotations" : [
+         "doll",
+         "nesting",
+         "nesting dolls",
+         "russia"
+      ],
+      "chars" : "🪆",
+      "codes" : [
+         "1FA86"
+      ],
+      "name" : "Nesting dolls"
    },
    {
       "annotations" : [
@@ -13231,6 +14503,21 @@
    },
    {
       "annotations" : [
+         "embroidery",
+         "needle",
+         "sewing",
+         "stitches",
+         "sutures",
+         "tailoring"
+      ],
+      "chars" : "🪡",
+      "codes" : [
+         "1FAA1"
+      ],
+      "name" : "Sewing needle"
+   },
+   {
+      "annotations" : [
          "ball",
          "crochet",
          "knit",
@@ -13241,6 +14528,21 @@
          "1F9F6"
       ],
       "name" : "Yarn"
+   },
+   {
+      "annotations" : [
+         "knot",
+         "rope",
+         "tangled",
+         "tie",
+         "twine",
+         "twist"
+      ],
+      "chars" : "🪢",
+      "codes" : [
+         "1FAA2"
+      ],
+      "name" : "Knot"
    },
    {
       "annotations" : [
@@ -13297,12 +14599,16 @@
       "name" : "Lab coat"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "emergency",
+         "safety",
+         "vest"
+      ],
       "chars" : "🦺",
       "codes" : [
          "1F9BA"
       ],
-      "name" : ""
+      "name" : "Safety vest"
    },
    {
       "annotations" : [
@@ -13409,36 +14715,54 @@
       "name" : "Kimono"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "clothing",
+         "dress",
+         "sari"
+      ],
       "chars" : "🥻",
       "codes" : [
          "1F97B"
       ],
-      "name" : ""
+      "name" : "Sari"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bathing suit",
+         "one-piece swimsuit"
+      ],
       "chars" : "🩱",
       "codes" : [
          "1FA71"
       ],
-      "name" : ""
+      "name" : "One-piece swimsuit"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bathing suit",
+         "briefs",
+         "one-piece",
+         "swimsuit",
+         "underwear"
+      ],
       "chars" : "🩲",
       "codes" : [
          "1FA72"
       ],
-      "name" : ""
+      "name" : "Briefs"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bathing suit",
+         "pants",
+         "shorts",
+         "underwear"
+      ],
       "chars" : "🩳",
       "codes" : [
          "1FA73"
       ],
-      "name" : ""
+      "name" : "Shorts"
    },
    {
       "annotations" : [
@@ -13531,6 +14855,21 @@
    },
    {
       "annotations" : [
+         "beach sandals",
+         "sandals",
+         "thong sandal",
+         "thong sandals",
+         "thongs",
+         "zōri"
+      ],
+      "chars" : "🩴",
+      "codes" : [
+         "1FA74"
+      ],
+      "name" : "Thong sandal"
+   },
+   {
+      "annotations" : [
          "clothing",
          "man",
          "man’s shoe",
@@ -13611,12 +14950,16 @@
       "name" : "Woman’s sandal"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "ballet",
+         "ballet shoes",
+         "dance"
+      ],
       "chars" : "🩰",
       "codes" : [
          "1FA70"
       ],
-      "name" : ""
+      "name" : "Ballet shoes"
    },
    {
       "annotations" : [
@@ -13695,6 +15038,20 @@
          "1F9E2"
       ],
       "name" : "Billed cap"
+   },
+   {
+      "annotations" : [
+         "army",
+         "helmet",
+         "military",
+         "soldier",
+         "warrior"
+      ],
+      "chars" : "🪖",
+      "codes" : [
+         "1FA96"
+      ],
+      "name" : "Military helmet"
    },
    {
       "annotations" : [
@@ -13991,6 +15348,19 @@
    },
    {
       "annotations" : [
+         "accordian",
+         "accordion",
+         "concertina",
+         "squeeze box"
+      ],
+      "chars" : "🪗",
+      "codes" : [
+         "1FA97"
+      ],
+      "name" : "Accordion"
+   },
+   {
+      "annotations" : [
          "guitar",
          "instrument",
          "music"
@@ -14040,12 +15410,16 @@
       "name" : "Violin"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "banjo",
+         "music",
+         "stringed"
+      ],
       "chars" : "🪕",
       "codes" : [
          "1FA95"
       ],
-      "name" : ""
+      "name" : "Banjo"
    },
    {
       "annotations" : [
@@ -14058,6 +15432,20 @@
          "1F941"
       ],
       "name" : "Drum"
+   },
+   {
+      "annotations" : [
+         "beat",
+         "conga",
+         "drum",
+         "long drum",
+         "rhythm"
+      ],
+      "chars" : "🪘",
+      "codes" : [
+         "1FA98"
+      ],
+      "name" : "Long drum"
    },
    {
       "annotations" : [
@@ -14156,7 +15544,7 @@
    {
       "annotations" : [
          "computer",
-         "laptop computer",
+         "laptop",
          "pc",
          "personal"
       ],
@@ -14164,7 +15552,7 @@
       "codes" : [
          "1F4BB"
       ],
-      "name" : "Laptop computer"
+      "name" : "Laptop"
    },
    {
       "annotations" : [
@@ -14477,12 +15865,16 @@
       "name" : "Red paper lantern"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "diya",
+         "lamp",
+         "oil"
+      ],
       "chars" : "🪔",
       "codes" : [
          "1FA94"
       ],
-      "name" : ""
+      "name" : "Diya lamp"
    },
    {
       "annotations" : [
@@ -14696,6 +16088,21 @@
    },
    {
       "annotations" : [
+         "coin",
+         "gold",
+         "metal",
+         "money",
+         "silver",
+         "treasure"
+      ],
+      "chars" : "🪙",
+      "codes" : [
+         "1FA99"
+      ],
+      "name" : "Coin"
+   },
+   {
+      "annotations" : [
          "banknote",
          "bill",
          "currency",
@@ -14809,32 +16216,6 @@
          "1F4B9"
       ],
       "name" : "Chart increasing with yen"
-   },
-   {
-      "annotations" : [
-         "bank",
-         "currency",
-         "exchange",
-         "money"
-      ],
-      "chars" : "💱",
-      "codes" : [
-         "1F4B1"
-      ],
-      "name" : "Currency exchange"
-   },
-   {
-      "annotations" : [
-         "currency",
-         "dollar",
-         "heavy dollar sign",
-         "money"
-      ],
-      "chars" : "💲",
-      "codes" : [
-         "1F4B2"
-      ],
-      "name" : "Heavy dollar sign"
    },
    {
       "annotations" : [
@@ -15452,12 +16833,18 @@
       "name" : "Hammer"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "axe",
+         "chop",
+         "hatchet",
+         "split",
+         "wood"
+      ],
       "chars" : "🪓",
       "codes" : [
          "1FA93"
       ],
-      "name" : ""
+      "name" : "Axe"
    },
    {
       "annotations" : [
@@ -15539,6 +16926,19 @@
    },
    {
       "annotations" : [
+         "australia",
+         "boomerang",
+         "rebound",
+         "repercussion"
+      ],
+      "chars" : "🪃",
+      "codes" : [
+         "1FA83"
+      ],
+      "name" : "Boomerang"
+   },
+   {
+      "annotations" : [
          "archer",
          "arrow",
          "bow",
@@ -15565,6 +16965,20 @@
    },
    {
       "annotations" : [
+         "carpenter",
+         "carpentry saw",
+         "lumber",
+         "saw",
+         "tool"
+      ],
+      "chars" : "🪚",
+      "codes" : [
+         "1FA9A"
+      ],
+      "name" : "Carpentry saw"
+   },
+   {
+      "annotations" : [
          "spanner",
          "tool",
          "wrench"
@@ -15574,6 +16988,18 @@
          "1F527"
       ],
       "name" : "Wrench"
+   },
+   {
+      "annotations" : [
+         "screw",
+         "screwdriver",
+         "tool"
+      ],
+      "chars" : "🪛",
+      "codes" : [
+         "1FA9B"
+      ],
+      "name" : "Screwdriver"
    },
    {
       "annotations" : [
@@ -15629,12 +17055,16 @@
       "name" : "Balance scale"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "accessibility",
+         "blind",
+         "probing cane"
+      ],
       "chars" : "🦯",
       "codes" : [
          "1F9AF"
       ],
-      "name" : ""
+      "name" : "Probing cane"
    },
    {
       "annotations" : [
@@ -15656,6 +17086,21 @@
          "26D3"
       ],
       "name" : "Chains"
+   },
+   {
+      "annotations" : [
+         "catch",
+         "crook",
+         "curve",
+         "ensnare",
+         "hook",
+         "selling point"
+      ],
+      "chars" : "🪝",
+      "codes" : [
+         "1FA9D"
+      ],
+      "name" : "Hook"
    },
    {
       "annotations" : [
@@ -15682,6 +17127,19 @@
          "1F9F2"
       ],
       "name" : "Magnet"
+   },
+   {
+      "annotations" : [
+         "climb",
+         "ladder",
+         "rung",
+         "step"
+      ],
+      "chars" : "🪜",
+      "codes" : [
+         "1FA9C"
+      ],
+      "name" : "Ladder"
    },
    {
       "annotations" : [
@@ -15791,12 +17249,19 @@
       "name" : "Syringe"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bleed",
+         "blood donation",
+         "drop of blood",
+         "injury",
+         "medicine",
+         "menstruation"
+      ],
       "chars" : "🩸",
       "codes" : [
          "1FA78"
       ],
-      "name" : ""
+      "name" : "Drop of blood"
    },
    {
       "annotations" : [
@@ -15812,20 +17277,28 @@
       "name" : "Pill"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "adhesive bandage",
+         "bandage"
+      ],
       "chars" : "🩹",
       "codes" : [
          "1FA79"
       ],
-      "name" : ""
+      "name" : "Adhesive bandage"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "doctor",
+         "heart",
+         "medicine",
+         "stethoscope"
+      ],
       "chars" : "🩺",
       "codes" : [
          "1FA7A"
       ],
-      "name" : ""
+      "name" : "Stethoscope"
    },
    {
       "annotations" : [
@@ -15836,6 +17309,47 @@
          "1F6AA"
       ],
       "name" : "Door"
+   },
+   {
+      "annotations" : [
+         "accessibility",
+         "elevator",
+         "hoist",
+         "lift"
+      ],
+      "chars" : "🛗",
+      "codes" : [
+         "1F6D7"
+      ],
+      "name" : "Elevator"
+   },
+   {
+      "annotations" : [
+         "mirror",
+         "reflection",
+         "reflector",
+         "speculum"
+      ],
+      "chars" : "🪞",
+      "codes" : [
+         "1FA9E"
+      ],
+      "name" : "Mirror"
+   },
+   {
+      "annotations" : [
+         "frame",
+         "fresh air",
+         "opening",
+         "transparent",
+         "view",
+         "window"
+      ],
+      "chars" : "🪟",
+      "codes" : [
+         "1FA9F"
+      ],
+      "name" : "Window"
    },
    {
       "annotations" : [
@@ -15863,12 +17377,16 @@
       "name" : "Couch and lamp"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "chair",
+         "seat",
+         "sit"
+      ],
       "chars" : "🪑",
       "codes" : [
          "1FA91"
       ],
-      "name" : ""
+      "name" : "Chair"
    },
    {
       "annotations" : [
@@ -15879,6 +17397,20 @@
          "1F6BD"
       ],
       "name" : "Toilet"
+   },
+   {
+      "annotations" : [
+         "force cup",
+         "plumber",
+         "plunger",
+         "suction",
+         "toilet"
+      ],
+      "chars" : "🪠",
+      "codes" : [
+         "1FAA0"
+      ],
+      "name" : "Plunger"
    },
    {
       "annotations" : [
@@ -15903,12 +17435,30 @@
       "name" : "Bathtub"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "bait",
+         "mouse trap",
+         "mousetrap",
+         "snare",
+         "trap"
+      ],
+      "chars" : "🪤",
+      "codes" : [
+         "1FAA4"
+      ],
+      "name" : "Mouse trap"
+   },
+   {
+      "annotations" : [
+         "razor",
+         "sharp",
+         "shave"
+      ],
       "chars" : "🪒",
       "codes" : [
          "1FA92"
       ],
-      "name" : ""
+      "name" : "Razor"
    },
    {
       "annotations" : [
@@ -15976,6 +17526,19 @@
    },
    {
       "annotations" : [
+         "bucket",
+         "cask",
+         "pail",
+         "vat"
+      ],
+      "chars" : "🪣",
+      "codes" : [
+         "1FAA3"
+      ],
+      "name" : "Bucket"
+   },
+   {
+      "annotations" : [
          "bar",
          "bathing",
          "cleaning",
@@ -15988,6 +17551,22 @@
          "1F9FC"
       ],
       "name" : "Soap"
+   },
+   {
+      "annotations" : [
+         "bathroom",
+         "brush",
+         "clean",
+         "dental",
+         "hygiene",
+         "teeth",
+         "toothbrush"
+      ],
+      "chars" : "🪥",
+      "codes" : [
+         "1FAA5"
+      ],
+      "name" : "Toothbrush"
    },
    {
       "annotations" : [
@@ -16051,6 +17630,20 @@
    },
    {
       "annotations" : [
+         "cemetery",
+         "grave",
+         "graveyard",
+         "headstone",
+         "tombstone"
+      ],
+      "chars" : "🪦",
+      "codes" : [
+         "1FAA6"
+      ],
+      "name" : "Headstone"
+   },
+   {
+      "annotations" : [
          "ashes",
          "death",
          "funeral",
@@ -16074,6 +17667,20 @@
          "1F5FF"
       ],
       "name" : "Moai"
+   },
+   {
+      "annotations" : [
+         "demonstration",
+         "picket",
+         "placard",
+         "protest",
+         "sign"
+      ],
+      "chars" : "🪧",
+      "codes" : [
+         "1FAA7"
+      ],
+      "name" : "Placard"
    },
    {
       "annotations" : [
@@ -17338,16 +18945,69 @@
    },
    {
       "annotations" : [
-         "aesculapius",
-         "medical symbol",
-         "medicine",
-         "staff"
+         "transgender",
+         "transgender symbol"
       ],
-      "chars" : "⚕",
+      "chars" : "⚧",
       "codes" : [
-         "2695"
+         "26A7"
       ],
-      "name" : "Medical symbol"
+      "name" : "Transgender symbol"
+   },
+   {
+      "annotations" : [
+         "×",
+         "cancel",
+         "multiplication",
+         "multiply",
+         "sign",
+         "x"
+      ],
+      "chars" : "✖",
+      "codes" : [
+         "2716"
+      ],
+      "name" : "Multiplication sign"
+   },
+   {
+      "annotations" : [
+         "+",
+         "math",
+         "plus",
+         "sign"
+      ],
+      "chars" : "➕",
+      "codes" : [
+         "2795"
+      ],
+      "name" : "Plus sign"
+   },
+   {
+      "annotations" : [
+         "-",
+         "−",
+         "math",
+         "minus",
+         "sign"
+      ],
+      "chars" : "➖",
+      "codes" : [
+         "2796"
+      ],
+      "name" : "Minus sign"
+   },
+   {
+      "annotations" : [
+         "÷",
+         "division",
+         "math",
+         "sign"
+      ],
+      "chars" : "➗",
+      "codes" : [
+         "2797"
+      ],
+      "name" : "Division sign"
    },
    {
       "annotations" : [
@@ -17361,6 +19021,145 @@
          "267E"
       ],
       "name" : "Infinity"
+   },
+   {
+      "annotations" : [
+         "!",
+         "!!",
+         "bangbang",
+         "double exclamation mark",
+         "exclamation",
+         "mark"
+      ],
+      "chars" : "‼",
+      "codes" : [
+         "203C"
+      ],
+      "name" : "Double exclamation mark"
+   },
+   {
+      "annotations" : [
+         "!",
+         "!?",
+         "?",
+         "exclamation",
+         "interrobang",
+         "mark",
+         "punctuation",
+         "question"
+      ],
+      "chars" : "⁉",
+      "codes" : [
+         "2049"
+      ],
+      "name" : "Exclamation question mark"
+   },
+   {
+      "annotations" : [
+         "?",
+         "mark",
+         "punctuation",
+         "question"
+      ],
+      "chars" : "❓",
+      "codes" : [
+         "2753"
+      ],
+      "name" : "Question mark"
+   },
+   {
+      "annotations" : [
+         "?",
+         "mark",
+         "outlined",
+         "punctuation",
+         "question",
+         "white question mark"
+      ],
+      "chars" : "❔",
+      "codes" : [
+         "2754"
+      ],
+      "name" : "White question mark"
+   },
+   {
+      "annotations" : [
+         "!",
+         "exclamation",
+         "mark",
+         "outlined",
+         "punctuation",
+         "white exclamation mark"
+      ],
+      "chars" : "❕",
+      "codes" : [
+         "2755"
+      ],
+      "name" : "White exclamation mark"
+   },
+   {
+      "annotations" : [
+         "!",
+         "exclamation",
+         "mark",
+         "punctuation"
+      ],
+      "chars" : "❗",
+      "codes" : [
+         "2757"
+      ],
+      "name" : "Exclamation mark"
+   },
+   {
+      "annotations" : [
+         "dash",
+         "punctuation",
+         "wavy"
+      ],
+      "chars" : "〰",
+      "codes" : [
+         "3030"
+      ],
+      "name" : "Wavy dash"
+   },
+   {
+      "annotations" : [
+         "bank",
+         "currency",
+         "exchange",
+         "money"
+      ],
+      "chars" : "💱",
+      "codes" : [
+         "1F4B1"
+      ],
+      "name" : "Currency exchange"
+   },
+   {
+      "annotations" : [
+         "currency",
+         "dollar",
+         "heavy dollar sign",
+         "money"
+      ],
+      "chars" : "💲",
+      "codes" : [
+         "1F4B2"
+      ],
+      "name" : "Heavy dollar sign"
+   },
+   {
+      "annotations" : [
+         "aesculapius",
+         "medical symbol",
+         "medicine",
+         "staff"
+      ],
+      "chars" : "⚕",
+      "codes" : [
+         "2695"
+      ],
+      "name" : "Medical symbol"
    },
    {
       "annotations" : [
@@ -17425,70 +19224,60 @@
    {
       "annotations" : [
          "circle",
-         "heavy large circle",
-         "o"
+         "hollow red circle",
+         "large",
+         "o",
+         "red"
       ],
       "chars" : "⭕",
       "codes" : [
          "2B55"
       ],
-      "name" : "Heavy large circle"
+      "name" : "Hollow red circle"
    },
    {
       "annotations" : [
+         "✓",
+         "button",
          "check",
-         "mark",
-         "white heavy check mark"
+         "mark"
       ],
       "chars" : "✅",
       "codes" : [
          "2705"
       ],
-      "name" : "White heavy check mark"
+      "name" : "Check mark button"
    },
    {
       "annotations" : [
-         "ballot",
-         "ballot box with check",
+         "✓",
          "box",
-         "check"
+         "check",
+         "check box with check"
       ],
       "chars" : "☑",
       "codes" : [
          "2611"
       ],
-      "name" : "Ballot box with check"
+      "name" : "Check box with check"
    },
    {
       "annotations" : [
+         "✓",
          "check",
-         "heavy check mark",
          "mark"
       ],
       "chars" : "✔",
       "codes" : [
          "2714"
       ],
-      "name" : "Heavy check mark"
+      "name" : "Check mark"
    },
    {
       "annotations" : [
+         "×",
          "cancel",
-         "heavy multiplication x",
-         "multiplication",
-         "multiply",
-         "x"
-      ],
-      "chars" : "✖",
-      "codes" : [
-         "2716"
-      ],
-      "name" : "Heavy multiplication x"
-   },
-   {
-      "annotations" : [
-         "cancel",
-         "cross mark",
+         "cross",
          "mark",
          "multiplication",
          "multiply",
@@ -17502,51 +19291,17 @@
    },
    {
       "annotations" : [
+         "×",
          "cross mark button",
          "mark",
-         "square"
+         "square",
+         "x"
       ],
       "chars" : "❎",
       "codes" : [
          "274E"
       ],
       "name" : "Cross mark button"
-   },
-   {
-      "annotations" : [
-         "heavy plus sign",
-         "math",
-         "plus"
-      ],
-      "chars" : "➕",
-      "codes" : [
-         "2795"
-      ],
-      "name" : "Heavy plus sign"
-   },
-   {
-      "annotations" : [
-         "heavy minus sign",
-         "math",
-         "minus"
-      ],
-      "chars" : "➖",
-      "codes" : [
-         "2796"
-      ],
-      "name" : "Heavy minus sign"
-   },
-   {
-      "annotations" : [
-         "division",
-         "heavy division sign",
-         "math"
-      ],
-      "chars" : "➗",
-      "codes" : [
-         "2797"
-      ],
-      "name" : "Heavy division sign"
    },
    {
       "annotations" : [
@@ -17587,6 +19342,7 @@
    },
    {
       "annotations" : [
+         "*",
          "asterisk",
          "eight-spoked asterisk"
       ],
@@ -17598,6 +19354,7 @@
    },
    {
       "annotations" : [
+         "*",
          "eight-pointed star",
          "star"
       ],
@@ -17609,6 +19366,7 @@
    },
    {
       "annotations" : [
+         "*",
          "sparkle"
       ],
       "chars" : "❇",
@@ -17619,98 +19377,7 @@
    },
    {
       "annotations" : [
-         "bangbang",
-         "double exclamation mark",
-         "exclamation",
-         "mark",
-         "punctuation"
-      ],
-      "chars" : "‼",
-      "codes" : [
-         "203C"
-      ],
-      "name" : "Double exclamation mark"
-   },
-   {
-      "annotations" : [
-         "exclamation",
-         "interrobang",
-         "mark",
-         "punctuation",
-         "question"
-      ],
-      "chars" : "⁉",
-      "codes" : [
-         "2049"
-      ],
-      "name" : "Exclamation question mark"
-   },
-   {
-      "annotations" : [
-         "mark",
-         "punctuation",
-         "question"
-      ],
-      "chars" : "❓",
-      "codes" : [
-         "2753"
-      ],
-      "name" : "Question mark"
-   },
-   {
-      "annotations" : [
-         "mark",
-         "outlined",
-         "punctuation",
-         "question",
-         "white question mark"
-      ],
-      "chars" : "❔",
-      "codes" : [
-         "2754"
-      ],
-      "name" : "White question mark"
-   },
-   {
-      "annotations" : [
-         "exclamation",
-         "mark",
-         "outlined",
-         "punctuation",
-         "white exclamation mark"
-      ],
-      "chars" : "❕",
-      "codes" : [
-         "2755"
-      ],
-      "name" : "White exclamation mark"
-   },
-   {
-      "annotations" : [
-         "exclamation",
-         "mark",
-         "punctuation"
-      ],
-      "chars" : "❗",
-      "codes" : [
-         "2757"
-      ],
-      "name" : "Exclamation mark"
-   },
-   {
-      "annotations" : [
-         "dash",
-         "punctuation",
-         "wavy"
-      ],
-      "chars" : "〰",
-      "codes" : [
-         "3030"
-      ],
-      "name" : "Wavy dash"
-   },
-   {
-      "annotations" : [
+         "c",
          "copyright"
       ],
       "chars" : "©",
@@ -17721,6 +19388,7 @@
    },
    {
       "annotations" : [
+         "r",
          "registered"
       ],
       "chars" : "®",
@@ -18383,28 +20051,37 @@
       "name" : "Red circle"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "circle",
+         "orange"
+      ],
       "chars" : "🟠",
       "codes" : [
          "1F7E0"
       ],
-      "name" : ""
+      "name" : "Orange circle"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "circle",
+         "yellow"
+      ],
       "chars" : "🟡",
       "codes" : [
          "1F7E1"
       ],
-      "name" : ""
+      "name" : "Yellow circle"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "circle",
+         "green"
+      ],
       "chars" : "🟢",
       "codes" : [
          "1F7E2"
       ],
-      "name" : ""
+      "name" : "Green circle"
    },
    {
       "annotations" : [
@@ -18419,80 +20096,26 @@
       "name" : "Blue circle"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "circle",
+         "purple"
+      ],
       "chars" : "🟣",
       "codes" : [
          "1F7E3"
       ],
-      "name" : ""
+      "name" : "Purple circle"
    },
    {
       "annotations" : [
-         "circle",
-         "geometric",
-         "white circle"
+         "brown",
+         "circle"
       ],
-      "chars" : "⚪",
-      "codes" : [
-         "26AA"
-      ],
-      "name" : "White circle"
-   },
-   {
-      "annotations" : [],
       "chars" : "🟤",
       "codes" : [
          "1F7E4"
       ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🟥",
-      "codes" : [
-         "1F7E5"
-      ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🟧",
-      "codes" : [
-         "1F7E7"
-      ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🟨",
-      "codes" : [
-         "1F7E8"
-      ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🟩",
-      "codes" : [
-         "1F7E9"
-      ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🟦",
-      "codes" : [
-         "1F7E6"
-      ],
-      "name" : ""
-   },
-   {
-      "annotations" : [],
-      "chars" : "🟪",
-      "codes" : [
-         "1F7EA"
-      ],
-      "name" : ""
+      "name" : "Brown circle"
    },
    {
       "annotations" : [
@@ -18508,23 +20131,92 @@
    },
    {
       "annotations" : [
+         "circle",
          "geometric",
-         "square",
-         "white large square"
+         "white circle"
       ],
-      "chars" : "⬜",
+      "chars" : "⚪",
       "codes" : [
-         "2B1C"
+         "26AA"
       ],
-      "name" : "White large square"
+      "name" : "White circle"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "red",
+         "square"
+      ],
+      "chars" : "🟥",
+      "codes" : [
+         "1F7E5"
+      ],
+      "name" : "Red square"
+   },
+   {
+      "annotations" : [
+         "orange",
+         "square"
+      ],
+      "chars" : "🟧",
+      "codes" : [
+         "1F7E7"
+      ],
+      "name" : "Orange square"
+   },
+   {
+      "annotations" : [
+         "square",
+         "yellow"
+      ],
+      "chars" : "🟨",
+      "codes" : [
+         "1F7E8"
+      ],
+      "name" : "Yellow square"
+   },
+   {
+      "annotations" : [
+         "green",
+         "square"
+      ],
+      "chars" : "🟩",
+      "codes" : [
+         "1F7E9"
+      ],
+      "name" : "Green square"
+   },
+   {
+      "annotations" : [
+         "blue",
+         "square"
+      ],
+      "chars" : "🟦",
+      "codes" : [
+         "1F7E6"
+      ],
+      "name" : "Blue square"
+   },
+   {
+      "annotations" : [
+         "purple",
+         "square"
+      ],
+      "chars" : "🟪",
+      "codes" : [
+         "1F7EA"
+      ],
+      "name" : "Purple square"
+   },
+   {
+      "annotations" : [
+         "brown",
+         "square"
+      ],
       "chars" : "🟫",
       "codes" : [
          "1F7EB"
       ],
-      "name" : ""
+      "name" : "Brown square"
    },
    {
       "annotations" : [
@@ -18537,6 +20229,18 @@
          "2B1B"
       ],
       "name" : "Black large square"
+   },
+   {
+      "annotations" : [
+         "geometric",
+         "square",
+         "white large square"
+      ],
+      "chars" : "⬜",
+      "codes" : [
+         "2B1C"
+      ],
+      "name" : "White large square"
    },
    {
       "annotations" : [
@@ -18564,18 +20268,6 @@
    },
    {
       "annotations" : [
-         "geometric",
-         "square",
-         "white medium-small square"
-      ],
-      "chars" : "◽",
-      "codes" : [
-         "25FD"
-      ],
-      "name" : "White medium-small square"
-   },
-   {
-      "annotations" : [
          "black medium-small square",
          "geometric",
          "square"
@@ -18590,13 +20282,13 @@
       "annotations" : [
          "geometric",
          "square",
-         "white small square"
+         "white medium-small square"
       ],
-      "chars" : "▫",
+      "chars" : "◽",
       "codes" : [
-         "25AB"
+         "25FD"
       ],
-      "name" : "White small square"
+      "name" : "White medium-small square"
    },
    {
       "annotations" : [
@@ -18609,6 +20301,18 @@
          "25AA"
       ],
       "name" : "Black small square"
+   },
+   {
+      "annotations" : [
+         "geometric",
+         "square",
+         "white small square"
+      ],
+      "chars" : "▫",
+      "codes" : [
+         "25AB"
+      ],
+      "name" : "White small square"
    },
    {
       "annotations" : [
@@ -18715,19 +20419,6 @@
    },
    {
       "annotations" : [
-         "black square button",
-         "button",
-         "geometric",
-         "square"
-      ],
-      "chars" : "🔲",
-      "codes" : [
-         "1F532"
-      ],
-      "name" : "Black square button"
-   },
-   {
-      "annotations" : [
          "button",
          "geometric",
          "outlined",
@@ -18739,6 +20430,19 @@
          "1F533"
       ],
       "name" : "White square button"
+   },
+   {
+      "annotations" : [
+         "black square button",
+         "button",
+         "geometric",
+         "square"
+      ],
+      "chars" : "🔲",
+      "codes" : [
+         "1F532"
+      ],
+      "name" : "Black square button"
    },
    {
       "annotations" : [
@@ -18815,6 +20519,23 @@
          "1F308"
       ],
       "name" : "White flag rainbow"
+   },
+   {
+      "annotations" : [
+         "waving",
+         "white flag",
+         "transgender",
+         "transgender symbol"
+      ],
+      "chars" : "🏳️‍⚧️",
+      "codes" : [
+         "1F3F3",
+         "FE0F",
+         "200D",
+         "26A7",
+         "FE0F"
+      ],
+      "name" : "White flag transgender symbol"
    },
    {
       "annotations" : [
