@@ -4617,15 +4617,15 @@
          "cap",
          "gua pi mao",
          "hat",
-         "man",
-         "man with skullcap",
+         "person",
+         "person with skullcap",
          "skullcap"
       ],
       "chars" : "👲",
       "codes" : [
          "1F472"
       ],
-      "name" : "Man with skullcap"
+      "name" : "Person with skullcap"
    },
    {
       "annotations" : [
@@ -4644,21 +4644,21 @@
    {
       "annotations" : [
          "groom",
-         "man",
-         "man in tuxedo",
+         "person",
+         "person in tuxedo",
          "tuxedo"
       ],
       "chars" : "🤵",
       "codes" : [
          "1F935"
       ],
-      "name" : "Man in tuxedo"
+      "name" : "Person in tuxedo"
    },
    {
       "annotations" : [
          "groom",
-         "man",
-         "man in tuxedo",
+         "person",
+         "person in tuxedo",
          "tuxedo",
          "male sign",
          "man"
@@ -4670,13 +4670,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Man in tuxedo male sign"
+      "name" : "Person in tuxedo male sign"
    },
    {
       "annotations" : [
          "groom",
-         "man",
-         "man in tuxedo",
+         "person",
+         "person in tuxedo",
          "tuxedo",
          "female sign",
          "woman"
@@ -4688,12 +4688,13 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Man in tuxedo female sign"
+      "name" : "Person in tuxedo female sign"
    },
    {
       "annotations" : [
          "bride",
-         "bride with veil",
+         "person",
+         "person with veil",
          "veil",
          "wedding"
       ],
@@ -4701,12 +4702,13 @@
       "codes" : [
          "1F470"
       ],
-      "name" : "Bride with veil"
+      "name" : "Person with veil"
    },
    {
       "annotations" : [
          "bride",
-         "bride with veil",
+         "person",
+         "person with veil",
          "veil",
          "wedding",
          "male sign",
@@ -4719,12 +4721,13 @@
          "2642",
          "FE0F"
       ],
-      "name" : "Bride with veil male sign"
+      "name" : "Person with veil male sign"
    },
    {
       "annotations" : [
          "bride",
-         "bride with veil",
+         "person",
+         "person with veil",
          "veil",
          "wedding",
          "female sign",
@@ -4737,7 +4740,7 @@
          "2640",
          "FE0F"
       ],
-      "name" : "Bride with veil female sign"
+      "name" : "Person with veil female sign"
    },
    {
       "annotations" : [
@@ -5560,7 +5563,7 @@
          "unspecified gender",
          "accessibility",
          "blind",
-         "probing cane"
+         "white cane"
       ],
       "chars" : "🧑‍🦯",
       "codes" : [
@@ -5568,7 +5571,7 @@
          "200D",
          "1F9AF"
       ],
-      "name" : "Person probing cane"
+      "name" : "Person white cane"
    },
    {
       "annotations" : [
@@ -5576,7 +5579,7 @@
          "man",
          "accessibility",
          "blind",
-         "probing cane"
+         "white cane"
       ],
       "chars" : "👨‍🦯",
       "codes" : [
@@ -5584,7 +5587,7 @@
          "200D",
          "1F9AF"
       ],
-      "name" : "Man probing cane"
+      "name" : "Man white cane"
    },
    {
       "annotations" : [
@@ -5592,7 +5595,7 @@
          "woman",
          "accessibility",
          "blind",
-         "probing cane"
+         "white cane"
       ],
       "chars" : "👩‍🦯",
       "codes" : [
@@ -5600,7 +5603,7 @@
          "200D",
          "1F9AF"
       ],
-      "name" : "Woman probing cane"
+      "name" : "Woman white cane"
    },
    {
       "annotations" : [
@@ -5768,15 +5771,15 @@
    {
       "annotations" : [
          "business",
-         "man",
-         "man in suit levitating",
+         "person",
+         "person in suit levitating",
          "suit"
       ],
       "chars" : "🕴",
       "codes" : [
          "1F574"
       ],
-      "name" : "Man in suit levitating"
+      "name" : "Person in suit levitating"
    },
    {
       "annotations" : [
@@ -17058,13 +17061,13 @@
       "annotations" : [
          "accessibility",
          "blind",
-         "probing cane"
+         "white cane"
       ],
       "chars" : "🦯",
       "codes" : [
          "1F9AF"
       ],
-      "name" : "Probing cane"
+      "name" : "White cane"
    },
    {
       "annotations" : [
@@ -18967,7 +18970,7 @@
       "codes" : [
          "2716"
       ],
-      "name" : "Multiplication sign"
+      "name" : "Multiply"
    },
    {
       "annotations" : [
@@ -18980,7 +18983,7 @@
       "codes" : [
          "2795"
       ],
-      "name" : "Plus sign"
+      "name" : "Plus"
    },
    {
       "annotations" : [
@@ -18994,11 +18997,12 @@
       "codes" : [
          "2796"
       ],
-      "name" : "Minus sign"
+      "name" : "Minus"
    },
    {
       "annotations" : [
          "÷",
+         "divide",
          "division",
          "math",
          "sign"
@@ -19007,7 +19011,7 @@
       "codes" : [
          "2797"
       ],
-      "name" : "Division sign"
+      "name" : "Divide"
    },
    {
       "annotations" : [
