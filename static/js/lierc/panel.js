@@ -376,7 +376,7 @@ var Panel = function(opts) {
     if (emojis.length != 1)
       return;
     var e = emojis[0];
-    if (e.innerText != message.innerText)
+    if (e.innerText.trim() != message.innerText.trim())
       return;
     panel.scroll(function() {
       var wrap = document.createElement('DIV');
@@ -384,6 +384,7 @@ var Panel = function(opts) {
       e.parentNode.removeChild(e);
       e.className = "emoji-large";
       wrap.appendChild(e);
+      message.innerHTML = '';
       message.appendChild(wrap);
     });
   };
