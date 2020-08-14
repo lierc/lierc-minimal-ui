@@ -9,6 +9,7 @@ var Logs = function(url) {
   logs.submit = document.getElementById("submit");
   logs.results = document.getElementById("results");
   logs.text = document.getElementById("text");
+  logs.sender = document.getElementById("sender");
   logs.connection = document.getElementById("connection");
   logs.channel = document.getElementById("channel");
   logs.from = document.getElementById("from");
@@ -84,6 +85,7 @@ var Logs = function(url) {
         logs.from.value = date;
         logs.to.value = date;
         logs.text.value = '';
+        logs.sender.value = '';
         logs.highlight = id;
         logs.submit.click();
       }
@@ -207,6 +209,9 @@ var Logs = function(url) {
       var data = {};
       if (logs.text.value != "") {
         data['text'] = logs.text.value;
+      }
+      if (logs.sender.value != "") {
+        data['sender'] = logs.sender.value;
       }
 
       var path = "/connection/" + conn + "/channel/" + chan + "/date/" + from + "/" + to;
