@@ -40,7 +40,7 @@ var App = function(url, user) {
     title: document.getElementsByTagName('title')[0],
     nicks: document.getElementById('nicks'),
     body: document.body,
-    audio: new Audio("/static/ent_communicator1.mp3"),
+    audio: Audio ? new Audio("/static/ent_communicator1.mp3") : undef,
     emoji: document.getElementById('emoji'),
     switcher: document.getElementById('switcher-wrap'),
     panel_name: document.getElementById('panel-name'),
@@ -92,7 +92,7 @@ var App = function(url, user) {
 
       var unfocused = !app.is_focused(panel);
       if (from && (unfocused || !panel.is_scrolled())) {
-        app.elem.audio.play();
+        app.play_alert()
       }
       if (message.Highlight && unfocused) {
         app.update_highlights(true);
@@ -121,7 +121,7 @@ var App = function(url, user) {
 
         if (message.Highlight) {
           if (!app.is_focused(panel) || !panel.is_scrolled()) {
-            app.elem.audio.play();
+            app.play_alert();
           }
           if (app.focused && app.focused.id != panel.id) {
             app.update_highlights(true);
@@ -1369,6 +1369,11 @@ var App = function(url, user) {
   });
 
   app.events = new UIEvents(app);
+  app.play_alert = function() {
+    if (app.elem.audio) {
+      app.elem.audio.play();
+    }
+  }
 };
 
 App.detect_mobile = function () {
