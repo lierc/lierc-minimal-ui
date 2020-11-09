@@ -813,6 +813,7 @@ var Panel = function(opts) {
         if (link.href.match(/#(nsfw|hide)/)) continue;
         var audio = document.createElement('AUDIO');
         audio.controls = "controls";
+        audio.preload = "metadata";
 
         audio.addEventListener('loadeddata', (function(audio, link) {
           return function(e) {
