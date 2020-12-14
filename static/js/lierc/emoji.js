@@ -52,20 +52,11 @@ Emoji.load = function() {
 
       Emoji.names[ res[i]['chars'] ] = res[i]['name'];
 
-      var surrogate = "";
+      var code = "";
       for (var j=0; j < res[i]['codes'].length; j++) {
-        // https://mathiasbynens.be/notes/javascript-encoding
-        var C = parseInt(res[i]['codes'][j], 16);
-        if (C > 0xFFFF) {
-          var H = Math.floor((C - 0x10000) / 0x400) + 0xD800;
-          var L = (C - 0x10000) % 0x400 + 0xDC00;
-          surrogate += "\\u" + H.toString(16) + "\\u" + L.toString(16);
-        }
-        else {
-          surrogate += "\\u" + C.toString(16);
-        }
+        code += "\\u{" + res[i]['codes'][j] + "}";
       }
-      codepoints.push(surrogate);
+      codepoints.push(code);
     }
     var sorted = codepoints.sort(function(a, b) {
       if (a.length > b.length)
@@ -76,7 +67,7 @@ Emoji.load = function() {
         return 1;
     });
 
-    Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "g");
+    Emoji.regex = new RegExp("(" + sorted.join("|") + ")", "ug");
 
     function append_chunk () {
       var chunk = data.splice(0, 50);
