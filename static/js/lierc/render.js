@@ -121,7 +121,7 @@ var Render = function(message, opts) {
       text = "";
 
     var from = make_nick(message, name);
-    var color = string_to_color(message.Prefix.User || nick);
+    var color = string_to_color(message.Prefix.User.replace("~", "") || nick);
     var wrap = make_text();
     wrap.setAttribute('class', 'message-text');
     from.style.color = color;
