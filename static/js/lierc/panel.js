@@ -737,7 +737,7 @@ var Panel = function(opts) {
     }
   };
 
-  panel.vid_re = /^http[^\s]*\.(?:gifv|mp4|mov)[^\/]*$/i;
+  panel.vid_re = /^http[^\s]*\.(?:gifv|mp4|mov|webm)[^\/]*$/i;
   panel.vidify = function(elem) {
     var links = elem.querySelectorAll("a[href]:not(.processed)");
     var message = elem.querySelector('.message-text');
