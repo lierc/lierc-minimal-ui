@@ -314,7 +314,7 @@ var Connection = function(id, host, nick) {
       var priv = conn.chantypes.indexOf(name[0]) == -1;
       var type = "msg";
 
-      if (String(message.Command) == "TAGMSG")
+      if (message.Command == "TAGMSG")
         type = "react";
 
       var channel = conn.channel(name);
