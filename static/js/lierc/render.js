@@ -328,8 +328,10 @@ var Render = function(message, opts) {
     if (message.Search)
       li.classList.add("search")
 
+    if (message.Id)
+      li.setAttribute('data-message-id', message.Id);
     if (message.Tags && message.Tags["msgid"])
-      li.setAttribute('data-message-id', message.Tags["msgid"]);
+      li.setAttribute('data-message-server-id', message.Tags["msgid"]);
     if (message.Time)
       li.setAttribute('data-time', message.Time);
     return li;

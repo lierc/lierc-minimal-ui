@@ -860,7 +860,7 @@ var Panel = function(opts) {
 
   panel.react_backlog_check = function() {
     panel.reactions.forEach(function(reaction, i) {
-      var li = panel.elem.list.querySelector('li[data-message-id="'+reaction[1]+'"]');
+      var li = panel.elem.list.querySelector('li[data-message-server-id="'+reaction[1]+'"]');
       if (li) {
         panel.handle_reaction(reaction);
         panel.reactions.slice(i, 1);
@@ -881,7 +881,7 @@ var Panel = function(opts) {
       return;
     }
 
-    var li = panel.elem.list.querySelector('li[data-message-id="' + id + '"] .message-text');
+    var li = panel.elem.list.querySelector('li[data-message-server-id="' + id + '"] .message-text');
 
     if (li) {
       panel.scroll(function() {

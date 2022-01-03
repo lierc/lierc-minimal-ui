@@ -961,7 +961,7 @@ var UIEvents = function(app) {
       while (message && !message.matches("li.message")) {
         message = message.parentNode;
       }
-      var id = message.getAttribute('data-message-id');
+      var id = message.getAttribute('data-message-server-id');
       var panel = app.focused;
 
       react.classList.remove('open');
