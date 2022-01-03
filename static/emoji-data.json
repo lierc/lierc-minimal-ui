@@ -89,8 +89,10 @@
          "face",
          "floor",
          "laugh",
+         "rofl",
          "rolling",
-         "rolling on the floor laughing"
+         "rolling on the floor laughing",
+         "rotfl"
       ],
       "chars" : "🤣",
       "codes" : [
@@ -134,6 +136,20 @@
          "1F643"
       ],
       "name" : "Upside-down face"
+   },
+   {
+      "annotations" : [
+         "disappear",
+         "dissolve",
+         "liquid",
+         "melt",
+         "melting face"
+      ],
+      "chars" : "🫠",
+      "codes" : [
+         "1FAE0"
+      ],
+      "name" : "Melting face"
    },
    {
       "annotations" : [
@@ -388,13 +404,16 @@
       "annotations" : [
          "face",
          "hug",
-         "hugging"
+         "hugging",
+         "open hands",
+         "smiling face",
+         "smiling face with open hands"
       ],
       "chars" : "🤗",
       "codes" : [
          "1F917"
       ],
-      "name" : "Hugging face"
+      "name" : "Smiling face with open hands"
    },
    {
       "annotations" : [
@@ -406,6 +425,35 @@
          "1F92D"
       ],
       "name" : "Face with hand over mouth"
+   },
+   {
+      "annotations" : [
+         "amazement",
+         "awe",
+         "disbelief",
+         "embarrass",
+         "face with open eyes and hand over mouth",
+         "scared",
+         "surprise"
+      ],
+      "chars" : "🫢",
+      "codes" : [
+         "1FAE2"
+      ],
+      "name" : "Face with open eyes and hand over mouth"
+   },
+   {
+      "annotations" : [
+         "captivated",
+         "face with peeking eye",
+         "peep",
+         "stare"
+      ],
+      "chars" : "🫣",
+      "codes" : [
+         "1FAE3"
+      ],
+      "name" : "Face with peeking eye"
    },
    {
       "annotations" : [
@@ -429,6 +477,21 @@
          "1F914"
       ],
       "name" : "Thinking face"
+   },
+   {
+      "annotations" : [
+         "OK",
+         "salute",
+         "saluting face",
+         "sunny",
+         "troops",
+         "yes"
+      ],
+      "chars" : "🫡",
+      "codes" : [
+         "1FAE1"
+      ],
+      "name" : "Saluting face"
    },
    {
       "annotations" : [
@@ -498,6 +561,40 @@
    },
    {
       "annotations" : [
+         "depressed",
+         "disappear",
+         "dotted line face",
+         "hide",
+         "introvert",
+         "invisible"
+      ],
+      "chars" : "🫥",
+      "codes" : [
+         "1FAE5"
+      ],
+      "name" : "Dotted line face"
+   },
+   {
+      "annotations" : [
+         "face",
+         "face without mouth",
+         "mouth",
+         "quiet",
+         "silent",
+         "cloud",
+         "fog"
+      ],
+      "chars" : "😶‍🌫️",
+      "codes" : [
+         "1F636",
+         "200D",
+         "1F32B",
+         "FE0F"
+      ],
+      "name" : "Face without mouth fog"
+   },
+   {
+      "annotations" : [
          "face",
          "smirk",
          "smirking face"
@@ -549,6 +646,26 @@
    {
       "annotations" : [
          "face",
+         "face with open mouth",
+         "mouth",
+         "open",
+         "sympathy",
+         "comic",
+         "dash",
+         "dashing away",
+         "running"
+      ],
+      "chars" : "😮‍💨",
+      "codes" : [
+         "1F62E",
+         "200D",
+         "1F4A8"
+      ],
+      "name" : "Face with open mouth dashing away"
+   },
+   {
+      "annotations" : [
+         "face",
          "lie",
          "lying face",
          "pinocchio"
@@ -585,6 +702,7 @@
    {
       "annotations" : [
          "face",
+         "good night",
          "sleep",
          "sleepy face"
       ],
@@ -608,9 +726,10 @@
    {
       "annotations" : [
          "face",
+         "good night",
          "sleep",
          "sleeping face",
-         "zzz"
+         "ZZZ"
       ],
       "chars" : "😴",
       "codes" : [
@@ -676,6 +795,7 @@
    {
       "annotations" : [
          "face vomiting",
+         "puke",
          "sick",
          "vomit"
       ],
@@ -745,14 +865,36 @@
    },
    {
       "annotations" : [
-         "dizzy",
-         "face"
+         "crossed-out eyes",
+         "dead",
+         "face",
+         "face with crossed-out eyes",
+         "knocked out"
       ],
       "chars" : "😵",
       "codes" : [
          "1F635"
       ],
-      "name" : "Dizzy face"
+      "name" : "Face with crossed-out eyes"
+   },
+   {
+      "annotations" : [
+         "crossed-out eyes",
+         "dead",
+         "face",
+         "face with crossed-out eyes",
+         "knocked out",
+         "comic",
+         "dizzy",
+         "star"
+      ],
+      "chars" : "😵‍💫",
+      "codes" : [
+         "1F635",
+         "200D",
+         "1F4AB"
+      ],
+      "name" : "Face with crossed-out eyes dizzy"
    },
    {
       "annotations" : [
@@ -837,7 +979,9 @@
    },
    {
       "annotations" : [
+         "face",
          "face with monocle",
+         "monocle",
          "stuffy"
       ],
       "chars" : "🧐",
@@ -857,6 +1001,20 @@
          "1F615"
       ],
       "name" : "Confused face"
+   },
+   {
+      "annotations" : [
+         "disappointed",
+         "face with diagonal mouth",
+         "meh",
+         "skeptical",
+         "unsure"
+      ],
+      "chars" : "🫤",
+      "codes" : [
+         "1FAE4"
+      ],
+      "name" : "Face with diagonal mouth"
    },
    {
       "annotations" : [
@@ -957,6 +1115,21 @@
          "1F97A"
       ],
       "name" : "Pleading face"
+   },
+   {
+      "annotations" : [
+         "angry",
+         "cry",
+         "face holding back tears",
+         "proud",
+         "resist",
+         "sad"
+      ],
+      "chars" : "🥹",
+      "codes" : [
+         "1F979"
+      ],
+      "name" : "Face holding back tears"
    },
    {
       "annotations" : [
@@ -1168,6 +1341,7 @@
    {
       "annotations" : [
          "angry",
+         "enraged",
          "face",
          "mad",
          "pouting",
@@ -1178,10 +1352,11 @@
       "codes" : [
          "1F621"
       ],
-      "name" : "Pouting face"
+      "name" : "Enraged face"
    },
    {
       "annotations" : [
+         "anger",
          "angry",
          "face",
          "mad"
@@ -1699,6 +1874,39 @@
    {
       "annotations" : [
          "heart",
+         "red heart",
+         "fire",
+         "flame",
+         "tool"
+      ],
+      "chars" : "❤️‍🔥",
+      "codes" : [
+         "2764",
+         "FE0F",
+         "200D",
+         "1F525"
+      ],
+      "name" : "Red heart fire"
+   },
+   {
+      "annotations" : [
+         "heart",
+         "red heart",
+         "adhesive bandage",
+         "bandage"
+      ],
+      "chars" : "❤️‍🩹",
+      "codes" : [
+         "2764",
+         "FE0F",
+         "200D",
+         "1FA79"
+      ],
+      "name" : "Red heart adhesive bandage"
+   },
+   {
+      "annotations" : [
+         "heart",
          "red heart"
       ],
       "chars" : "❤",
@@ -1913,6 +2121,8 @@
       "annotations" : [
          "body",
          "eye",
+         "balloon",
+         "bubble",
          "dialog",
          "left speech bubble",
          "speech"
@@ -1929,6 +2139,8 @@
    },
    {
       "annotations" : [
+         "balloon",
+         "bubble",
          "dialog",
          "left speech bubble",
          "speech"
@@ -1969,14 +2181,15 @@
    {
       "annotations" : [
          "comic",
+         "good night",
          "sleep",
-         "zzz"
+         "ZZZ"
       ],
       "chars" : "💤",
       "codes" : [
          "1F4A4"
       ],
-      "name" : "Zzz"
+      "name" : "ZZZ"
    },
    {
       "annotations" : [
@@ -2018,6 +2231,8 @@
    {
       "annotations" : [
          "hand",
+         "high 5",
+         "high five",
          "raised hand"
       ],
       "chars" : "✋",
@@ -2039,6 +2254,59 @@
          "1F596"
       ],
       "name" : "Vulcan salute"
+   },
+   {
+      "annotations" : [
+         "hand",
+         "right",
+         "rightward",
+         "rightwards hand"
+      ],
+      "chars" : "🫱",
+      "codes" : [
+         "1FAF1"
+      ],
+      "name" : "Rightwards hand"
+   },
+   {
+      "annotations" : [
+         "hand",
+         "left",
+         "leftward",
+         "leftwards hand"
+      ],
+      "chars" : "🫲",
+      "codes" : [
+         "1FAF2"
+      ],
+      "name" : "Leftwards hand"
+   },
+   {
+      "annotations" : [
+         "dismiss",
+         "drop",
+         "palm down hand",
+         "shoo"
+      ],
+      "chars" : "🫳",
+      "codes" : [
+         "1FAF3"
+      ],
+      "name" : "Palm down hand"
+   },
+   {
+      "annotations" : [
+         "beckon",
+         "catch",
+         "come",
+         "offer",
+         "palm up hand"
+      ],
+      "chars" : "🫴",
+      "codes" : [
+         "1FAF4"
+      ],
+      "name" : "Palm up hand"
    },
    {
       "annotations" : [
@@ -2104,6 +2372,21 @@
    },
    {
       "annotations" : [
+         "expensive",
+         "hand with index finger and thumb crossed",
+         "heart",
+         "love",
+         "money",
+         "snap"
+      ],
+      "chars" : "🫰",
+      "codes" : [
+         "1FAF0"
+      ],
+      "name" : "Hand with index finger and thumb crossed"
+   },
+   {
+      "annotations" : [
          "hand",
          "ILY",
          "love-you gesture"
@@ -2132,7 +2415,9 @@
       "annotations" : [
          "call",
          "call me hand",
-         "hand"
+         "hand",
+         "hang loose",
+         "Shaka"
       ],
       "chars" : "🤙",
       "codes" : [
@@ -2226,6 +2511,18 @@
          "261D"
       ],
       "name" : "Index pointing up"
+   },
+   {
+      "annotations" : [
+         "index pointing at the viewer",
+         "point",
+         "you"
+      ],
+      "chars" : "🫵",
+      "codes" : [
+         "1FAF5"
+      ],
+      "name" : "Index pointing at the viewer"
    },
    {
       "annotations" : [
@@ -2336,6 +2633,17 @@
    },
    {
       "annotations" : [
+         "heart hands",
+         "love"
+      ],
+      "chars" : "🫶",
+      "codes" : [
+         "1FAF6"
+      ],
+      "name" : "Heart hands"
+   },
+   {
+      "annotations" : [
          "hand",
          "open",
          "open hands"
@@ -2376,6 +2684,8 @@
          "ask",
          "folded hands",
          "hand",
+         "high 5",
+         "high five",
          "please",
          "pray",
          "thanks"
@@ -2629,6 +2939,22 @@
    },
    {
       "annotations" : [
+         "anxious",
+         "biting lip",
+         "fear",
+         "flirting",
+         "nervous",
+         "uncomfortable",
+         "worried"
+      ],
+      "chars" : "🫦",
+      "codes" : [
+         "1FAE6"
+      ],
+      "name" : "Biting lip"
+   },
+   {
+      "annotations" : [
          "baby",
          "young"
       ],
@@ -2715,15 +3041,48 @@
    {
       "annotations" : [
          "beard",
-         "man",
-         "man: beard",
-         "person"
+         "person",
+         "person: beard"
       ],
       "chars" : "🧔",
       "codes" : [
          "1F9D4"
       ],
-      "name" : "Man: beard"
+      "name" : "Person: beard"
+   },
+   {
+      "annotations" : [
+         "beard",
+         "person",
+         "person: beard",
+         "male sign",
+         "man"
+      ],
+      "chars" : "🧔‍♂️",
+      "codes" : [
+         "1F9D4",
+         "200D",
+         "2642",
+         "FE0F"
+      ],
+      "name" : "Person: beard male sign"
+   },
+   {
+      "annotations" : [
+         "beard",
+         "person",
+         "person: beard",
+         "female sign",
+         "woman"
+      ],
+      "chars" : "🧔‍♀️",
+      "codes" : [
+         "1F9D4",
+         "200D",
+         "2640",
+         "FE0F"
+      ],
+      "name" : "Person: beard female sign"
    },
    {
       "annotations" : [
@@ -4549,6 +4908,20 @@
    },
    {
       "annotations" : [
+         "monarch",
+         "noble",
+         "person with crown",
+         "regal",
+         "royalty"
+      ],
+      "chars" : "🫅",
+      "codes" : [
+         "1FAC5"
+      ],
+      "name" : "Person with crown"
+   },
+   {
+      "annotations" : [
          "prince"
       ],
       "chars" : "🤴",
@@ -4752,6 +5125,34 @@
          "1F930"
       ],
       "name" : "Pregnant woman"
+   },
+   {
+      "annotations" : [
+         "belly",
+         "bloated",
+         "full",
+         "pregnant",
+         "pregnant man"
+      ],
+      "chars" : "🫃",
+      "codes" : [
+         "1FAC3"
+      ],
+      "name" : "Pregnant man"
+   },
+   {
+      "annotations" : [
+         "belly",
+         "bloated",
+         "full",
+         "pregnant",
+         "pregnant person"
+      ],
+      "chars" : "🫄",
+      "codes" : [
+         "1FAC4"
+      ],
+      "name" : "Pregnant person"
    },
    {
       "annotations" : [
@@ -5315,6 +5716,19 @@
    },
    {
       "annotations" : [
+         "fairy tale",
+         "fantasy",
+         "monster",
+         "troll"
+      ],
+      "chars" : "🧌",
+      "codes" : [
+         "1F9CC"
+      ],
+      "name" : "Troll"
+   },
+   {
+      "annotations" : [
          "face",
          "massage",
          "person getting massage",
@@ -5747,6 +6161,7 @@
    },
    {
       "annotations" : [
+         "dance",
          "dancing",
          "woman"
       ],
@@ -5759,8 +6174,8 @@
    {
       "annotations" : [
          "dance",
-         "man",
-         "man dancing"
+         "dancing",
+         "man"
       ],
       "chars" : "🕺",
       "codes" : [
@@ -6643,6 +7058,7 @@
    },
    {
       "annotations" : [
+         "good night",
          "hotel",
          "person in bed",
          "sleep"
@@ -8202,8 +8618,9 @@
    },
    {
       "annotations" : [
-         "bear",
-         "koala"
+         "face",
+         "koala",
+         "marsupial"
       ],
       "chars" : "🐨",
       "codes" : [
@@ -8654,7 +9071,7 @@
    },
    {
       "annotations" : [
-         "sea Lion",
+         "sea lion",
          "seal"
       ],
       "chars" : "🦭",
@@ -8728,6 +9145,18 @@
          "1F41A"
       ],
       "name" : "Spiral shell"
+   },
+   {
+      "annotations" : [
+         "coral",
+         "ocean",
+         "reef"
+      ],
+      "chars" : "🪸",
+      "codes" : [
+         "1FAB8"
+      ],
+      "name" : "Coral"
    },
    {
       "annotations" : [
@@ -8958,6 +9387,22 @@
          "1F4AE"
       ],
       "name" : "White flower"
+   },
+   {
+      "annotations" : [
+         "Buddhism",
+         "flower",
+         "Hinduism",
+         "India",
+         "lotus",
+         "purity",
+         "Vietnam"
+      ],
+      "chars" : "🪷",
+      "codes" : [
+         "1FAB7"
+      ],
+      "name" : "Lotus"
    },
    {
       "annotations" : [
@@ -9195,6 +9640,28 @@
          "1F343"
       ],
       "name" : "Leaf fluttering in wind"
+   },
+   {
+      "annotations" : [
+         "empty nest",
+         "nesting"
+      ],
+      "chars" : "🪹",
+      "codes" : [
+         "1FAB9"
+      ],
+      "name" : "Empty nest"
+   },
+   {
+      "annotations" : [
+         "nest with eggs",
+         "nesting"
+      ],
+      "chars" : "🪺",
+      "codes" : [
+         "1FABA"
+      ],
+      "name" : "Nest with eggs"
    },
    {
       "annotations" : [
@@ -9591,6 +10058,19 @@
          "1F95C"
       ],
       "name" : "Peanuts"
+   },
+   {
+      "annotations" : [
+         "beans",
+         "food",
+         "kidney",
+         "legume"
+      ],
+      "chars" : "🫘",
+      "codes" : [
+         "1FAD8"
+      ],
+      "name" : "Beans"
    },
    {
       "annotations" : [
@@ -10680,6 +11160,20 @@
    },
    {
       "annotations" : [
+         "drink",
+         "empty",
+         "glass",
+         "pouring liquid",
+         "spill"
+      ],
+      "chars" : "🫗",
+      "codes" : [
+         "1FAD7"
+      ],
+      "name" : "Pouring liquid"
+   },
+   {
+      "annotations" : [
          "cup with straw",
          "juice",
          "soda"
@@ -10805,6 +11299,21 @@
          "1F52A"
       ],
       "name" : "Kitchen knife"
+   },
+   {
+      "annotations" : [
+         "condiment",
+         "container",
+         "empty",
+         "jar",
+         "sauce",
+         "store"
+      ],
+      "chars" : "🫙",
+      "codes" : [
+         "1FAD9"
+      ],
+      "name" : "Jar"
    },
    {
       "annotations" : [
@@ -11551,6 +12060,18 @@
    {
       "annotations" : [
          "amusement park",
+         "play",
+         "playground slide"
+      ],
+      "chars" : "🛝",
+      "codes" : [
+         "1F6DD"
+      ],
+      "name" : "Playground slide"
+   },
+   {
+      "annotations" : [
+         "amusement park",
          "ferris",
          "wheel"
       ],
@@ -12053,7 +12574,6 @@
    {
       "annotations" : [
          "bus",
-         "busstop",
          "stop"
       ],
       "chars" : "🚏",
@@ -12111,6 +12631,19 @@
          "26FD"
       ],
       "name" : "Fuel pump"
+   },
+   {
+      "annotations" : [
+         "circle",
+         "tire",
+         "turn",
+         "wheel"
+      ],
+      "chars" : "🛞",
+      "codes" : [
+         "1F6DE"
+      ],
+      "name" : "Wheel"
    },
    {
       "annotations" : [
@@ -12186,6 +12719,21 @@
          "2693"
       ],
       "name" : "Anchor"
+   },
+   {
+      "annotations" : [
+         "float",
+         "life preserver",
+         "life saver",
+         "rescue",
+         "ring buoy",
+         "safety"
+      ],
+      "chars" : "🛟",
+      "codes" : [
+         "1F6DF"
+      ],
+      "name" : "Ring buoy"
    },
    {
       "annotations" : [
@@ -14159,7 +14707,7 @@
       "codes" : [
          "1F3AF"
       ],
-      "name" : "Direct hit"
+      "name" : "Bullseye"
    },
    {
       "annotations" : [
@@ -14242,6 +14790,22 @@
          "1F9FF"
       ],
       "name" : "Nazar amulet"
+   },
+   {
+      "annotations" : [
+         "amulet",
+         "Fatima",
+         "hamsa",
+         "hand",
+         "Mary",
+         "Miriam",
+         "protection"
+      ],
+      "chars" : "🪬",
+      "codes" : [
+         "1FAAC"
+      ],
+      "name" : "Hamsa"
    },
    {
       "annotations" : [
@@ -14330,6 +14894,20 @@
          "1FA85"
       ],
       "name" : "Piñata"
+   },
+   {
+      "annotations" : [
+         "dance",
+         "disco",
+         "glitter",
+         "mirror ball",
+         "party"
+      ],
+      "chars" : "🪩",
+      "codes" : [
+         "1FAA9"
+      ],
+      "name" : "Mirror ball"
    },
    {
       "annotations" : [
@@ -15351,7 +15929,6 @@
    },
    {
       "annotations" : [
-         "accordian",
          "accordion",
          "concertina",
          "squeeze box"
@@ -15534,6 +16111,18 @@
    },
    {
       "annotations" : [
+         "electronic",
+         "low battery",
+         "low energy"
+      ],
+      "chars" : "🪫",
+      "codes" : [
+         "1FAAB"
+      ],
+      "name" : "Low battery"
+   },
+   {
+      "annotations" : [
          "electric",
          "electricity",
          "plug"
@@ -15639,7 +16228,7 @@
    },
    {
       "annotations" : [
-         "cd",
+         "CD",
          "computer",
          "disk",
          "optical"
@@ -15652,10 +16241,11 @@
    },
    {
       "annotations" : [
-         "blu-ray",
+         "Blu-ray",
          "computer",
          "disk",
          "dvd",
+         "DVD",
          "optical"
       ],
       "chars" : "📀",
@@ -16919,13 +17509,14 @@
          "pistol",
          "revolver",
          "tool",
+         "water",
          "weapon"
       ],
       "chars" : "🔫",
       "codes" : [
          "1F52B"
       ],
-      "name" : "Pistol"
+      "name" : "Water pistol"
    },
    {
       "annotations" : [
@@ -17292,6 +17883,21 @@
    },
    {
       "annotations" : [
+         "cane",
+         "crutch",
+         "disability",
+         "hurt",
+         "mobility aid",
+         "stick"
+      ],
+      "chars" : "🩼",
+      "codes" : [
+         "1FA7C"
+      ],
+      "name" : "Crutch"
+   },
+   {
+      "annotations" : [
          "doctor",
          "heart",
          "medicine",
@@ -17302,6 +17908,20 @@
          "1FA7A"
       ],
       "name" : "Stethoscope"
+   },
+   {
+      "annotations" : [
+         "bones",
+         "doctor",
+         "medical",
+         "skeleton",
+         "x-ray"
+      ],
+      "chars" : "🩻",
+      "codes" : [
+         "1FA7B"
+      ],
+      "name" : "X-ray"
    },
    {
       "annotations" : [
@@ -17557,6 +18177,20 @@
    },
    {
       "annotations" : [
+         "bubbles",
+         "burp",
+         "clean",
+         "soap",
+         "underwater"
+      ],
+      "chars" : "🫧",
+      "codes" : [
+         "1FAE7"
+      ],
+      "name" : "Bubbles"
+   },
+   {
+      "annotations" : [
          "bathroom",
          "brush",
          "clean",
@@ -17687,7 +18321,21 @@
    },
    {
       "annotations" : [
-         "atm",
+         "credentials",
+         "ID",
+         "identification card",
+         "license",
+         "security"
+      ],
+      "chars" : "🪪",
+      "codes" : [
+         "1FAAA"
+      ],
+      "name" : "Identification card"
+   },
+   {
+      "annotations" : [
+         "ATM",
          "ATM sign",
          "automated",
          "bank",
@@ -17736,11 +18384,13 @@
    },
    {
       "annotations" : [
+         "bathroom",
          "lavatory",
          "man",
          "men’s room",
          "restroom",
-         "wc"
+         "toilet",
+         "WC"
       ],
       "chars" : "🚹",
       "codes" : [
@@ -17750,9 +18400,11 @@
    },
    {
       "annotations" : [
+         "bathroom",
          "lavatory",
          "restroom",
-         "wc",
+         "toilet",
+         "WC",
          "woman",
          "women’s room"
       ],
@@ -17764,8 +18416,10 @@
    },
    {
       "annotations" : [
+         "bathroom",
          "lavatory",
          "restroom",
+         "toilet",
          "WC"
       ],
       "chars" : "🚻",
@@ -17788,11 +18442,13 @@
    },
    {
       "annotations" : [
+         "bathroom",
          "closet",
          "lavatory",
          "restroom",
+         "toilet",
          "water",
-         "wc"
+         "WC"
       ],
       "chars" : "🚾",
       "codes" : [
@@ -18230,8 +18886,7 @@
    {
       "annotations" : [
          "arrow",
-         "back",
-         "BACK arrow"
+         "BACK"
       ],
       "chars" : "🔙",
       "codes" : [
@@ -18242,8 +18897,7 @@
    {
       "annotations" : [
          "arrow",
-         "end",
-         "END arrow"
+         "END"
       ],
       "chars" : "🔚",
       "codes" : [
@@ -18255,8 +18909,8 @@
       "annotations" : [
          "arrow",
          "mark",
-         "on",
-         "ON! arrow"
+         "ON",
+         "ON!"
       ],
       "chars" : "🔛",
       "codes" : [
@@ -18267,8 +18921,7 @@
    {
       "annotations" : [
          "arrow",
-         "soon",
-         "SOON arrow"
+         "SOON"
       ],
       "chars" : "🔜",
       "codes" : [
@@ -18279,8 +18932,7 @@
    {
       "annotations" : [
          "arrow",
-         "top",
-         "TOP arrow",
+         "TOP",
          "up"
       ],
       "chars" : "🔝",
@@ -19015,6 +19667,18 @@
    },
    {
       "annotations" : [
+         "equality",
+         "heavy equals sign",
+         "math"
+      ],
+      "chars" : "🟰",
+      "codes" : [
+         "1F7F0"
+      ],
+      "name" : "Heavy equals sign"
+   },
+   {
+      "annotations" : [
          "forever",
          "infinity",
          "unbounded",
@@ -19063,13 +19727,14 @@
          "?",
          "mark",
          "punctuation",
-         "question"
+         "question",
+         "red question mark"
       ],
       "chars" : "❓",
       "codes" : [
          "2753"
       ],
-      "name" : "Question mark"
+      "name" : "Red question mark"
    },
    {
       "annotations" : [
@@ -19106,13 +19771,14 @@
          "!",
          "exclamation",
          "mark",
-         "punctuation"
+         "punctuation",
+         "red exclamation mark"
       ],
       "chars" : "❗",
       "codes" : [
          "2757"
       ],
-      "name" : "Exclamation mark"
+      "name" : "Red exclamation mark"
    },
    {
       "annotations" : [
@@ -19381,7 +20047,7 @@
    },
    {
       "annotations" : [
-         "c",
+         "C",
          "copyright"
       ],
       "chars" : "©",
@@ -19392,7 +20058,7 @@
    },
    {
       "annotations" : [
-         "r",
+         "R",
          "registered"
       ],
       "chars" : "®",
@@ -19404,7 +20070,7 @@
    {
       "annotations" : [
          "mark",
-         "tm",
+         "TM",
          "trade mark",
          "trademark"
       ],
@@ -19415,24 +20081,35 @@
       "name" : "Trade mark"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "hash",
+         "hash sign",
+         "hashtag",
+         "lb",
+         "number",
+         "pound"
+      ],
       "chars" : "#️⃣",
       "codes" : [
          "23",
          "FE0F",
          "20E3"
       ],
-      "name" : ""
+      "name" : "Hash sign"
    },
    {
-      "annotations" : [],
+      "annotations" : [
+         "asterisk",
+         "star",
+         "wildcard"
+      ],
       "chars" : "*️⃣",
       "codes" : [
          "2A",
          "FE0F",
          "20E3"
       ],
-      "name" : ""
+      "name" : "Asterisk"
    },
    {
       "annotations" : [],
@@ -19610,7 +20287,7 @@
    },
    {
       "annotations" : [
-         "a",
+         "A",
          "A button (blood type)",
          "blood type"
       ],
@@ -19622,7 +20299,7 @@
    },
    {
       "annotations" : [
-         "ab",
+         "AB",
          "AB button (blood type)",
          "blood type"
       ],
@@ -19634,7 +20311,7 @@
    },
    {
       "annotations" : [
-         "b",
+         "B",
          "B button (blood type)",
          "blood type"
       ],
@@ -19646,7 +20323,7 @@
    },
    {
       "annotations" : [
-         "cl",
+         "CL",
          "CL button"
       ],
       "chars" : "🆑",
@@ -19657,7 +20334,7 @@
    },
    {
       "annotations" : [
-         "cool",
+         "COOL",
          "COOL button"
       ],
       "chars" : "🆒",
@@ -19668,7 +20345,7 @@
    },
    {
       "annotations" : [
-         "free",
+         "FREE",
          "FREE button"
       ],
       "chars" : "🆓",
@@ -19690,7 +20367,7 @@
    },
    {
       "annotations" : [
-         "id",
+         "ID",
          "ID button",
          "identity"
       ],
@@ -19704,7 +20381,7 @@
       "annotations" : [
          "circle",
          "circled M",
-         "m"
+         "M"
       ],
       "chars" : "Ⓜ",
       "codes" : [
@@ -19714,7 +20391,7 @@
    },
    {
       "annotations" : [
-         "new",
+         "NEW",
          "NEW button"
       ],
       "chars" : "🆕",
@@ -19725,7 +20402,7 @@
    },
    {
       "annotations" : [
-         "ng",
+         "NG",
          "NG button"
       ],
       "chars" : "🆖",
@@ -19737,7 +20414,7 @@
    {
       "annotations" : [
          "blood type",
-         "o",
+         "O",
          "O button (blood type)"
       ],
       "chars" : "🅾",
@@ -19759,6 +20436,7 @@
    },
    {
       "annotations" : [
+         "P",
          "P button",
          "parking"
       ],
@@ -19771,7 +20449,7 @@
    {
       "annotations" : [
          "help",
-         "sos",
+         "SOS",
          "SOS button"
       ],
       "chars" : "🆘",
@@ -19783,7 +20461,8 @@
    {
       "annotations" : [
          "mark",
-         "up",
+         "UP",
+         "UP!",
          "UP! button"
       ],
       "chars" : "🆙",
@@ -19795,7 +20474,7 @@
    {
       "annotations" : [
          "versus",
-         "vs",
+         "VS",
          "VS button"
       ],
       "chars" : "🆚",
