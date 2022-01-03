@@ -314,8 +314,15 @@ var Connection = function(id, host, nick) {
       var priv = conn.chantypes.indexOf(name[0]) == -1;
       var type = "msg";
 
-      if (message.Command == "TAGMSG")
-        type = "react";
+      if (message.Command == "TAGMSG") {
+        if (message.Tags && message.Tags["+draft/react"]) {
+          type = "react";
+        } else if (message.Tags && message.Tags["+draft/typing"]) {
+          type = "typing";
+        } else {
+          return;
+        }
+      }
 
       var channel = conn.channel(name);
 

@@ -206,6 +206,9 @@ var Render = function(message, opts) {
       [ span, message.Params[0] ]
     );
 
+  case "TAGMSG":
+    return;
+
   default:
     return raw(message);
   };

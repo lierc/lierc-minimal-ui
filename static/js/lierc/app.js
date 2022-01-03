@@ -135,6 +135,11 @@ var App = function(url, user) {
       panel.handle_reaction(message);
     });
 
+    connection.on("channel:typing", function(conn, nick, message) {
+      var panel = app.get_panel(channel, conn);
+      console.log(message, panel);
+    });
+
     connection.on("private:react", function(conn, nick, message) {
       var panel = app.get_panel(nick, conn);
       panel.handle_reaction(message.Prefix.Name, msgid, react);
