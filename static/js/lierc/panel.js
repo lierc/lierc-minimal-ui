@@ -860,7 +860,7 @@ var Panel = function(opts) {
 
   panel.react_backlog_check = function() {
     panel.reactions.forEach(function(reaction, i) {
-      var li = panel.elem.list.querySelector('li[data-message-hash="'+reaction[1]+'"]');
+      var li = panel.elem.list.querySelector('li[data-message-id="'+reaction[1]+'"]');
       if (li) {
         panel.handle_reaction.apply(panel, reaction);
         panel.reactions.slice(i, 1);
@@ -868,13 +868,13 @@ var Panel = function(opts) {
     });
   };
 
-  panel.handle_reaction = function(from, hash, reaction) {
-    if (!hash) {
-      console.log(from, hash, reaction);
+  panel.handle_reaction = function(from, id, reaction) {
+    if (!id) {
+      console.log(from, id, reaction);
       return;
     }
 
-    var li = panel.elem.list.querySelector('li[data-message-hash="' + hash + '"] .message-text');
+    var li = panel.elem.list.querySelector('li[data-message-id="' + id + '"] .message-text');
 
     if (li) {
       panel.scroll(function() {
@@ -897,7 +897,7 @@ var Panel = function(opts) {
       });
     }
     else {
-      panel.reactions.push([from, hash, reaction]);
+      panel.reactions.push([from, id, reaction]);
     }
   };
 

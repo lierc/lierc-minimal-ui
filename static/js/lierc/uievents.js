@@ -961,7 +961,7 @@ var UIEvents = function(app) {
       while (message && !message.matches("li.message")) {
         message = message.parentNode;
       }
-      var hash = message.getAttribute('data-message-hash');
+      var id = message.getAttribute('data-message-id');
       var panel = app.focused;
 
       react.classList.remove('open');
@@ -969,11 +969,11 @@ var UIEvents = function(app) {
       var popup = react.querySelector('.emoji-popup');
       popup.parentNode.removeChild(popup);
 
-      if (! (emoji && hash && panel))
+      if (! (emoji && id && panel))
         return;
 
       app.api.post("/connection/" + panel.connection, {
-        body: "PRIVMSG " + panel.name + " :\x01" + ["FACE", hash, emoji].join(" "),
+        body: "PRIVMSG " + panel.name + " :\x01" + ["FACE", id, emoji].join(" "),
         headers: {
           'lierc-token' : app.post_token(),
           'content-type': "application/irc",

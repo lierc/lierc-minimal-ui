@@ -146,9 +146,7 @@ var Render = function(message, opts) {
       append(msg, Format(text));
     }
 
-    var hash = md5(message.Raw);
     var li = make("message", message);
-    li.setAttribute('data-message-hash', hash);
 
     return append(
       li,
@@ -302,9 +300,11 @@ var Render = function(message, opts) {
     var controls = document.createElement('DIV');
     controls.classList.add('message-controls', 'popup-toggle');
 
-    var react = document.createElement('DIV');
-    react.classList.add('message-react', 'popup-toggle');
-    controls.appendChild(react);
+    if (message.Tags && message.Tags["msgid"]) {
+        var react = document.createElement('DIV');
+        react.classList.add('message-react', 'popup-toggle');
+        controls.appendChild(react);
+    }
 
     var menu = document.createElement('DIV');
     menu.classList.add('message-menu', 'popup-toggle');
@@ -328,8 +328,8 @@ var Render = function(message, opts) {
     if (message.Search)
       li.classList.add("search")
 
-    if (message.Id)
-      li.setAttribute('data-message-id', message.Id);
+    if (message.Tags && message.Tags["msgid"])
+      li.setAttribute('data-message-id', message.Tags["msgid"]);
     if (message.Time)
       li.setAttribute('data-time', message.Time);
     return li;
