@@ -26,6 +26,7 @@ var App = function(url, user) {
   app.mobile = App.detect_mobile();
   app.post_tokens = [];
   app.theme = 'default';
+  app.typing = [];
 
   app.elem = {
     panel: document.getElementById('panel'),
@@ -49,7 +50,8 @@ var App = function(url, user) {
     images: document.getElementById('image-uploads'),
     meta: document.getElementById('meta-channels'),
     themes: document.getElementById('themes'),
-    title_top: document.getElementById('title-top')
+    title_top: document.getElementById('title-top'),
+    typing: document.getElementById('typing-indicator')
   };
 
   app.set_connected = function(conn_id, status, message) {
@@ -62,6 +64,42 @@ var App = function(url, user) {
         panel.set_connected(status, message);
       }
     }
+  };
+
+  app.set_typing = function(nick) {
+    app.typing.push(nick);
+
+    // remove nick from list after 3 seconds
+    setTimeout(function() {
+        for (var i=0; i < app.typing.length; i++) {
+          if (app.typing[i] == nick) {
+            app.typing.splice(i, 1);
+            return;
+          }
+        }
+    }, 5000);
+  };
+
+  function onlyUnique(value, index, self) {
+    return self.indexOf(value) === index;
+  }
+
+  app.render_typing = function() {
+    var nicks = app.typing.filter(onlyUnique);
+    var len = nicks.length;
+
+    if ( len > 1) {
+      app.elem.typing.innerText = len + " people are typing";
+    } else if ( len == 1 ) {
+      app.elem.typing.innerText = nicks[0] + " is typing";
+    } else {
+      app.elem.typing.innerText = "";
+    }
+  }
+
+  app.clear_typing = function() {
+    app.typing = [];
+    app.elem.typing.innerText = "";
   };
 
   app.setup_connection = function(id, host, nick) {
@@ -135,14 +173,23 @@ var App = function(url, user) {
       panel.handle_reaction(message);
     });
 
-    connection.on("channel:typing", function(conn, nick, message) {
+    connection.on("channel:typing", function(conn, channel, message) {
       var panel = app.get_panel(channel, conn);
-      console.log(message, panel);
+      if (app.is_focused(panel)) {
+        app.set_typing(message.Prefix.Name);
+      }
     });
 
     connection.on("private:react", function(conn, nick, message) {
       var panel = app.get_panel(nick, conn);
       panel.handle_reaction(message.Prefix.Name, msgid, react);
+    });
+
+    connection.on("privmsg:typing", function(conn, nick, message) {
+      var panel = app.get_panel(nick, conn);
+      if (app.is_focused(panel)) {
+        app.set_typing(message.Prefix.Name);
+      }
     });
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
@@ -782,6 +829,7 @@ var App = function(url, user) {
     if (! panel)
       return;
 
+    app.clear_typing();
     app.elem.panel_name.textContent = panel.name;
     app.replace_child("panel", panel.elem.list);
     app.replace_child("input", panel.elem.input);
@@ -1345,6 +1393,7 @@ var App = function(url, user) {
 
   setInterval(app.check_scroll, 250);
   setInterval(app.ping_server, 1000 * 15);
+  setInterval(app.render_typing, 500);
   app.setup_highlights();
 
   app.get_prefs(function(prefs) {

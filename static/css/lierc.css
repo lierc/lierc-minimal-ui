@@ -485,6 +485,7 @@ body.solarized-dark .image-wrap a:hover {
   flex-shrink: 0;
   flex-grow: 0;
   flex-flow: row;
+  flex-wrap: wrap;
   margin: 0;
   padding: 0;
   right: 0px;
@@ -505,7 +506,18 @@ body.solarized #foot {
 #input {
   flex-grow: 1;
   padding: 5px;
+  padding-bottom: 0;
   overflow: hidden;
+}
+
+#typing-indicator {
+  padding: 5px;
+  padding-top: 0;
+  margin: 0;
+  width: 100%;
+  font-size: 12px;
+  height: 1em;
+  color: #666;
 }
 
 #input .input {
@@ -1530,7 +1542,7 @@ body.solarized-dark #nicks ul li a:hover {
   color: #666;
   height: 18px;
   line-height: 18px;
-  padding: 11px 5px;
+  padding: 9px 5px 8px 5px;
   cursor: pointer;
 }
 
@@ -1635,7 +1647,7 @@ body.solarized-dark #nicks ul li a:hover {
   font-size: 18px;
   height: 18px;
   line-height: 18px;
-  padding: 11px 5px;
+  padding: 9px 5px 8px 5px;
   cursor: pointer;
 }
 

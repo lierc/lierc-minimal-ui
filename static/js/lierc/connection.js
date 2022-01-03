@@ -307,38 +307,48 @@ var Connection = function(id, host, nick) {
       break;
 
     case "TAGMSG":
-    case "PRIVMSG":
       var nick = message.Prefix.Name;
       var name = message.Params[0];
       var text = message.Params[1];
       var priv = conn.chantypes.indexOf(name[0]) == -1;
-      var type = "msg";
-
-      if (message.Command == "TAGMSG") {
-        if (message.Tags && message.Tags["+draft/react"]) {
-          type = "react";
-        } else if (message.Tags && message.Tags["+draft/typing"]) {
-          type = "typing";
-        } else {
-          return;
-        }
-      }
-
       var channel = conn.channel(name);
+      var type;
+
+      if (message.Tags && message.Tags["+draft/react"]) {
+        type = "react";
+      } else if (message.Tags && message.Tags["+draft/typing"]) {
+        type = "typing";
+      } else {
+        return;
+      }
 
       if (name == conn.nick && priv)
         fire("private:"+type, conn.id, nick, message);
       else if (priv)
         fire("private:"+type, conn.id, name, message);
       else if (channel) {
-        channel.bump_nick(nick);
         fire("channel:"+type, conn.id, name, message);
       }
       break;
 
-    case "PING":
+    case "PRIVMSG":
+      var nick = message.Prefix.Name;
+      var name = message.Params[0];
+      var text = message.Params[1];
+      var priv = conn.chantypes.indexOf(name[0]) == -1;
+      var channel = conn.channel(name);
+
+      if (name == conn.nick && priv)
+        fire("private:msg", conn.id, nick, message);
+      else if (priv)
+        fire("private:msg", conn.id, name, message);
+      else if (channel) {
+        channel.bump_nick(nick);
+        fire("channel:msg", conn.id, name, message);
+      }
       break;
 
+    case "PING":
     case "PONG":
       break;
 
