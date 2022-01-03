@@ -306,6 +306,7 @@ var Connection = function(id, host, nick) {
 
       break;
 
+    case "TAGMSG":
     case "PRIVMSG":
       var nick = message.Prefix.Name;
       var name = message.Params[0];
@@ -313,7 +314,7 @@ var Connection = function(id, host, nick) {
       var priv = conn.chantypes.indexOf(name[0]) == -1;
       var type = "msg";
 
-      if (text && text.substring(0,5) == "\x01" + "FACE")
+      if (String(message.Command) == "TAGMSG")
         type = "react";
 
       var channel = conn.channel(name);

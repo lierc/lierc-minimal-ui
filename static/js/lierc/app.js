@@ -132,14 +132,12 @@ var App = function(url, user) {
 
     connection.on("channel:react", function(conn, channel, message) {
       var panel = app.get_panel(channel, conn);
-      var parts = message.Params[1].split(" ");
-      panel.handle_reaction(message.Prefix.Name, parts[1], parts[2]);
+      panel.handle_reaction(message);
     });
 
     connection.on("private:react", function(conn, nick, message) {
       var panel = app.get_panel(nick, conn);
-      var parts = message.Params[1].split(" ");
-      panel.handle_reaction(message.Prefix.Name, parts[1], parts[2]);
+      panel.handle_reaction(message.Prefix.Name, msgid, react);
     });
 
     connection.on("channel:nicks", function(conn, channel, nicks) {
@@ -681,8 +679,7 @@ var App = function(url, user) {
         app.filling_backlog = false;
 
         reactions.forEach(function(reaction) {
-          var parts = reaction.Params[1].split(" ");
-          panel.handle_reaction(reaction.Prefix.Name, parts[1], parts[2]);
+          panel.handle_reaction(reaction);
         });
 
         panel.react_backlog_check();
@@ -701,8 +698,7 @@ var App = function(url, user) {
   };
 
   app.is_reaction = function(message) {
-    return message.Command == "PRIVMSG"
-    && (message.Params[1] || "").substring(0,5) == "\x01" + "FACE";
+    return message.Command == "TAGMSG" && message.Tags && message.Tags["+draft/react"];
   };
 
   app.prev_panel = function() {

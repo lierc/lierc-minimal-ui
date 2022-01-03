@@ -862,13 +862,20 @@ var Panel = function(opts) {
     panel.reactions.forEach(function(reaction, i) {
       var li = panel.elem.list.querySelector('li[data-message-id="'+reaction[1]+'"]');
       if (li) {
-        panel.handle_reaction.apply(panel, reaction);
+        panel.handle_reaction(reaction);
         panel.reactions.slice(i, 1);
       }
     });
   };
 
-  panel.handle_reaction = function(from, id, reaction) {
+  panel.handle_reaction = function(message) {
+    if (!message.Tags)
+      return;
+
+    var from = message.Prefix.Name;
+    var id = message.Tags["+draft/reply"];
+    var reaction = message.Tags["+draft/react"];
+
     if (!id) {
       console.log(from, id, reaction);
       return;
@@ -897,7 +904,7 @@ var Panel = function(opts) {
       });
     }
     else {
-      panel.reactions.push([from, id, reaction]);
+      panel.reactions.push(message);
     }
   };
 

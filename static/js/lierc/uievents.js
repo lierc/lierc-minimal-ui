@@ -972,8 +972,10 @@ var UIEvents = function(app) {
       if (! (emoji && id && panel))
         return;
 
+      var tag = "@+draft/reply="+id+";+draft/react="+emoji;
+
       app.api.post("/connection/" + panel.connection, {
-        body: "PRIVMSG " + panel.name + " :\x01" + ["FACE", id, emoji].join(" "),
+        body:  tag + " TAGMSG " + panel.name,
         headers: {
           'lierc-token' : app.post_token(),
           'content-type': "application/irc",
