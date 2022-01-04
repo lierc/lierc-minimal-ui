@@ -88,10 +88,24 @@ var App = function(url, user) {
     var nicks = app.typing.filter(onlyUnique);
     var len = nicks.length;
 
-    if ( len > 1) {
+    if ( len > 2) {
       app.elem.typing.innerText = len + " people are typing…";
-    } else if ( len == 1 ) {
-      app.elem.typing.innerText = nicks[0] + " is typing…";
+    } else if ( len > 0 ) {
+      app.elem.typing.innerText = "";
+      var els = [];
+      for (var i=0; i < len; i++) {
+        var nick = document.createElement("STRONG")
+        nick.innerText = nicks[i];
+        els.push(nick);
+        if (i + 1 < len) {
+          els.push(document.createTextNode(" and "));
+        }
+      }
+      var verb = len > 1 ? 'are' : 'is';
+      els.push(document.createTextNode(" " + verb + " typing…"));
+      for (var i=0; i < els.length; i++) {
+        app.elem.typing.appendChild(els[i]);
+      }
     } else {
       app.elem.typing.innerText = "";
     }

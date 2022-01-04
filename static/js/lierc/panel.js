@@ -970,7 +970,6 @@ var Panel = function(opts) {
 
   panel.set_send_typing = function(bool) {
     panel.scroll(function() {
-        console.log("focused " + panel.focused);
       if (panel.focused) {
         if (bool)
           panel.elem.body.classList.add('send-typing');
@@ -983,11 +982,11 @@ var Panel = function(opts) {
   };
 
   panel.should_send_typing = function(c) {
-    // must contain non-space character
-    if (!c.match(/\w/))
+    if (!panel.send_typing)
       return false;
 
-    if (!panel.send_typing)
+    // must contain non-space character
+    if (!c.match(/\w/))
       return false;
 
     return panel.send_typing_debounced();
