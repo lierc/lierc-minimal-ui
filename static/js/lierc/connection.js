@@ -9,6 +9,7 @@ var Connection = function(id, host, nick) {
   conn.isupport = {};
   conn.prefix = [ ["v","+"],["o","@"],["h", "%"]];
   conn.chantypes = ["#","&"];
+  conn.caps_enabled = {};
 
   var listeners = {};
 
@@ -81,6 +82,13 @@ var Connection = function(id, host, nick) {
     case "001":
       conn.nick = message.Params[0];
       fire("status:raw", conn.id, message);
+      break;
+
+    case "CAP":
+      var caps = message.Params[2].split(" ");
+      for (var i=0; i < caps.length; i++) {
+        conn.caps_enabled[caps[i]] = true;
+      }
       break;
 
     case "005":
@@ -316,7 +324,7 @@ var Connection = function(id, host, nick) {
 
       if (message.Tags && message.Tags["+draft/react"]) {
         type = "react";
-      } else if (message.Tags && message.Tags["+draft/typing"]) {
+      } else if (message.Tags && ( message.Tags["+draft/typing"] || message.Tags["+typing"] )) {
         type = "typing";
       } else {
         return;

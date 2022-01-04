@@ -1413,6 +1413,7 @@ ul.channel-controls li a {
 
 #view-log .history:before,
 #toggle-hideembeds .checkbox:before,
+#toggle-sendtyping .checkbox:before,
 #toggle-hideevents .checkbox:before {
   content: "\f096";
   font-family: FontAwesome;
@@ -1423,6 +1424,7 @@ ul.channel-controls li a {
 }
 
 .hide-embeds #toggle-hideembeds .checkbox:before,
+.send-typing #toggle-sendtyping .checkbox:before,
 .hide-events #toggle-hideevents .checkbox:before {
   content: "\f046";
 }

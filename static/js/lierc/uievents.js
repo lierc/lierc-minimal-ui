@@ -134,6 +134,10 @@ var UIEvents = function(app) {
           });
         }
         app.focused.editor.keydown(e, mods);
+
+        if (!mods['meta'] && !mods['ctrl'] && !mods['cmd']) {
+          app.maybe_send_typing(app.focused, c);
+        }
       }
       /* focus input area on a-z 0-9 keys */
       else if (
@@ -309,6 +313,12 @@ var UIEvents = function(app) {
     e.preventDefault();
     app.focused.set_ignore_events(!app.focused.ignore_events);
     app.update_pref(app.focused.id + "-ignore-events", app.focused.ignore_events);
+  });
+
+  clickTouchEvent(document.querySelector('#toggle-sendtyping a'), function(e) {
+    e.preventDefault();
+    app.focused.set_send_typing(!app.focused.send_typing);
+    app.update_pref(app.focused.id + "-send-typing", app.focused.send_typing);
   });
 
   clickTouchEvent(document.querySelector('#toggle-hideembeds a'), function(e) {

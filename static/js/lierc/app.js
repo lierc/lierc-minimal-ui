@@ -69,7 +69,7 @@ var App = function(url, user) {
   app.set_typing = function(nick) {
     app.typing.push(nick);
 
-    // remove nick from list after 3 seconds
+    // remove nick from list after 4 seconds
     setTimeout(function() {
         for (var i=0; i < app.typing.length; i++) {
           if (app.typing[i] == nick) {
@@ -77,7 +77,7 @@ var App = function(url, user) {
             return;
           }
         }
-    }, 5000);
+    }, 4000);
   };
 
   function onlyUnique(value, index, self) {
@@ -89,9 +89,9 @@ var App = function(url, user) {
     var len = nicks.length;
 
     if ( len > 1) {
-      app.elem.typing.innerText = len + " people are typing";
+      app.elem.typing.innerText = len + " people are typing…";
     } else if ( len == 1 ) {
-      app.elem.typing.innerText = nicks[0] + " is typing";
+      app.elem.typing.innerText = nicks[0] + " is typing…";
     } else {
       app.elem.typing.innerText = "";
     }
@@ -491,6 +491,7 @@ var App = function(url, user) {
     app.collapse_embeds_pref(panel);
     app.monospace_nicks_pref(panel);
     app.ignore_nicks_pref(panel);
+    app.send_typing_pref(panel);
 
     panel.elem.nav.addEventListener('click', function(e) {
       if (e.target.classList.contains("panel-log"))
@@ -671,6 +672,33 @@ var App = function(url, user) {
       },
       error: function(e) {
         app.reset();
+      }
+    });
+  };
+
+  app.maybe_send_typing = function(panel, c) {
+    var conn = app.connections[panel.connection];
+    if (!conn.caps_enabled["message-tags"])
+      return;
+
+    if (!panel.should_send_typing(c))
+      return;
+
+    var tag = "@+typing=active"
+
+    app.api.post("/connection/" + panel.connection, {
+      body:  tag + " TAGMSG " + panel.name,
+      headers: {
+        'lierc-token' : app.post_token(),
+        'content-type': "application/irc",
+      },
+      success: function(res) {
+        app.post_tokens.push(res.token);
+      },
+      error: function(e) {
+        var res = JSON.parse(e.responseText);
+        alert("Error: " + res.error);
+        app.load_token();
       }
     });
   };
@@ -1038,6 +1066,12 @@ var App = function(url, user) {
     var value = app.get_pref(panel.id + "-show-nicklist");
     if (value != undefined)
       panel.set_show_nicklist(value);
+  };
+
+  app.send_typing_pref = function(panel) {
+    var value = app.get_pref(panel.id + "-send-typing");
+    if (value !== undefined)
+      panel.set_send_typing(value);
   };
 
   app.ignore_events_pref = function(panel) {

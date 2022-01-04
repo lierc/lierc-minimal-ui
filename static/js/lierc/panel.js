@@ -23,6 +23,7 @@ var Panel = function(opts) {
   panel.monospace_nicks = [];
   panel.ignore_nicks = [];
   panel.ignore_events = false;
+  panel.send_typing = true;
   panel.collapse_embeds = false;
   panel.pause_gifs = false;
   panel.show_nicklist = false;
@@ -30,6 +31,7 @@ var Panel = function(opts) {
   panel.last_seen = null;
   panel.oldest_message = null;
   panel.mode = "";
+  panel.debounce_typing = false;
 
   panel.change_name = function(name) {
     panel.name = name;
@@ -141,6 +143,11 @@ var Panel = function(opts) {
       panel.elem.body.classList.add('show-nicklist');
     else
       panel.elem.body.classList.remove('show-nicklist');
+
+    if (panel.send_typing)
+      panel.elem.body.classList.add('send-typing');
+    else
+      panel.elem.body.classList.remove('send-typing');
 
     panel.first_focus = false;
     panel.focused = true;
@@ -959,6 +966,41 @@ var Panel = function(opts) {
 
       panel.collapse_embeds = bool;
     });
+  };
+
+  panel.set_send_typing = function(bool) {
+    panel.scroll(function() {
+        console.log("focused " + panel.focused);
+      if (panel.focused) {
+        if (bool)
+          panel.elem.body.classList.add('send-typing');
+        else
+          panel.elem.body.classList.remove('send-typing');
+      }
+
+      panel.send_typing = bool;
+    });
+  };
+
+  panel.should_send_typing = function(c) {
+    // must contain non-space character
+    if (!c.match(/\w/))
+      return false;
+
+    if (!panel.send_typing)
+      return false;
+
+    return panel.send_typing_debounced();
+  }
+
+  panel.send_typing_debounced = function() {
+    if (panel.debounce_typing)
+      return false;
+
+    setTimeout(function() { panel.debounce_typing = false; }, 5000);
+    panel.debounce_typing = true;
+
+    return true;
   };
 
   panel.set_ignore_events = function(bool) {
