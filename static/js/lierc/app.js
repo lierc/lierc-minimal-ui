@@ -66,18 +66,32 @@ var App = function(url, user) {
     }
   };
 
-  app.set_typing = function(nick) {
+  app.set_typing = function(nick, msg) {
+    var tag = msg.Tags["+draft/typing"] || msg.Tags["+typing"];
+
+    if (tag == "paused" || tag == "done") {
+      app.stop_typing(nick);
+      return;
+    }
+
+    // unknown typing state
+    if (tag != "active") {
+      return;
+    }
+
     app.typing.push(nick);
 
     // remove nick from list after 4 seconds
-    setTimeout(function() {
-        for (var i=0; i < app.typing.length; i++) {
-          if (app.typing[i] == nick) {
-            app.typing.splice(i, 1);
-            return;
-          }
-        }
-    }, 4000);
+    setTimeout(function() { app.stop_typing(nick); }, 4000);
+  };
+
+  app.stop_typing = function(nick) {
+    for (var i=0; i < app.typing.length; i++) {
+      if (app.typing[i] == nick) {
+        app.typing.splice(i, 1);
+        return;
+      }
+    }
   };
 
   function onlyUnique(value, index, self) {
@@ -190,7 +204,7 @@ var App = function(url, user) {
     connection.on("channel:typing", function(conn, channel, message) {
       var panel = app.get_panel(channel, conn);
       if (app.is_focused(panel)) {
-        app.set_typing(message.Prefix.Name);
+        app.set_typing(message.Prefix.Name, message);
       }
     });
 
@@ -202,7 +216,7 @@ var App = function(url, user) {
     connection.on("privmsg:typing", function(conn, nick, message) {
       var panel = app.get_panel(nick, conn);
       if (app.is_focused(panel)) {
-        app.set_typing(message.Prefix.Name);
+        app.set_typing(message.Prefix.Name, message);
       }
     });
 
@@ -699,6 +713,30 @@ var App = function(url, user) {
       return;
 
     var tag = "@+typing=active"
+
+    app.api.post("/connection/" + panel.connection, {
+      body:  tag + " TAGMSG " + panel.name,
+      headers: {
+        'lierc-token' : app.post_token(),
+        'content-type': "application/irc",
+      },
+      success: function(res) {
+        app.post_tokens.push(res.token);
+      },
+      error: function(e) {
+        var res = JSON.parse(e.responseText);
+        alert("Error: " + res.error);
+        app.load_token();
+      }
+    });
+  };
+
+  app.send_stop_typing = function(panel) {
+    var conn = app.connections[panel.connection];
+    if (!conn.caps_enabled["message-tags"])
+      return;
+
+    var tag = "@+typing=done"
 
     app.api.post("/connection/" + panel.connection, {
       body:  tag + " TAGMSG " + panel.name,

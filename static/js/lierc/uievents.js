@@ -460,6 +460,7 @@ var UIEvents = function(app) {
     }
 
     sendlines(send);
+    app.send_stop_typing(panel);
   }
 
   document.getElementById('gist-upload-form').addEventListener('submit', function(e) {
