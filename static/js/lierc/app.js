@@ -150,6 +150,9 @@ var App = function(url, user) {
       var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
+      if (message.Id)
+        panel.update_seen(message.Id)
+
       if (app.is_ignore(panel, message))
         return;
 

@@ -28,7 +28,7 @@ var Panel = function(opts) {
   panel.pause_gifs = false;
   panel.show_nicklist = false;
   panel.first_focus = true;
-  panel.last_seen = null;
+  panel.last_seen = -1;
   panel.oldest_message = null;
   panel.mode = "";
   panel.debounce_typing = false;
@@ -211,9 +211,11 @@ var Panel = function(opts) {
     panel.elem.nav.setAttribute("data-name", panel.name);
   };
 
-  panel.update_seen = function() {
-    var id = panel.latest_message_id();
-    if (id)
+  panel.update_seen = function(id) {
+    if (!id)
+      id = panel.latest_message_id();
+
+    if (id && id > panel.last_seen)
       panel.last_seen = id;
   };
 
