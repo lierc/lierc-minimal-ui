@@ -28,8 +28,9 @@ var Panel = function(opts) {
   panel.pause_gifs = false;
   panel.show_nicklist = false;
   panel.first_focus = true;
-  panel.last_seen = null;
+  panel.last_seen = -1;
   panel.oldest_message = null;
+  panel.oldest_message_id = null;
   panel.mode = "";
   panel.debounce_typing = false;
 
@@ -217,6 +218,14 @@ var Panel = function(opts) {
       panel.last_seen = id;
   };
 
+  panel.update_oldest_message_id = function(id) {
+    if (!panel.focused)
+      return
+
+    if (id && (panel.oldest_message_id === null || id < panel.oldest_message_id))
+      panel.oldest_message_id = id;
+  };
+
   panel.unfocus = function() {
     panel.update_seen();
     panel.focused = false;
@@ -224,6 +233,7 @@ var Panel = function(opts) {
     panel.clear_lists();
     panel.backlog_empty = false;
     panel.oldest_message = null;
+    panel.oldest_message_id = null;
   };
 
   panel.remove_elems = function() {
@@ -588,14 +598,6 @@ var Panel = function(opts) {
     return null;
   };
 
-  panel.oldest_message_id = function() {
-    var els = panel.elem.list.querySelectorAll('li[data-message-id]');
-    if (els.length) {
-      return parseInt(els[0].getAttribute('data-message-id'));
-    }
-    return null;
-  };
-
   panel.update_topic = function(topic) {
     while (panel.elem.topic.firstChild) {
       panel.elem.topic.removeChild(panel.elem.topic.firstChild);
@@ -734,7 +736,10 @@ var Panel = function(opts) {
               });
             };
         })(image, link);
-        if (panel.pause_gifs) {
+        if (link.href.match("i.imgur.com")) {
+          image.src = link.href;
+        }
+        else if (panel.pause_gifs) {
           image.src = "https://noembed.com/i/still/0/600/" + link.href;
         }
         else {
@@ -744,7 +749,7 @@ var Panel = function(opts) {
     }
   };
 
-  panel.vid_re = /^http[^\s]*\.(?:gifv|mp4|mov|webm)[^\/]*$/i;
+  panel.vid_re = /^http[^\s]*\.(?:gifv|mp4|m4v|mov|webm)[^\/]*$/i;
   panel.vidify = function(elem) {
     var links = elem.querySelectorAll("a[href]:not(.processed)");
     var message = elem.querySelector('.message-text');
@@ -996,7 +1001,7 @@ var Panel = function(opts) {
     if (panel.debounce_typing)
       return false;
 
-    setTimeout(function() { panel.debounce_typing = false; }, 5000);
+    setTimeout(function() { panel.debounce_typing = false; }, 3000);
     panel.debounce_typing = true;
 
     return true;
