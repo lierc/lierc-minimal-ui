@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-title" content="Relaychat">
+    <meta name="mobile-web-app-title" content="Relaychat">
+    <link type="text/css" rel="stylesheet" href="/static/css/lierc.css?bust=1124"></link>
+    <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css"></link>
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/favicon.png">
+    <meta name="description" content="Chat on IRC in a web browser">
+    <meta name="keywords" content="IRC,cloud,HTTP,chat,browser,irccloud,relaychat,party">
+    <meta name="author" content="Lee Aylward">
+    <link rel="manifest" href="/manifest.json">
+    <title>relaychat.party 🍆</title>
+  </head>
+  <body noscroll>
+    <div class="flex-wrap">
+      <div class="flex-wrap-left">
+        <header>
+          <h1 id="title-top">:relaychat: <span style="font-weight:normal">👋</span></h1>
+          <div class="header-right">
+            <h2 id="panel-name"></h2>
+            <a id="global-controls-toggle" class="fa fa-chevron-down"></a>
+          </div>
+        </header>
+
+        <!--googleoff: all-->
+        <nav id="nav">
+          <div id="switcher-wrap">
+            <input id="switcher" placeholder="Jump to…" type="text" spellcheck="false" autocorrect="false">
+          </div>
+          <h2 class="nav-title networks expandable collapsed"><span class="nav-title-text">Networks</span> <span class="count">0</span><span class="add-connection fa fa-plus" title="Add a connection"></span></h2>
+          <ul class="nav sortable" id="status"></ul>
+          <ul class="nav" id="meta-channels"></ul>
+          <h2 class="nav-title"><span class="nav-title-text">Channels</span> <span class="count">0</span><span class="join-channel fa fa-plus" title="Join a channel"></span></h2>
+          <ul class="nav sortable" id="channels"></ul>
+          <h2 class="nav-title"><span class="nav-title-text">Privates</span> <span class="count">0</span></h2>
+          <ul class="nav sortable" id="privates"></ul>
+
+          <ul id="global-controls">
+            <li class="join-channel"><a>Join channel</a></li>
+            <li class="add-connection"><a>Add connection</a></li>
+            <li id="email-notify"><a>Email notifications</a></li>
+            <li id="web-notify"><a>Push Notifications</a></li>
+            <li id="logs" class="link"><a target="_blank" href="/search/">Log browser</a></li>
+            <li class="select">
+              <select id="themes">
+                <option value="default">Default Theme</option>
+                <option value="solarized">Solarized Theme</option>
+                <option value="solarized-dark">Solarized Dark Theme</option>
+              </select>
+            </li>
+            <li id="help"><a>Help</a></li>
+            <li class="link"><a target="_blank" href="https://github.com/lierc/lierc-basicui/issues/new">Report a bug</a></li>
+            <li id="logout"><a>Logout</a></li>
+          </ul>
+        </nav>
+      </div>
+
+      <div class="flex-wrap-right" id="chat">
+        <header id="reconnect">
+          <strong>Disconnected</strong> from relaychat.party &ndash;
+          <span id="reconnect-status"></span>
+        </header>
+        <header id="topic"></header>
+        <div id="toggle-nicks" class="fa fa-ellipsis-v" title="Channel info"></div>
+
+        <div class="flex-wrap-panel">
+          <div id="panel-scroll" tabindex="0">
+            <div id="panel-inner-scroll">
+              <div id="filler"></div>
+              <main id="panel"></main>
+              <div id="react"></div>
+            </div>
+          </div>
+          <div class="channel-meta">
+            <ul class="channel-controls">
+              <li id="toggle-hideevents"><a><span class="checkbox"></span>Hide events</a></li>
+              <li id="toggle-hideembeds"><a><span class="checkbox"></span>Hide embeds</a></li>
+              <li id="toggle-sendtyping"><a><span class="checkbox"></span>Send typing</a></li>
+              <li id="view-log"><a><span class="history"></span>View logs</a></li>
+            </ul>
+            <div id="nicks"></div>
+          </div>
+        </div>
+
+        <footer id="foot">
+          <form id="input"></form>
+          <div id="color-info">
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td style="background-color:white">0</td>
+                <td style="background-color:black">1</td>
+                <td style="background-color:navy">2</td>
+                <td style="background-color:green">3</td>
+                <td style="background-color:red">4</td>
+                <td style="background-color:maroon">5</td>
+                <td style="background-color:purple">6</td>
+                <td style="background-color:olive">7</td>
+              </tr>
+              <tr>
+                <td style="background-color:yellow">8</td>
+                <td style="background-color:lightgreen">9</td>
+                <td style="background-color:teal">10</td>
+                <td style="background-color:cyan">11</td>
+                <td style="background-color:royalblue">12</td>
+                <td style="background-color:magenta">13</td>
+                <td style="background-color:gray">14</td>
+                <td style="background-color:lightgray">15</td>
+              </tr>
+            </table>
+          </div>
+          <div id="emoji" class="popup-toggle">
+            <div class="emoji-popup">
+              <ul></ul><form class="emoji-search"><input placeholder="Filter" type="text"></input></form>
+            </div>
+          </div>
+          <div id="upload" class="popup-toggle">
+            <div class="upload-popup">
+              <form method="POST" id="gist-upload-form">
+                <textarea placeholder="Paste text snippet" name="gist" id="gist-upload-input"></textarea>
+                <select name="gist-extension" id="gist-upload-extension">
+                  <option value="txt" selected>Text</option>
+                  <option value="sql">SQL</option>
+                  <option value="pl">Perl</option>
+                  <option value="rb">Ruby</option>
+                  <option value="py">Python</option>
+                  <option value="go">Golang</option>
+                  <option value="c">C</option>
+                </select>
+                <input type="submit" name="upload" value="Create Gist &#xf15c;">
+              </form>
+              <hr>
+              <div id="image-uploads"></div>
+              <form method="POST" id="image-upload-form">
+                <input type="file" name="image" id="image-upload-input" />
+                <input type="submit" name="upload" value="Upload to Imgur &#xf03e;">
+              </form>
+            </div>
+          </div>
+          <p id="typing-indicator"></p>
+        </footer>
+      </div>
+    </div>
+
+    <script type="text/javascript" src="/static/js/vendor/base64.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/vendor/eventsource.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/vendor/fetch.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/vendor/handlebars.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/vendor/promise.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/vendor/resize-observer.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/vendor/Sortable.js?bust=1124"></script>
+
+    <script type="text/javascript" src="/static/js/lierc/api.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/app.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/auth.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/channel.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/commands.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/completion.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/connection.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/dialog.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/editor.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/embed.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/emoji.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/format.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/history.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/notifier.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/panel.js?bust=1125"></script>
+    <script type="text/javascript" src="/static/js/lierc/render.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/stream.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/template.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/lierc/uievents.js?bust=1124"></script>
+    <script type="text/javascript" src="/static/js/templates.js?bust=1124"></script>
+
+    <script type="text/javascript">
+      document.addEventListener("DOMContentLoaded", function(e) {
+        var auth = new Auth("/api");
+        auth.auth(function(res) {
+          window.lierc = new App("/api", res);
+        });
+      });
+    </script>
+
+  </body>
+</html>
