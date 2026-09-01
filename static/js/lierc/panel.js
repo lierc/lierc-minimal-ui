@@ -680,7 +680,7 @@ var Panel = function(opts) {
   setInterval(panel.prune, 1000 * 60);
   panel.watch_editor();
 
-  panel.img_re = /^http[^\s]*(?:\.|format=)(?:jpe?g|gif|png|bmp|svg|webp)[^\/]*$/i;
+  panel.img_re = /^http[^\s]*(?:\.|format=)(?:jpe?g|gif|png|bmp|svg|webp|heic)[^\/]*$/i;
   panel.imagify = function (elem) {
     var links = elem.querySelectorAll("a[href]:not(.processed)");
     var message = elem.querySelector('.message-text');
