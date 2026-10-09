@@ -121,7 +121,7 @@ var Render = function(message, opts) {
       text = "";
 
     var from = make_nick(message, name);
-    var color = string_to_color(message.Prefix.User.replace("~", "") || nick);
+    var color = string_to_color(color_seed(message.Prefix));
     var wrap = make_text();
     wrap.setAttribute('class', 'message-text');
     from.style.color = color;
@@ -349,6 +349,16 @@ var Render = function(message, opts) {
     return wrap;
   }
 
+  function color_seed(prefix) {
+    var nick = prefix.Name || '';
+    var user = (prefix.User || '').replace('~', '');
+
+    if (!user || nick.indexOf('/') != -1)
+      return nick;
+
+    return user;
+  }
+
   function string_to_color(str){
     var colors = [
       "MediumVioletRed",
@@ -404,5 +414,3 @@ var Render = function(message, opts) {
     return colors[c];
   }
 };
-
-
