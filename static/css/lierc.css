@@ -37,9 +37,9 @@ body {
 
 body,input {
   font-family: BlinkMacSystemFont, "San Francisco",
-    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
-    "Fira Sans", "Droid Sans", "Helvetica Neue", 
-    sans-serif, FontAwesome;
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
 }
 
 a:link {
@@ -71,7 +71,7 @@ a:hover {
   display: block;
   text-align: center;
   color: #555;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   padding: 3px 0;
   width: 15px;
   margin: 0 auto;
@@ -438,7 +438,7 @@ body.solarized-dark #panel ol .last-read {
 .embed-toggle {
   margin-left: 4px;
   cursor: pointer;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
 }
 
 .image-toggle:after,
@@ -591,7 +591,7 @@ body.solarized-dark #input .input:focus {
 .nav li[data-panel-id=highlights]:before {
   opacity: 1;
   content: "\f006";
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   color: var(--base00);
   font-size: 12px;
   line-height:12px;
@@ -672,7 +672,7 @@ body.solarized-dark #input .input:focus {
 .nav-title.networks:before {
   content: "\f1e6";
   opacity: 1;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   color: var(--base00);
   font-size: 12px;
   line-height: 12px;
@@ -764,7 +764,7 @@ body.solarized-dark #input .input:focus {
 
 .nav li:before {
   content: '';
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   font-size: 12px;
   line-height: 12px;
   width: 14px;
@@ -1416,7 +1416,7 @@ ul.channel-controls li a {
 #toggle-sendtyping .checkbox:before,
 #toggle-hideevents .checkbox:before {
   content: "\f096";
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   width: 15px;
   text-align: left;
   display: inline-block;
@@ -2123,7 +2123,7 @@ body[data-panel-type=channel] #panel-scroll {
 }
 #title-top.unread:before {
   opacity: 1;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   font-size: 12px;
   line-height:12px;
   width: 16px;

@@ -7,8 +7,10 @@
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-title" content="Relaychat">
     <meta name="mobile-web-app-title" content="Relaychat">
+    <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/fontawesome.min.css"></link>
+    <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/solid.min.css"></link>
+    <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/brands.min.css"></link>
     <link type="text/css" rel="stylesheet" href="/static/css/lierc.css"></link>
-    <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/font-awesome.min.css"></link>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
     <meta name="description" content="Chat on IRC in a web browser">
@@ -24,7 +26,7 @@
           <h1 id="title-top">:relaychat: <span style="font-weight:normal">👋</span></h1>
           <div class="header-right">
             <h2 id="panel-name"></h2>
-            <a id="global-controls-toggle" class="fa fa-chevron-down"></a>
+            <a id="global-controls-toggle" class="fa-solid fa-chevron-down"></a>
           </div>
         </header>
 
@@ -33,10 +35,10 @@
           <div id="switcher-wrap">
             <input id="switcher" placeholder="Jump to…" type="text" spellcheck="false" autocorrect="false">
           </div>
-          <h2 class="nav-title networks expandable collapsed"><span class="nav-title-text">Networks</span> <span class="count">0</span><span class="add-connection fa fa-plus" title="Add a connection"></span></h2>
+          <h2 class="nav-title networks expandable collapsed"><span class="nav-title-text">Networks</span> <span class="count">0</span><span class="add-connection fa-solid fa-plus" title="Add a connection"></span></h2>
           <ul class="nav sortable" id="status"></ul>
           <ul class="nav" id="meta-channels"></ul>
-          <h2 class="nav-title"><span class="nav-title-text">Channels</span> <span class="count">0</span><span class="join-channel fa fa-plus" title="Join a channel"></span></h2>
+          <h2 class="nav-title"><span class="nav-title-text">Channels</span> <span class="count">0</span><span class="join-channel fa-solid fa-plus" title="Join a channel"></span></h2>
           <ul class="nav sortable" id="channels"></ul>
           <h2 class="nav-title"><span class="nav-title-text">Privates</span> <span class="count">0</span></h2>
           <ul class="nav sortable" id="privates"></ul>
@@ -67,7 +69,7 @@
           <span id="reconnect-status"></span>
         </header>
         <header id="topic"></header>
-        <div id="toggle-nicks" class="fa fa-ellipsis-v" title="Channel info"></div>
+        <div id="toggle-nicks" class="fa-solid fa-ellipsis-vertical" title="Channel info"></div>
 
         <div class="flex-wrap-panel">
           <div id="panel-scroll" tabindex="0">
