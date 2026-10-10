@@ -9,7 +9,7 @@ var Render = function(message, opts) {
     return append(
       make("event", message),
       [
-        make_text(old + " is now known as "),
+        append(make_text(), [RelayMsg.render(old), " is now known as "]),
         make_nick(message),
         timestamp(message)
       ]
@@ -131,7 +131,7 @@ var Render = function(message, opts) {
 
     if (text.substring(0, 1) == "\x01") {
       if (text.substring(1,7) == "ACTION") {
-        from.textContent = '* ' + nick + ' ';
+        decorate_nick(from, nick, '* ', ' ');
         var action = text.substring(8).replace(/\x01$/, "");
         msg.style.fontStyle = 'italic';
         from.style.fontStyle = 'italic';
@@ -142,7 +142,7 @@ var Render = function(message, opts) {
       }
     }
     else {
-      from.textContent = '< '+from.textContent+'> ';
+      decorate_nick(from, nick, '< ' + channel_prefix(name), '> ');
       append(msg, Format(text));
     }
 
@@ -248,13 +248,28 @@ var Render = function(message, opts) {
     el.setAttribute('data-nick', message.Prefix.Name);
     el.setAttribute('title', prefix);
     el.classList.add('message-nick');
-    el.textContent = message.Prefix.Name;
 
-    if (channel && opts['show_channel']) {
-      el.textContent = channel + ":" + el.textContent;
-    }
+    decorate_nick(el, message.Prefix.Name, channel_prefix(channel));
 
     return el;
+  }
+
+  function channel_prefix(channel) {
+    return channel && opts['show_channel'] ? channel + ":" : "";
+  }
+
+  function decorate_nick(el, nick, before, after) {
+    while (el.firstChild) {
+      el.removeChild(el.firstChild);
+    }
+
+    if (before)
+      el.appendChild(document.createTextNode(before));
+
+    el.appendChild(RelayMsg.render(nick));
+
+    if (after)
+      el.appendChild(document.createTextNode(after));
   }
 
   function raw (message) {
@@ -353,7 +368,7 @@ var Render = function(message, opts) {
     var nick = prefix.Name || '';
     var user = (prefix.User || '').replace('~', '');
 
-    if (!user || nick.indexOf('/') != -1)
+    if (!user || nick.indexOf(RelayMsg.discriminator) != -1)
       return nick;
 
     return user;

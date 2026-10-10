@@ -1104,6 +1104,13 @@ div.header-right {
   white-space: pre;
 }
 
+.nick-platform {
+  --fa-width: auto;
+  font-size: 0.9em;
+  margin-left: 0.2em;
+  pointer-events: none; /* Pass clicks through to the nick */
+}
+
 li.message.monospace .message-flex .message-text,
 li.message.monospace .message-flex .message-nick {
   line-height: 1.1em;
