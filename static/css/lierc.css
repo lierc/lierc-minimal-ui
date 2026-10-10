@@ -1534,7 +1534,7 @@ body.solarized-dark #nicks ul li a:hover {
 
 #emoji.open:hover:before,
 #emoji.open:before {
-  content: '\f118';
+  content: '\f599';
   color: #000;
 }
 
@@ -1547,6 +1547,7 @@ body.solarized-dark #nicks ul li a:hover {
   content: '\f11a';
   display: inline-block;
   filter: grayscale(100%);
+  font-family: var(--fa-family-classic);
   font-size: 18px;
   color: #666;
   height: 18px;
@@ -1653,6 +1654,7 @@ body.solarized-dark #nicks ul li a:hover {
   color: #666;
   display: inline-block;
   filter: grayscale(100%);
+  font-family: var(--fa-family-classic);
   font-size: 18px;
   height: 18px;
   line-height: 18px;
