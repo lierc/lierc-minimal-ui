@@ -39,7 +39,7 @@ body,input {
   font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif;
+    sans-serif, var(--fa-family-classic);
 }
 
 a:link {
@@ -406,6 +406,7 @@ body.solarized-dark #panel ol .last-read {
   top: 2px;
   right: 2px;
   content: "\f057";
+  font-family: var(--fa-family-classic);
   font-size: 18px;
   color: #000;
   opacity: 0;
@@ -1079,12 +1080,14 @@ div.header-right {
 
 #logs a:before {
   content: "\f0f6";
+  font-family: var(--fa-family-classic);
   padding-right: 5px;
 }
 
 #web-notify a:before,
 #email-notify a:before {
   content: "\f096";
+  font-family: var(--fa-family-classic);
   padding-right: 5px;
 }
 
@@ -1922,6 +1925,7 @@ li.message:hover .message-controls,
 .message-react:before,
 .message-menu:before {
   cursor: pointer;
+  font-family: var(--fa-family-classic);
   padding: 0 3px;
 }
 
