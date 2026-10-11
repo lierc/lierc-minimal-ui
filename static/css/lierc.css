@@ -37,9 +37,9 @@ body {
 
 body,input {
   font-family: BlinkMacSystemFont, "San Francisco",
-    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
-    "Fira Sans", "Droid Sans", "Helvetica Neue", 
-    sans-serif, FontAwesome;
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif, var(--fa-family-classic);
 }
 
 a:link {
@@ -71,7 +71,7 @@ a:hover {
   display: block;
   text-align: center;
   color: #555;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   padding: 3px 0;
   width: 15px;
   margin: 0 auto;
@@ -406,6 +406,7 @@ body.solarized-dark #panel ol .last-read {
   top: 2px;
   right: 2px;
   content: "\f057";
+  font-family: var(--fa-family-classic);
   font-size: 18px;
   color: #000;
   opacity: 0;
@@ -438,7 +439,7 @@ body.solarized-dark #panel ol .last-read {
 .embed-toggle {
   margin-left: 4px;
   cursor: pointer;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
 }
 
 .image-toggle:after,
@@ -591,7 +592,7 @@ body.solarized-dark #input .input:focus {
 .nav li[data-panel-id=highlights]:before {
   opacity: 1;
   content: "\f006";
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   color: var(--base00);
   font-size: 12px;
   line-height:12px;
@@ -672,7 +673,7 @@ body.solarized-dark #input .input:focus {
 .nav-title.networks:before {
   content: "\f1e6";
   opacity: 1;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   color: var(--base00);
   font-size: 12px;
   line-height: 12px;
@@ -764,7 +765,7 @@ body.solarized-dark #input .input:focus {
 
 .nav li:before {
   content: '';
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   font-size: 12px;
   line-height: 12px;
   width: 14px;
@@ -1079,12 +1080,14 @@ div.header-right {
 
 #logs a:before {
   content: "\f0f6";
+  font-family: var(--fa-family-classic);
   padding-right: 5px;
 }
 
 #web-notify a:before,
 #email-notify a:before {
   content: "\f096";
+  font-family: var(--fa-family-classic);
   padding-right: 5px;
 }
 
@@ -1102,6 +1105,13 @@ div.header-right {
 
 .message-nick {
   white-space: pre;
+}
+
+.nick-platform {
+  --fa-width: auto;
+  font-size: 0.9em;
+  margin-left: 0.2em;
+  pointer-events: none; /* Pass clicks through to the nick */
 }
 
 li.message.monospace .message-flex .message-text,
@@ -1416,7 +1426,7 @@ ul.channel-controls li a {
 #toggle-sendtyping .checkbox:before,
 #toggle-hideevents .checkbox:before {
   content: "\f096";
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   width: 15px;
   text-align: left;
   display: inline-block;
@@ -1527,7 +1537,7 @@ body.solarized-dark #nicks ul li a:hover {
 
 #emoji.open:hover:before,
 #emoji.open:before {
-  content: '\f118';
+  content: '\f599';
   color: #000;
 }
 
@@ -1540,6 +1550,7 @@ body.solarized-dark #nicks ul li a:hover {
   content: '\f11a';
   display: inline-block;
   filter: grayscale(100%);
+  font-family: var(--fa-family-classic);
   font-size: 18px;
   color: #666;
   height: 18px;
@@ -1646,6 +1657,7 @@ body.solarized-dark #nicks ul li a:hover {
   color: #666;
   display: inline-block;
   filter: grayscale(100%);
+  font-family: var(--fa-family-classic);
   font-size: 18px;
   height: 18px;
   line-height: 18px;
@@ -1913,6 +1925,7 @@ li.message:hover .message-controls,
 .message-react:before,
 .message-menu:before {
   cursor: pointer;
+  font-family: var(--fa-family-classic);
   padding: 0 3px;
 }
 
@@ -2123,7 +2136,7 @@ body[data-panel-type=channel] #panel-scroll {
 }
 #title-top.unread:before {
   opacity: 1;
-  font-family: FontAwesome;
+  font-family: var(--fa-family-classic);
   font-size: 12px;
   line-height:12px;
   width: 16px;
