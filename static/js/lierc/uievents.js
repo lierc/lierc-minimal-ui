@@ -929,7 +929,7 @@ export const UIEvents = function(app) {
     setTimeout(() =>{ m.disconnect(); }, 10000);
   });
 
-  app.elem.panel.addEventListener('click', async (e) => {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches('.message-react, .message-react *'))
       return;
 
@@ -973,26 +973,38 @@ export const UIEvents = function(app) {
       const popup = react.querySelector('.emoji-popup');
       popup.parentNode.removeChild(popup);
 
-      if (! (emoji && id && panel))
-        return;
-
-      const tag = `@+draft/reply=${id};+draft/react=${emoji}`;
-
-      try {
-        const res = await app.api.post(`/connection/${panel.connection}`, {
-          body:  `${tag} TAGMSG ${panel.name}`,
-          headers: {
-            'lierc-token' : app.post_token(),
-            'content-type': "application/irc",
-          }
-        });
-        app.post_tokens.push(res.token);
-      }
-      catch (e) {
-        alert(`Error: ${e}`);
-        app.load_token();
-      }
+      app.send_reaction(panel, id, emoji, false);
     }
+  });
+
+  app.elem.panel.addEventListener('click', (e) => {
+    if (!e.target.matches('.reactions .reaction, .reactions .reaction *'))
+      return;
+
+    e.preventDefault();
+
+    let group = e.target;
+    while (group && !group.matches('.reaction')) {
+      group = group.parentNode;
+    }
+
+    let message = group;
+    while (message && !message.matches('li.message')) {
+      message = message.parentNode;
+    }
+
+    if (!message)
+      return;
+
+    const panel_id = message.getAttribute('data-panel-id');
+    const panel = panel_id ? app.panels[panel_id] : app.focused;
+
+    app.send_reaction(
+      panel,
+      message.getAttribute('data-message-server-id'),
+      group.getAttribute('data-emoji'),
+      group.classList.contains('self')
+    );
   });
 
   window.addEventListener("beforeunload", () => {

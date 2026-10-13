@@ -338,7 +338,7 @@ export class Connection {
       const channel = this.channel(name);
       let type;
 
-      if (message.Tags?.["+draft/react"]) {
+      if (message.Tags?.["+draft/react"] || message.Tags?.["+draft/unreact"]) {
         type = "react";
       } else if (message.Tags && ( message.Tags["+draft/typing"] || message.Tags["+typing"] )) {
         type = "typing";

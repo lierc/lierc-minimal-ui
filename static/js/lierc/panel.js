@@ -19,6 +19,7 @@ export class Panel {
     this.path = opts.path;
     this.connected = opts.connected;
     this.network = opts.network;
+    this.get_nick = opts.get_nick || (() => null);
     this.mobile = opts.mobile;
 
     this.unread = false;
@@ -943,53 +944,144 @@ export class Panel {
   }
 
   react_backlog_check() {
-    this.reactions.forEach((reaction, i) => {
-      const li = this.elem.list.querySelector(`li[data-message-server-id="${reaction[1]}"]`);
-      if (li) {
-        this.handle_reaction(reaction);
-        this.reactions.slice(i, 1);
-      }
+    const pending = this.reactions;
+    this.reactions = [];
+    pending.forEach((message) => {
+      this.handle_reaction(message);
     });
   }
 
-  handle_reaction(message) {
+  parse_reaction(message) {
     if (!message.Tags)
-      return;
+      return null;
 
-    const from = message.Prefix.Name;
     const id = message.Tags["+draft/reply"];
-    const reaction = message.Tags["+draft/react"];
+    const react = message.Tags["+draft/react"];
+    const unreact = message.Tags["+draft/unreact"];
+    const emoji = unreact || react;
 
-    if (!id) {
-      console.log(from, id, reaction);
+    if (!id || !emoji)
+      return null;
+
+    return {
+      id: id,
+      nick: message.Prefix.Name,
+      emoji: emoji,
+      remove: !!unreact
+    };
+  }
+
+  handle_reaction(message) {
+    const reaction = this.parse_reaction(message);
+
+    if (!reaction) {
+      console.log("ignoring malformed reaction", message);
       return;
     }
 
-    const li = this.elem.list.querySelector(`li[data-message-server-id="${id}"] .message-text`);
+    const texts = this.elem.list.querySelectorAll(
+      `li[data-message-server-id="${reaction.id}"] .message-text`
+    );
 
-    if (li) {
-      this.scroll(() => {
-        let reactions = li.querySelector('.reactions');
-        if (!reactions) {
-          reactions = document.createElement('DIV');
-          reactions.classList.add('reactions');
-          li.appendChild(reactions);
-        }
+    if (!texts.length) {
+      this.reactions.push(message);
+      return;
+    }
 
-        const span = document.createElement('SPAN');
-        span.textContent = reaction;
-        span.setAttribute('title', from);
-        if (reactions.firstChild) {
-          reactions.insertBefore(span, reactions.firstChild);
-        }
-        else {
-          reactions.appendChild(span);
-        }
+    this.scroll(() => {
+      texts.forEach((text) => {
+        this.apply_reaction(text, reaction);
       });
+    });
+  }
+
+  reaction_group(reactions, emoji) {
+    for (const group of reactions.querySelectorAll('.reaction')) {
+      if (group.getAttribute('data-emoji') === emoji)
+        return group;
+    }
+    return null;
+  }
+
+  reaction_nicks(group) {
+    const nicks = group.getAttribute('data-nicks');
+    if (!nicks)
+      return [];
+    return nicks.split(",").filter((nick) => nick.length);
+  }
+
+  build_reaction(emoji) {
+    const group = document.createElement('BUTTON');
+    group.setAttribute('type', 'button');
+    group.setAttribute('data-emoji', emoji);
+    group.classList.add('reaction');
+
+    const chars = document.createElement('SPAN');
+    chars.classList.add('reaction-emoji');
+    chars.textContent = emoji;
+
+    const count = document.createElement('SPAN');
+    count.classList.add('reaction-count');
+
+    group.appendChild(chars);
+    group.appendChild(count);
+
+    return group;
+  }
+
+  update_reaction(group, nicks) {
+    const nick = this.get_nick();
+
+    group.setAttribute('data-nicks', nicks.join(","));
+    group.setAttribute('title', nicks.join(", "));
+    group.querySelector('.reaction-count').textContent = nicks.length;
+
+    if (nick && nicks.indexOf(nick) != -1)
+      group.classList.add('self');
+    else
+      group.classList.remove('self');
+  }
+
+  apply_reaction(text, reaction) {
+    let reactions = text.querySelector('.reactions');
+
+    if (!reactions) {
+      if (reaction.remove)
+        return;
+      reactions = document.createElement('DIV');
+      reactions.classList.add('reactions');
+      text.appendChild(reactions);
+    }
+
+    let group = this.reaction_group(reactions, reaction.emoji);
+    const nicks = group ? this.reaction_nicks(group) : [];
+    const pos = nicks.indexOf(reaction.nick);
+
+    if (reaction.remove) {
+      if (pos == -1)
+        return;
+      nicks.splice(pos, 1);
     }
     else {
-      this.reactions.push(message);
+      if (pos != -1)
+        return;
+      nicks.push(reaction.nick);
     }
+
+    if (!nicks.length) {
+      if (group)
+        reactions.removeChild(group);
+      if (!reactions.querySelector('.reaction'))
+        reactions.parentNode.removeChild(reactions);
+      return;
+    }
+
+    if (!group) {
+      group = this.build_reaction(reaction.emoji);
+      reactions.appendChild(group);
+    }
+
+    this.update_reaction(group, nicks);
   }
 
   set_loading(on) {

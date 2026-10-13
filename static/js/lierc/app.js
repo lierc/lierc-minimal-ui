@@ -539,7 +539,8 @@ export class App {
       connected: conn.connected,
       mobile: this.mobile,
       type: type,
-      network: conn.host
+      network: conn.host,
+      get_nick: () => conn.nick
     });
 
     if (this.last_seen[panel.id])
@@ -893,7 +894,30 @@ export class App {
   }
 
   is_reaction(message) {
-    return message.Command == "TAGMSG" && message.Tags?.["+draft/react"];
+    return message.Command == "TAGMSG"
+      && (message.Tags?.["+draft/react"] || message.Tags?.["+draft/unreact"]);
+  }
+
+  async send_reaction(panel, id, emoji, remove) {
+    if (!panel || !panel.connection || !id || !emoji)
+      return;
+
+    const tag = `@+draft/reply=${id};${remove ? "+draft/unreact=" : "+draft/react="}${emoji}`;
+
+    try {
+      const res = await this.api.post(`/connection/${panel.connection}`, {
+        body:  `${tag} TAGMSG ${panel.name}`,
+        headers: {
+          'lierc-token' : this.post_token(),
+          'content-type': "application/irc",
+        }
+      });
+      this.post_tokens.push(res.token);
+    }
+    catch (e) {
+      alert(`Error: ${e}`);
+      this.load_token();
+    }
   }
 
   prev_panel() {
