@@ -396,6 +396,58 @@ var Panel = function(opts) {
     });
   };
 
+  panel.index_links = function(message) {
+    if (message.hasAttribute('data-links-indexed'))
+      return;
+
+    message.setAttribute('data-links-indexed', 'true');
+    var links = message.querySelectorAll('a[href]');
+    for (var i=0; i < links.length; i++) {
+      links[i].setAttribute('data-link-order', i);
+    }
+  };
+
+  panel.message_text = function(el) {
+    while (el && !(el.classList && el.classList.contains('message-text'))) {
+      el = el.parentNode;
+    }
+    return el;
+  };
+
+  panel.media_order = function(link) {
+    var message = panel.message_text(link);
+    if (!message)
+      return Number.MAX_SAFE_INTEGER;
+
+    panel.index_links(message);
+
+    var order = parseInt(link.getAttribute('data-link-order'), 10);
+    return isNaN(order) ? Number.MAX_SAFE_INTEGER : order;
+  };
+
+  panel.insert_media = function(message, node, order) {
+    node.setAttribute('data-media-order', order);
+
+    var children = message.children;
+    for (var i=0; i < children.length; i++) {
+      var child = children[i];
+      var child_order = parseInt(child.getAttribute('data-media-order'), 10);
+
+      if (!isNaN(child_order) && child_order > order) {
+        message.insertBefore(node, child);
+        return;
+      }
+
+      // reactions always stay at the bottom of the message
+      if (child.classList.contains('reactions')) {
+        message.insertBefore(node, child);
+        return;
+      }
+    }
+
+    message.appendChild(node);
+  };
+
   panel.embed = function(a, embed, manual) {
     if (!manual && panel.collapse_embeds) {
       var toggle = a.nextSibling;
@@ -444,8 +496,18 @@ var Panel = function(opts) {
       use_html: use_html
     });
 
+    var order = panel.media_order(a);
+
     panel.scroll(function() {
-      li.querySelector('.message-text').insertAdjacentHTML('beforeend', html);
+      var message = li.querySelector('.message-text');
+      var wrap = document.createElement('DIV');
+      wrap.innerHTML = html;
+
+      var node = wrap.firstElementChild;
+      if (!node)
+        return;
+
+      panel.insert_media(message, node, order);
     });
   };
 
@@ -694,7 +756,7 @@ var Panel = function(opts) {
         if (link.href.match(/#(nsfw|hide)/)) continue;
         var image = new Image();
         image.setAttribute("title", link.href);
-        image.onload = (function(image, link) {
+        image.onload = (function(image, link, order) {
             return function(e) {
               image.onload = null;
               var s = panel.scroller;
@@ -715,7 +777,7 @@ var Panel = function(opts) {
                 toggle.setAttribute("aria-hidden", "true");
                 link.parentNode.insertBefore(toggle, link.nextSibling);
                 wrap.appendChild(a);
-                message.appendChild(wrap);
+                panel.insert_media(message, wrap, order);
               });
 
               toggle.addEventListener("click", function(e) {
@@ -733,7 +795,7 @@ var Panel = function(opts) {
                 }
               });
             };
-        })(image, link);
+        })(image, link, panel.media_order(link));
         if (panel.pause_gifs) {
           image.src = "https://noembed.com/i/still/0/600/" + link.href;
         }
@@ -764,7 +826,7 @@ var Panel = function(opts) {
         video.controls = "controls";
         video.preload = "metadata";
 
-        video.addEventListener('loadeddata', (function(video, link) {
+        video.addEventListener('loadeddata', (function(video, link, order) {
           return function(e) {
             var wrap = document.createElement('DIV');
             var toggle = document.createElement('SPAN');
@@ -781,7 +843,7 @@ var Panel = function(opts) {
               toggle.setAttribute("aria-hidden", "true");
               link.parentNode.insertBefore(toggle, link.nextSibling);
               wrap.appendChild(video);
-              message.appendChild(wrap);
+              panel.insert_media(message, wrap, order);
             });
 
             toggle.addEventListener("click", function(e) {
@@ -799,7 +861,7 @@ var Panel = function(opts) {
               }
             });
           };
-        })(video, link), false);
+        })(video, link, panel.media_order(link)), false);
 
         video.src = link.href;
         video.load();
@@ -822,7 +884,7 @@ var Panel = function(opts) {
         audio.controls = "controls";
         audio.preload = "metadata";
 
-        audio.addEventListener('loadeddata', (function(audio, link) {
+        audio.addEventListener('loadeddata', (function(audio, link, order) {
           return function(e) {
             var wrap = document.createElement('DIV');
             var toggle = document.createElement('SPAN');
@@ -839,7 +901,7 @@ var Panel = function(opts) {
               toggle.setAttribute("aria-hidden", "true");
               link.parentNode.insertBefore(toggle, link.nextSibling);
               wrap.appendChild(audio);
-              message.appendChild(wrap);
+              panel.insert_media(message, wrap, order);
             });
             toggle.addEventListener("click", function(e) {
               e.preventDefault();
@@ -856,7 +918,7 @@ var Panel = function(opts) {
               }
             });
           };
-        })(audio, link), false);
+        })(audio, link, panel.media_order(link)), false);
 
         audio.src = link.href;
         audio.load();
