@@ -1977,20 +1977,82 @@ li.message:hover .message-controls,
 }
 
 .reactions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 3px;
   text-align: left;
 }
 
-.reactions span {
+.reactions .reaction {
   background: rgba(0,0,0,0.05);
-  display: inline-block;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
   text-align: center;
-  padding: 4px 2px;
-  margin-left: 2px;
+  padding: 3px 6px;
   border: 1px solid #ccc;
   box-sizing: border-box;
-  border-radius: 3px;
+  border-radius: 10px;
+  color: inherit;
+  font-family: inherit;
+  line-height: 16px;
+  cursor: pointer;
+}
+
+.reactions .reaction:hover {
+  background: rgba(0,0,0,0.09);
+  border-color: #999;
+}
+
+.reactions .reaction-emoji {
   font-size: 16px;
   line-height: 16px;
+}
+
+.reactions .reaction-count {
+  font-size: 13px;
+  font-weight: bold;
+  color: #666;
+}
+
+.reactions .reaction.self {
+  background: rgba(38, 139, 210, 0.15);
+  border-color: var(--blue);
+}
+
+.reactions .reaction.self:hover {
+  background: rgba(38, 139, 210, 0.25);
+}
+
+.reactions .reaction.self .reaction-count {
+  color: var(--blue);
+}
+
+body.solarized-dark .reactions .reaction {
+  background: rgba(255,255,255,0.07);
+  border-color: var(--base01);
+}
+
+body.solarized-dark .reactions .reaction:hover {
+  background: rgba(255,255,255,0.13);
+  border-color: var(--base00);
+}
+
+body.solarized-dark .reactions .reaction-count {
+  color: var(--base1);
+}
+
+body.solarized-dark .reactions .reaction.self {
+  background: rgba(38, 139, 210, 0.25);
+  border-color: var(--blue);
+}
+
+body.solarized-dark .reactions .reaction.self:hover {
+  background: rgba(38, 139, 210, 0.35);
+}
+
+body.solarized-dark .reactions .reaction.self .reaction-count {
+  color: #fff;
 }
 
 #color-info {
