@@ -12,6 +12,7 @@ var Panel = function(opts) {
   panel.path = opts.path;
   panel.connected = opts.connected;
   panel.network = opts.network;
+  panel.get_nick = opts.get_nick || function() { return null; };
   panel.mobile = opts.mobile;
 
   panel.unread = false;
@@ -928,53 +929,145 @@ var Panel = function(opts) {
 
 
   panel.react_backlog_check = function() {
-    panel.reactions.forEach(function(reaction, i) {
-      var li = panel.elem.list.querySelector('li[data-message-server-id="'+reaction[1]+'"]');
-      if (li) {
-        panel.handle_reaction(reaction);
-        panel.reactions.slice(i, 1);
-      }
+    var pending = panel.reactions;
+    panel.reactions = [];
+    pending.forEach(function(message) {
+      panel.handle_reaction(message);
     });
   };
 
-  panel.handle_reaction = function(message) {
+  panel.parse_reaction = function(message) {
     if (!message.Tags)
-      return;
+      return null;
 
-    var from = message.Prefix.Name;
     var id = message.Tags["+draft/reply"];
-    var reaction = message.Tags["+draft/react"];
+    var react = message.Tags["+draft/react"];
+    var unreact = message.Tags["+draft/unreact"];
+    var emoji = unreact || react;
 
-    if (!id) {
-      console.log(from, id, reaction);
+    if (!id || !emoji)
+      return null;
+
+    return {
+      id: id,
+      nick: message.Prefix.Name,
+      emoji: emoji,
+      remove: !!unreact
+    };
+  };
+
+  panel.handle_reaction = function(message) {
+    var reaction = panel.parse_reaction(message);
+
+    if (!reaction) {
+      console.log("ignoring malformed reaction", message);
       return;
     }
 
-    var li = panel.elem.list.querySelector('li[data-message-server-id="' + id + '"] .message-text');
+    var texts = panel.elem.list.querySelectorAll(
+      'li[data-message-server-id="' + reaction.id + '"] .message-text'
+    );
 
-    if (li) {
-      panel.scroll(function() {
-        var reactions = li.querySelector('.reactions');
-        if (!reactions) {
-          reactions = document.createElement('DIV');
-          reactions.classList.add('reactions');
-          li.appendChild(reactions);
-        }
+    if (!texts.length) {
+      panel.reactions.push(message);
+      return;
+    }
 
-        var span = document.createElement('SPAN');
-        span.textContent = reaction;
-        span.setAttribute('title', from);
-        if (reactions.firstChild) {
-          reactions.insertBefore(span, reactions.firstChild);
-        }
-        else {
-          reactions.appendChild(span);
-        }
+    panel.scroll(function() {
+      texts.forEach(function(text) {
+        panel.apply_reaction(text, reaction);
       });
+    });
+  };
+
+  panel.reaction_group = function(reactions, emoji) {
+    var groups = reactions.querySelectorAll('.reaction');
+    for (var i=0; i < groups.length; i++) {
+      if (groups[i].getAttribute('data-emoji') === emoji)
+        return groups[i];
+    }
+    return null;
+  };
+
+  panel.reaction_nicks = function(group) {
+    var nicks = group.getAttribute('data-nicks');
+    if (!nicks)
+      return [];
+    return nicks.split(",").filter(function(nick) { return nick.length; });
+  };
+
+  panel.build_reaction = function(emoji) {
+    var group = document.createElement('BUTTON');
+    group.setAttribute('type', 'button');
+    group.setAttribute('data-emoji', emoji);
+    group.classList.add('reaction');
+
+    var chars = document.createElement('SPAN');
+    chars.classList.add('reaction-emoji');
+    chars.textContent = emoji;
+
+    var count = document.createElement('SPAN');
+    count.classList.add('reaction-count');
+
+    group.appendChild(chars);
+    group.appendChild(count);
+
+    return group;
+  };
+
+  panel.update_reaction = function(group, nicks) {
+    var nick = panel.get_nick();
+
+    group.setAttribute('data-nicks', nicks.join(","));
+    group.setAttribute('title', nicks.join(", "));
+    group.querySelector('.reaction-count').textContent = nicks.length;
+
+    if (nick && nicks.indexOf(nick) != -1)
+      group.classList.add('self');
+    else
+      group.classList.remove('self');
+  };
+
+  panel.apply_reaction = function(text, reaction) {
+    var reactions = text.querySelector('.reactions');
+
+    if (!reactions) {
+      if (reaction.remove)
+        return;
+      reactions = document.createElement('DIV');
+      reactions.classList.add('reactions');
+      text.appendChild(reactions);
+    }
+
+    var group = panel.reaction_group(reactions, reaction.emoji);
+    var nicks = group ? panel.reaction_nicks(group) : [];
+    var pos = nicks.indexOf(reaction.nick);
+
+    if (reaction.remove) {
+      if (pos == -1)
+        return;
+      nicks.splice(pos, 1);
     }
     else {
-      panel.reactions.push(message);
+      if (pos != -1)
+        return;
+      nicks.push(reaction.nick);
     }
+
+    if (!nicks.length) {
+      if (group)
+        reactions.removeChild(group);
+      if (!reactions.querySelector('.reaction'))
+        reactions.parentNode.removeChild(reactions);
+      return;
+    }
+
+    if (!group) {
+      group = panel.build_reaction(reaction.emoji);
+      reactions.appendChild(group);
+    }
+
+    panel.update_reaction(group, nicks);
   };
 
   panel.set_loading = function(on) {
