@@ -73,7 +73,7 @@ export const Format = function(text) {
   });
 };
 
-Format.url_re = /https?:\/\/[^\s<"]*/ig;
+Format.url_re = /https?:\/\/[^\s<>"]*/ig;
 Format.token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
 
 Format.emojify = function(node) {
