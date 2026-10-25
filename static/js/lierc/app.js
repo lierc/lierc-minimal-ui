@@ -6,7 +6,6 @@ import { Emoji } from "./emoji.js";
 import { Notifier } from "./notifier.js";
 import { Panel } from "./panel.js";
 import { Render } from "./render.js";
-import { Template } from "./template.js";
 import { UIEvents } from "./uievents.js";
 
 function onlyUnique(value, index, self) {
@@ -60,7 +59,6 @@ export class App {
       panel_name: document.getElementById('panel-name'),
       flex_wrap: document.querySelector('.flex-wrap'),
       reconnect: document.getElementById('reconnect-status'),
-      images: document.getElementById('image-uploads'),
       meta: document.getElementById('meta-channels'),
       themes: document.getElementById('themes'),
       title_top: document.getElementById('title-top'),
@@ -1557,14 +1555,6 @@ export class App {
     await this.load_seen();
     await this.load_token();
     this.init();
-  }
-
-  async fill_images() {
-    const images = await this.api.get("/image");
-    const html = Template("images", {
-      images: images
-    });
-    this.elem.images.innerHTML = html;
   }
 
   set_theme(theme, skip_save) {

@@ -457,46 +457,6 @@ export const UIEvents = function(app) {
     app.send_stop_typing(panel);
   }
 
-  document.getElementById('gist-upload-form').addEventListener('submit', async (e) => {
-    e.preventDefault();
-    const form = e.target;
-    const submit = form.querySelector('input[name=upload]');
-    const text = form.querySelector('textarea');
-    const ext = form.querySelector('select');
-    const filename = `files1.${ext.options[ext.selectedIndex].value}`;
-
-    submit.setAttribute('disabled','disabled');
-    text.setAttribute('disabled','disabled');
-
-    const data = {
-      'public': false,
-      'files': {}
-    };
-
-    data['files'][filename] = { 'content': text.value };
-
-    try {
-      const response = await fetch("https://api.github.com/gists", {
-        'method': 'POST',
-        'body': JSON.stringify(data)
-      });
-      if (!response.ok)
-        throw Error(response.statusText);
-      const res = await response.json();
-      submit.removeAttribute('disabled');
-      text.removeAttribute('disabled');
-      text.value = '';
-      app.focus_input(true);
-      document.execCommand("insertText", false, res.html_url);
-      document.getElementById('upload').classList.remove('open');
-    }
-    catch (e) {
-      alert("I'm sorry");
-      submit.removeAttribute('disabled');
-      text.removeAttribute('disabled');
-    }
-  });
-
   document.getElementById('image-upload-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const submit = e.target.querySelector('input[name="upload"]');
@@ -546,24 +506,10 @@ export const UIEvents = function(app) {
     image.value = null;
   });
 
-  clickTouchEvent(document.getElementById('image-uploads'), async (e) => {
-    if (e.target.matches('.image-delete')) {
-      e.preventDefault();
-      const url = e.target.getAttribute('data-url');
-      if (confirm(`Are you sure you would like to delete ${url}?`)) {
-        await app.api.delete(`/image/${encodeURIComponent(url)}`);
-        app.fill_images();
-      }
-    }
-  });
-
   clickTouchEvent(document.getElementById('upload'), (e) => {
     if (e.target.matches('#upload')) {
       e.preventDefault();
       e.target.classList.toggle("open");
-      if (e.target.classList.contains("open")) {
-        app.fill_images();
-      }
     }
   });
 
@@ -625,8 +571,6 @@ export const UIEvents = function(app) {
 
   document.addEventListener('paste', async (e) => {
     if (app.overlayed())
-      return;
-    if (document.activeElement.matches('#gist-upload-input'))
       return;
 
     e.preventDefault();

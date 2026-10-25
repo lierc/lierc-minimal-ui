@@ -10,7 +10,7 @@
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/fontawesome.min.css?v=69aaf8f88a"></link>
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/solid.min.css?v=79cc2bdfdd"></link>
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/brands.min.css?v=bbacc07258"></link>
-    <link type="text/css" rel="stylesheet" href="/static/css/lierc.css?v=07a3e71306"></link>
+    <link type="text/css" rel="stylesheet" href="/static/css/lierc.css?v=1c673df037"></link>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
     <meta name="description" content="Chat on IRC in a web browser">
@@ -125,24 +125,9 @@
           </div>
           <div id="upload" class="popup-toggle">
             <div class="upload-popup">
-              <form method="POST" id="gist-upload-form">
-                <textarea placeholder="Paste text snippet" name="gist" id="gist-upload-input"></textarea>
-                <select name="gist-extension" id="gist-upload-extension">
-                  <option value="txt" selected>Text</option>
-                  <option value="sql">SQL</option>
-                  <option value="pl">Perl</option>
-                  <option value="rb">Ruby</option>
-                  <option value="py">Python</option>
-                  <option value="go">Golang</option>
-                  <option value="c">C</option>
-                </select>
-                <input type="submit" name="upload" value="Create Gist &#xf15c;">
-              </form>
-              <hr>
-              <div id="image-uploads"></div>
               <form method="POST" id="image-upload-form">
                 <input type="file" name="image" id="image-upload-input" />
-                <input type="submit" name="upload" value="Upload to Imgur &#xf03e;">
+                <input type="submit" name="upload" value="Upload &#xf03e;">
               </form>
             </div>
           </div>
@@ -157,7 +142,7 @@
     {
       "imports": {
         "/static/js/lierc/api.js": "/static/js/lierc/api.js?v=91adf76b92",
-        "/static/js/lierc/app.js": "/static/js/lierc/app.js?v=9e22ed8e06",
+        "/static/js/lierc/app.js": "/static/js/lierc/app.js?v=584b4917f9",
         "/static/js/lierc/auth.js": "/static/js/lierc/auth.js?v=4de4208fde",
         "/static/js/lierc/channel.js": "/static/js/lierc/channel.js?v=d47521e56f",
         "/static/js/lierc/commands.js": "/static/js/lierc/commands.js?v=1826d602d6",
@@ -175,8 +160,8 @@
         "/static/js/lierc/relaymsg.js": "/static/js/lierc/relaymsg.js?v=6ade5dded3",
         "/static/js/lierc/render.js": "/static/js/lierc/render.js?v=5c10256b94",
         "/static/js/lierc/stream.js": "/static/js/lierc/stream.js?v=20bf39df10",
-        "/static/js/lierc/template.js": "/static/js/lierc/template.js?v=2871133a07",
-        "/static/js/lierc/uievents.js": "/static/js/lierc/uievents.js?v=b327a12b8d"
+        "/static/js/lierc/template.js": "/static/js/lierc/template.js?v=e3d623188a",
+        "/static/js/lierc/uievents.js": "/static/js/lierc/uievents.js?v=523838cf42"
       }
     }
     </script>

@@ -201,15 +201,6 @@ const templates = {
     </div>
   `,
 
-  images: (v) => each(v.images, (image) => html`
-    <div class="uploaded-image">
-      <a target="_blank" href="${image.url}">
-        <div class="image-delete" data-url="${image.url}" title="Delete image"></div>
-        <img src="https://noembed.com/i/100/50/${image.url}" title="${image.created}">
-      </a>
-    </div>
-  `),
-
   join: (v) => html`
     <section  class="dialog join">
       <a href="#" class="close login-toggle">close</a>
