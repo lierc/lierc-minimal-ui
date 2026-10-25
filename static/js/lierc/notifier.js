@@ -141,19 +141,19 @@ var APN = function(app) {
     app.api.get("/notification/apn/config", {
       success: function(c) {
         apn.config = c;
-        var per = window.safari.pushNotification.permission(c.push_id);
-        apn.check_per(per);
       }
     });
   };
 
   apn.check_per = function(per) {
     if (per.permission === 'default') {
+      console.log('requesting permission', apn.config);
       window.safari.pushNotification.requestPermission(
         apn.config.service_url,
         apn.config.push_id,
         { user: apn.config.user },
         function(per) {
+          console.log(per);
           apn.check_per(per)
         }
       );
@@ -164,6 +164,16 @@ var APN = function(app) {
     else if (per.permission == 'granted') {
       document.getElementById("web-notify").classList.add("enabled");
     }
+  };
+
+  apn.subscribe = function() {
+    var per = window.safari.pushNotification.permission(apn.config.push_id);
+    apn.check_per(per);
+  };
+
+  apn.unsubscribe = function() {
+    var per = window.safari.pushNotification.permission(apn.config.push_id);
+    apn.check_per(per);
   };
 
   if (APN.supported()) {

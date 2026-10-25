@@ -82,7 +82,7 @@ var App = function(url, user) {
     app.typing.push(nick);
 
     // remove nick from list after 4 seconds
-    setTimeout(function() { app.stop_typing(nick); }, 4000);
+    setTimeout(function() { app.stop_typing(nick); }, 6000);
   };
 
   app.stop_typing = function(nick) {
@@ -150,6 +150,8 @@ var App = function(url, user) {
       var connection = app.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
+      panel.update_oldest_message_id(message.Id)
+
       if (app.is_ignore(panel, message))
         return;
 
@@ -177,6 +179,8 @@ var App = function(url, user) {
     connection.on("channel:msg", function(conn, channel, message) {
       var panel = app.get_panel(channel, conn);
       var html = Render(message);
+
+      panel.update_oldest_message_id(message.Id)
 
       if (app.is_ignore(panel, message))
         return;
@@ -788,6 +792,8 @@ var App = function(url, user) {
           message.Id = e.MessageId;
           message.Highlight = e.Highlight && panel.id != 'highlights';
 
+          panel.update_oldest_message_id(message.Id);
+
           if (app.is_ignore(panel, message))
             return;
 
@@ -1060,7 +1066,7 @@ var App = function(url, user) {
     if (app.elem.scroll.scrollTop <= 1) {
       app.filling_backlog = true;
       app.fill_backlog(
-        app.focused, app.focused.oldest_message_id(), focus
+        app.focused, app.focused.oldest_message_id, focus
       );
     }
   };

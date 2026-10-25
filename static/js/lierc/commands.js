@@ -124,6 +124,11 @@ var Commands = function(app) {
     return ["PRIVMSG", panel.name, url].join(" ");
   });
 
+  add_command("stryfe", ["dragonstryfe", "dagon", "stryfin"], function(panel) {
+    var url = ":https://streamable.com/55sxk7";
+    return ["PRIVMSG", panel.name, url].join(" ");
+  });
+
   add_command("bustin", ["bust"], function(panel) {
     var url = ":https://www.youtube.com/watch?v=0tdyU_gW6WE";
     return ["PRIVMSG", panel.name, url].join(" ");

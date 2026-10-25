@@ -371,6 +371,7 @@ var UIEvents = function(app) {
     if (text == "") return;
 
     panel.editor.history.record();
+    app.clear_typing();
 
     var value = Unformat(input.innerHTML);
     input.innerHTML = "";
@@ -513,13 +514,6 @@ var UIEvents = function(app) {
       return;
     }
 
-    var fd = new FormData();
-    if (files[0].type.match(/^video/)) {
-      fd.append("video", files[0]);
-    }
-    else {
-      fd.append("image", files[0]);
-    }
     var xhr = new XMLHttpRequest();
 
     submit.setAttribute('disabled','disabled');
@@ -553,8 +547,9 @@ var UIEvents = function(app) {
       app.focus_input(true);
     });
 
-    xhr.open("POST", app.api.baseurl + "/image");
-    xhr.send(fd);
+    xhr.open("PUT", "https://relaychat.party/img/");
+    xhr.setRequestHeader('content-type', files[0].type),
+    xhr.send(files[0]);
   });
 
   clickTouchEvent(document.getElementById('image-uploads'), function(e) {
@@ -656,9 +651,8 @@ var UIEvents = function(app) {
 
         app.focus_input();
         var blob = items[i].getAsFile();
-        var fd = new FormData();
-        fd.append("image", blob);
         var xhr = new XMLHttpRequest();
+
         xhr.addEventListener("load", function() {
           var res = JSON.parse(xhr.responseText);
           if (xhr.status != 200) {
@@ -674,8 +668,9 @@ var UIEvents = function(app) {
           }
         });
 
-        xhr.open("POST", app.api.baseurl + "/image");
-        xhr.send(fd);
+        xhr.open("PUT", "https://relaychat.party/img/");
+        xhr.setRequestHeader("content-type", items[i].type);
+        xhr.send(blob);
         return;
       }
     }

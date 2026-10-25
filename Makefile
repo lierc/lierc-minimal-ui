@@ -8,7 +8,7 @@ $(templates): $(handlebars)
 
 .PHONY: bust
 bust: $(templates)
-	bin/cache-bust index.html search.html home.html
+	bin/cache-bust index.html app/index.html search/index.html unsubscribe/index.html
 
 .PHONY: watch
 watch:
