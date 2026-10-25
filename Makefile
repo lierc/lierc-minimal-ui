@@ -1,18 +1,6 @@
-handlebars = $(wildcard templates/*)
-templates = static/js/templates.js
-
-all: $(templates)
-
-$(templates): $(handlebars)
-	handlebars $(handlebars) > $(templates)
-
 .PHONY: bust
-bust: $(templates)
+bust:
 	bin/cache-bust index.html app/index.html search/index.html unsubscribe/index.html
-
-.PHONY: watch
-watch:
-	bin/watch --exec make --dir templates --ignore .swp
 
 .PHONY: emoji
 emoji:

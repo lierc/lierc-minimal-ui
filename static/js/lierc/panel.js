@@ -1,7 +1,7 @@
 import { Editor } from "./editor.js";
 import { Embed } from "./embed.js";
 import { Format } from "./format.js";
-import { Template } from "./template.js";
+import { safe, Template } from "./template.js";
 
 const months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
 const days   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
@@ -529,7 +529,7 @@ export class Panel {
 
     if (embed.provider_name == "Twitter") {
       use_html = true;
-      embed.html = new Handlebars.SafeString(
+      embed.html = safe(
         embed.html
           .replace(/<script[^>]+>.*<\/script>/, "")
           .replace(/twitter-tweet/, "")
@@ -537,7 +537,7 @@ export class Panel {
     }
     else if (embed.provider_name == "Facebook") {
       use_html = true;
-      embed.html = new Handlebars.SafeString(
+      embed.html = safe(
         embed.html
           .replace(/<script[^>]+>.*<\/script>/, "")
         );
