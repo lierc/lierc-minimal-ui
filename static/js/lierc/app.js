@@ -215,7 +215,7 @@ var App = function(url, user) {
 
     connection.on("private:react", function(conn, nick, message) {
       var panel = app.get_panel(nick, conn);
-      panel.handle_reaction(message.Prefix.Name, msgid, react);
+      panel.handle_reaction(message);
     });
 
     connection.on("privmsg:typing", function(conn, nick, message) {
@@ -487,7 +487,8 @@ var App = function(url, user) {
       connected: conn.connected,
       mobile: app.mobile,
       type: type,
-      network: conn.host
+      network: conn.host,
+      get_nick: function() { return conn.nick; }
     });
 
     if (app.last_seen[panel.id])
@@ -840,7 +841,32 @@ var App = function(url, user) {
   };
 
   app.is_reaction = function(message) {
-    return message.Command == "TAGMSG" && message.Tags && message.Tags["+draft/react"];
+    return message.Command == "TAGMSG" && message.Tags
+      && (message.Tags["+draft/react"] || message.Tags["+draft/unreact"]);
+  };
+
+  app.send_reaction = function(panel, id, emoji, remove) {
+    if (!panel || !panel.connection || !id || !emoji)
+      return;
+
+    var tag = "@+draft/reply=" + id + ";"
+      + (remove ? "+draft/unreact=" : "+draft/react=") + emoji;
+
+    app.api.post("/connection/" + panel.connection, {
+      body:  tag + " TAGMSG " + panel.name,
+      headers: {
+        'lierc-token' : app.post_token(),
+        'content-type': "application/irc",
+      },
+      success: function(res) {
+        app.post_tokens.push(res.token);
+      },
+      error: function(e) {
+        var res = JSON.parse(e.responseText);
+        alert("Error: " + res.error);
+        app.load_token();
+      }
+    });
   };
 
   app.prev_panel = function() {

@@ -975,27 +975,38 @@ var UIEvents = function(app) {
       var popup = react.querySelector('.emoji-popup');
       popup.parentNode.removeChild(popup);
 
-      if (! (emoji && id && panel))
-        return;
-
-      var tag = "@+draft/reply="+id+";+draft/react="+emoji;
-
-      app.api.post("/connection/" + panel.connection, {
-        body:  tag + " TAGMSG " + panel.name,
-        headers: {
-          'lierc-token' : app.post_token(),
-          'content-type': "application/irc",
-        },
-        success: function(res) {
-          app.post_tokens.push(res.token);
-        },
-        error: function(e) {
-          var res = JSON.parse(e.responseText);
-          alert("Error: " + res.error);
-          app.load_token();
-        }
-      });
+      app.send_reaction(panel, id, emoji, false);
     }
+  });
+
+  app.elem.panel.addEventListener('click', function(e) {
+    if (!e.target.matches('.reactions .reaction, .reactions .reaction *'))
+      return;
+
+    e.preventDefault();
+
+    var group = e.target;
+    while (group && !group.matches('.reaction')) {
+      group = group.parentNode;
+    }
+
+    var message = group;
+    while (message && !message.matches('li.message')) {
+      message = message.parentNode;
+    }
+
+    if (!message)
+      return;
+
+    var panel_id = message.getAttribute('data-panel-id');
+    var panel = panel_id ? app.panels[panel_id] : app.focused;
+
+    app.send_reaction(
+      panel,
+      message.getAttribute('data-message-server-id'),
+      group.getAttribute('data-emoji'),
+      group.classList.contains('self')
+    );
   });
 
   window.addEventListener("beforeunload", function() {
