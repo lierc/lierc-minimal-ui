@@ -822,6 +822,9 @@ export class App {
       if (!connection) return;
     }
 
+    // set only once a request is made, and always cleared below,
+    // so an early return can't leave check_scroll waiting forever
+    this.filling_backlog = true;
     panel.set_loading(true);
 
     const highlight = panel.id == 'highlights';
@@ -868,7 +871,6 @@ export class App {
       });
 
       panel.prepend(list);
-      this.filling_backlog = false;
 
       reactions.forEach((reaction) => {
         panel.handle_reaction(reaction);
@@ -882,9 +884,11 @@ export class App {
       }
     }
     catch (e) {
-      this.filling_backlog = false;
       panel.set_loading(false);
       console.log(e);
+    }
+    finally {
+      this.filling_backlog = false;
     }
   }
 
@@ -1117,7 +1121,6 @@ export class App {
     }
 
     if (this.elem.scroll.scrollTop <= 1) {
-      this.filling_backlog = true;
       this.fill_backlog(
         this.focused, this.focused.oldest_message_id, focus
       );
