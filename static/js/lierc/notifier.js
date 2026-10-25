@@ -21,7 +21,7 @@ class WebPush {
     document.getElementById("web-notify").classList.add("broken");
   }
 
-  setup() {
+  async setup() {
     if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
       this.hide();
       console.log("Notifications not supported.");
@@ -39,61 +39,61 @@ class WebPush {
       return;
     }
 
-    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-      serviceWorkerRegistration.pushManager.getSubscription()
-        .then((subscription) => {
-          if(subscription) {
-            this.set_enabled(true, subscription);
-          }
-        });
-    });
+    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    const subscription = await serviceWorkerRegistration.pushManager.getSubscription();
+    if (subscription) {
+      this.set_enabled(true, subscription);
+    }
   }
 
-  unsubscribe() {
-    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-      serviceWorkerRegistration.pushManager.getSubscription()
-        .then((subscription) => {
-          if (!subscription) {
-            this.set_enabled(false);
-            return;
-          }
-          subscription.unsubscribe().then(() => {
-            this.set_enabled(false);
-            const part = encodeURIComponent(subscription.endpoint);;
-            this.#app.api.delete(`/notification/web_push/${part}`);
-          }).catch((e) => {
-            console.log("Failed to unsubscribe", e);
-          });
-        }).catch((e) => {
-          console.log("Error unsubscribing", e);
-        });
-    });
+  async unsubscribe() {
+    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    let subscription;
+    try {
+      subscription = await serviceWorkerRegistration.pushManager.getSubscription();
+    }
+    catch (e) {
+      console.log("Error unsubscribing", e);
+      return;
+    }
+
+    if (!subscription) {
+      this.set_enabled(false);
+      return;
+    }
+
+    try {
+      await subscription.unsubscribe();
+      this.set_enabled(false);
+      const part = encodeURIComponent(subscription.endpoint);
+      this.#app.api.delete(`/notification/web_push/${part}`);
+    }
+    catch (e) {
+      console.log("Failed to unsubscribe", e);
+    }
   }
 
-  subscribe() {
-    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
-      this.#app.api.get("/notification/web_push_keys", {
-        success: (res) => {
-          const vapid = base64url.decode(res['vapid_public_key']);
-          serviceWorkerRegistration.pushManager.subscribe({
-              userVisibleOnly: true,
-              applicationServerKey: vapid.buffer
-            })
-            .then((subscription) => {
-              this.set_enabled(true, subscription);
-            })
-            .catch((e) => {
-              if (Notification.permission === 'denied') {
-                console.log("Notifier permission denied");
-              }
-              else {
-                console.log("Unable to subscribe", e);
-              }
-              this.set_enabled(false);
-            });
-        }
+  async subscribe() {
+    const serviceWorkerRegistration = await navigator.serviceWorker.ready;
+    const res = await this.#app.api.get("/notification/web_push_keys");
+    const vapid = base64url.decode(res['vapid_public_key']);
+
+    try {
+      const subscription = await serviceWorkerRegistration.pushManager.subscribe({
+        userVisibleOnly: true,
+        applicationServerKey: vapid.buffer
       });
-    });
+      this.set_enabled(true, subscription);
+    }
+    catch (e) {
+      if (Notification.permission === 'denied') {
+        console.log("Notifier permission denied");
+      }
+      else {
+        console.log("Unable to subscribe", e);
+      }
+      this.set_enabled(false);
+    }
   }
 
   build_pref(sub) {
@@ -151,12 +151,8 @@ class APN {
     }
   }
 
-  setup() {
-    this.#app.api.get("/notification/apn/config", {
-      success: (c) => {
-        this.config = c;
-      }
-    });
+  async setup() {
+    this.config = await this.#app.api.get("/notification/apn/config");
   }
 
   check_per(per) {

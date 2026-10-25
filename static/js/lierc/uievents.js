@@ -253,28 +253,27 @@ export const UIEvents = function(app) {
       connections: Object.values(app.connections)
     });
 
-    dialog.el.addEventListener('submit', (e) => {
+    dialog.el.addEventListener('submit', async (e) => {
       e.preventDefault();
       const channel = dialog.el.querySelector('input[name=channel]').value;
       const select = dialog.el.querySelector('select');
       const conn = select.options[select.selectedIndex].value;
-      app.api.post(`/connection/${conn}`, {
-        body: `JOIN ${channel}`,
-        headers: {
-          'content-type': "application/irc",
-          'lierc-token' : app.post_token()
-        },
-        success: function(res) {
-          app.post_tokens.push(res.token);
-          app.close_dialog();
-        },
-        error: function(e) {
-          app.close_dialog();
-          const res = JSON.parse(e.responseText);
-          alert(`Error: ${res.error}`);
-          app.load_token();
-        }
-      });
+      try {
+        const res = await app.api.post(`/connection/${conn}`, {
+          body: `JOIN ${channel}`,
+          headers: {
+            'content-type': "application/irc",
+            'lierc-token' : app.post_token()
+          }
+        });
+        app.post_tokens.push(res.token);
+        app.close_dialog();
+      }
+      catch (e) {
+        app.close_dialog();
+        alert(`Error: ${e}`);
+        app.load_token();
+      }
     });
   }
 
@@ -442,31 +441,32 @@ export const UIEvents = function(app) {
       }
     }
 
-    function sendlines(lines) {
-      if (!lines.length) return;
-      app.api.post(`/connection/${panel.connection}`, {
-        headers:{
-          'content-type': 'application/irc',
-          'lierc-token' : app.post_token()
-        },
-        body: lines.shift(),
-        success: function(res) {
+    // one at a time, in order, stopping at the first failure
+    async function sendlines(lines) {
+      for (const line of lines) {
+        try {
+          const res = await app.api.post(`/connection/${panel.connection}`, {
+            headers:{
+              'content-type': 'application/irc',
+              'lierc-token' : app.post_token()
+            },
+            body: line
+          });
           app.post_tokens.push(res.token);
-          if (lines.length)
-            sendlines(lines);
-        },
-        error: function(e) {;
+        }
+        catch (e) {
           alert(`Error: ${e}`);
           app.load_token();
+          return;
         }
-      });
+      }
     }
 
     sendlines(send);
     app.send_stop_typing(panel);
   }
 
-  document.getElementById('gist-upload-form').addEventListener('submit', (e) => {
+  document.getElementById('gist-upload-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const form = e.target;
     const submit = form.querySelector('input[name=upload]');
@@ -484,28 +484,29 @@ export const UIEvents = function(app) {
 
     data['files'][filename] = { 'content': text.value };
 
-    fetch("https://api.github.com/gists", {
+    try {
+      const response = await fetch("https://api.github.com/gists", {
         'method': 'POST',
         'body': JSON.stringify(data)
-      }).then((res) => {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then((res) => {
-        submit.removeAttribute('disabled');
-        text.removeAttribute('disabled');
-        text.value = '';
-        app.focus_input(true);
-        document.execCommand("insertText", false, res.html_url);
-        document.getElementById('upload').classList.remove('open');
-      }).catch((e) => {
-        alert("I'm sorry");
-        submit.removeAttribute('disabled');
-        text.removeAttribute('disabled');
       });
+      if (!response.ok)
+        throw Error(response.statusText);
+      const res = await response.json();
+      submit.removeAttribute('disabled');
+      text.removeAttribute('disabled');
+      text.value = '';
+      app.focus_input(true);
+      document.execCommand("insertText", false, res.html_url);
+      document.getElementById('upload').classList.remove('open');
+    }
+    catch (e) {
+      alert("I'm sorry");
+      submit.removeAttribute('disabled');
+      text.removeAttribute('disabled');
+    }
   });
 
-  document.getElementById('image-upload-form').addEventListener('submit', (e) => {
+  document.getElementById('image-upload-form').addEventListener('submit', async (e) => {
     e.preventDefault();
     const submit = e.target.querySelector('input[name="upload"]');
     const image = e.target.querySelector('input[name="image"]');
@@ -516,54 +517,51 @@ export const UIEvents = function(app) {
       return;
     }
 
-    const xhr = new XMLHttpRequest();
-
     submit.setAttribute('disabled','disabled');
 
-    xhr.addEventListener("load", () => {
-      let res;
-      try {
-        res = JSON.parse(xhr.responseText);
-      } catch (error) {
-        res = { error: error };
-      }
-
-      submit.removeAttribute('disabled');
-
-      if (xhr.status != 200) {
-        submit.removeAttribute('disabled');
-        const err = res['data'] ? res['data']['error'] : res['error'];
-        alert(err);
-        return;
-      }
-      else {
-        app.focus_input(true);
-        document.execCommand("insertText", false, res.data.link);
-        document.getElementById('upload').classList.remove('open');
-        image.value = null;
-      }
-    });
-
-    xhr.addEventListener("error", (e) => {
+    let response;
+    try {
+      response = await fetch("https://relaychat.party/img/", {
+        method: "PUT",
+        headers: { 'content-type': files[0].type },
+        body: files[0]
+      });
+    }
+    catch (error) {
+      // network failure
       submit.removeAttribute('disabled');
       app.focus_input(true);
-    });
+      return;
+    }
 
-    xhr.open("PUT", "https://relaychat.party/img/");
-    xhr.setRequestHeader('content-type', files[0].type),
-    xhr.send(files[0]);
+    let res;
+    try {
+      res = await response.json();
+    } catch (error) {
+      res = { error: error };
+    }
+
+    submit.removeAttribute('disabled');
+
+    if (response.status != 200) {
+      const err = res['data'] ? res['data']['error'] : res['error'];
+      alert(err);
+      return;
+    }
+
+    app.focus_input(true);
+    document.execCommand("insertText", false, res.data.link);
+    document.getElementById('upload').classList.remove('open');
+    image.value = null;
   });
 
-  clickTouchEvent(document.getElementById('image-uploads'), (e) => {
+  clickTouchEvent(document.getElementById('image-uploads'), async (e) => {
     if (e.target.matches('.image-delete')) {
       e.preventDefault();
       const url = e.target.getAttribute('data-url');
       if (confirm(`Are you sure you would like to delete ${url}?`)) {
-        app.api.delete(`/image/${encodeURIComponent(url)}`, {
-          success: function() {
-            app.fill_images();
-          }
-        });
+        await app.api.delete(`/image/${encodeURIComponent(url)}`);
+        app.fill_images();
       }
     }
   });
@@ -634,7 +632,7 @@ export const UIEvents = function(app) {
     e.clipboardData.setData('Text', lines.join("\n"));
   });
 
-  document.addEventListener('paste', (e) => {
+  document.addEventListener('paste', async (e) => {
     if (app.overlayed())
       return;
     if (document.activeElement.matches('#gist-upload-input'))
@@ -652,27 +650,25 @@ export const UIEvents = function(app) {
         app.focused.editor.append_elem(span);
 
         app.focus_input();
+        // clipboard items can't be read once the paste event is over
+        const type = items[i].type;
         const blob = items[i].getAsFile();
-        const xhr = new XMLHttpRequest();
 
-        xhr.addEventListener("load", () => {
-          const res = JSON.parse(xhr.responseText);
-          if (xhr.status != 200) {
-            const err = res['data'] ? res['data']['error'] : res['error'];
-            alert(err);
-            span.parentNode.removeChild(span);
-            return;
-          }
-          else {
-            span.textContent = res.data.link;
-            span.classList.remove('uploading');
-            app.focused.editor.move_cursor_after(span);
-          }
+        const response = await fetch("https://relaychat.party/img/", {
+          method: "PUT",
+          headers: { "content-type": type },
+          body: blob
         });
-
-        xhr.open("PUT", "https://relaychat.party/img/");
-        xhr.setRequestHeader("content-type", items[i].type);
-        xhr.send(blob);
+        const res = await response.json();
+        if (response.status != 200) {
+          const err = res['data'] ? res['data']['error'] : res['error'];
+          alert(err);
+          span.parentNode.removeChild(span);
+          return;
+        }
+        span.textContent = res.data.link;
+        span.classList.remove('uploading');
+        app.focused.editor.move_cursor_after(span);
         return;
       }
     }
@@ -933,7 +929,7 @@ export const UIEvents = function(app) {
     setTimeout(() =>{ m.disconnect(); }, 10000);
   });
 
-  app.elem.panel.addEventListener('click', (e) => {
+  app.elem.panel.addEventListener('click', async (e) => {
     if (!e.target.matches('.message-react, .message-react *'))
       return;
 
@@ -982,21 +978,20 @@ export const UIEvents = function(app) {
 
       const tag = `@+draft/reply=${id};+draft/react=${emoji}`;
 
-      app.api.post(`/connection/${panel.connection}`, {
-        body:  `${tag} TAGMSG ${panel.name}`,
-        headers: {
-          'lierc-token' : app.post_token(),
-          'content-type': "application/irc",
-        },
-        success: function(res) {
-          app.post_tokens.push(res.token);
-        },
-        error: function(e) {
-          const res = JSON.parse(e.responseText);
-          alert(`Error: ${res.error}`);
-          app.load_token();
-        }
-      });
+      try {
+        const res = await app.api.post(`/connection/${panel.connection}`, {
+          body:  `${tag} TAGMSG ${panel.name}`,
+          headers: {
+            'lierc-token' : app.post_token(),
+            'content-type': "application/irc",
+          }
+        });
+        app.post_tokens.push(res.token);
+      }
+      catch (e) {
+        alert(`Error: ${e}`);
+        app.load_token();
+      }
     }
   });
 
@@ -1018,7 +1013,7 @@ export const UIEvents = function(app) {
   });
 
   document.onselectionchange = function(e) {
-    if (app.focused && app.focused.editor.focused) {
+    if (app.focused?.editor.focused) {
       app.focused.editor.save_selection();
     }
   };

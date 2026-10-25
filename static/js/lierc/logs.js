@@ -21,7 +21,7 @@ export class Logs {
     this.topic = document.getElementById("topic");
   }
 
-  populate_datalist() {
+  async populate_datalist() {
     const path = `/connection/${this.connection.value}/channel`;
 
     if (this.channel.value == '') {
@@ -29,31 +29,49 @@ export class Logs {
       this.channel.setAttribute('disabled', 'disabled');
     }
 
-    this.api.get(path, {
-      error: (err) => {
-        if (this.channel.value == 'loading...') {
-          this.channel.value = '';
-        }
-      },
-      success: (channels) => {
-        this.datalist.innerHTML = '';
+    try {
+      const channels = await this.api.get(path);
+      this.datalist.innerHTML = '';
 
-        channels.forEach((chan) => {
-          const item = document.createElement('OPTION');
-          item.value = chan;
-          this.datalist.appendChild(item);
-        });
+      channels.forEach((chan) => {
+        const item = document.createElement('OPTION');
+        item.value = chan;
+        this.datalist.appendChild(item);
+      });
 
-        if (this.channel.value == 'loading...') {
-          this.channel.value = '';
-          this.channel.removeAttribute('disabled');
+      if (this.channel.value == 'loading...') {
+        this.channel.value = '';
+        this.channel.removeAttribute('disabled');
 
-          if (this.datalist.childNodes.length) {
-            this.channel.value = this.datalist.childNodes[0].value;
-          }
+        if (this.datalist.childNodes.length) {
+          this.channel.value = this.datalist.childNodes[0].value;
         }
       }
+    }
+    catch (err) {
+      if (this.channel.value == 'loading...') {
+        this.channel.value = '';
+      }
+    }
+  }
+
+  async load_connections() {
+    const conns = await this.api.get("/connection");
+    conns.forEach((conn) => {
+      const item = document.createElement('OPTION');
+      item.value = conn.Id;
+
+      if (conn.Config.Alias) {
+        item.textContent = conn.Config.Alias;
+      }
+      else {
+       item.textContent = conn.Config.Host;
+      }
+
+      this.connection.appendChild(item);
     });
+    this.load_url_search();
+    this.populate_datalist();
   }
 
   init() {
@@ -99,25 +117,7 @@ export class Logs {
       }
     });
 
-    this.api.get("/connection", {
-      success: (conns) => {
-        conns.forEach((conn) => {
-          const item = document.createElement('OPTION');
-          item.value = conn.Id;
-
-          if (conn.Config.Alias) {
-            item.textContent = conn.Config.Alias;
-          }
-          else {
-           item.textContent = conn.Config.Host;
-          }
-
-          this.connection.appendChild(item);
-        });
-        this.load_url_search();
-        this.populate_datalist();
-      }
-    });
+    this.load_connections();
 
     this.to.addEventListener("change", (e) => {
       const to   = new Date(this.to.value);

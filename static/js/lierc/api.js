@@ -5,10 +5,8 @@ export class API {
     this.baseurl = baseurl;
   }
 
-  request(method, path, options) {
-    if (!options)
-      options = {};
-
+  // resolves with the response data, rejects with an "API Error: ..." message
+  async request(method, path, options = {}) {
     const settings = {
       method: method,
       credentials: 'same-origin'
@@ -28,35 +26,27 @@ export class API {
       settings['headers'] = options['headers'];
     }
 
-    return fetch(this.baseurl + path, settings).then((res) => {
-      const type = res.headers.get('Content-Type');
-      if (type && type.match(/^application\/javascript/)) {
-        return res.json();
-      }
-      else if (res.ok) {
-        return res.text();
-      }
-      else {
-        throw new Error(
-          `API Error: [${res.status}] '${res.statusText}'`
-        );
-      }
-    }).then((data) => {
-        if (data['status'] == "error") {
-          throw `API Error: ${data['error']}`;
-        }
+    const res = await fetch(this.baseurl + path, settings);
+    const type = res.headers.get('Content-Type');
+    let data;
 
-        if (options['success']) {
-          options['success'](data);
-        }
-    }).catch((e) => {
-        if (options['error']) {
-          options['error'](e);
-        }
-        else {
-          console.error(e);
-        }
-    });
+    if (type?.match(/^application\/javascript/)) {
+      data = await res.json();
+    }
+    else if (res.ok) {
+      data = await res.text();
+    }
+    else {
+      throw new Error(
+        `API Error: [${res.status}] '${res.statusText}'`
+      );
+    }
+
+    if (data['status'] == "error") {
+      throw `API Error: ${data['error']}`;
+    }
+
+    return data;
   }
 
   build_query(params) {
@@ -72,28 +62,30 @@ export class API {
     return new Stream(this.baseurl);
   }
 
-  auth(cb) {
-    return fetch(`${this.baseurl}/auth`, {
-      credentials: 'same-origin'
-    }).then(cb, () => {
-      // network failure
-      cb({status: 0});
-    });
+  // resolves with the response, or {status: 0} if the request failed
+  async auth() {
+    try {
+      return await fetch(`${this.baseurl}/auth`, {
+        credentials: 'same-origin'
+      });
+    }
+    catch (e) {
+      return {status: 0};
+    }
   }
 
-  logout() {
-    return fetch(`${this.baseurl}/logout`, {
+  async logout() {
+    const res = await fetch(`${this.baseurl}/logout`, {
       'method': 'POST',
       'credentials': 'same-origin',
-    }).then((res) => {
-      if (!res.ok)
-        alert('Error!');
-      else
-        window.location.reload();
     });
+    if (!res.ok)
+      alert('Error!');
+    else
+      window.location.reload();
   }
 
-  get(path, options) {
+  get(path, options = {}) {
     if (options['data'])
       path += `?${this.build_query(options['data'])}`;
     return this.request('GET', path, options);

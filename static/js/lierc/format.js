@@ -16,7 +16,7 @@ Unformat.descend = function(node, string) {
     if (Unformat.tags[node.nodeName])
       string += Unformat.tags[node.nodeName];
     if (node.nodeType == 1) {
-      if (node.classList && node.classList.contains('invert'))
+      if (node.classList?.contains('invert'))
         string += Unformat.invert;
       if (node.hasAttribute('data-color-fg')) {
         string += `\x03${node.getAttribute('data-color-fg')}`;
@@ -116,7 +116,7 @@ Format.linkify = function(elem) {
     if (!node.nodeValue) {
       console.log(node);
     }
-    if (node.nodeValue && node.nodeValue.match(Format.url_re)) {
+    if (node.nodeValue?.match(Format.url_re)) {
       const replace = [];
       const text = node.nodeValue;
       let match;

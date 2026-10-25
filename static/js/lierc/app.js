@@ -9,10 +9,6 @@ import { Render } from "./render.js";
 import { Template } from "./template.js";
 import { UIEvents } from "./uievents.js";
 
-if (!("forEach" in NodeList)) {
-  NodeList.prototype.forEach = Array.prototype.forEach;
-}
-
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
@@ -93,29 +89,36 @@ export class App {
     window.addEventListener("pageshow", check_stream);
     this.setup_highlights();
 
-    this.get_prefs((prefs) => {
-      this.prefs = prefs;
-      this.sorting = this.prefs['sorting'] || [];
-      delete this.prefs['sorting'];
-
-      if (this.prefs['email'] === true) {
-        document.getElementById('email-notify')
-          .classList.add('enabled');
-      }
-      if (this.prefs['theme']) {
-        this.set_theme(this.prefs['theme'], true);
-      }
-
-      this.load_seen(() => {
-        this.load_token(() => {
-          this.init();
-          Emoji.load();
-          this.notify = new Notifier(this);
-        });
-      });
-    });
+    this.#start();
 
     this.events = new UIEvents(this);
+  }
+
+  async #start() {
+    try {
+      this.prefs = await this.get_prefs();
+    }
+    catch (e) {
+      alert(e);
+      return;
+    }
+
+    this.sorting = this.prefs['sorting'] || [];
+    delete this.prefs['sorting'];
+
+    if (this.prefs['email'] === true) {
+      document.getElementById('email-notify')
+        .classList.add('enabled');
+    }
+    if (this.prefs['theme']) {
+      this.set_theme(this.prefs['theme'], true);
+    }
+
+    await this.load_seen();
+    await this.load_token();
+    this.init();
+    Emoji.load();
+    this.notify = new Notifier(this);
   }
 
   set_connected(conn_id, status, message) {
@@ -324,7 +327,7 @@ export class App {
   }
 
   is_focused(panel) {
-    return this.window_focused && this.focused && this.focused.id == panel.id;
+    return this.window_focused && this.focused?.id == panel.id;
   }
 
   find_default_panel() {
@@ -338,45 +341,37 @@ export class App {
     return null;
   }
 
-  init() {
+  async init() {
     this.default_panel = this.find_default_panel();
-    this.api.get('/connection', {
-      success: (configs) => {
-        if (!configs.length)
-          this.config_modal();
+    const configs = await this.api.get('/connection');
 
-        configs.forEach((conn) => {
-          const conn_id   = conn.Id;
-          const host = conn.Config.Alias || conn.Config.Host;
-          const nick = conn.Nick;
-          this.setup_connection(conn_id, host, nick);
-        });
+    if (!configs.length)
+      this.config_modal();
 
-        if (this.stream)
-          this.stream.destroy();
+    configs.forEach((conn) => {
+      const conn_id   = conn.Id;
+      const host = conn.Config.Alias || conn.Config.Host;
+      const nick = conn.Nick;
+      this.setup_connection(conn_id, host, nick);
+    });
 
-        this.connect();
-      }
+    if (this.stream)
+      this.stream.destroy();
+
+    this.connect();
+  }
+
+  async add_recent_privates() {
+    const privates = await this.api.get("/privates");
+    privates.forEach((priv) => {
+      this.add_panel(priv.nick, priv.connection, {
+        focus: false,
+        dont_save: true
+      });
     });
   }
 
-  add_recent_privates(cb) {
-    this.api.get("/privates", {
-      success: (privates) => {
-        privates.forEach((priv) => {
-          this.add_panel(priv.nick, priv.connection, {
-            focus: false,
-            dont_save: true
-          });
-        });
-        if (cb) {
-          cb();
-        }
-      }
-    });;
-  }
-
-  connect() {
+  async connect() {
     const stream = this.api.stream();
 
     stream.on('message', (e) => {
@@ -454,11 +449,9 @@ export class App {
       }
     });
 
-    this.sync_missed(() => {
-      this.add_recent_privates(() => {
-        this.stream = stream;
-      });
-    });
+    await this.sync_missed();
+    await this.add_recent_privates();
+    this.stream = stream;
   }
 
   get_panel(name, connection) {
@@ -585,7 +578,7 @@ export class App {
     this.ignore_nicks_pref(panel);
     this.send_typing_pref(panel);
 
-    panel.elem.nav.addEventListener('click', (e) => {
+    panel.elem.nav.addEventListener('click', async (e) => {
       if (e.target.classList.contains("panel-log"))
         return;
 
@@ -605,14 +598,13 @@ export class App {
           this.close_panel(id);
       }
       else if (e.target.classList.contains('edit-panel')) {
-        this.api.get(`/connection/${panel.connection}`, {
-          success: (res) => {
-            this.config_modal(null, res);
-          },
-          error: function(e) {
-            alert(e);
-          }
-        });
+        try {
+          const res = await this.api.get(`/connection/${panel.connection}`);
+          this.config_modal(null, res);
+        }
+        catch (e) {
+          alert(e);
+        }
       }
       else {
         this.focus_panel(id);
@@ -654,7 +646,7 @@ export class App {
   }
 
   apply_missed(panel, missed) {
-    if (this.focused && this.focused.id == panel.id) {
+    if (this.focused?.id == panel.id) {
       return;
     }
 
@@ -697,7 +689,7 @@ export class App {
     return token;
   }
 
-  part_channel(name, connection) {
+  async part_channel(name, connection) {
     if (!confirm(`Are you sure you want to leave ${name}?`))
       return;
 
@@ -705,26 +697,29 @@ export class App {
     headers.append('lierc-token', this.post_token());
     headers.append('content-type', 'application/irc');
 
-    this.api.post(`/connection/${connection}`, {
-      body: `PART ${name}`,
-      headers: headers,
-      success: (res) => {
-        this.remove_panel(App.panel_id(name, connection));
-        this.post_tokens.push(res.token);
-      },
-      error: (e) => {
-        alert(`Error: ${e}`);
-        this.load_token();
-      }
-    });
+    try {
+      const res = await this.api.post(`/connection/${connection}`, {
+        body: `PART ${name}`,
+        headers: headers
+      });
+      this.remove_panel(App.panel_id(name, connection));
+      this.post_tokens.push(res.token);
+    }
+    catch (e) {
+      alert(`Error: ${e}`);
+      this.load_token();
+    }
   }
 
-  delete_connection(connection) {
+  async delete_connection(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    this.api.delete(`/connection/${connection}`, {
-      error: function(e) { alert(e); }
-    });
+    try {
+      await this.api.delete(`/connection/${connection}`);
+    }
+    catch (e) {
+      alert(e);
+    }
   }
 
   channel_panels() {
@@ -758,20 +753,19 @@ export class App {
     this.elem.channels.appendChild(panel.elem.nav);
   }
 
-  fill_missed(start) {
-    this.api.get(`/log/${start}`, {
-      success: (events) => {
-        for (let i=0; i < events.length; i++) {
-          this.stream.fire('message', events[i]);
-        }
-      },
-      error: (e) => {
-        this.reset();
+  async fill_missed(start) {
+    try {
+      const events = await this.api.get(`/log/${start}`);
+      for (let i=0; i < events.length; i++) {
+        this.stream.fire('message', events[i]);
       }
-    });
+    }
+    catch (e) {
+      this.reset();
+    }
   }
 
-  maybe_send_typing(panel, c) {
+  async maybe_send_typing(panel, c) {
     const conn = this.connections[panel.connection];
     if (!conn.caps_enabled["message-tags"])
       return;
@@ -781,48 +775,46 @@ export class App {
 
     const tag = "@+typing=active"
 
-    this.api.post(`/connection/${panel.connection}`, {
-      body:  `${tag} TAGMSG ${panel.name}`,
-      headers: {
-        'lierc-token' : this.post_token(),
-        'content-type': "application/irc",
-      },
-      success: (res) => {
-        this.post_tokens.push(res.token);
-      },
-      error: (e) => {
-        const res = JSON.parse(e.responseText);
-        alert(`Error: ${res.error}`);
-        this.load_token();
-      }
-    });
+    try {
+      const res = await this.api.post(`/connection/${panel.connection}`, {
+        body:  `${tag} TAGMSG ${panel.name}`,
+        headers: {
+          'lierc-token' : this.post_token(),
+          'content-type': "application/irc",
+        }
+      });
+      this.post_tokens.push(res.token);
+    }
+    catch (e) {
+      alert(`Error: ${e}`);
+      this.load_token();
+    }
   }
 
-  send_stop_typing(panel) {
+  async send_stop_typing(panel) {
     const conn = this.connections[panel.connection];
     if (!conn.caps_enabled["message-tags"])
       return;
 
     const tag = "@+typing=done"
 
-    this.api.post(`/connection/${panel.connection}`, {
-      body:  `${tag} TAGMSG ${panel.name}`,
-      headers: {
-        'lierc-token' : this.post_token(),
-        'content-type': "application/irc",
-      },
-      success: (res) => {
-        this.post_tokens.push(res.token);
-      },
-      error: (e) => {
-        const res = JSON.parse(e.responseText);
-        alert(`Error: ${res.error}`);
-        this.load_token();
-      }
-    });
+    try {
+      const res = await this.api.post(`/connection/${panel.connection}`, {
+        body:  `${tag} TAGMSG ${panel.name}`,
+        headers: {
+          'lierc-token' : this.post_token(),
+          'content-type': "application/irc",
+        }
+      });
+      this.post_tokens.push(res.token);
+    }
+    catch (e) {
+      alert(`Error: ${e}`);
+      this.load_token();
+    }
   }
 
-  fill_backlog(panel, msgid, focus) {
+  async fill_backlog(panel, msgid, focus) {
     if (panel.backlog_empty) return;
 
     if (panel.connection) {
@@ -840,66 +832,64 @@ export class App {
     if (msgid)
       url += `/${msgid}`;
 
-    this.api.get(url, {
-      data: { limit: limit },
-      success: (events) => {
-        if (events.length < limit)
-          panel.backlog_empty = true;
+    try {
+      const events = await this.api.get(url, { data: { limit: limit } });
+      if (events.length < limit)
+        panel.backlog_empty = true;
 
-        const list = [];
-        const reactions = [];
-        const is_search = panel.type == "search";
+      const list = [];
+      const reactions = [];
+      const is_search = panel.type == "search";
 
-        events.forEach( (e) => {
-          const message = e.Message;
-          message.Id = e.MessageId;
-          message.Highlight = e.Highlight && panel.id != 'highlights';
+      events.forEach( (e) => {
+        const message = e.Message;
+        message.Id = e.MessageId;
+        message.Highlight = e.Highlight && panel.id != 'highlights';
 
-          panel.update_oldest_message_id(message.Id);
+        panel.update_oldest_message_id(message.Id);
 
-          if (this.is_ignore(panel, message))
-            return;
+        if (this.is_ignore(panel, message))
+          return;
 
-          if (this.is_reaction(message))
-            reactions.push(message);
-          else {
-            const el = Render(message, {
-              show_channel: is_search,
-              controls: !is_search
-            });
-            if (el)
-              list.push(el);
-            if (highlight) {
-              const panel_id = App.panel_id(message.Params[0], e.ConnectionId);
-              el.setAttribute('data-panel-id', panel_id);
-            }
+        if (this.is_reaction(message))
+          reactions.push(message);
+        else {
+          const el = Render(message, {
+            show_channel: is_search,
+            controls: !is_search
+          });
+          if (el)
+            list.push(el);
+          if (highlight) {
+            const panel_id = App.panel_id(message.Params[0], e.ConnectionId);
+            el.setAttribute('data-panel-id', panel_id);
           }
-        });
-
-        panel.prepend(list);
-        this.filling_backlog = false;
-
-        reactions.forEach((reaction) => {
-          panel.handle_reaction(reaction);
-        });
-
-        panel.react_backlog_check();
-        panel.set_loading(false);
-        if (focus) {
-          panel.update_seen();
-          this.save_seen(panel);
         }
-      },
-      error: (e) => {
-        this.filling_backlog = false;
-        panel.set_loading(false);
-        console.log(e);
+      });
+
+      panel.prepend(list);
+      this.filling_backlog = false;
+
+      reactions.forEach((reaction) => {
+        panel.handle_reaction(reaction);
+      });
+
+      panel.react_backlog_check();
+      panel.set_loading(false);
+      if (focus) {
+        panel.update_seen();
+        this.save_seen(panel);
       }
-    });
+    }
+    catch (e) {
+      this.filling_backlog = false;
+      panel.set_loading(false);
+      console.log(e);
+    }
   }
 
   is_reaction(message) {
-    return message.Command == "TAGMSG" && message.Tags && message.Tags["+draft/react"];
+    return message.Command == "TAGMSG" && message.Tags?.["+draft/react"];
   }
 
   prev_panel() {
@@ -1084,7 +1074,7 @@ export class App {
       });
     }
 
-    dialog.el.addEventListener("submit", (e) => {
+    dialog.el.addEventListener("submit", async (e) => {
       e.preventDefault();
       const form = e.target;
       const method = form.getAttribute('method');
@@ -1103,15 +1093,15 @@ export class App {
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
-      this.api.request(method, action, {
-        body: JSON.stringify(data),
-        success: (res) => {
-          this.close_dialog();
-        },
-        error: function(e) {
-          alert("i'm sorry");
-        }
-      });
+      try {
+        await this.api.request(method, action, {
+          body: JSON.stringify(data)
+        });
+        this.close_dialog();
+      }
+      catch (e) {
+        alert("i'm sorry");
+      }
     });
   }
 
@@ -1134,50 +1124,44 @@ export class App {
     }
   }
 
-  ping_server() {
-    this.api.auth(
-      (res) => {
-        if (res.status == 200)
-          return;
+  async ping_server() {
+    const res = await this.api.auth();
 
-        if (res.status == 401) {
-          //window.location.reload();
-          return;
-        }
+    if (res.status == 200)
+      return;
 
-        console.log(res.status);
+    if (res.status == 401) {
+      //window.location.reload();
+      return;
+    }
 
-        // ping failed, force a reconnect of stream...
-        if (res.status == 0) {
-          if (this.stream)
-            this.stream.close();
-          return;
-        }
+    console.log(res.status);
 
-        const data = res.json();
-        if (data["error"]) {
-          console.log(data["error"]);
-        }
-      }
-    );
+    // ping failed, force a reconnect of stream...
+    if (res.status == 0) {
+      if (this.stream)
+        this.stream.close();
+      return;
+    }
+
+    const data = await res.json();
+    if (data["error"]) {
+      console.log(data["error"]);
+    }
   }
 
-  get_prefs(cb) {
-    this.api.get("/preference", {
-      success: function(data) {
-        const prefs = {};
-        for (let i=0; i < data.length; i++) {
-          try {
-            prefs[data[i].name] = JSON.parse(data[i].value);
-          }
-          catch(e) {
-            console.log("Unable to parse JSON: ", data[i].value);
-          }
-        }
-        cb(prefs);
-      },
-      error: function(e) { alert(e); }
-    });
+  async get_prefs() {
+    const data = await this.api.get("/preference");
+    const prefs = {};
+    for (let i=0; i < data.length; i++) {
+      try {
+        prefs[data[i].name] = JSON.parse(data[i].value);
+      }
+      catch(e) {
+        console.log("Unable to parse JSON: ", data[i].value);
+      }
+    }
+    return prefs;
   }
 
   get_pref(name) {
@@ -1263,34 +1247,30 @@ export class App {
     });
   }
 
-  load_token(cb) {
-    this.api.get("/token", {
-      success: (data) => {
-        this.post_tokens.push(data.token);
-        if (data.extra) {
-          this.post_tokens = this.post_tokens.concat(data.extra);
-        }
-        if (cb) cb();
-      },
-      error: function(e) {
-        if (cb) cb();
+  // never rejects: startup carries on without tokens if this fails
+  async load_token() {
+    try {
+      const data = await this.api.get("/token");
+      this.post_tokens.push(data.token);
+      if (data.extra) {
+        this.post_tokens = this.post_tokens.concat(data.extra);
       }
-    });
+    }
+    catch (e) {
+    }
   }
 
-  load_seen(cb) {
-    this.api.get("/seen", {
-      success: (res) => {
-        for (const i in res) {
-          const id = App.panel_id(res[i]["channel"], res[i]["connection"]);
-          this.last_seen[id] = res[i]["message_id"];
-        }
-        cb();
-      },
-      error: function(e) {
-        cb();
+  // never rejects: startup carries on without seen state if this fails
+  async load_seen() {
+    try {
+      const res = await this.api.get("/seen");
+      for (const i in res) {
+        const id = App.panel_id(res[i]["channel"], res[i]["connection"]);
+        this.last_seen[id] = res[i]["message_id"];
       }
-    });
+    }
+    catch (e) {
+    }
   }
 
   save_seen(panel, force) {
@@ -1316,57 +1296,49 @@ export class App {
     }
   }
 
-  sync_missed(cb) {
+  async sync_missed() {
     if (this.focused) {
       this.focused.update_seen();
       if (this.focused.last_seen)
         this.last_seen[this.focused.id] = this.focused.last_seen;
     }
 
-    this.api.get("/missed", {
-      data: this.last_seen,
-      success: (res) => {
-        this.missed = {};
-        for (const connection in res) {
-          for (const channel in res[connection]) {
-            const id = App.panel_id(channel, connection);
-            if (this.panels[id]) {
-              this.apply_missed(this.panels[id], res[connection][channel]);
-            }
-            else {
-              this.missed[id] = res[connection][channel];
-            }
-          }
+    const res = await this.api.get("/missed", { data: this.last_seen });
+    this.missed = {};
+    for (const connection in res) {
+      for (const channel in res[connection]) {
+        const id = App.panel_id(channel, connection);
+        if (this.panels[id]) {
+          this.apply_missed(this.panels[id], res[connection][channel]);
         }
-        if (cb) {
-          cb();
+        else {
+          this.missed[id] = res[connection][channel];
         }
       }
-    });
+    }
   }
 
-  search_panel(panel, text) {
+  async search_panel(panel, text) {
     const parts = [ "connection", panel.connection
       , "channel", encodeURIComponent(panel.name), "last" ];
 
-    this.api.get(`/${parts.join("/")}`, {
-      data: { query: text, limit: 10 },
-      success: function(messages) {
-        if (messages.length > 0) {
-          panel.scroll(() => {
-            const line = document.createElement('DIV');
-            line.classList.add('search-start');
-            panel.elem.list.appendChild(line);
-          });
-        }
-
-        for (let i=messages.length - 1; i >= 0; i--) {
-          const msg = messages[i].Message;
-          msg.Search = true;
-          panel.append(Render(msg), {skip_date: true});
-        }
-      }
+    const messages = await this.api.get(`/${parts.join("/")}`, {
+      data: { query: text, limit: 10 }
     });
+
+    if (messages.length > 0) {
+      panel.scroll(() => {
+        const line = document.createElement('DIV');
+        line.classList.add('search-start');
+        panel.elem.list.appendChild(line);
+      });
+    }
+
+    for (let i=messages.length - 1; i >= 0; i--) {
+      const msg = messages[i].Message;
+      msg.Search = true;
+      panel.append(Render(msg), {skip_date: true});
+    }
   }
 
   focus_input(force) {
@@ -1470,18 +1442,17 @@ export class App {
   }
 
   save_channel_order() {
-    const order = Array.prototype.map.call(
+    const order = Array.from(
       this.elem.channels.querySelectorAll('li'),
-      (li) => {
-        return li.getAttribute('data-panel-id');
-      });
+      (li) => li.getAttribute('data-panel-id')
+    );
 
     this.sorting = order;
     this.update_pref("sorting", order);
   }
 
   overlayed() {
-    return this.dialog && this.dialog.open;
+    return this.dialog?.open;
   }
 
   close_dialog() {
@@ -1537,8 +1508,8 @@ export class App {
     this.panels[this.highlights.id] = this.highlights;
   }
 
-  reset() {
-    const path = this.focused ? this.focused.path : "";
+  async reset() {
+    const path = this.focused?.path ?? "";
 
     for (const id in this.panels) {
       this.remove_panel(id);
@@ -1552,22 +1523,17 @@ export class App {
     this.focused = null;
     this.setup_highlights();
 
-    this.load_seen(() => {
-      this.load_token(() => {
-        this.init();
-      });
-    });
+    await this.load_seen();
+    await this.load_token();
+    this.init();
   }
 
-  fill_images() {
-    this.api.get("/image", {
-      success: (images) => {
-        const html = Template("images", {
-          images: images
-        });
-        this.elem.images.innerHTML = html;
-      }
+  async fill_images() {
+    const images = await this.api.get("/image");
+    const html = Template("images", {
+      images: images
     });
+    this.elem.images.innerHTML = html;
   }
 
   set_theme(theme, skip_save) {

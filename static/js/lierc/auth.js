@@ -7,19 +7,19 @@ export class Auth {
     this.#baseurl = baseurl;
   }
 
-  auth(complete) {
-    fetch(`${this.#baseurl}/auth`, {
-      'credentials': 'same-origin'
-    }).then((res) => {
+  async auth(complete) {
+    try {
+      const res = await fetch(`${this.#baseurl}/auth`, {
+        'credentials': 'same-origin'
+      });
       if (!res.ok)
         throw Error(res.statusText);
-      return res.json();
-    }).then((res) => {
-      complete(res);
-    }).catch((e) => {
-        console.log(e);
+      complete(await res.json());
+    }
+    catch (e) {
+      console.log(e);
       this.#modal_overlay(complete);
-    });
+    }
   }
 
   #modal_overlay(complete) {
@@ -31,7 +31,7 @@ export class Auth {
       overlay.querySelector('.login-form input[name="email"]').focus();
     }
 
-    overlay.addEventListener("submit", (e) => {
+    overlay.addEventListener("submit", async (e) => {
       e.preventDefault();
       const action = e.target.querySelector('input[type="submit"]').getAttribute('name');
       const email = e.target.querySelector('input[name="email"]').value;
@@ -46,23 +46,24 @@ export class Auth {
         body += `&username=${encodeURIComponent(user)}`;
       }
 
-      fetch(`${this.#baseurl}/${action}`, {
+      try {
+        const res = await fetch(`${this.#baseurl}/${action}`, {
           'credentials': 'same-origin',
           'method': "POST",
           'body': body,
           'headers': {
             'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
           }
-        }).then((res) => {
-          if (!res.ok)
-            throw Error(res.statusText);
-          return res.json();
-        }).then((res) => {
-          dialog.close();
-          complete(res);
-        }).catch((e) => {
-          alert(`Sorry: ${e}`);
         });
+        if (!res.ok)
+          throw Error(res.statusText);
+        const data = await res.json();
+        dialog.close();
+        complete(data);
+      }
+      catch (e) {
+        alert(`Sorry: ${e}`);
+      }
     });
 
     overlay.querySelector('.login-toggle').addEventListener('click', (e) => {

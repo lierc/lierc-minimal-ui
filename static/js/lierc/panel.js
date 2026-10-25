@@ -468,7 +468,7 @@ export class Panel {
   }
 
   message_text(el) {
-    while (el && !(el.classList && el.classList.contains('message-text'))) {
+    while (el && !el.classList?.contains('message-text')) {
       el = el.parentNode;
     }
     return el;
@@ -514,7 +514,7 @@ export class Panel {
       while (toggle && !toggle.classList.contains("embed-toggle")) {
         toggle = toggle.nextSibling;
       }
-      if (toggle && toggle.classList.contains("embed-toggle")) {
+      if (toggle?.classList.contains("embed-toggle")) {
         toggle.classList.add("hidden");
       }
       return;
@@ -595,7 +595,7 @@ export class Panel {
           const nick = nick_el ? nick_el.getAttribute('data-nick') : "";
           const prev = el.previousSibling;
 
-          if (el.classList.contains("message") && prev && prev.classList.contains("message")) {
+          if (el.classList.contains("message") && prev?.classList.contains("message")) {
             const prev_nick_el = prev.querySelector('span[data-nick]');
             const prev_nick = prev_nick_el ? prev_nick_el.getAttribute('data-nick') : "";
 
@@ -603,7 +603,7 @@ export class Panel {
               el.classList.add('consecutive');
           }
 
-          if (prev && prev.classList.contains("chat") && !opts['skip_date']) {
+          if (prev?.classList.contains("chat") && !opts['skip_date']) {
             const time = el.querySelector("time");
             const prev_time = prev.querySelector("time");
             if (time && prev_time && time.textContent == prev_time.textContent)
@@ -617,7 +617,7 @@ export class Panel {
             }
           }
           else {
-            if (prev && prev.classList.contains("monospace"))
+            if (prev?.classList.contains("monospace"))
               prev.classList.add("monospace-end");
           }
 
@@ -726,7 +726,7 @@ export class Panel {
     if (this.focused && !this.is_scrolled())
       return;
 
-    const els = Array.prototype.filter.call(this.elem.list.querySelectorAll('li.chat'), (el) => {
+    const els = [...this.elem.list.querySelectorAll('li.chat')].filter((el) => {
       return getComputedStyle(el).display != "none";
     });
 

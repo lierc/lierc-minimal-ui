@@ -312,7 +312,7 @@ export const Render = function(message, opts) {
     time.setAttribute('data-time', message.Time);
     time.setAttribute('title', date.toString());
 
-    if (opts && opts['full_date']) {
+    if (opts?.['full_date']) {
       const mos = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
       const mo = mos[date.getMonth()];
       const y = date.getYear() + 1900;
@@ -330,7 +330,7 @@ export const Render = function(message, opts) {
     const controls = document.createElement('DIV');
     controls.classList.add('message-controls', 'popup-toggle');
 
-    if (message.Tags && message.Tags["msgid"]) {
+    if (message.Tags?.["msgid"]) {
         const react = document.createElement('DIV');
         react.classList.add('message-react', 'popup-toggle');
         controls.appendChild(react);
@@ -360,18 +360,18 @@ export const Render = function(message, opts) {
 
     if (message.Id)
       li.setAttribute('data-message-id', message.Id);
-    if (message.Tags && message.Tags["msgid"])
+    if (message.Tags?.["msgid"])
       li.setAttribute('data-message-server-id', message.Tags["msgid"]);
     if (message.Time)
       li.setAttribute('data-time', message.Time);
     return li;
   }
 
-  function flex () {
+  function flex (...children) {
     const wrap = document.createElement('DIV');
     wrap.setAttribute('class', 'message-flex');
-    for (let i=0; i < arguments.length; i++) {
-      wrap.appendChild(arguments[i]);
+    for (const child of children) {
+      wrap.appendChild(child);
     }
     return wrap;
   }

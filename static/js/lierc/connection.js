@@ -21,11 +21,10 @@ export class Connection {
     this.#listeners[name].push(func);
   }
 
-  #fire(name) {
+  #fire(name, ...data) {
     if (this.#listeners[name]) {
-      const data = Array.prototype.slice.call(arguments, 1);
       this.#listeners[name].forEach((listener) => {
-        listener.apply(undefined, data);
+        listener(...data);
       });
     }
   }
@@ -339,7 +338,7 @@ export class Connection {
       const channel = this.channel(name);
       let type;
 
-      if (message.Tags && message.Tags["+draft/react"]) {
+      if (message.Tags?.["+draft/react"]) {
         type = "react";
       } else if (message.Tags && ( message.Tags["+draft/typing"] || message.Tags["+typing"] )) {
         type = "typing";

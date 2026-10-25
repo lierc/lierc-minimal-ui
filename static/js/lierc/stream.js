@@ -28,12 +28,10 @@ export class Stream {
     this.#listeners[name].push(func);
   }
 
-  fire(name) {
+  fire(name, ...data) {
     if (this.#listeners[name]) {
-      const data = Array.prototype.slice.call(arguments,1);
       this.#listeners[name].forEach((listener) => {
-        data.unshift(listener, 0);
-        setTimeout.apply(undefined, data);
+        setTimeout(listener, 0, ...data);
       });
     }
   }
@@ -119,7 +117,7 @@ export class Stream {
 
   check() {
     // a half-open connection (e.g. after sleep) stays OPEN forever
-    if (this.eventsource && this.eventsource.readyState == 1
+    if (this.eventsource?.readyState == 1
         && Date.now() - this.last_event > heartbeat_timeout) {
       console.log("no heartbeat, forcing reconnect");
       this.close();
