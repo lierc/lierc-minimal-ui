@@ -72,7 +72,10 @@ var API = function(baseurl) {
   api.auth = function(cb) {
     return fetch(api.baseurl + "/auth", {
       credentials: 'same-origin'
-    }).then(cb);
+    }).then(cb, function() {
+      // network failure
+      cb({status: 0});
+    });
   };
 
   api.logout = function() {
