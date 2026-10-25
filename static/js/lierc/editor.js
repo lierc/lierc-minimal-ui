@@ -2,50 +2,51 @@ import { Completion } from "./completion.js";
 import { Format } from "./format.js";
 import { History } from "./history.js";
 
-export var Editor = function(element) {
-  var editor = this;
+const BOLD = 66;
+const ITALIC = 73;
+const UNDERLINE = 85;
+const INVERT = 191;
+const COLOR = 67;
+const RESET = 79;
+const TAB = 9;
+const UP = 38;
+const DOWN = 40;
 
-  var BOLD = 66;
-  var ITALIC = 73;
-  var UNDERLINE = 85;
-  var INVERT = 191;
-  var COLOR = 67;
-  var RESET = 79;
+export class Editor {
+  constructor(element) {
+    this.el = element;
+    this.info = document.getElementById('color-info');
+    this.completion = new Completion(element);
+    this.history = new History(element);
+    this.focused = false;
+    this.coloring = false;
+    this.color = "";
+    this.range = null;
 
-  var TAB = 9;
-  var UP = 38;
-  var DOWN = 40;
+    this.el.addEventListener("blur", (e) => this.blur(e));
+    this.el.addEventListener("focus", (e) => this.focus(e));
+    this.el.addEventListener("input", (e) => this.save_selection(e));
+  }
 
-  editor.el = element;
-  editor.info = document.getElementById('color-info');
-  editor.completion = new Completion(element);
-  editor.history = new History(element);
-  editor.focused = false;
-  editor.coloring = false;
-  editor.color = "";
-  editor.range = null;
-
-  var osx = window.navigator.userAgent.match(/Macintosh/);
-
-  editor.keydown = function(e, mods) {
-    if (editor.coloring) {
+  keydown(e, mods) {
+    if (this.coloring) {
       if (e.which >= 48 && e.which <= 57) {
         var i = String(9 - (57 - e.which));
-        editor.color += i;
+        this.color += i;
         e.preventDefault();
       }
       else if (e.which == 188) {
-        editor.color += ",";
+        this.color += ",";
         e.preventDefault();
       }
       else {
-        editor.coloring = false;
-        editor.el.classList.remove('coloring');
-        editor.info.classList.remove('open');
+        this.coloring = false;
+        this.el.classList.remove('coloring');
+        this.info.classList.remove('open');
 
-        var seq = editor.color;
+        var seq = this.color;
         var parts = seq.match(/^(?:([0-9]{1,2}),?([0-9]{1,2})?)?$/);
-        editor.color = "";
+        this.color = "";
 
         if (parts === null) {
           alert("Invalid color sequence: '" + seq + "'");
@@ -101,14 +102,14 @@ export var Editor = function(element) {
 
     else if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
       if (e.which == COLOR) {
-        editor.coloring = !editor.coloring;
-        if (editor.coloring) {
-          editor.el.classList.add('coloring');
-          editor.info.classList.add('open');
+        this.coloring = !this.coloring;
+        if (this.coloring) {
+          this.el.classList.add('coloring');
+          this.info.classList.add('open');
         }
         else {
-          editor.el.classList.remove('coloring');
-          editor.info.classList.remove('open');
+          this.el.classList.remove('coloring');
+          this.info.classList.remove('open');
         }
         return;
       }
@@ -117,12 +118,12 @@ export var Editor = function(element) {
         var sel = window.getSelection();
         var range = sel.getRangeAt(0);
 
-        var last = editor.el.lastChild;
+        var last = this.el.lastChild;
         range.setEndAfter(last);
 
         var contents = range.extractContents();
         var text = document.createTextNode("\u200b" + contents.textContent);
-        editor.el.appendChild(text);
+        this.el.appendChild(text);
 
         range.setStart(text, 1);
         range.setEnd(text, 1);
@@ -167,19 +168,19 @@ export var Editor = function(element) {
 
     if (e.which == TAB && !mods['ctrl']) {
       e.preventDefault();
-      editor.completion.complete();
+      this.completion.complete();
       return;
     }
 
-    editor.completion.stop();
+    this.completion.stop();
 
     if (e.which == UP && !mods['ctrl'] && !mods['meta'] && mods['shift']) {
       e.preventDefault();
-      editor.history.up();
+      this.history.up();
 
       var sel = window.getSelection();
       var range = sel.getRangeAt(0);
-      var last = editor.el.lastChild;
+      var last = this.el.lastChild;
       if (last) {
         range.setStartAfter(last);
         range.setEndAfter(last);
@@ -189,11 +190,11 @@ export var Editor = function(element) {
 
     if (e.which == DOWN && !mods['ctrl'] && !mods['meta'] && mods['shift']) {
       e.preventDefault();
-      editor.history.down();
+      this.history.down();
 
       var sel = window.getSelection();
       var range = sel.getRangeAt(0);
-      var last = editor.el.lastChild;
+      var last = this.el.lastChild;
       if (last) {
         range.setStartAfter(last);
         range.setEndAfter(last);
@@ -201,54 +202,54 @@ export var Editor = function(element) {
       return;
     }
 
-    editor.history.reset();
-  };
+    this.history.reset();
+  }
 
-  editor.blur = function() {
-    editor.focused = false;
-  };
+  blur() {
+    this.focused = false;
+  }
 
-  editor.focus = function() {
-    editor.focused = true;
-    editor.restore_selection();
-  };
+  focus() {
+    this.focused = true;
+    this.restore_selection();
+  }
 
-  editor.restore_selection = function() {
-    if (editor.range) {
+  restore_selection() {
+    if (this.range) {
       var s = window.getSelection();
       s.removeAllRanges();
       var range = document.createRange();
-      range.setStart(editor.range.startContainer, editor.range.startOffset);
-      range.setEnd(editor.range.endContainer, editor.range.endOffset);
+      range.setStart(this.range.startContainer, this.range.startOffset);
+      range.setEnd(this.range.endContainer, this.range.endOffset);
       s.addRange(range);
     }
-  };
+  }
 
-  editor.append_elem = function(el) {
+  append_elem(el) {
     var sel = window.getSelection();
     var range = sel.getRangeAt(0);
     range.insertNode(el);
-    editor.move_cursor_after(el);
-  };
+    this.move_cursor_after(el);
+  }
 
-  editor.move_cursor_after = function(el) {
+  move_cursor_after(el) {
     var sel = window.getSelection();
     var range = sel.getRangeAt(0);
     range.setStart(el, 1);
     range.setEnd(el, 1);
-  };
+  }
 
-  editor.save_selection = function() {
+  save_selection() {
     var s = window.getSelection();
     if (s.rangeCount == 0) {
-      editor.range = null;
+      this.range = null;
       return;
     }
 
     var range = s.getRangeAt(0);
     var node = range.commonAncestorContainer;
-    if (editor.el.contains(node)) {
-      editor.range = {
+    if (this.el.contains(node)) {
+      this.range = {
         startContainer: range.startContainer,
         endContainer: range.endContainer,
         startOffset: range.startOffset,
@@ -256,11 +257,7 @@ export var Editor = function(element) {
       };
     }
     else {
-      editor.range = null;
+      this.range = null;
     }
-  };
-
-  editor.el.addEventListener("blur", editor.blur);
-  editor.el.addEventListener("focus", editor.focus);
-  editor.el.addEventListener("input", editor.save_selection);
-};
+  }
+}

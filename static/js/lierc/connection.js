@@ -1,55 +1,55 @@
 import { Channel } from "./channel.js";
 
-export var Connection = function(id, host, nick) {
-  var conn = this;
+export class Connection {
+  #listeners = {};
 
-  conn.id = id;
-  conn.host = host;
-  conn.nick = nick;
-  conn.connected = false;
-  conn.channels = [];
-  conn.isupport = {};
-  conn.prefix = [ ["v","+"],["o","@"],["h", "%"]];
-  conn.chantypes = ["#","&"];
-  conn.caps_enabled = {};
+  constructor(id, host, nick) {
+    this.id = id;
+    this.host = host;
+    this.nick = nick;
+    this.connected = false;
+    this.channels = [];
+    this.isupport = {};
+    this.prefix = [ ["v","+"],["o","@"],["h", "%"]];
+    this.chantypes = ["#","&"];
+    this.caps_enabled = {};
+  }
 
-  var listeners = {};
+  on(name, func) {
+    if (!this.#listeners[name])
+      this.#listeners[name] = [];
+    this.#listeners[name].push(func);
+  }
 
-  conn.on = function(name, func) {
-    if (!listeners[name])
-      listeners[name] = [];
-    listeners[name].push(func);
-  };
-
-  var fire = function (name) {
-    if (listeners[name]) {
+  #fire(name) {
+    if (this.#listeners[name]) {
       var data = Array.prototype.slice.call(arguments, 1);
-      listeners[name].forEach(function(listener) {
+      this.#listeners[name].forEach(function(listener) {
         listener.apply(undefined, data);
       });
     }
   }
 
-  conn.remove_channel = function(name) {
-    var i = conn.channels.indexOf(name);
+  remove_channel(name) {
+    var i = this.channels.indexOf(name);
     if (i != -1) {
-      conn.channels.splice(i, 1);
+      this.channels.splice(i, 1);
       return true;
     }
     return false;
-  };
+  }
 
-  conn.nick_mode = function(nick) {
+  nick_mode(nick) {
     var first = nick.slice(0,1);
-    for (var i=0; i < conn.prefix.length; i++) {
-      if (first == conn.prefix[i][1]) {
-        return [nick.slice(1), conn.prefix[i][0]];
+    for (var i=0; i < this.prefix.length; i++) {
+      if (first == this.prefix[i][1]) {
+        return [nick.slice(1), this.prefix[i][0]];
       }
     }
     return [nick, ""]
-  };
+  }
 
-  conn.nicks = function(channel) {
+  nicks(channel) {
     var ret = {};
     var nicks = channel.nicks;
     var l = nicks.length;
@@ -59,37 +59,37 @@ export var Connection = function(id, host, nick) {
       var modes = channel.nick_modes[nick];
       ret[nick] = "";
 
-      for (var j=0; j < conn.prefix.length; j++) {
-        if (modes && modes.indexOf( conn.prefix[j][0]) != -1) {
-          ret[nick] = conn.prefix[j][1] + ret[nick];
+      for (var j=0; j < this.prefix.length; j++) {
+        if (modes && modes.indexOf( this.prefix[j][0]) != -1) {
+          ret[nick] = this.prefix[j][1] + ret[nick];
         }
       }
     }
 
     return ret;
-  };
+  }
 
-  conn.on_message = function(message) {
+  on_message(message) {
     switch (String(message.Command)) {
     case "CONNECT":
-      fire("connect", conn.id, message);
-      fire("status", conn.id, message);
+      this.#fire("connect", this.id, message);
+      this.#fire("status", this.id, message);
       break;
 
     case "DISCONNECT":
-      fire("disconnect", conn.id, message);
-      fire("status", conn.id, message);
+      this.#fire("disconnect", this.id, message);
+      this.#fire("status", this.id, message);
       break;
 
     case "001":
-      conn.nick = message.Params[0];
-      fire("status:raw", conn.id, message);
+      this.nick = message.Params[0];
+      this.#fire("status:raw", this.id, message);
       break;
 
     case "CAP":
       var caps = message.Params[2].split(" ");
       for (var i=0; i < caps.length; i++) {
-        conn.caps_enabled[caps[i]] = true;
+        this.caps_enabled[caps[i]] = true;
       }
       break;
 
@@ -99,24 +99,24 @@ export var Connection = function(id, host, nick) {
       for (var i=0; i < parts.length; i++) {
         if (parts[i].indexOf("=") != -1) {
           var kv = parts[i].split("=", 2);
-          conn.isupport[kv[0]] = kv[1];
+          this.isupport[kv[0]] = kv[1];
           if (kv[0] == "PREFIX") {
             var match = kv[1].match(/\(([^\)]+)\)(.+)/);
             if (match) {
               var modes = match[1].split("");
               var prefixes = match[2].split("");
-              conn.prefix = [];
+              this.prefix = [];
               for (var j=0; j < modes.length; j++) {
-                conn.prefix.push([modes[j], prefixes[j]]);
+                this.prefix.push([modes[j], prefixes[j]]);
               }
             }
           }
           else if (kv[0] == "CHANTYPES") {
-            conn.chantypes = kv[1].split("");
+            this.chantypes = kv[1].split("");
           }
         }
         else {
-          conn.isupport[parts[i]] = true;
+          this.isupport[parts[i]] = true;
         }
       }
       break;
@@ -125,20 +125,20 @@ export var Connection = function(id, host, nick) {
       var old = message.Prefix.Name;
       var nick = message.Params[0];
 
-      if (old == conn.nick) {
-        conn.nick = nick;
-        conn.channels.forEach(function(channel) {
+      if (old == this.nick) {
+        this.nick = nick;
+        this.channels.forEach((channel) => {
           channel.rename_nick(old, nick);
-          fire("status:raw", conn.id, message);
-          fire("channel:msg", conn.id, channel.name, message);
-          fire("channel:nicks", conn.id, channel.name, conn.nicks(channel))
+          this.#fire("status:raw", this.id, message);
+          this.#fire("channel:msg", this.id, channel.name, message);
+          this.#fire("channel:nicks", this.id, channel.name, this.nicks(channel))
         });
       }
       else {
-        conn.channels.forEach( function(channel) {
+        this.channels.forEach( (channel) => {
           if (channel.rename_nick(old, nick)) {
-            fire("channel:msg", conn.id, channel.name, message);
-            fire("channel:nicks", conn.id, channel.name, conn.nicks(channel))
+            this.#fire("channel:msg", this.id, channel.name, message);
+            this.#fire("channel:nicks", this.id, channel.name, this.nicks(channel))
           }
         });
       }
@@ -150,24 +150,24 @@ export var Connection = function(id, host, nick) {
       var msg = message.Params[1];
 
       var del = true;
-      for (var i=0; i < conn.channels; i++) {
-        if (conn.channels[i].contains_nick(nick)) {
+      for (var i=0; i < this.channels; i++) {
+        if (this.channels[i].contains_nick(nick)) {
           del = false;
           break;
         }
       }
 
-      var channel = conn.channel(name);
+      var channel = this.channel(name);
 
       if (channel) {
-        if (nick == conn.nick) {
-          conn.remove_channel(name);
-          fire("channel:close", conn.id, name);
+        if (nick == this.nick) {
+          this.remove_channel(name);
+          this.#fire("channel:close", this.id, name);
         }
         else {
           channel.remove_nick(nick);
-          fire("channel:msg", conn.id, name, message);
-          fire("channel:nicks", conn.id, name, conn.nicks(channel))
+          this.#fire("channel:msg", this.id, name, message);
+          this.#fire("channel:nicks", this.id, name, this.nicks(channel))
         }
       };
       break;
@@ -176,10 +176,10 @@ export var Connection = function(id, host, nick) {
       var nick = message.Prefix.Name;
       var msg = message.Params[0];
 
-      conn.channels.forEach( function(channel) {
+      this.channels.forEach( (channel) => {
         if (channel.remove_nick(nick)) {
-          fire("channel:msg", conn.id, channel.name, message);
-          fire("channel:nicks", conn.id, channel.name, conn.nicks(channel))
+          this.#fire("channel:msg", this.id, channel.name, message);
+          this.#fire("channel:nicks", this.id, channel.name, this.nicks(channel))
         }
       });
       break;
@@ -188,27 +188,27 @@ export var Connection = function(id, host, nick) {
       var name = message.Params[0];
       var nick = message.Prefix.Name;
 
-      if (nick == conn.nick) {
+      if (nick == this.nick) {
         var channel = new Channel(name);
-        conn.channels.push(channel);
-        fire("channel:new", conn.id, name, message);
+        this.channels.push(channel);
+        this.#fire("channel:new", this.id, name, message);
       }
       else {
-        var channel = conn.channel(name);
+        var channel = this.channel(name);
         if (channel) {
           channel.add_nick(nick);
-          fire("channel:msg", conn.id, name, message);
-          fire("channel:nicks", conn.id, name, conn.nicks(channel))
+          this.#fire("channel:msg", this.id, name, message);
+          this.#fire("channel:nicks", this.id, name, this.nicks(channel))
         }
       }
       break;
 
     case "324":
       var name = message.Params[0];
-      var channel = conn.channel(name)
+      var channel = this.channel(name)
       if (channel) {
         channel.mode = message.Params[1].substring(1);
-        fire("channel:mode", conn.id, name, channel.mode);
+        this.#fire("channel:mode", this.id, name, channel.mode);
       }
       break;
 
@@ -218,17 +218,17 @@ export var Connection = function(id, host, nick) {
       }
       else {
         var name = message.Params[0];
-        var channel = conn.channel(name);
+        var channel = this.channel(name);
         if (channel) {
           if (message.Params[1].match(/[+-][voh]/)) {
             channel.nick_mode(message.Params[2], message.Params[1]);
-            fire("channel:nicks", conn.id, name, conn.nicks(channel))
+            this.#fire("channel:nicks", this.id, name, this.nicks(channel))
           }
           else {
             channel.set_mode(message.Params[1]);
-            fire("channel:mode", conn.id, name, channel.mode);
+            this.#fire("channel:mode", this.id, name, channel.mode);
           }
-          fire("channel:msg", conn.id, name, message);
+          this.#fire("channel:msg", this.id, name, message);
         }
       }
       break;
@@ -237,21 +237,21 @@ export var Connection = function(id, host, nick) {
       var name = message.Params[1];
       var topic = message.Params[2];
 
-      var channel = conn.channel(name);
+      var channel = this.channel(name);
       if (channel) {
         channel.topic.value = topic;
-        fire("channel:topic", conn.id, name, channel.topic);
+        this.#fire("channel:topic", this.id, name, channel.topic);
       }
       break;
 
     case "333":
       var name = message.Params[1];
-      var channel = conn.channel(name);
+      var channel = this.channel(name);
 
       if (channel) {
         channel.topic.user = message.Params[2];
         channel.topic.time = message.Params[3];
-        fire("channel:topic", conn.id, name, channel.topic)
+        this.#fire("channel:topic", this.id, name, channel.topic)
       }
       break;
 
@@ -259,21 +259,21 @@ export var Connection = function(id, host, nick) {
       var nick = message.Prefix.Name;
       var name = message.Params[0];
       var text = message.Params[1];
-      var channel = conn.channel(name);
+      var channel = this.channel(name);
 
       if (channel) {
         channel.topic.value = text;
         channel.topic.time = parseInt((new Date()).getTime() / 1000);
         channel.topic.user = nick;
-        fire("channel:msg", conn.id, name, message);
-        fire("channel:topic", conn.id, name, channel.topic);
+        this.#fire("channel:msg", this.id, name, message);
+        this.#fire("channel:topic", this.id, name, channel.topic);
       }
       break;
 
     case "353":
       var name  = message.Params[2];
       var nicks = message.Params[3].split(/\s+/);
-      var channel = conn.channel(name);
+      var channel = this.channel(name);
 
       if (channel) {
         if (channel.synced) {
@@ -282,7 +282,7 @@ export var Connection = function(id, host, nick) {
         }
         for (i in nicks) {
           if (nicks[i])
-            var nick_mode = conn.nick_mode(nicks[i]);
+            var nick_mode = this.nick_mode(nicks[i]);
             channel.add_nick(nick_mode[0], nick_mode[1]);
         }
       }
@@ -290,11 +290,11 @@ export var Connection = function(id, host, nick) {
 
     case "366":
       var name = message.Params[1];
-      var channel = conn.channel(name);
+      var channel = this.channel(name);
 
       if (channel) {
         channel.synced = true;
-        fire("channel:nicks", conn.id, name, conn.nicks(channel))
+        this.#fire("channel:nicks", this.id, name, this.nicks(channel))
       }
       break;
 
@@ -302,17 +302,17 @@ export var Connection = function(id, host, nick) {
     case "403":
     case "482":
       var name = message.Params[1];
-      fire("channel:error", conn.id, name,  message);
+      this.#fire("channel:error", this.id, name,  message);
       break;
 
     case "NOTICE":
       var nick = message.Prefix.Name;
       var name = message.Params[0];
 
-      if (name == conn.nick)
-        fire("private:msg", conn.id, nick, message);
+      if (name == this.nick)
+        this.#fire("private:msg", this.id, nick, message);
       else
-        fire("status", conn.id, message);
+        this.#fire("status", this.id, message);
 
       break;
 
@@ -320,8 +320,8 @@ export var Connection = function(id, host, nick) {
       var nick = message.Prefix.Name;
       var name = message.Params[0];
       var text = message.Params[1];
-      var priv = conn.chantypes.indexOf(name[0]) == -1;
-      var channel = conn.channel(name);
+      var priv = this.chantypes.indexOf(name[0]) == -1;
+      var channel = this.channel(name);
       var type;
 
       if (message.Tags && message.Tags["+draft/react"]) {
@@ -332,12 +332,12 @@ export var Connection = function(id, host, nick) {
         return;
       }
 
-      if (name == conn.nick && priv)
-        fire("private:"+type, conn.id, nick, message);
+      if (name == this.nick && priv)
+        this.#fire("private:"+type, this.id, nick, message);
       else if (priv)
-        fire("private:"+type, conn.id, name, message);
+        this.#fire("private:"+type, this.id, name, message);
       else if (channel) {
-        fire("channel:"+type, conn.id, name, message);
+        this.#fire("channel:"+type, this.id, name, message);
       }
       break;
 
@@ -345,16 +345,16 @@ export var Connection = function(id, host, nick) {
       var nick = message.Prefix.Name;
       var name = message.Params[0];
       var text = message.Params[1];
-      var priv = conn.chantypes.indexOf(name[0]) == -1;
-      var channel = conn.channel(name);
+      var priv = this.chantypes.indexOf(name[0]) == -1;
+      var channel = this.channel(name);
 
-      if (name == conn.nick && priv)
-        fire("private:msg", conn.id, nick, message);
+      if (name == this.nick && priv)
+        this.#fire("private:msg", this.id, nick, message);
       else if (priv)
-        fire("private:msg", conn.id, name, message);
+        this.#fire("private:msg", this.id, name, message);
       else if (channel) {
         channel.bump_nick(nick);
-        fire("channel:msg", conn.id, name, message);
+        this.#fire("channel:msg", this.id, name, message);
       }
       break;
 
@@ -363,21 +363,21 @@ export var Connection = function(id, host, nick) {
       break;
 
     default:
-      fire("status", conn.id, message);
+      this.#fire("status", this.id, message);
     };
-  };
+  }
 
-  conn.channel = function(name) {
+  channel(name) {
     name = name.toLowerCase();
-    for (var i=0; i < conn.channels.length; i++) {
-      if (conn.channels[i].name.toLowerCase() == name) {
-        return conn.channels[i];
+    for (var i=0; i < this.channels.length; i++) {
+      if (this.channels[i].name.toLowerCase() == name) {
+        return this.channels[i];
       }
     }
     return false;
-  };
+  }
 
-  conn.is_channel = function(name) {
-    return conn.chantypes.indexOf(name[0]) != -1;
-  };
-};
+  is_channel(name) {
+    return this.chantypes.indexOf(name[0]) != -1;
+  }
+}

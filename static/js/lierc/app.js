@@ -13,76 +13,128 @@ if (!("forEach" in NodeList)) {
   NodeList.prototype.forEach = Array.prototype.forEach;
 }
 
-export var App = function(url, user) {
-  var app = this;
+function onlyUnique(value, index, self) {
+  return self.indexOf(value) === index;
+}
 
-  app.user = user;
-  app.api = new API(url);
-  app.commands = new Commands(app);
-  app.stream;
-  app.connections = {};
-  app.filling_backlog = false;
-  app.dialog = null;
-  app.sorting = [];
-  app.last_seen = {};
-  app.missed = {};
-  app.panels = {};
-  app.focused = null;
-  app.last_panel_id = null;
-  app.window_focused = true;
-  app.default_panel = null;
-  app.default_focused = false;
-  app.prefs = {};
-  app.touchstart = "ontouchstart" in document.documentElement;
-  app.mobile = App.detect_mobile();
-  app.sortable = !app.mobile && !app.touchstart;
-  app.post_tokens = [];
-  app.theme = 'default';
-  app.typing = [];
+const themes = ["solarized-dark", "solarized"];
 
-  app.elem = {
-    panel: document.getElementById('panel'),
-    nav: document.getElementById('nav'),
-    'status': document.getElementById('status'),
-    privates: document.getElementById('privates'),
-    channels: document.getElementById('channels'),
-    input: document.getElementById('input'),
-    topic: document.getElementById('topic'),
-    filler: document.getElementById('filler'),
-    scroll: document.getElementById('panel-scroll'),
-    title: document.getElementsByTagName('title')[0],
-    nicks: document.getElementById('nicks'),
-    body: document.body,
-    audio: Audio ? new Audio("/static/ent_communicator1.mp3") : undefined,
-    emoji: document.getElementById('emoji'),
-    switcher: document.getElementById('switcher-wrap'),
-    panel_name: document.getElementById('panel-name'),
-    flex_wrap: document.querySelector('.flex-wrap'),
-    reconnect: document.getElementById('reconnect-status'),
-    images: document.getElementById('image-uploads'),
-    meta: document.getElementById('meta-channels'),
-    themes: document.getElementById('themes'),
-    title_top: document.getElementById('title-top'),
-    typing: document.getElementById('typing-indicator')
-  };
+export class App {
+  constructor(url, user) {
+    this.user = user;
+    this.api = new API(url);
+    this.commands = new Commands(this);
+    this.stream;
+    this.connections = {};
+    this.filling_backlog = false;
+    this.dialog = null;
+    this.sorting = [];
+    this.last_seen = {};
+    this.missed = {};
+    this.panels = {};
+    this.focused = null;
+    this.last_panel_id = null;
+    this.window_focused = true;
+    this.default_panel = null;
+    this.default_focused = false;
+    this.prefs = {};
+    this.touchstart = "ontouchstart" in document.documentElement;
+    this.mobile = App.detect_mobile();
+    this.sortable = !this.mobile && !this.touchstart;
+    this.post_tokens = [];
+    this.theme = 'default';
+    this.typing = [];
 
-  app.set_connected = function(conn_id, status, message) {
-    var connection = app.connections[conn_id];
+    this.elem = {
+      panel: document.getElementById('panel'),
+      nav: document.getElementById('nav'),
+      'status': document.getElementById('status'),
+      privates: document.getElementById('privates'),
+      channels: document.getElementById('channels'),
+      input: document.getElementById('input'),
+      topic: document.getElementById('topic'),
+      filler: document.getElementById('filler'),
+      scroll: document.getElementById('panel-scroll'),
+      title: document.getElementsByTagName('title')[0],
+      nicks: document.getElementById('nicks'),
+      body: document.body,
+      audio: Audio ? new Audio("/static/ent_communicator1.mp3") : undefined,
+      emoji: document.getElementById('emoji'),
+      switcher: document.getElementById('switcher-wrap'),
+      panel_name: document.getElementById('panel-name'),
+      flex_wrap: document.querySelector('.flex-wrap'),
+      reconnect: document.getElementById('reconnect-status'),
+      images: document.getElementById('image-uploads'),
+      meta: document.getElementById('meta-channels'),
+      themes: document.getElementById('themes'),
+      title_top: document.getElementById('title-top'),
+      typing: document.getElementById('typing-indicator')
+    };
+
+    // setup
+
+    if (this.sortable)
+      this.make_sortable(this.elem.channels, () => this.save_channel_order());
+
+    setInterval(() => this.check_scroll(), 250);
+    setInterval(() => this.ping_server(), 1000 * 15);
+    setInterval(() => this.render_typing(), 500);
+
+    var check_stream = () => {
+      if (this.stream)
+        this.stream.check();
+    };
+
+    document.addEventListener("visibilitychange", function() {
+      if (!document.hidden)
+        check_stream();
+    });
+    window.addEventListener("online", check_stream);
+    window.addEventListener("pageshow", check_stream);
+    this.setup_highlights();
+
+    this.get_prefs((prefs) => {
+      this.prefs = prefs;
+      this.sorting = this.prefs['sorting'] || [];
+      delete this.prefs['sorting'];
+
+      if (this.prefs['email'] === true) {
+        document.getElementById('email-notify')
+          .classList.add('enabled');
+      }
+      if (this.prefs['theme']) {
+        this.set_theme(this.prefs['theme'], true);
+      }
+
+      this.load_seen(() => {
+        this.load_token(() => {
+          this.init();
+          Emoji.load();
+          this.notify = new Notifier(this);
+        });
+      });
+    });
+
+    this.events = new UIEvents(this);
+  }
+
+  set_connected(conn_id, status, message) {
+    var connection = this.connections[conn_id];
     connection.connected = status;
 
-    for (var id in app.panels) {
-      var panel = app.panels[id];
+    for (var id in this.panels) {
+      var panel = this.panels[id];
       if (panel.connection == conn_id) {
         panel.set_connected(status, message);
       }
     }
-  };
+  }
 
-  app.set_typing = function(nick, msg) {
+  set_typing(nick, msg) {
     var tag = msg.Tags["+draft/typing"] || msg.Tags["+typing"];
 
     if (tag == "paused" || tag == "done") {
-      app.stop_typing(nick);
+      this.stop_typing(nick);
       return;
     }
 
@@ -91,33 +143,29 @@ export var App = function(url, user) {
       return;
     }
 
-    app.typing.push(nick);
+    this.typing.push(nick);
 
     // remove nick from list after 4 seconds
-    setTimeout(function() { app.stop_typing(nick); }, 6000);
-  };
+    setTimeout(() => { this.stop_typing(nick); }, 6000);
+  }
 
-  app.stop_typing = function(nick) {
-    for (var i=0; i < app.typing.length; i++) {
-      if (app.typing[i] == nick) {
-        app.typing.splice(i, 1);
+  stop_typing(nick) {
+    for (var i=0; i < this.typing.length; i++) {
+      if (this.typing[i] == nick) {
+        this.typing.splice(i, 1);
         return;
       }
     }
-  };
-
-  function onlyUnique(value, index, self) {
-    return self.indexOf(value) === index;
   }
 
-  app.render_typing = function() {
-    var nicks = app.typing.filter(onlyUnique);
+  render_typing() {
+    var nicks = this.typing.filter(onlyUnique);
     var len = nicks.length;
 
     if ( len > 2) {
-      app.elem.typing.innerText = len + " people are typing…";
+      this.elem.typing.innerText = len + " people are typing…";
     } else if ( len > 0 ) {
-      app.elem.typing.innerText = "";
+      this.elem.typing.innerText = "";
       var els = [];
       for (var i=0; i < len; i++) {
         var nick = document.createElement("STRONG")
@@ -130,193 +178,193 @@ export var App = function(url, user) {
       var verb = len > 1 ? 'are' : 'is';
       els.push(document.createTextNode(" " + verb + " typing…"));
       for (var i=0; i < els.length; i++) {
-        app.elem.typing.appendChild(els[i]);
+        this.elem.typing.appendChild(els[i]);
       }
     } else {
-      app.elem.typing.innerText = "";
+      this.elem.typing.innerText = "";
     }
   }
 
-  app.clear_typing = function() {
-    app.typing = [];
-    app.elem.typing.innerText = "";
-  };
+  clear_typing() {
+    this.typing = [];
+    this.elem.typing.innerText = "";
+  }
 
-  app.setup_connection = function(id, host, nick) {
-    if (app.connections[id])
+  setup_connection(id, host, nick) {
+    if (this.connections[id])
       return;
 
     var connection = new Connection(id, host);
-    app.connections[id] = connection;
+    this.connections[id] = connection;
 
-    var panel = app.add_panel("status", connection.id, {status: true});
+    var panel = this.add_panel("status", connection.id, {status: true});
     panel.change_name(host);
     panel.update_topic({value: "status."});
 
-    connection.on("channel:new", function(conn, channel, message) {
-      app.add_panel(channel, conn, {focus: ("Id" in message)});
+    connection.on("channel:new", (conn, channel, message) => {
+      this.add_panel(channel, conn, {focus: ("Id" in message)});
     });
 
-    connection.on("private:msg", function(conn, nick, message) {
-      var panel = app.add_panel(nick, conn, {focus: false});
-      var connection = app.connections[conn];
+    connection.on("private:msg", (conn, nick, message) => {
+      var panel = this.add_panel(nick, conn, {focus: false});
+      var connection = this.connections[conn];
       var from = message.Prefix.Name != connection.nick;
 
       panel.update_oldest_message_id(message.Id)
 
-      if (app.is_ignore(panel, message))
+      if (this.is_ignore(panel, message))
         return;
 
       panel.append(Render(message));
-      app.update_title(true);
+      this.update_title(true);
 
-      var unfocused = !app.is_focused(panel);
+      var unfocused = !this.is_focused(panel);
       if (from && (unfocused || !panel.is_scrolled())) {
-        app.play_alert()
+        this.play_alert()
       }
       if (message.Highlight && unfocused) {
-        app.update_highlights(true);
+        this.update_highlights(true);
       }
       else if (unfocused) {
-        app.elem.title_top.classList.add('unread');
+        this.elem.title_top.classList.add('unread');
       }
     });
 
-    connection.on("channel:error", function(conn, channel, message) {
-      var panel = app.get_panel(channel, conn);
+    connection.on("channel:error", (conn, channel, message) => {
+      var panel = this.get_panel(channel, conn);
       var html = Render(message);
       panel.append(html);
     });
 
-    connection.on("channel:msg", function(conn, channel, message) {
-      var panel = app.get_panel(channel, conn);
+    connection.on("channel:msg", (conn, channel, message) => {
+      var panel = this.get_panel(channel, conn);
       var html = Render(message);
 
       panel.update_oldest_message_id(message.Id)
 
-      if (app.is_ignore(panel, message))
+      if (this.is_ignore(panel, message))
         return;
 
       if (html) {
         panel.append(html);
-        app.update_title(true);
+        this.update_title(true);
 
         if (message.Highlight) {
-          if (!app.is_focused(panel) || !panel.is_scrolled()) {
-            app.play_alert();
+          if (!this.is_focused(panel) || !panel.is_scrolled()) {
+            this.play_alert();
           }
-          if (app.focused && app.focused.id != panel.id) {
-            app.update_highlights(true);
+          if (this.focused && this.focused.id != panel.id) {
+            this.update_highlights(true);
           }
         }
       }
     });
 
-    connection.on("channel:react", function(conn, channel, message) {
-      var panel = app.get_panel(channel, conn);
+    connection.on("channel:react", (conn, channel, message) => {
+      var panel = this.get_panel(channel, conn);
       panel.handle_reaction(message);
     });
 
-    connection.on("channel:typing", function(conn, channel, message) {
-      var panel = app.get_panel(channel, conn);
-      if (app.is_focused(panel)) {
-        app.set_typing(message.Prefix.Name, message);
+    connection.on("channel:typing", (conn, channel, message) => {
+      var panel = this.get_panel(channel, conn);
+      if (this.is_focused(panel)) {
+        this.set_typing(message.Prefix.Name, message);
       }
     });
 
-    connection.on("private:react", function(conn, nick, message) {
-      var panel = app.get_panel(nick, conn);
+    connection.on("private:react", (conn, nick, message) => {
+      var panel = this.get_panel(nick, conn);
       panel.handle_reaction(message);
     });
 
-    connection.on("privmsg:typing", function(conn, nick, message) {
-      var panel = app.get_panel(nick, conn);
-      if (app.is_focused(panel)) {
-        app.set_typing(message.Prefix.Name, message);
+    connection.on("privmsg:typing", (conn, nick, message) => {
+      var panel = this.get_panel(nick, conn);
+      if (this.is_focused(panel)) {
+        this.set_typing(message.Prefix.Name, message);
       }
     });
 
-    connection.on("channel:nicks", function(conn, channel, nicks) {
-      var panel = app.get_panel(channel, conn);
+    connection.on("channel:nicks", (conn, channel, nicks) => {
+      var panel = this.get_panel(channel, conn);
       if (panel.focused)
         panel.update_nicks(nicks);
     });
 
-    connection.on("channel:mode", function(conn, channel, mode) {
-      var panel = app.get_panel(channel, conn);
+    connection.on("channel:mode", (conn, channel, mode) => {
+      var panel = this.get_panel(channel, conn);
       panel.update_mode(mode);
     });
 
-    connection.on("channel:close", function(conn, channel) {
-      app.remove_panel(App.panel_id(channel, conn));
+    connection.on("channel:close", (conn, channel) => {
+      this.remove_panel(App.panel_id(channel, conn));
     });
 
-    connection.on("status:raw", function(conn, message) {
-      var panel = app.get_panel("status", conn);
+    connection.on("status:raw", (conn, message) => {
+      var panel = this.get_panel("status", conn);
       panel.append(Render(message, {raw: true}));
     });
 
-    connection.on("status", function(conn, message) {
-      var panel = app.get_panel("status", conn);
+    connection.on("status", (conn, message) => {
+      var panel = this.get_panel("status", conn);
       panel.append(Render(message));
     });
 
-    connection.on("connect", function(conn, message) {
-      app.set_connected(conn, true, message.Params[0]);
+    connection.on("connect", (conn, message) => {
+      this.set_connected(conn, true, message.Params[0]);
     });
 
-    connection.on("disconnect", function(conn, message) {
-      app.set_connected(conn, false, message.Params[0]);
+    connection.on("disconnect", (conn, message) => {
+      this.set_connected(conn, false, message.Params[0]);
     });
 
-    connection.on("channel:topic", function(conn, channel, topic) {
-      var panel = app.get_panel(channel, conn);
+    connection.on("channel:topic", (conn, channel, topic) => {
+      var panel = this.get_panel(channel, conn);
       panel.update_topic(topic);
     });
-  };
+  }
 
-  app.is_focused = function(panel) {
-    return app.window_focused && app.focused && app.focused.id == panel.id;
-  };
+  is_focused(panel) {
+    return this.window_focused && this.focused && this.focused.id == panel.id;
+  }
 
-  app.find_default_panel = function() {
+  find_default_panel() {
     var parts = window.location.hash.split("/").slice(1);
     if (parts.length == 2) {
       return App.panel_id(decodeURIComponent(parts[1]), parts[0]);
     }
-    else if (app.sorting.length) {
-      return app.sorting[0];
+    else if (this.sorting.length) {
+      return this.sorting[0];
     }
     return null;
-  };
+  }
 
-  app.init = function() {
-    app.default_panel = app.find_default_panel();
-    app.api.get('/connection', {
-      success: function(configs) {
+  init() {
+    this.default_panel = this.find_default_panel();
+    this.api.get('/connection', {
+      success: (configs) => {
         if (!configs.length)
-          app.config_modal();
+          this.config_modal();
 
-        configs.forEach(function(conn) {
+        configs.forEach((conn) => {
           var conn_id   = conn.Id;
           var host = conn.Config.Alias || conn.Config.Host;
           var nick = conn.Nick;
-          app.setup_connection(conn_id, host, nick);
+          this.setup_connection(conn_id, host, nick);
         });
 
-        if (app.stream)
-          app.stream.destroy();
+        if (this.stream)
+          this.stream.destroy();
 
-        app.connect();
+        this.connect();
       }
     });
-  };
+  }
 
-  app.add_recent_privates = function(cb) {
-    app.api.get("/privates", {
-      success: function(privates) {
-        privates.forEach(function(priv) {
-          app.add_panel(priv.nick, priv.connection, {
+  add_recent_privates(cb) {
+    this.api.get("/privates", {
+      success: (privates) => {
+        privates.forEach((priv) => {
+          this.add_panel(priv.nick, priv.connection, {
             focus: false,
             dont_save: true
           });
@@ -326,12 +374,12 @@ export var App = function(url, user) {
         }
       }
     });;
-  };
+  }
 
-  app.connect = function() {
-    var stream = app.api.stream();
+  connect() {
+    var stream = this.api.stream();
 
-    stream.on('message', function(e) {
+    stream.on('message', (e) => {
       var conn_id = e.ConnectionId;
       var message = e.Message;
 
@@ -339,149 +387,149 @@ export var App = function(url, user) {
         message.Id =  e.MessageId;
       message.Highlight = e.Highlight;
 
-      if (app.connections[conn_id]) {
-        app.connections[conn_id].on_message(message);
+      if (this.connections[conn_id]) {
+        this.connections[conn_id].on_message(message);
       }
     });
 
-    stream.on('create_connection', function(e) {
+    stream.on('create_connection', (e) => {
       var conn_id = e.ConnectionId;
       var message = e.Message;
       var nick    = message.Params[0];
       var host    = message.Params[1];
-      app.setup_connection(conn_id, host, nick);
+      this.setup_connection(conn_id, host, nick);
     });
 
-    stream.on('delete_connection', function(e) {
+    stream.on('delete_connection', (e) => {
       var conn_id = e.ConnectionId;
 
-      for (var id in app.panels) {
-        var panel = app.panels[id];
+      for (var id in this.panels) {
+        var panel = this.panels[id];
         if (panel.connection == conn_id) {
-          app.remove_panel(id);
+          this.remove_panel(id);
         }
       }
 
-      delete app.connections[conn_id];
+      delete this.connections[conn_id];
     });
 
-    stream.on('close', function(e) {
-      for (var id in app.panels) {
-        app.panels[id].set_disabled(true);
+    stream.on('close', (e) => {
+      for (var id in this.panels) {
+        this.panels[id].set_disabled(true);
       }
-      if (app.focused) {
-        app.focused.scroll(function() {
-          app.elem.body.classList.add('disconnected');
+      if (this.focused) {
+        this.focused.scroll(() => {
+          this.elem.body.classList.add('disconnected');
         });
       }
       else {
-        app.elem.body.classList.add('disconnected');
+        this.elem.body.classList.add('disconnected');
       }
     });
 
-    stream.on('reconnect-status', function(text) {
-      if (app.focused) {
-        app.focused.scroll(function() {
-          app.elem.reconnect.textContent = text;
+    stream.on('reconnect-status', (text) => {
+      if (this.focused) {
+        this.focused.scroll(() => {
+          this.elem.reconnect.textContent = text;
         });
       }
       else {
-        app.elem.reconnect.textContent = text;
+        this.elem.reconnect.textContent = text;
       }
     });
 
-    stream.on('open', function(e) {
-      app.elem.body.classList.remove('disconnected');
-      if (app.focused) {
+    stream.on('open', (e) => {
+      this.elem.body.classList.remove('disconnected');
+      if (this.focused) {
         if (stream.last_id) {
-          app.fill_missed(stream.last_id);
+          this.fill_missed(stream.last_id);
         }
       }
 
-      for (var id in app.panels) {
-        app.panels[id].set_disabled(false);
-        if (!app.focused || id != app.focused.id) {
-          app.panels[id].clear_lists();
+      for (var id in this.panels) {
+        this.panels[id].set_disabled(false);
+        if (!this.focused || id != this.focused.id) {
+          this.panels[id].clear_lists();
         }
       }
     });
 
-    app.sync_missed(function() {
-      app.add_recent_privates(function() {
-        app.stream = stream;
+    this.sync_missed(() => {
+      this.add_recent_privates(() => {
+        this.stream = stream;
       });
     });
-  };
+  }
 
-  app.get_panel = function(name, connection) {
+  get_panel(name, connection) {
     var id = App.panel_id(name, connection);
-    return app.panels[id];
-  };
+    return this.panels[id];
+  }
 
-  app.add_private = function(conn_id, name) {
+  add_private(conn_id, name) {
     var path = "/connection/" + conn_id + "/nick/" + encodeURIComponent(name);
-    app.api.post(path);
-  };
+    this.api.post(path);
+  }
 
-  app.close_panel = function(id) {
-    var panel = app.panels[id];
+  close_panel(id) {
+    var panel = this.panels[id];
     if (panel.type == "private") {
       var path = "/connection/" + panel.connection + "/nick/" + encodeURIComponent(panel.name);
-      app.api.delete(path);
+      this.api.delete(path);
     }
-    app.remove_panel(id);
-  };
+    this.remove_panel(id);
+  }
 
-  app.remove_panel = function(id) {
-    if (!app.panels[id])
+  remove_panel(id) {
+    if (!this.panels[id])
       return;
 
-    var focused = id == app.focused.id;
-    app.panels[id].remove_elems();
-    delete app.panels[id];
+    var focused = id == this.focused.id;
+    this.panels[id].remove_elems();
+    delete this.panels[id];
 
     if (focused) {
-      if (app.last_panel_id && app.panels[app.last_panel_id])
-        app.focus_panel(app.last_panel_id);
-      else if (Object.keys(app.panels).length)
-        app.focus_panel(Object.keys(app.panels)[0]);
+      if (this.last_panel_id && this.panels[this.last_panel_id])
+        this.focus_panel(this.last_panel_id);
+      else if (Object.keys(this.panels).length)
+        this.focus_panel(Object.keys(this.panels)[0]);
       else
-        app.focused = null;
+        this.focused = null;
     }
 
-    app.update_nav_counts();
-  };
+    this.update_nav_counts();
+  }
 
-  app.update_nav_counts = function() {
-    app.elem.status
+  update_nav_counts() {
+    this.elem.status
       .previousSibling.previousSibling
       .querySelector('.count')
-      .textContent = app.elem.status.querySelectorAll("li").length
+      .textContent = this.elem.status.querySelectorAll("li").length
 
-    app.elem.privates
+    this.elem.privates
       .previousSibling.previousSibling
       .querySelector(".count")
-      .textContent = app.elem.privates.querySelectorAll("li").length;
+      .textContent = this.elem.privates.querySelectorAll("li").length;
 
-    app.elem.channels
+    this.elem.channels
       .previousSibling.previousSibling
       .querySelector(".count")
-      .textContent = app.elem.channels.querySelectorAll("li").length;
-  };
+      .textContent = this.elem.channels.querySelectorAll("li").length;
+  }
 
-  app.add_panel = function(name, connection, opts) {
+  add_panel(name, connection, opts) {
     if (!opts) opts = {};
     var id = App.panel_id(name, connection);
 
-    if (app.panels[id])
-      return app.panels[id];
+    if (this.panels[id])
+      return this.panels[id];
 
-    if (!app.connections[connection]) {
+    if (!this.connections[connection]) {
       console.log("Connection does not exist", connection);
       throw "Connection does not exist";
     }
 
-    var conn = app.connections[connection];
+    var conn = this.connections[connection];
     var type = opts['status'] ? 'status'
       : conn.is_channel(name)
         ? 'channel' : 'private';
@@ -496,13 +544,13 @@ export var App = function(url, user) {
       editable: opts['status'] ? true : false,
       connection: conn.id,
       connected: conn.connected,
-      mobile: app.mobile,
+      mobile: this.mobile,
       type: type,
       network: conn.host
     });
 
-    if (app.last_seen[panel.id])
-      panel.last_seen = app.last_seen[panel.id];
+    if (this.last_seen[panel.id])
+      panel.last_seen = this.last_seen[panel.id];
     panel.update_nav();
 
     if (panel.type == "channel") {
@@ -514,52 +562,52 @@ export var App = function(url, user) {
       panel.update_topic({value: panel.name});
     }
     if (panel.type == "private" && !opts['dont_save']) {
-      app.add_private(connection, panel.name);
+      this.add_private(connection, panel.name);
     }
-    panel.editor.completion.commands = app.commands.completions();
+    panel.editor.completion.commands = this.commands.completions();
 
-    app.panels[id] = panel;
+    this.panels[id] = panel;
 
     if (panel.type == "status")
-      app.elem.status.appendChild(panel.elem.nav);
+      this.elem.status.appendChild(panel.elem.nav);
     else if (panel.type == "private")
-      app.elem.privates.appendChild(panel.elem.nav);
+      this.elem.privates.appendChild(panel.elem.nav);
     else
-      app.insert_sorted_nav(panel);
+      this.insert_sorted_nav(panel);
 
-    app.update_nav_counts();
+    this.update_nav_counts();
 
     if (panel.type == "channel")
-      app.ignore_events_pref(panel);
+      this.ignore_events_pref(panel);
 
-    app.collapse_embeds_pref(panel);
-    app.monospace_nicks_pref(panel);
-    app.ignore_nicks_pref(panel);
-    app.send_typing_pref(panel);
+    this.collapse_embeds_pref(panel);
+    this.monospace_nicks_pref(panel);
+    this.ignore_nicks_pref(panel);
+    this.send_typing_pref(panel);
 
-    panel.elem.nav.addEventListener('click', function(e) {
+    panel.elem.nav.addEventListener('click', (e) => {
       if (e.target.classList.contains("panel-log"))
         return;
 
       e.preventDefault();
 
-      app.elem.flex_wrap.classList.remove("open");
+      this.elem.flex_wrap.classList.remove("open");
 
-      var id = this.getAttribute('data-panel-id');
-      var panel = app.panels[id];
+      var id = e.currentTarget.getAttribute('data-panel-id');
+      var panel = this.panels[id];
 
       if (e.target.classList.contains('close-panel')) {
         if (panel.type == "channel")
-          app.part_channel(panel.name, panel.connection);
+          this.part_channel(panel.name, panel.connection);
         else if (panel.type == "status")
-          app.delete_connection(panel.connection);
+          this.delete_connection(panel.connection);
         else
-          app.close_panel(id);
+          this.close_panel(id);
       }
       else if (e.target.classList.contains('edit-panel')) {
-        app.api.get("/connection/" + panel.connection, {
-          success: function(res) {
-            app.config_modal(null, res);
+        this.api.get("/connection/" + panel.connection, {
+          success: (res) => {
+            this.config_modal(null, res);
           },
           error: function(e) {
             alert(e);
@@ -567,46 +615,46 @@ export var App = function(url, user) {
         });
       }
       else {
-        app.focus_panel(id);
+        this.focus_panel(id);
       }
     });
 
     // force focusing or no focused panel
-    if (opts['focus'] === true || !app.focused) {
-      app.focus_panel(id);
+    if (opts['focus'] === true || !this.focused) {
+      this.focus_panel(id);
     }
     // this channel was in the URL on load
-    else if (app.default_panel && id == app.default_panel) {
-      app.default_panel = null;
-      app.default_focused = true;
-      app.focus_panel(id);
+    else if (this.default_panel && id == this.default_panel) {
+      this.default_panel = null;
+      this.default_focused = true;
+      this.focus_panel(id);
     }
     // focus the first channel added
-    else if (!app.default_focused && panel.type == "channel" && app.channel_panels() == 1) {
-      app.focus_panel(id);
+    else if (!this.default_focused && panel.type == "channel" && this.channel_panels() == 1) {
+      this.focus_panel(id);
     }
 
-    if (!panel.focused && app.missed[panel.id])
-      app.apply_missed(panel, app.missed[panel.id]);
+    if (!panel.focused && this.missed[panel.id])
+      this.apply_missed(panel, this.missed[panel.id]);
 
-    delete app.missed[panel.id];
+    delete this.missed[panel.id];
 
-    return app.panels[id];
-  };
+    return this.panels[id];
+  }
 
-  app.update_highlights = function(bool) {
-    app.highlights.unread = bool;
-    app.highlights.update_nav();
+  update_highlights(bool) {
+    this.highlights.unread = bool;
+    this.highlights.update_nav();
     if (bool) {
-      app.elem.title_top.classList.add('unread');
+      this.elem.title_top.classList.add('unread');
     }
     else {
-      app.elem.title_top.classList.remove('unread');
+      this.elem.title_top.classList.remove('unread');
     }
-  };
+  }
 
-  app.apply_missed = function(panel, missed) {
-    if (app.focused && app.focused.id == panel.id) {
+  apply_missed(panel, missed) {
+    if (this.focused && this.focused.id == panel.id) {
       return;
     }
 
@@ -614,7 +662,7 @@ export var App = function(url, user) {
       panel.unread = true;
       panel.update_nav();
       if (panel.type == 'private') {
-        app.elem.title_top.classList.add('unread');
+        this.elem.title_top.classList.add('unread');
       }
     }
     else if (missed.events) {
@@ -623,108 +671,108 @@ export var App = function(url, user) {
     }
     if (missed.highlights > 0) {
       panel.highlighted = true;
-      app.update_highlights(true);
+      this.update_highlights(true);
       panel.update_nav();
     }
-    app.update_title();
-  };
+    this.update_title();
+  }
 
-  app.update_title = function(highlight) {
-    if (!app.focused) return;
-    var name = app.focused.name;
+  update_title(highlight) {
+    if (!this.focused) return;
+    var name = this.focused.name;
 
-    if (!app.window_focused && highlight) {
+    if (!this.window_focused && highlight) {
       name = "*" + name;
     }
 
-    app.elem.title.textContent = name;
-  };
+    this.elem.title.textContent = name;
+  }
 
-  app.post_token = function() {
-    var token = app.post_tokens.pop();
+  post_token() {
+    var token = this.post_tokens.pop();
     if (!token) {
       alert("No post tokens, tell Lee!");
       throw Error("No tokens");
     }
     return token;
-  };
+  }
 
-  app.part_channel = function(name, connection) {
+  part_channel(name, connection) {
     if (!confirm("Are you sure you want to leave " + name + "?"))
       return;
 
     var headers = new Headers();
-    headers.append('lierc-token', app.post_token());
+    headers.append('lierc-token', this.post_token());
     headers.append('content-type', 'application/irc');
 
-    app.api.post('/connection/' + connection, {
+    this.api.post('/connection/' + connection, {
       body: 'PART ' + name,
       headers: headers,
-      success: function(res) {
-        app.remove_panel(App.panel_id(name, connection));
-        app.post_tokens.push(res.token);
+      success: (res) => {
+        this.remove_panel(App.panel_id(name, connection));
+        this.post_tokens.push(res.token);
       },
-      error: function(e) {
+      error: (e) => {
         alert("Error: " + e);
-        app.load_token();
+        this.load_token();
       }
     });
-  };
+  }
 
-  app.delete_connection = function(connection) {
+  delete_connection(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    app.api.delete('/connection/' + connection, {
+    this.api.delete('/connection/' + connection, {
       error: function(e) { alert(e); }
     });
-  };
+  }
 
-  app.channel_panels = function() {
+  channel_panels() {
     var panels = 0
-    for (var id in app.panels) {
-      if (app.panels[id].type == "channel")
+    for (var id in this.panels) {
+      if (this.panels[id].type == "channel")
         panels++;
     }
     return panels;
-  };
+  }
 
-  app.insert_sorted_nav = function(panel) {
-    if (app.sortable)
+  insert_sorted_nav(panel) {
+    if (this.sortable)
       panel.elem.nav.draggable = true;
 
-    var index = app.sorting.indexOf(panel.id);
+    var index = this.sorting.indexOf(panel.id);
     if (index == -1) {
-      app.elem.channels.appendChild(panel.elem.nav);
-      app.save_channel_order();
+      this.elem.channels.appendChild(panel.elem.nav);
+      this.save_channel_order();
       return;
     }
-    var items = app.elem.channels.childNodes;
+    var items = this.elem.channels.childNodes;
     for (var i=0; i < items.length; i++) {
       var id = items[i].getAttribute('data-panel-id');
-      if (index < app.sorting.indexOf(id)) {
-        app.elem.channels.insertBefore(panel.elem.nav, items[i]);
+      if (index < this.sorting.indexOf(id)) {
+        this.elem.channels.insertBefore(panel.elem.nav, items[i]);
         return;
       }
     }
 
-    app.elem.channels.appendChild(panel.elem.nav);
-  };
+    this.elem.channels.appendChild(panel.elem.nav);
+  }
 
-  app.fill_missed = function(start) {
-    app.api.get("/log/" + start, {
-      success: function(events) {
+  fill_missed(start) {
+    this.api.get("/log/" + start, {
+      success: (events) => {
         for (var i=0; i < events.length; i++) {
-          app.stream.fire('message', events[i]);
+          this.stream.fire('message', events[i]);
         }
       },
-      error: function(e) {
-        app.reset();
+      error: (e) => {
+        this.reset();
       }
     });
-  };
+  }
 
-  app.maybe_send_typing = function(panel, c) {
-    var conn = app.connections[panel.connection];
+  maybe_send_typing(panel, c) {
+    var conn = this.connections[panel.connection];
     if (!conn.caps_enabled["message-tags"])
       return;
 
@@ -733,52 +781,52 @@ export var App = function(url, user) {
 
     var tag = "@+typing=active"
 
-    app.api.post("/connection/" + panel.connection, {
+    this.api.post("/connection/" + panel.connection, {
       body:  tag + " TAGMSG " + panel.name,
       headers: {
-        'lierc-token' : app.post_token(),
+        'lierc-token' : this.post_token(),
         'content-type': "application/irc",
       },
-      success: function(res) {
-        app.post_tokens.push(res.token);
+      success: (res) => {
+        this.post_tokens.push(res.token);
       },
-      error: function(e) {
+      error: (e) => {
         var res = JSON.parse(e.responseText);
         alert("Error: " + res.error);
-        app.load_token();
+        this.load_token();
       }
     });
-  };
+  }
 
-  app.send_stop_typing = function(panel) {
-    var conn = app.connections[panel.connection];
+  send_stop_typing(panel) {
+    var conn = this.connections[panel.connection];
     if (!conn.caps_enabled["message-tags"])
       return;
 
     var tag = "@+typing=done"
 
-    app.api.post("/connection/" + panel.connection, {
+    this.api.post("/connection/" + panel.connection, {
       body:  tag + " TAGMSG " + panel.name,
       headers: {
-        'lierc-token' : app.post_token(),
+        'lierc-token' : this.post_token(),
         'content-type': "application/irc",
       },
-      success: function(res) {
-        app.post_tokens.push(res.token);
+      success: (res) => {
+        this.post_tokens.push(res.token);
       },
-      error: function(e) {
+      error: (e) => {
         var res = JSON.parse(e.responseText);
         alert("Error: " + res.error);
-        app.load_token();
+        this.load_token();
       }
     });
-  };
+  }
 
-  app.fill_backlog = function(panel, msgid, focus) {
+  fill_backlog(panel, msgid, focus) {
     if (panel.backlog_empty) return;
 
     if (panel.connection) {
-      var connection = app.connections[panel.connection];
+      var connection = this.connections[panel.connection];
       if (!connection) return;
     }
 
@@ -792,9 +840,9 @@ export var App = function(url, user) {
     if (msgid)
       url += "/" + msgid;
 
-    app.api.get(url, {
+    this.api.get(url, {
       data: { limit: limit },
-      success: function(events) {
+      success: (events) => {
         if (events.length < limit)
           panel.backlog_empty = true;
 
@@ -802,17 +850,17 @@ export var App = function(url, user) {
         var reactions = [];
         var is_search = panel.type == "search";
 
-        events.forEach( function (e) {
+        events.forEach( (e) => {
           var message = e.Message;
           message.Id = e.MessageId;
           message.Highlight = e.Highlight && panel.id != 'highlights';
 
           panel.update_oldest_message_id(message.Id);
 
-          if (app.is_ignore(panel, message))
+          if (this.is_ignore(panel, message))
             return;
 
-          if (app.is_reaction(message))
+          if (this.is_reaction(message))
             reactions.push(message);
           else {
             var el = Render(message, {
@@ -829,7 +877,7 @@ export var App = function(url, user) {
         });
 
         panel.prepend(list);
-        app.filling_backlog = false;
+        this.filling_backlog = false;
 
         reactions.forEach(function(reaction) {
           panel.handle_reaction(reaction);
@@ -839,35 +887,35 @@ export var App = function(url, user) {
         panel.set_loading(false);
         if (focus) {
           panel.update_seen();
-          app.save_seen(panel);
+          this.save_seen(panel);
         }
       },
-      error: function(e) {
-        app.filling_backlog = false;
+      error: (e) => {
+        this.filling_backlog = false;
         panel.set_loading(false);
         console.log(e);
       }
     });
-  };
+  }
 
-  app.is_reaction = function(message) {
+  is_reaction(message) {
     return message.Command == "TAGMSG" && message.Tags && message.Tags["+draft/react"];
-  };
+  }
 
-  app.prev_panel = function() {
-    var items = app.elem.nav.querySelectorAll("li");
+  prev_panel() {
+    var items = this.elem.nav.querySelectorAll("li");
     for (var i=items.length - 1; i >= 0; i--) {
       var item = items[i];
       if (item.classList.contains("active") && items[i - 1]) {
         var id = items[i - 1].getAttribute('data-panel-id');
-        app.focus_panel(id);
+        this.focus_panel(id);
         return;
       }
     }
-  };
+  }
 
-  app.prev_unread_panel = function() {
-    var items = app.elem.nav.querySelectorAll("li");
+  prev_unread_panel() {
+    var items = this.elem.nav.querySelectorAll("li");
     for (var i=items.length - 1; i >= 0; i--) {
       var item = items[i];
       if (item.classList.contains("active")) {
@@ -875,29 +923,29 @@ export var App = function(url, user) {
           var item = items[j - 1];
           if (item.classList.contains("unread")) {
             var id = item.getAttribute('data-panel-id');
-            app.focus_panel(id);
+            this.focus_panel(id);
             return;
           }
         }
         return;
       }
     }
-  };
+  }
 
-  app.next_panel = function() {
-    var items = app.elem.nav.querySelectorAll("li");
+  next_panel() {
+    var items = this.elem.nav.querySelectorAll("li");
     for (var i=0; i < items.length; i++) {
       var item = items[i];
       if (item.classList.contains("active") && items[i + 1]) {
         var id = items[i + 1].getAttribute('data-panel-id');
-        app.focus_panel(id);
+        this.focus_panel(id);
         return;
       }
     }
   }
 
-  app.next_unread_panel = function() {
-    var items = app.elem.nav.querySelectorAll("li");
+  next_unread_panel() {
+    var items = this.elem.nav.querySelectorAll("li");
     for (var i=0; i < items.length; i++) {
       var item = items[i];
       if (item.classList.contains("active")) {
@@ -905,85 +953,85 @@ export var App = function(url, user) {
           var item = items[j + 1];
           if (item.classList.contains("unread")) {
             var id = item.getAttribute('data-panel-id');
-            app.focus_panel(id);
+            this.focus_panel(id);
             return;
           }
         }
         return;
       }
     }
-  };
+  }
 
-  app.focus_panel = function(id) {
-    if (app.focused) {
-      if (app.focused.id == id)
+  focus_panel(id) {
+    if (this.focused) {
+      if (this.focused.id == id)
         return;
-      app.last_panel_id = app.focused.id;
+      this.last_panel_id = this.focused.id;
     }
 
-    if (app.elem.switcher.classList.contains('open')) {
-      app.hide_switcher();
+    if (this.elem.switcher.classList.contains('open')) {
+      this.hide_switcher();
     }
 
-    var panel = app.panels[id];
+    var panel = this.panels[id];
 
     if (! panel)
       return;
 
-    app.clear_typing();
-    app.elem.panel_name.textContent = panel.name;
-    app.replace_child("panel", panel.elem.list);
-    app.replace_child("input", panel.elem.input);
-    app.replace_child("topic", panel.elem.topic);
-    app.replace_child("filler", panel.elem.filler);
+    this.clear_typing();
+    this.elem.panel_name.textContent = panel.name;
+    this.replace_child("panel", panel.elem.list);
+    this.replace_child("input", panel.elem.input);
+    this.replace_child("topic", panel.elem.topic);
+    this.replace_child("filler", panel.elem.filler);
 
-    app.elem.body.setAttribute("data-panel-type", panel.type);
-    app.replace_child("nicks", panel.elem.nicks);
+    this.elem.body.setAttribute("data-panel-type", panel.type);
+    this.replace_child("nicks", panel.elem.nicks);
 
-    if (app.focused) {
-      app.focused.unfocus();
-      app.save_seen(app.focused);
+    if (this.focused) {
+      this.focused.unfocus();
+      this.save_seen(this.focused);
     }
 
     //app.scroll_to_nav(panel.elem.nav);
 
     if (panel.first_focus && panel.type == "channel")
-      app.show_nicklist_pref(panel);
+      this.show_nicklist_pref(panel);
 
     panel.focus();
-    app.focused = panel;
+    this.focused = panel;
     window.history.replaceState({}, "", panel.path);
-    app.check_scroll(true);
-    app.update_title();
+    this.check_scroll(true);
+    this.update_title();
 
     if (panel.type == "channel") {
-      var conn = app.connections[panel.connection];
+      var conn = this.connections[panel.connection];
       panel.update_nicks(
         conn.nicks(conn.channel(panel.name))
       );
     }
 
     var highlight = false;
-    for (id in app.panels) {
-      if (app.panels[id].highlighted && id != 'highlights') {
+    for (id in this.panels) {
+      if (this.panels[id].highlighted && id != 'highlights') {
         highlight = true;
         break;
       }
     }
     if (!highlight) {
-      app.update_highlights(false);
+      this.update_highlights(false);
     }
-  };
+  }
 
-  app.replace_child = function(p, c) {
-    p = app.elem[p];
+  replace_child(p, c) {
+    p = this.elem[p];
     while (p.firstChild) {
       p.removeChild(p.firstChild);
     }
     p.appendChild(c);
-  };
+  }
 
-  app.config_modal = function(e, connection) {
+  config_modal(e, connection) {
     if (e) e.preventDefault();
 
     var vars = {};
@@ -1006,11 +1054,11 @@ export var App = function(url, user) {
       vars.edit = true;
     }
     else {
-      vars.Nick = app.user.user;
-      vars.User = app.user.user;
-      vars.Highlight = app.user.user;
+      vars.Nick = this.user.user;
+      vars.User = this.user.user;
+      vars.Highlight = this.user.user;
 
-      if (Object.keys(app.connections).length == 0) {
+      if (Object.keys(this.connections).length == 0) {
         vars.Host = "irc.freenode.com";
         vars.Port = "6697";
         vars.Ssl = true;
@@ -1023,20 +1071,20 @@ export var App = function(url, user) {
       vars.edit = false;
     }
 
-    app.elem.flex_wrap.classList.remove('open');
+    this.elem.flex_wrap.classList.remove('open');
 
-    var dialog = app.new_dialog("connection", vars);
+    var dialog = this.new_dialog("connection", vars);
 
     var del = dialog.el.querySelector('.delete-connection');
     if (del && connection) {
-      del.addEventListener('click', function(e) {
+      del.addEventListener('click', (e) => {
         e.preventDefault();
-        app.delete_connection(connection.Id);
-        app.close_dialog();
+        this.delete_connection(connection.Id);
+        this.close_dialog();
       });
     }
 
-    dialog.el.addEventListener("submit", function(e) {
+    dialog.el.addEventListener("submit", (e) => {
       e.preventDefault();
       var form = e.target;
       var method = form.getAttribute('method');
@@ -1055,40 +1103,40 @@ export var App = function(url, user) {
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
-      app.api.request(method, action, {
+      this.api.request(method, action, {
         body: JSON.stringify(data),
-        success: function(res) {
-          app.close_dialog();
+        success: (res) => {
+          this.close_dialog();
         },
         error: function(e) {
           alert("i'm sorry");
         }
       });
     });
-  };
+  }
 
-  app.check_scroll = function(focus) {
-    if (app.filling_backlog
-      || !app.focused
-      || app.focused.backlog_empty
-      || app.overlayed()
-      || app.elem.flex_wrap.classList.contains('open')
-      || getComputedStyle(app.elem.scroll).display == "none")
+  check_scroll(focus) {
+    if (this.filling_backlog
+      || !this.focused
+      || this.focused.backlog_empty
+      || this.overlayed()
+      || this.elem.flex_wrap.classList.contains('open')
+      || getComputedStyle(this.elem.scroll).display == "none")
     {
       return;
     }
 
-    if (app.elem.scroll.scrollTop <= 1) {
-      app.filling_backlog = true;
-      app.fill_backlog(
-        app.focused, app.focused.oldest_message_id, focus
+    if (this.elem.scroll.scrollTop <= 1) {
+      this.filling_backlog = true;
+      this.fill_backlog(
+        this.focused, this.focused.oldest_message_id, focus
       );
     }
-  };
+  }
 
-  app.ping_server = function() {
-    app.api.auth(
-      function(res) {
+  ping_server() {
+    this.api.auth(
+      (res) => {
         if (res.status == 200)
           return;
 
@@ -1101,8 +1149,8 @@ export var App = function(url, user) {
 
         // ping failed, force a reconnect of stream...
         if (res.status == 0) {
-          if (app.stream)
-            app.stream.close();
+          if (this.stream)
+            this.stream.close();
           return;
         }
 
@@ -1112,10 +1160,10 @@ export var App = function(url, user) {
         }
       }
     );
-  };
+  }
 
-  app.get_prefs = function(cb) {
-    app.api.get("/preference", {
+  get_prefs(cb) {
+    this.api.get("/preference", {
       success: function(data) {
         var prefs = {};
         for (var i=0; i < data.length; i++) {
@@ -1130,63 +1178,63 @@ export var App = function(url, user) {
       },
       error: function(e) { alert(e); }
     });
-  };
+  }
 
-  app.get_pref = function(name) {
-    return app.prefs[name];
-  };
+  get_pref(name) {
+    return this.prefs[name];
+  }
 
-  app.show_nicklist_pref = function(panel) {
-    var value = app.get_pref(panel.id + "-show-nicklist");
+  show_nicklist_pref(panel) {
+    var value = this.get_pref(panel.id + "-show-nicklist");
     if (value != undefined)
       panel.set_show_nicklist(value);
-  };
+  }
 
-  app.send_typing_pref = function(panel) {
-    var value = app.get_pref(panel.id + "-send-typing");
+  send_typing_pref(panel) {
+    var value = this.get_pref(panel.id + "-send-typing");
     if (value !== undefined)
       panel.set_send_typing(value);
-  };
+  }
 
-  app.ignore_events_pref = function(panel) {
-    var value = app.get_pref(panel.id + "-ignore-events");
+  ignore_events_pref(panel) {
+    var value = this.get_pref(panel.id + "-ignore-events");
     if (value !== undefined)
       panel.set_ignore_events(value);
-  };
+  }
 
-  app.collapse_embeds_pref = function(panel) {
-    var value = app.get_pref(panel.id + "-collapse-embeds");
+  collapse_embeds_pref(panel) {
+    var value = this.get_pref(panel.id + "-collapse-embeds");
     if (value !== undefined)
       panel.set_collapse_embeds(value);
-  };
+  }
 
-  app.monospace_nicks_pref = function(panel) {
-    var value = app.get_pref(panel.id + '-monospace-nicks');
+  monospace_nicks_pref(panel) {
+    var value = this.get_pref(panel.id + '-monospace-nicks');
     if (value !== undefined)
       panel.monospace_nicks = value;
-  };
+  }
 
-  app.add_monospace_nick = function(panel, nick) {
+  add_monospace_nick(panel, nick) {
     panel.add_monospace_nick(nick);
-    app.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
-  };
+    this.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+  }
 
-  app.remove_monospace_nick = function(panel, nick) {
+  remove_monospace_nick(panel, nick) {
     panel.remove_monospace_nick(nick);
-    app.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
-  };
+    this.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+  }
 
-  app.ignore_nicks_pref = function(panel) {
-    var value = app.get_pref(panel.id + '-ignore-nicks');
+  ignore_nicks_pref(panel) {
+    var value = this.get_pref(panel.id + '-ignore-nicks');
     if (value !== undefined)
       panel.ignore_nicks = value;
-  };
+  }
 
-  app.ignores = function(panel) {
+  ignores(panel) {
     return panel.ignore_nicks;
-  };
+  }
 
-  app.is_ignore = function(panel, message) {
+  is_ignore(panel, message) {
     if (message.Command != "PRIVMSG")
       return false;
 
@@ -1196,31 +1244,31 @@ export var App = function(url, user) {
     }
 
     return false;
-  };
+  }
 
-  app.add_ignore = function(panel, nick) {
+  add_ignore(panel, nick) {
     panel.add_ignore(nick);
-    app.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
-  };
+    this.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
+  }
 
-  app.remove_ignore = function(panel, nick) {
+  remove_ignore(panel, nick) {
     panel.remove_ignore(nick);
-    app.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
-  };
+    this.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
+  }
 
-  app.update_pref = function(name, value) {
-    app.prefs[name] = value;
-    app.api.post("/preference/" + encodeURIComponent(name), {
+  update_pref(name, value) {
+    this.prefs[name] = value;
+    this.api.post("/preference/" + encodeURIComponent(name), {
       body: JSON.stringify(value),
     });
-  };
+  }
 
-  app.load_token = function(cb) {
-    app.api.get("/token", {
-      success: function(data) {
-        app.post_tokens.push(data.token);
+  load_token(cb) {
+    this.api.get("/token", {
+      success: (data) => {
+        this.post_tokens.push(data.token);
         if (data.extra) {
-          app.post_tokens = app.post_tokens.concat(data.extra);
+          this.post_tokens = this.post_tokens.concat(data.extra);
         }
         if (cb) cb();
       },
@@ -1228,14 +1276,14 @@ export var App = function(url, user) {
         if (cb) cb();
       }
     });
-  };
+  }
 
-  app.load_seen = function(cb) {
-    app.api.get("/seen", {
-      success: function(res) {
+  load_seen(cb) {
+    this.api.get("/seen", {
+      success: (res) => {
         for (var i in res) {
           var id = App.panel_id(res[i]["channel"], res[i]["connection"]);
-          app.last_seen[id] = res[i]["message_id"];
+          this.last_seen[id] = res[i]["message_id"];
         }
         cb();
       },
@@ -1243,16 +1291,16 @@ export var App = function(url, user) {
         cb();
       }
     });
-  };
+  }
 
-  app.save_seen = function(panel, force) {
+  save_seen(panel, force) {
     if (panel.type == "search")
       return;
 
     var diffs = 0;
     var id = panel.id;
     var last_seen = panel.last_seen;
-    var send = last_seen && last_seen != app.last_seen[id];
+    var send = last_seen && last_seen != this.last_seen[id];
 
     if (send || force) {
       var parts = [
@@ -1260,33 +1308,33 @@ export var App = function(url, user) {
         "channel", encodeURIComponent(panel.name), "seen"
       ];
 
-      app.api.post("/" + parts.join("/"), {
+      this.api.post("/" + parts.join("/"), {
         body: "" + last_seen
       });
 
-      app.last_seen[id] = last_seen;
+      this.last_seen[id] = last_seen;
     }
-  };
+  }
 
-  app.sync_missed = function(cb) {
-    if (app.focused) {
-      app.focused.update_seen();
-      if (app.focused.last_seen)
-        app.last_seen[app.focused.id] = app.focused.last_seen;
+  sync_missed(cb) {
+    if (this.focused) {
+      this.focused.update_seen();
+      if (this.focused.last_seen)
+        this.last_seen[this.focused.id] = this.focused.last_seen;
     }
 
-    app.api.get("/missed", {
-      data: app.last_seen,
-      success: function(res) {
-        app.missed = {};
+    this.api.get("/missed", {
+      data: this.last_seen,
+      success: (res) => {
+        this.missed = {};
         for (var connection in res) {
           for (var channel in res[connection]) {
             var id = App.panel_id(channel, connection);
-            if (app.panels[id]) {
-              app.apply_missed(app.panels[id], res[connection][channel]);
+            if (this.panels[id]) {
+              this.apply_missed(this.panels[id], res[connection][channel]);
             }
             else {
-              app.missed[id] = res[connection][channel];
+              this.missed[id] = res[connection][channel];
             }
           }
         }
@@ -1295,13 +1343,13 @@ export var App = function(url, user) {
         }
       }
     });
-  };
+  }
 
-  app.search_panel = function(panel, text) {
+  search_panel(panel, text) {
     var parts = [ "connection", panel.connection
       , "channel", encodeURIComponent(panel.name), "last" ];
 
-    app.api.get("/" + parts.join("/"), {
+    this.api.get("/" + parts.join("/"), {
       data: { query: text, limit: 10 },
       success: function(messages) {
         if (messages.length > 0) {
@@ -1319,55 +1367,55 @@ export var App = function(url, user) {
         }
       }
     });
-  };
+  }
 
-  app.focus_input = function(force) {
+  focus_input(force) {
     if (force) {
-      app.focused.elem.input.focus();
+      this.focused.elem.input.focus();
       return;
     }
 
-    if (app.mobile)
+    if (this.mobile)
       return;
-    if (!app.focused)
+    if (!this.focused)
       return;
-    if (app.overlayed())
+    if (this.overlayed())
       return;
-    app.focused.elem.input.focus();
-  };
+    this.focused.elem.input.focus();
+  }
 
-  app.hide_switcher = function() {
-    app.elem.switcher.classList.remove('open');
-    app.elem.nav.classList.remove('filtering');
-    app.elem.nav.querySelectorAll('li').forEach(function(li) {
+  hide_switcher() {
+    this.elem.switcher.classList.remove('open');
+    this.elem.nav.classList.remove('filtering');
+    this.elem.nav.querySelectorAll('li').forEach(function(li) {
       li.classList.remove('match', 'selected', 'candidate');
     });
-  };
+  }
 
-  app.toggle_switcher = function() {
-    app.elem.switcher.querySelector('input').value = '';
-    if (app.elem.switcher.classList.contains('open')) {
-      app.hide_switcher();
+  toggle_switcher() {
+    this.elem.switcher.querySelector('input').value = '';
+    if (this.elem.switcher.classList.contains('open')) {
+      this.hide_switcher();
     }
     else {
-      app.elem.switcher.classList.add('open');
-      app.elem.nav.classList.add('filtering');
-      app.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]').forEach(function(li) {
+      this.elem.switcher.classList.add('open');
+      this.elem.nav.classList.add('filtering');
+      this.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]').forEach(function(li) {
         li.classList.add('candidate');
         if (li.classList.contains("unread"))
           li.classList.add("match");
       });
-      var matches = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
+      var matches = this.elem.nav.querySelectorAll('li[data-name].candidate.match');
       if (!matches.length)
-        matches = app.elem.nav.querySelectorAll('li[data-name].candidate');
+        matches = this.elem.nav.querySelectorAll('li[data-name].candidate');
       if (matches.length) {
         matches[0].classList.add('selected');
       }
-      app.elem.switcher.querySelector('input').focus();
+      this.elem.switcher.querySelector('input').focus();
     }
-  };
+  }
 
-  app.make_sortable = function(list, on_sort) {
+  make_sortable(list, on_sort) {
     var dragging = null;
     var orig_next = null;
 
@@ -1419,183 +1467,137 @@ export var App = function(url, user) {
       if (li.nextSibling != orig_next)
         on_sort();
     });
-  };
+  }
 
-  app.save_channel_order = function() {
+  save_channel_order() {
     var order = Array.prototype.map.call(
-      app.elem.channels.querySelectorAll('li'),
+      this.elem.channels.querySelectorAll('li'),
       function(li) {
         return li.getAttribute('data-panel-id');
       });
 
-    app.sorting = order;
-    app.update_pref("sorting", order);
-  };
+    this.sorting = order;
+    this.update_pref("sorting", order);
+  }
 
-  app.overlayed = function() {
-    return app.dialog && app.dialog.open;
-  };
+  overlayed() {
+    return this.dialog && this.dialog.open;
+  }
 
-  app.close_dialog = function() {
-    if (app.dialog)
-      app.dialog.close();
-    app.dialog = null;
-  };
+  close_dialog() {
+    if (this.dialog)
+      this.dialog.close();
+    this.dialog = null;
+  }
 
-  app.open_log = function(panel) {
+  open_log(panel) {
     var url = "/search/#!/"
       + "/connection/" + encodeURIComponent(panel.connection)
       + "/channel/" + encodeURIComponent(panel.name);
     window.open(url);
-  };
+  }
 
-  app.new_dialog = function(name, vars) {
-    if (app.dialog)
-      app.dialog.close();
+  new_dialog(name, vars) {
+    if (this.dialog)
+      this.dialog.close();
 
     var dialog = new Dialog(name, vars);
-    app.elem.flex_wrap.classList.remove('open');
-    dialog.append(app.elem.body);
+    this.elem.flex_wrap.classList.remove('open');
+    dialog.append(this.elem.body);
     var input = dialog.el.querySelector('input[type=text]')
-    if (!app.mobile && input) {
+    if (!this.mobile && input) {
       input.focus();
       input.select();
     }
-    app.dialog = dialog;
+    this.dialog = dialog;
     return dialog;
-  };
+  }
 
-  app.setup_highlights = function() {
-    if (app.panels['highlights']) {
-      app.remove_panel('highlights');
+  setup_highlights() {
+    if (this.panels['highlights']) {
+      this.remove_panel('highlights');
     }
 
-    app.highlights = new Panel({
+    this.highlights = new Panel({
       name: "All Highlights",
       id: "highlights",
       closable: false,
       editable: false,
       backlog_url: "/highlight",
       path: window.location.pathname + "#/highlights",
-      mobile: app.mobile,
+      mobile: this.mobile,
       connected: true,
       type: "search"
     });
-    app.highlights.update_nav();
-    app.highlights.elem.nav.addEventListener('click', function() {
-      app.elem.flex_wrap.classList.remove("open");
-      app.focus_panel('highlights');
+    this.highlights.update_nav();
+    this.highlights.elem.nav.addEventListener('click', () => {
+      this.elem.flex_wrap.classList.remove("open");
+      this.focus_panel('highlights');
     });
-    app.elem.meta.appendChild(app.highlights.elem.nav);
-    app.panels[app.highlights.id] = app.highlights;
-  };
+    this.elem.meta.appendChild(this.highlights.elem.nav);
+    this.panels[this.highlights.id] = this.highlights;
+  }
 
-  app.reset = function() {
-    var path = app.focused ? app.focused.path : "";
+  reset() {
+    var path = this.focused ? this.focused.path : "";
 
-    for (var id in app.panels) {
-      app.remove_panel(id);
+    for (var id in this.panels) {
+      this.remove_panel(id);
     }
 
     window.history.replaceState({}, "", path);
-    app.default_focused = false;
-    app.connections = [];
-    app.last_seen = {};
-    app.missed = {};
-    app.focused = null;
-    app.setup_highlights();
+    this.default_focused = false;
+    this.connections = [];
+    this.last_seen = {};
+    this.missed = {};
+    this.focused = null;
+    this.setup_highlights();
 
-    app.load_seen(function() {
-      app.load_token(function() {
-        app.init();
+    this.load_seen(() => {
+      this.load_token(() => {
+        this.init();
       });
     });
-  };
+  }
 
-  app.fill_images = function() {
-    app.api.get("/image", {
-      success: function(images) {
+  fill_images() {
+    this.api.get("/image", {
+      success: (images) => {
         var html = Template("images", {
           images: images
         });
-        app.elem.images.innerHTML = html;
+        this.elem.images.innerHTML = html;
       }
     });
-  };
+  }
 
-  var themes = ["solarized-dark", "solarized"];
-  app.set_theme = function(theme, skip_save) {
+  set_theme(theme, skip_save) {
     themes.forEach(function(t) {
       document.body.classList.remove(t);
     });
     if (themes.indexOf(theme) != -1) {
       document.body.classList.add(theme);
     }
-    if (app.theme != theme) {
-      app.theme = theme;
-      app.elem.themes.value = theme;
+    if (this.theme != theme) {
+      this.theme = theme;
+      this.elem.themes.value = theme;
       if (!skip_save) {
-        app.update_pref("theme", theme);
+        this.update_pref("theme", theme);
       }
     }
-  };
-
-  // setup
-
-  if (app.sortable)
-    app.make_sortable(app.elem.channels, app.save_channel_order);
-
-  setInterval(app.check_scroll, 250);
-  setInterval(app.ping_server, 1000 * 15);
-  setInterval(app.render_typing, 500);
-
-  function check_stream() {
-    if (app.stream)
-      app.stream.check();
   }
 
-  document.addEventListener("visibilitychange", function() {
-    if (!document.hidden)
-      check_stream();
-  });
-  window.addEventListener("online", check_stream);
-  window.addEventListener("pageshow", check_stream);
-  app.setup_highlights();
-
-  app.get_prefs(function(prefs) {
-    app.prefs = prefs;
-    app.sorting = app.prefs['sorting'] || [];
-    delete app.prefs['sorting'];
-
-    if (app.prefs['email'] === true) {
-      document.getElementById('email-notify')
-        .classList.add('enabled');
-    }
-    if (app.prefs['theme']) {
-      app.set_theme(app.prefs['theme'], true);
-    }
-
-    app.load_seen(function() {
-      app.load_token(function() {
-        app.init();
-        Emoji.load();
-        app.notify = new Notifier(app);
-      });
-    });
-  });
-
-  app.events = new UIEvents(app);
-  app.play_alert = function() {
-    if (app.elem.audio) {
-      app.elem.audio.play();
+  play_alert() {
+    if (this.elem.audio) {
+      this.elem.audio.play();
     }
   }
-};
 
-App.detect_mobile = function () {
-  return (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) return true; return false;})(navigator.userAgent||navigator.vendor||window.opera);
-};
+  static detect_mobile() {
+    return (function(a){if(/(android|bb\d+|meego).+mobile|avantgo|bada\/|blackberry|blazer|compal|elaine|fennec|hiptop|iemobile|ip(hone|od)|iris|kindle|lge |maemo|midp|mmp|mobile.+firefox|netfront|opera m(ob|in)i|palm( os)?|phone|p(ixi|re)\/|plucker|pocket|psp|series(4|6)0|symbian|treo|up\.(browser|link)|vodafone|wap|windows ce|xda|xiino/i.test(a)||/1207|6310|6590|3gso|4thp|50[1-6]i|770s|802s|a wa|abac|ac(er|oo|s\-)|ai(ko|rn)|al(av|ca|co)|amoi|an(ex|ny|yw)|aptu|ar(ch|go)|as(te|us)|attw|au(di|\-m|r |s )|avan|be(ck|ll|nq)|bi(lb|rd)|bl(ac|az)|br(e|v)w|bumb|bw\-(n|u)|c55\/|capi|ccwa|cdm\-|cell|chtm|cldc|cmd\-|co(mp|nd)|craw|da(it|ll|ng)|dbte|dc\-s|devi|dica|dmob|do(c|p)o|ds(12|\-d)|el(49|ai)|em(l2|ul)|er(ic|k0)|esl8|ez([4-7]0|os|wa|ze)|fetc|fly(\-|_)|g1 u|g560|gene|gf\-5|g\-mo|go(\.w|od)|gr(ad|un)|haie|hcit|hd\-(m|p|t)|hei\-|hi(pt|ta)|hp( i|ip)|hs\-c|ht(c(\-| |_|a|g|p|s|t)|tp)|hu(aw|tc)|i\-(20|go|ma)|i230|iac( |\-|\/)|ibro|idea|ig01|ikom|im1k|inno|ipaq|iris|ja(t|v)a|jbro|jemu|jigs|kddi|keji|kgt( |\/)|klon|kpt |kwc\-|kyo(c|k)|le(no|xi)|lg( g|\/(k|l|u)|50|54|\-[a-w])|libw|lynx|m1\-w|m3ga|m50\/|ma(te|ui|xo)|mc(01|21|ca)|m\-cr|me(rc|ri)|mi(o8|oa|ts)|mmef|mo(01|02|bi|de|do|t(\-| |o|v)|zz)|mt(50|p1|v )|mwbp|mywa|n10[0-2]|n20[2-3]|n30(0|2)|n50(0|2|5)|n7(0(0|1)|10)|ne((c|m)\-|on|tf|wf|wg|wt)|nok(6|i)|nzph|o2im|op(ti|wv)|oran|owg1|p800|pan(a|d|t)|pdxg|pg(13|\-([1-8]|c))|phil|pire|pl(ay|uc)|pn\-2|po(ck|rt|se)|prox|psio|pt\-g|qa\-a|qc(07|12|21|32|60|\-[2-7]|i\-)|qtek|r380|r600|raks|rim9|ro(ve|zo)|s55\/|sa(ge|ma|mm|ms|ny|va)|sc(01|h\-|oo|p\-)|sdk\/|se(c(\-|0|1)|47|mc|nd|ri)|sgh\-|shar|sie(\-|m)|sk\-0|sl(45|id)|sm(al|ar|b3|it|t5)|so(ft|ny)|sp(01|h\-|v\-|v )|sy(01|mb)|t2(18|50)|t6(00|10|18)|ta(gt|lk)|tcl\-|tdg\-|tel(i|m)|tim\-|t\-mo|to(pl|sh)|ts(70|m\-|m3|m5)|tx\-9|up(\.b|g1|si)|utst|v400|v750|veri|vi(rg|te)|vk(40|5[0-3]|\-v)|vm40|voda|vulc|vx(52|53|60|61|70|80|81|83|85|98)|w3c(\-| )|webc|whit|wi(g |nc|nw)|wmlb|wonu|x700|yas\-|your|zeto|zte\-/i.test(a.substr(0,4))) return true; return false;})(navigator.userAgent||navigator.vendor||window.opera);
+  }
 
-App.panel_id = function (name, connection) {
-  return [connection, name.toLowerCase()].join("-");
-};
+  static panel_id(name, connection) {
+    return [connection, name.toLowerCase()].join("-");
+  }
+}

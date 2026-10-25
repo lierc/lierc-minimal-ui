@@ -1,10 +1,11 @@
 import { Stream } from "./stream.js";
 
-export var API = function(baseurl) {
-  var api = this;
-  api.baseurl = baseurl;
+export class API {
+  constructor(baseurl) {
+    this.baseurl = baseurl;
+  }
 
-  api.request = function(method, path, options) {
+  request(method, path, options) {
     if (!options)
       options = {};
 
@@ -27,7 +28,7 @@ export var API = function(baseurl) {
       settings['headers'] = options['headers'];
     }
 
-    return fetch(api.baseurl + path, settings).then(function(res) {
+    return fetch(this.baseurl + path, settings).then(function(res) {
       var type = res.headers.get('Content-Type');
       if (type && type.match(/^application\/javascript/)) {
         return res.json();
@@ -56,32 +57,32 @@ export var API = function(baseurl) {
           console.error(e);
         }
     });
-  };
+  }
 
-  api.build_query = function(params) {
+  build_query(params) {
     return Object.keys(params).map(function(k) {
       return [
         encodeURIComponent(k),
         encodeURIComponent(params[k])
       ].join("=")
     }).join("&");
-  };
+  }
 
-  api.stream = function() {
-    return new Stream(api.baseurl);
-  };
+  stream() {
+    return new Stream(this.baseurl);
+  }
 
-  api.auth = function(cb) {
-    return fetch(api.baseurl + "/auth", {
+  auth(cb) {
+    return fetch(this.baseurl + "/auth", {
       credentials: 'same-origin'
     }).then(cb, function() {
       // network failure
       cb({status: 0});
     });
-  };
+  }
 
-  api.logout = function() {
-    return fetch(api.baseurl + "/logout", {
+  logout() {
+    return fetch(this.baseurl + "/logout", {
       'method': 'POST',
       'credentials': 'same-origin',
     }).then(function(res) {
@@ -90,25 +91,25 @@ export var API = function(baseurl) {
       else
         window.location.reload();
     });
-  };
+  }
 
-  api.get = function(path, options) {
+  get(path, options) {
     if (options['data'])
-      path += '?' + api.build_query(options['data']);
-    return api.request('GET', path, options);
-  };
+      path += '?' + this.build_query(options['data']);
+    return this.request('GET', path, options);
+  }
 
-  api.post = function(path, options) {
-    return api.request('POST', path, options);
-  };
+  post(path, options) {
+    return this.request('POST', path, options);
+  }
 
-  api.delete = function(path, options, query) {
+  delete(path, options, query) {
     if (query)
-      path += '?' + api.build_query(query);
-    return api.request('DELETE', path, options);
-  };
+      path += '?' + this.build_query(query);
+    return this.request('DELETE', path, options);
+  }
 
-  api.put = function(path, options) {
-    return api.request('PUT', path, options);
-  };
-};
+  put(path, options) {
+    return this.request('PUT', path, options);
+  }
+}

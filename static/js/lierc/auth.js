@@ -1,10 +1,14 @@
 import { Dialog } from "./dialog.js";
 
-export var Auth = function(baseurl) {
-  var baseurl = baseurl;
+export class Auth {
+  #baseurl;
 
-  this.auth = function(complete) {
-    fetch(baseurl + "/auth", {
+  constructor(baseurl) {
+    this.#baseurl = baseurl;
+  }
+
+  auth(complete) {
+    fetch(this.#baseurl + "/auth", {
       'credentials': 'same-origin'
     }).then(function(res) {
       if (!res.ok)
@@ -12,13 +16,13 @@ export var Auth = function(baseurl) {
       return res.json();
     }).then(function(res) {
       complete(res);
-    }).catch(function(e) {
+    }).catch((e) => {
         console.log(e);
-      modal_overlay(complete);
+      this.#modal_overlay(complete);
     });
-  };
+  }
 
-  function modal_overlay(complete) {
+  #modal_overlay(complete) {
     var dialog = new Dialog('login');
     var overlay = dialog.el;
     dialog.append(document.body);
@@ -27,7 +31,7 @@ export var Auth = function(baseurl) {
       overlay.querySelector('.login-form input[name="email"]').focus();
     }
 
-    overlay.addEventListener("submit", function(e) {
+    overlay.addEventListener("submit", (e) => {
       e.preventDefault();
       var action = e.target.querySelector('input[type="submit"]').getAttribute('name');
       var email = e.target.querySelector('input[name="email"]').value;
@@ -42,7 +46,7 @@ export var Auth = function(baseurl) {
         body += "&username=" + encodeURIComponent(user);
       }
 
-      fetch(baseurl + "/" + action, {
+      fetch(this.#baseurl + "/" + action, {
           'credentials': 'same-origin',
           'method': "POST",
           'body': body,
@@ -74,6 +78,5 @@ export var Auth = function(baseurl) {
       overlay.querySelector('.reset-wrap').style.display = 'block';
       overlay.querySelector('.reset-wrap input[name="email"]').focus();
     });
-
-  };
-};
+  }
+}

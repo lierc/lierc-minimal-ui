@@ -16,34 +16,36 @@ if (!String.prototype.splice) {
     };
 }
 
-export var Completion = function(element) {
-  var TAB = 9;
+const BREAK = ' .,:;';
 
-  this.completions = [];
-  this.commands = [];
-  this.nicks = [];
-  this.completing = false;
-  this.matches = []
-  this.word = null;
-  this.index = 0;
-  this.el = element;
+export class Completion {
+  constructor(element) {
+    this.completions = [];
+    this.commands = [];
+    this.nicks = [];
+    this.completing = false;
+    this.matches = []
+    this.word = null;
+    this.index = 0;
+    this.el = element;
+  }
 
-  this.complete = function(e) {
+  complete(e) {
     if (! this.completing)
       this.start();
     if (this.completing)
       this.cycle();
-  };
+  }
 
-  this.stop = function() {
+  stop() {
     this.completing = false;
     this.matches = [];
     this.completions = [];
     this.index = 0;
     this.word = null;
-  };
+  }
 
-  this.start = function() {
+  start() {
     var word = this.find_word();
     if (!word || word.length == 0)
       return;
@@ -58,9 +60,9 @@ export var Completion = function(element) {
     this.word = word;
     this.completing = true;
     this.index = 0;
-  };
+  }
 
-  this.cycle = function() {
+  cycle() {
     if (this.index >= this.matches.length)
       this.index = 0;
 
@@ -78,9 +80,9 @@ export var Completion = function(element) {
     this.word.tail = word.length;
     this.word.length = word.length;
     this.move_cursor();
-  };
+  }
 
-  this.move_cursor = function(count) {
+  move_cursor(count) {
     var node = this.word.node;
     if (node.nodeType == 1) {
       if (node.childNodes[0].nodeType == 3)
@@ -97,7 +99,7 @@ export var Completion = function(element) {
     sel.addRange(range);
   }
 
-  this.find_matches = function(word) {
+  find_matches(word) {
     word = word.toLowerCase();
     var matches = [];
     var length = word.length;
@@ -111,11 +113,9 @@ export var Completion = function(element) {
     }
 
     return matches;
-  };
+  }
 
-  var BREAK = ' .,:;';
-
-  this.find_word = function() {
+  find_word() {
     var sel = window.getSelection();
     var node = sel.focusNode;
     var pos  = sel.focusOffset;
@@ -173,5 +173,5 @@ export var Completion = function(element) {
       node: node,
       append: append
     };
-  };
-};
+  }
+}

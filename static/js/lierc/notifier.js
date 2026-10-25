@@ -1,14 +1,29 @@
-var WebPush = function(app) {
-  var webpush = this;
-  webpush.subscribed = false;
+class WebPush {
+  #app;
 
-  webpush.hide = function() {
+  constructor(app) {
+    this.#app = app;
+
+    this.subscribed = false;
+
+    if ("serviceWorker" in navigator) {
+      navigator.serviceWorker.register("/service-worker.js")
+        .then(() => {
+          this.setup();
+        });
+    }
+    else {
+      this.hide();
+    }
+  }
+
+  hide() {
     document.getElementById("web-notify").classList.add("broken");
-  };
+  }
 
-  webpush.setup = function() {
+  setup() {
     if (!('showNotification' in ServiceWorkerRegistration.prototype)) {
-      webpush.hide();
+      this.hide();
       console.log("Notifications not supported.");
       return;
     }
@@ -19,33 +34,33 @@ var WebPush = function(app) {
     }
 
     if (!('PushManager' in window)) {
-      webpush.hide();
+      this.hide();
       console.log("Push notifications not supported.");
       return;
     }
 
-    navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
       serviceWorkerRegistration.pushManager.getSubscription()
-        .then(function(subscription) {
+        .then((subscription) => {
           if(subscription) {
-            webpush.set_enabled(true, subscription);
+            this.set_enabled(true, subscription);
           }
         });
     });
-  };
+  }
 
-  webpush.unsubscribe = function() {
-    navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
+  unsubscribe() {
+    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
       serviceWorkerRegistration.pushManager.getSubscription()
-        .then(function(subscription) {
+        .then((subscription) => {
           if (!subscription) {
-            webpush.set_enabled(false);
+            this.set_enabled(false);
             return;
           }
-          subscription.unsubscribe().then(function() {
-            webpush.set_enabled(false);
+          subscription.unsubscribe().then(() => {
+            this.set_enabled(false);
             var part = encodeURIComponent(subscription.endpoint);;
-            app.api.delete("/notification/web_push/" + part);
+            this.#app.api.delete("/notification/web_push/" + part);
           }).catch(function(e) {
             console.log("Failed to unsubscribe", e);
           });
@@ -53,35 +68,35 @@ var WebPush = function(app) {
           console.log("Error unsubscribing", e);
         });
     });
-  };
+  }
 
-  webpush.subscribe = function() {
-    navigator.serviceWorker.ready.then(function(serviceWorkerRegistration) {
-      app.api.get("/notification/web_push_keys", {
-        success: function(res) {
+  subscribe() {
+    navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
+      this.#app.api.get("/notification/web_push_keys", {
+        success: (res) => {
           var vapid = base64url.decode(res['vapid_public_key']);
           serviceWorkerRegistration.pushManager.subscribe({
               userVisibleOnly: true,
               applicationServerKey: vapid.buffer
             })
-            .then(function(subscription) {
-              webpush.set_enabled(true, subscription);
+            .then((subscription) => {
+              this.set_enabled(true, subscription);
             })
-            .catch(function(e) {
+            .catch((e) => {
               if (Notification.permission === 'denied') {
                 console.log("Notifier permission denied");
               }
               else {
                 console.log("Unable to subscribe", e);
               }
-              webpush.set_enabled(false);
+              this.set_enabled(false);
             });
         }
       });
     });
-  };
+  }
 
-  webpush.build_pref = function(sub) {
+  build_pref(sub) {
     var rawKey = sub.getKey ? sub.getKey('p256dh') : '';
     var key = rawKey ?
       base64url.encode(rawKey) :
@@ -97,10 +112,10 @@ var WebPush = function(app) {
       key: key,
       auth: authSecret
     };
-  };
+  }
 
-  webpush.set_enabled = function(bool, sub) {
-    webpush.subscribed = bool;
+  set_enabled(bool, sub) {
+    this.subscribed = bool;
 
     if (bool) {
       if (sub) {
@@ -109,8 +124,8 @@ var WebPush = function(app) {
           'content-type',
           'application/x-www-form-urlencoded; charset=UTF-8'
         );
-        app.api.post("/notification/web_push", {
-          body: app.api.build_query(webpush.build_pref(sub)),
+        this.#app.api.post("/notification/web_push", {
+          body: this.#app.api.build_query(this.build_pref(sub)),
           headers: headers
         });
       }
@@ -119,42 +134,41 @@ var WebPush = function(app) {
     else {
       document.getElementById("web-notify").classList.remove("enabled");
     }
-  };
-
-  if ("serviceWorker" in navigator) {
-    navigator.serviceWorker.register("/service-worker.js")
-      .then(function() {
-        webpush.setup();
-      });
   }
-  else {
-    webpush.hide();
+}
+
+class APN {
+  #app;
+
+  constructor(app) {
+    this.#app = app;
+
+    this.subscribed = false;
+    this.config = {};
+
+    if (APN.supported()) {
+      this.setup();
+    }
   }
-};
 
-var APN = function(app) {
-  var apn = this;
-  apn.subscribed = false;
-  apn.config = {};
-
-  apn.setup = function() {
-    app.api.get("/notification/apn/config", {
-      success: function(c) {
-        apn.config = c;
+  setup() {
+    this.#app.api.get("/notification/apn/config", {
+      success: (c) => {
+        this.config = c;
       }
     });
-  };
+  }
 
-  apn.check_per = function(per) {
+  check_per(per) {
     if (per.permission === 'default') {
-      console.log('requesting permission', apn.config);
+      console.log('requesting permission', this.config);
       window.safari.pushNotification.requestPermission(
-        apn.config.service_url,
-        apn.config.push_id,
-        { user: apn.config.user },
-        function(per) {
+        this.config.service_url,
+        this.config.push_id,
+        { user: this.config.user },
+        (per) => {
           console.log(per);
-          apn.check_per(per)
+          this.check_per(per)
         }
       );
     }
@@ -164,25 +178,21 @@ var APN = function(app) {
     else if (per.permission == 'granted') {
       document.getElementById("web-notify").classList.add("enabled");
     }
-  };
-
-  apn.subscribe = function() {
-    var per = window.safari.pushNotification.permission(apn.config.push_id);
-    apn.check_per(per);
-  };
-
-  apn.unsubscribe = function() {
-    var per = window.safari.pushNotification.permission(apn.config.push_id);
-    apn.check_per(per);
-  };
-
-  if (APN.supported()) {
-    apn.setup();
   }
-};
 
-APN.supported = function() {
-  return 'safari' in window && 'pushNotification' in window.safari
-};
+  subscribe() {
+    var per = window.safari.pushNotification.permission(this.config.push_id);
+    this.check_per(per);
+  }
+
+  unsubscribe() {
+    var per = window.safari.pushNotification.permission(this.config.push_id);
+    this.check_per(per);
+  }
+
+  static supported() {
+    return 'safari' in window && 'pushNotification' in window.safari
+  }
+}
 
 export var Notifier = APN.supported() ? APN : WebPush;

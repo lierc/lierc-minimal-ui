@@ -1,67 +1,68 @@
 import { API } from "./api.js";
 import { Render } from "./render.js";
 
-export var Logs = function(url) {
-  var logs = this;
-  logs.api = new API(url);
-  logs.es = null;
-  logs.highlight = null;
-  logs.query = false;
-  logs.form = document.getElementById("log-search");
-  logs.status = document.getElementById("status");
-  logs.submit = document.getElementById("submit");
-  logs.results = document.getElementById("results");
-  logs.text = document.getElementById("text");
-  logs.sender = document.getElementById("sender");
-  logs.connection = document.getElementById("connection");
-  logs.channel = document.getElementById("channel");
-  logs.from = document.getElementById("from");
-  logs.to = document.getElementById("to");
-  logs.datalist = document.getElementById("channels");
-  logs.topic = document.getElementById("topic");
+export class Logs {
+  constructor(url) {
+    this.api = new API(url);
+    this.es = null;
+    this.highlight = null;
+    this.query = false;
+    this.form = document.getElementById("log-search");
+    this.status = document.getElementById("status");
+    this.submit = document.getElementById("submit");
+    this.results = document.getElementById("results");
+    this.text = document.getElementById("text");
+    this.sender = document.getElementById("sender");
+    this.connection = document.getElementById("connection");
+    this.channel = document.getElementById("channel");
+    this.from = document.getElementById("from");
+    this.to = document.getElementById("to");
+    this.datalist = document.getElementById("channels");
+    this.topic = document.getElementById("topic");
+  }
 
-  logs.populate_datalist = function() {
-    var path = "/connection/" + logs.connection.value + "/channel";
+  populate_datalist() {
+    var path = "/connection/" + this.connection.value + "/channel";
 
-    if (logs.channel.value == '') {
-      logs.channel.value = 'loading...';
-      logs.channel.setAttribute('disabled', 'disabled');
+    if (this.channel.value == '') {
+      this.channel.value = 'loading...';
+      this.channel.setAttribute('disabled', 'disabled');
     }
 
-    logs.api.get(path, {
-      error: function(err) {
-        if (logs.channel.value == 'loading...') {
-          logs.channel.value = '';
+    this.api.get(path, {
+      error: (err) => {
+        if (this.channel.value == 'loading...') {
+          this.channel.value = '';
         }
       },
-      success: function(channels) {
-        logs.datalist.innerHTML = '';
+      success: (channels) => {
+        this.datalist.innerHTML = '';
 
-        channels.forEach(function(chan) {
+        channels.forEach((chan) => {
           var item = document.createElement('OPTION');
           item.value = chan;
-          logs.datalist.appendChild(item);
+          this.datalist.appendChild(item);
         });
 
-        if (logs.channel.value == 'loading...') {
-          logs.channel.value = '';
-          logs.channel.removeAttribute('disabled');
+        if (this.channel.value == 'loading...') {
+          this.channel.value = '';
+          this.channel.removeAttribute('disabled');
 
-          if (logs.datalist.childNodes.length) {
-            logs.channel.value = logs.datalist.childNodes[0].value;
+          if (this.datalist.childNodes.length) {
+            this.channel.value = this.datalist.childNodes[0].value;
           }
         }
       }
     });
-  };
+  }
 
-  logs.init = function() {
+  init() {
     var now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
-    logs.from.value = JSON.stringify(now).slice(1,11);
-    logs.to.value = logs.from.value;
+    this.from.value = JSON.stringify(now).slice(1,11);
+    this.to.value = this.from.value;
 
-    logs.results.addEventListener('click', function(e) {
+    this.results.addEventListener('click', (e) => {
       var el = e.target;
 
       if (!el.matches('li.message time')) {
@@ -72,7 +73,7 @@ export var Logs = function(url) {
         el = el.parentNode;
       }
 
-      if (logs.query && el) {
+      if (this.query && el) {
         var time = el.getAttribute('data-time');
         var id   = el.getAttribute('data-message-id');
 
@@ -85,12 +86,12 @@ export var Logs = function(url) {
         if (day.length == 1)
           day = "0" + day;
         var date = [y, mo, day].join("-");
-        logs.from.value = date;
-        logs.to.value = date;
-        logs.text.value = '';
-        logs.sender.value = '';
-        logs.highlight = id;
-        logs.submit.click();
+        this.from.value = date;
+        this.to.value = date;
+        this.text.value = '';
+        this.sender.value = '';
+        this.highlight = id;
+        this.submit.click();
       }
       else if (el) {
         el.scrollIntoView();
@@ -98,9 +99,9 @@ export var Logs = function(url) {
       }
     });
 
-    logs.api.get("/connection", {
-      success: function(conns) {
-        conns.forEach(function(conn) {
+    this.api.get("/connection", {
+      success: (conns) => {
+        conns.forEach((conn) => {
           var item = document.createElement('OPTION');
           item.value = conn.Id;
 
@@ -111,48 +112,48 @@ export var Logs = function(url) {
            item.textContent = conn.Config.Host;
           }
 
-          logs.connection.appendChild(item);
+          this.connection.appendChild(item);
         });
-        logs.load_url_search();
-        logs.populate_datalist();
+        this.load_url_search();
+        this.populate_datalist();
       }
     });
 
-    logs.to.addEventListener("change", function(e) {
-      var to   = new Date(logs.to.value);
-      var from = new Date(logs.from.value);
+    this.to.addEventListener("change", (e) => {
+      var to   = new Date(this.to.value);
+      var from = new Date(this.from.value);
 
       if (to < from) {
-        logs.from.value = logs.to.value;
+        this.from.value = this.to.value;
       }
     });
 
-    logs.from.addEventListener("change", function(e) {
-      var to   = new Date(logs.to.value);
-      var from = new Date(logs.from.value);
+    this.from.addEventListener("change", (e) => {
+      var to   = new Date(this.to.value);
+      var from = new Date(this.from.value);
 
       if (to < from) {
-        logs.to.value = logs.from.value;
+        this.to.value = this.from.value;
       }
     });
 
-    logs.connection.addEventListener("change", function(e) {
-      logs.populate_datalist();
+    this.connection.addEventListener("change", (e) => {
+      this.populate_datalist();
     });
 
-    logs.form.addEventListener("submit", function(e) {
+    this.form.addEventListener("submit", (e) => {
       e.preventDefault();
 
-      logs.results.innerHTML = '';
+      this.results.innerHTML = '';
 
-      var conn = logs.connection.value;
-      var chan = encodeURIComponent(logs.channel.value);
+      var conn = this.connection.value;
+      var chan = encodeURIComponent(this.channel.value);
 
-      var from = new Date(logs.from.value);
-      var to = new Date(logs.to.value);
+      var from = new Date(this.from.value);
+      var to = new Date(this.to.value);
 
       if (isNaN(from) || isNaN(to)) {
-        alert("Invalid date rate '" + logs.from.value + "' - '" + logs.to.value + "'");
+        alert("Invalid date rate '" + this.from.value + "' - '" + this.to.value + "'");
         return;
       }
 
@@ -185,18 +186,18 @@ export var Logs = function(url) {
       var title;
       var p = document.createElement('P');
 
-      if (logs.text.value == "") {
+      if (this.text.value == "") {
         title = "";
-        logs.query = false;
+        this.query = false;
       }
       else {
-        title = "'" + logs.text.value + "' in  ";
-        logs.query = true;
+        title = "'" + this.text.value + "' in  ";
+        this.query = true;
       }
       p.innerText = title;
 
       var c = document.createElement('STRONG');
-      c.innerText = logs.channel.value;
+      c.innerText = this.channel.value;
       p.appendChild(c);
       var s = document.createElement('SPAN');
       if (from == to) {
@@ -206,36 +207,36 @@ export var Logs = function(url) {
         s.innerText = " from " + from + " to " + to;
       }
       p.appendChild(s);
-      logs.topic.innerHTML = '';
-      logs.topic.appendChild(p);
+      this.topic.innerHTML = '';
+      this.topic.appendChild(p);
 
       var data = {};
-      if (logs.text.value != "") {
-        data['text'] = logs.text.value;
+      if (this.text.value != "") {
+        data['text'] = this.text.value;
       }
-      if (logs.sender.value != "") {
-        data['sender'] = logs.sender.value;
+      if (this.sender.value != "") {
+        data['sender'] = this.sender.value;
       }
 
       var path = "/connection/" + conn + "/channel/" + chan + "/date/" + from + "/" + to;
-      var query = logs.api.build_query(data);
+      var query = this.api.build_query(data);
 
       if (query) {
         path += '?' + query;
       }
 
-      if (logs.es) {
-        logs.es.close();
+      if (this.es) {
+        this.es.close();
       }
 
-      logs.es = new EventSource(logs.api.baseurl + path);
+      this.es = new EventSource(this.api.baseurl + path);
 
       window.history.replaceState({}, path, "/search/#!" + path);
 
-      logs.status.textContent = "searching...";
+      this.status.textContent = "searching...";
       var total = 0;
 
-      logs.es.addEventListener("log", function(e) {
+      this.es.addEventListener("log", (e) => {
         total++;
         var line = JSON.parse(e.data);
         var message = line.Message;
@@ -243,16 +244,16 @@ export var Logs = function(url) {
         message.Highlight = e.Highlight;
         var el = Render(message, {controls: false, full_date: true});
         if (el) {
-          logs.results.appendChild(el);
+          this.results.appendChild(el);
         }
       });
 
-      logs.es.addEventListener("error", function(e) {
-        logs.es.close();
-        logs.es = null;
-        logs.status.textContent = total + " results";
-        if (logs.highlight) {
-          var el = logs.results.querySelector('li[data-message-id="' + logs.highlight + '"]');
+      this.es.addEventListener("error", (e) => {
+        this.es.close();
+        this.es = null;
+        this.status.textContent = total + " results";
+        if (this.highlight) {
+          var el = this.results.querySelector('li[data-message-id="' + this.highlight + '"]');
           if (el) {
             el.scrollIntoView();
             el.classList.add('focused');
@@ -260,9 +261,9 @@ export var Logs = function(url) {
         }
       });
     });
-  };
+  }
 
-  logs.load_url_search = function() {
+  load_url_search() {
     var hash = window.location.hash;
     if (!hash) return;
 
@@ -281,31 +282,31 @@ export var Logs = function(url) {
       }
 
       if (query["text"]) {
-        logs.text.value = query["text"];
-        logs.query = true;
+        this.text.value = query["text"];
+        this.query = true;
       }
       else {
-        logs.query = false;
+        this.query = false;
       }
     }
 
     while (path_parts.length) {
       var name = path_parts.shift();
       if (name == "connection") {
-        logs.connection.value = decodeURIComponent(path_parts.shift());
+        this.connection.value = decodeURIComponent(path_parts.shift());
       }
       else if (name == "channel") {
-        logs.channel.value = decodeURIComponent(path_parts.shift());
+        this.channel.value = decodeURIComponent(path_parts.shift());
       }
       else if (name == "date") {
-        logs.from.value = decodeURIComponent(path_parts.shift());
-        logs.to.value = decodeURIComponent(path_parts.shift());
+        this.from.value = decodeURIComponent(path_parts.shift());
+        this.to.value = decodeURIComponent(path_parts.shift());
       }
       else if (name == "message") {
-        logs.highlight = path_parts.shift();
+        this.highlight = path_parts.shift();
       }
     }
 
-    logs.submit.click();
-  };
+    this.submit.click();
+  }
 }

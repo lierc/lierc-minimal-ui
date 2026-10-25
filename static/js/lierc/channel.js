@@ -1,37 +1,39 @@
-export var Channel = function(name) {
-  this.name = name;
+export class Channel {
+  constructor(name) {
+    this.name = name;
 
-  this.topic = {
-    value: "No topic set",
-    user: null,
-    time: null
-  };
+    this.topic = {
+      value: "No topic set",
+      user: null,
+      time: null
+    };
 
-  this.nicks = [];
-  this.nick_modes = {};
-  this.synced = true;
-  this.mode = "";
+    this.nicks = [];
+    this.nick_modes = {};
+    this.synced = true;
+    this.mode = "";
+  }
 
-  this.reset_nicks = function() {
+  reset_nicks() {
     this.nicks.splice(0, this.nicks.length);
     this.nick_modes = {};
-  };
+  }
 
-  this.bump_nick = function(nick) {
+  bump_nick(nick) {
     var i = this.nicks.indexOf(nick);
     if (i != -1) {
       this.nicks.splice(i, 1);
       this.nicks.unshift(nick);
     }
-  };
+  }
 
-  this.add_nick = function(nick, mode) {
+  add_nick(nick, mode) {
     if (!mode) mode = "";
     this.nicks.unshift(nick);
     this.nick_modes[nick] = mode;
-  };
+  }
 
-  this.set_mode = function(param) {
+  set_mode(param) {
     var action  = param.substring(0, 1);
     var modes   = param.substring(1);
 
@@ -43,9 +45,9 @@ export var Channel = function(name) {
       else if (action == "-" && current.indexOf(mode) != -1)
         this.mode = current.replace(mode, "");
     }
-  };
+  }
 
-  this.nick_mode = function(nick, param) {
+  nick_mode(nick, param) {
     var action  = param.substring(0, 1);
     var modes   = param.substring(1);
 
@@ -59,11 +61,11 @@ export var Channel = function(name) {
     }
   }
 
-  this.contains_nick = function(nick) {
+  contains_nick(nick) {
     return this.nicks.indexOf(nick) != -1;
-  };
+  }
 
-  this.remove_nick = function(nick) {
+  remove_nick(nick) {
     var i = this.nicks.indexOf(nick);
 
     if (i != -1) {
@@ -73,9 +75,9 @@ export var Channel = function(name) {
     }
 
     return false;
-  };
+  }
 
-  this.rename_nick = function(old, nick) {
+  rename_nick(old, nick) {
     var i = this.nicks.indexOf(old);
     if (i != -1) {
       this.nicks.splice(i, 1, nick);
@@ -84,5 +86,5 @@ export var Channel = function(name) {
       return true;
     }
     return false;
-  };
-};
+  }
+}

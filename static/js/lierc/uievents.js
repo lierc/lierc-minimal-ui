@@ -291,7 +291,7 @@ export var UIEvents = function(app) {
   });
 
   document.querySelectorAll('.add-connection').forEach(function(el) {
-    el.addEventListener('click', app.config_modal);
+    el.addEventListener('click', (e) => app.config_modal(e));
   });
 
   document.querySelectorAll('#nav .nav-title')

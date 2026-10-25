@@ -1,26 +1,29 @@
-export var History = function(element) {
-  this.el = element;
-  this.limit = 10;
-  this.history = [];
+const EMPTY = "";
 
-  var EMPTY = "";
-  var index = null;
-  var current = null;
+export class History {
+  #index = null;
+  #current = null;
 
-  this.up = function() {
+  constructor(element) {
+    this.el = element;
+    this.limit = 10;
+    this.history = [];
+  }
+
+  up() {
     var history = this.history.concat(this.tail());
 
-    if (index === null) {
-      index = 0;
+    if (this.#index === null) {
+      this.#index = 0;
     }
-    else if (++index >= history.length) {
-      index = 0;
+    else if (++this.#index >= history.length) {
+      this.#index = 0;
     }
 
-    this.el.innerHTML = history[index];
-  };
+    this.el.innerHTML = history[this.#index];
+  }
 
-  this.tail = function(rev) {
+  tail(rev) {
     var current = this.current();
     var tail = [EMPTY];
 
@@ -28,37 +31,37 @@ export var History = function(element) {
       tail.push(current);
 
     return tail;
-  };
+  }
 
-  this.current = function() {
-    if (current === null) {
-      current = this.el.innerHTML;
+  current() {
+    if (this.#current === null) {
+      this.#current = this.el.innerHTML;
     }
-    return current;
-  };
+    return this.#current;
+  }
 
-  this.reset = function() {
-    current = null;
-    index = null;
-  };
+  reset() {
+    this.#current = null;
+    this.#index = null;
+  }
 
-  this.down = function() {
+  down() {
     var history = this.history.concat(this.tail(true));
     
-    if (index === null) {
-      index = 0;
+    if (this.#index === null) {
+      this.#index = 0;
     }
-    else if (--index < 0) {
-      index = history.length - 1;
+    else if (--this.#index < 0) {
+      this.#index = history.length - 1;
     }
 
-    this.el.innerHTML = history[index];
-  };
+    this.el.innerHTML = history[this.#index];
+  }
 
-  this.record = function() {
+  record() {
     this.history.unshift(this.el.innerHTML);
-    current = null;
+    this.#current = null;
     if (this.history.length > this.limit)
       this.history = this.history.slice(0, this.limit);
-  };
+  }
 }
