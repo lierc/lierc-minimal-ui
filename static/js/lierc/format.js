@@ -97,6 +97,19 @@ Format.emojify = function(node) {
   return node;
 };
 
+// cut a url at the first ")" that doesn't close a "(" inside it, so
+// "(see http://x.com/a_(b))" links http://x.com/a_(b)
+Format.trim_url = function(url) {
+  let depth = 0;
+  for (let i = 0; i < url.length; i++) {
+    if (url[i] == "(")
+      depth++;
+    else if (url[i] == ")" && --depth < 0)
+      return url.substring(0, i);
+  }
+  return url;
+};
+
 Format.linkify = function(elem) {
   const children = elem.childNodes;
   const length = children.length;
@@ -123,15 +136,12 @@ Format.linkify = function(elem) {
       let pos = 0;
 
       while ((match = Format.url_re.exec(text)) !== null) {
-        let url = match[0];
         const i = match.index;
+        const url = Format.trim_url(match[0]);
+        // keep scanning right after the trimmed url: what was cut off
+        // (a closing paren, or another url) is ordinary text again
+        Format.url_re.lastIndex = i + url.length;
         const before = text.substring(pos, i);
-        let after;
-
-        if ( i > 0 && text[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
-          url = url.substring(0, url.length - 1);
-          after = ')';
-        }
 
         const link = document.createElement('A');
         link.setAttribute('href', url);
@@ -141,9 +151,6 @@ Format.linkify = function(elem) {
 
         replace.push(document.createTextNode(before));
         replace.push(link);
-        if (after) {
-          replace.push(document.createTextNode(after));
-        }
 
         pos = Format.url_re.lastIndex;
       }
