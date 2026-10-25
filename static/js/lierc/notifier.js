@@ -76,7 +76,15 @@ class WebPush {
   async subscribe() {
     const serviceWorkerRegistration = await navigator.serviceWorker.ready;
     const res = await this.#app.api.get("/notification/web_push_keys");
-    const vapid = base64url.decode(res['vapid_public_key']);
+    const key = res['vapid_public_key'];
+    if (!key) {
+      // the API's VAPID_PUBLIC isn't set, so there's nothing to subscribe with
+      console.log("Push notifications aren't configured on the server");
+      alert("Push notifications aren't set up on this server.");
+      this.hide();
+      return;
+    }
+    const vapid = base64url.decode(key);
 
     try {
       const subscription = await serviceWorkerRegistration.pushManager.subscribe({
