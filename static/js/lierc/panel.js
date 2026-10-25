@@ -6,6 +6,14 @@ import { safe, Template } from "./template.js";
 const months = [ "Jan", "Feb", "Mar", "Apr", "May", "June", "July", "Aug", "Sept", "Oct", "Nov", "Dec" ];
 const days   = [ "Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat" ];
 
+// owner, admin, op, halfop, voice; nicks with none sort last
+const NICK_RANKS = "~&@%+";
+
+const nick_rank = (sigils) => {
+  const i = sigils ? NICK_RANKS.indexOf(sigils[0]) : -1;
+  return i == -1 ? NICK_RANKS.length : i;
+};
+
 export class Panel {
   constructor(opts) {
     this.name = opts.name;
@@ -97,88 +105,49 @@ export class Panel {
     this.update_nav();
   }
 
+  // nicks is {nick: sigils}, e.g. {alice: "@", bob: ""}
   update_nicks(nicks) {
-    const order = [ "@", "+" ];
-    const sorted = Object.keys(nicks).map((n) => {
-      return [n, n.toLowerCase()];
-    }).sort((a, b) => {
-      return a[1] < b[1]
-        ? -1 : a[1] > b[1]
-          ? 1 : 0;
-    }).map((n) => {
-      return n[0];
-    });
-
-    const display_sorted = sorted.map((n) => {
-      const pos = order.indexOf(nicks[n]);
-      const prefix = `${pos != -1 ? pos : order.length}`;
-      return [n, prefix + n.toLowerCase()];
-    }).sort((a, b) => {
-      return a[1] < b[1]
-        ? -1 : a[1] > b[1]
-          ? 1 : 0;
-    });
+    const sorted = Object.keys(nicks).map((nick) => ({
+      nick: nick,
+      sigil: nicks[nick],
+      key: `${nick_rank(nicks[nick])}${nick.toLowerCase()}`,
+    })).sort((a, b) => a.key < b.key ? -1 : a.key > b.key ? 1 : 0);
 
     const list = this.elem.nicks;
-    const items = list.querySelectorAll('li');
-    const l = items.length;
-    const del = [];
-
-    for (let i=0; i < l; i++) {
-      const a = items[i].querySelector('a');
-      const nick = a.getAttribute('data-nick');
-      if (!(nick in nicks)) {
-        del.push(items[i]);
-      }
+    const existing = new Map();
+    for (let li = list.firstElementChild; li; li = li.nextElementSibling) {
+      existing.set(li.firstElementChild.getAttribute('data-nick'), li);
     }
 
-    const sorted_len = display_sorted.length;
+    // put each nick's <li> (reused, or new) right after the previous
+    // one, so only nicks that are out of place get moved
+    let next = list.firstElementChild;
+    for (const { nick, sigil, key } of sorted) {
+      let li = existing.get(nick);
+      existing.delete(nick);
 
-    for (let i=0; i < sorted_len; i++) {
-      const nick = display_sorted[i][0];
-      const order = display_sorted[i][1];
-      let inserted = false;
-
-      for (let j=0; j < l; j++) {
-        const item = items[j];
-        const a = item.querySelector('a');
-        const n = a.getAttribute('data-nick');
-        const o = a.getAttribute('data-nick-order');
-
-        if (n == nick) {
-          const text = a.textContent;
-          const display = nicks[nick] + nick;
-          if (text != display) {
-            a.textContent = display;
-            a.setAttribute('data-nick-order', order);
-          }
-          inserted = true;
-          break;
-        }
-        else if (o > order) {
-          const html = Template('nick', {
-            nick: nick,
-            order: order,
-            sigil: nicks[nick],
-          });
-          item.insertAdjacentHTML('beforebegin', html);
-          inserted = true;
-          break;
+      if (li) {
+        const a = li.firstElementChild;
+        if (a.getAttribute('data-nick-order') != key) {
+          a.textContent = sigil + nick;
+          a.setAttribute('data-nick-order', key);
         }
       }
-
-      if (!inserted) {
-        const html = Template('nick', {
-          nick: nick,
-          order: order,
-          sigil: nicks[nick],
-        });
-        list.insertAdjacentHTML('beforeend', html);
+      else {
+        const tmp = document.createElement('template');
+        tmp.innerHTML = Template('nick', { nick: nick, order: key, sigil: sigil });
+        li = tmp.content.firstElementChild;
       }
+
+      if (li == next)
+        next = li.nextElementSibling;
+      else
+        list.insertBefore(li, next);
     }
 
-    for (let i=0; i < del.length; i++) {
-      list.removeChild(del[i]);
+    // whatever wasn't reused has left
+    for (const li of existing.values()) {
+      li.remove();
     }
   }
 

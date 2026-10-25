@@ -33,6 +33,20 @@ export const Render = function(message, opts) {
     );
   }
 
+  case "KICK": {
+    const name = message.Params[0];
+    const nick = message.Params[1];
+    const msg = message.Params[2];
+    return append(
+      make("event", message),
+      [
+        make_nick(message, name),
+        make_text(` kicked ${nick}${msg ? ` (${msg})` : ""}`),
+        timestamp(message)
+      ]
+    );
+  }
+
   case "MODE":
     if (message.Prefix.Nick == message.Params[0]) {
       return raw(message);

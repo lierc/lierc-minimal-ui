@@ -10,7 +10,8 @@ export class Connection {
     this.connected = false;
     this.channels = [];
     this.isupport = {};
-    this.prefix = [ ["v","+"],["o","@"],["h", "%"]];
+    // highest first, like the server's PREFIX
+    this.prefix = [ ["o","@"],["h", "%"],["v","+"]];
     this.chantypes = ["#","&"];
     this.caps_enabled = {};
   }
@@ -30,7 +31,7 @@ export class Connection {
   }
 
   remove_channel(name) {
-    const i = this.channels.indexOf(name);
+    const i = this.channels.indexOf(this.channel(name));
     if (i != -1) {
       this.channels.splice(i, 1);
       return true;
@@ -60,7 +61,7 @@ export class Connection {
 
       for (let j=0; j < this.prefix.length; j++) {
         if (modes && modes.indexOf( this.prefix[j][0]) != -1) {
-          ret[nick] = this.prefix[j][1] + ret[nick];
+          ret[nick] += this.prefix[j][1];
         }
       }
     }
@@ -172,6 +173,27 @@ export class Connection {
           this.#fire("channel:nicks", this.id, name, this.nicks(channel))
         }
       };
+      break;
+    }
+
+    case "KICK": {
+      const name = message.Params[0];
+      const nick = message.Params[1];
+      const channel = this.channel(name);
+
+      if (channel) {
+        if (nick == this.nick) {
+          // keep the panel open so the reason stays visible
+          this.remove_channel(name);
+          this.#fire("channel:msg", this.id, name, message);
+          this.#fire("channel:nicks", this.id, name, {});
+        }
+        else {
+          channel.remove_nick(nick);
+          this.#fire("channel:msg", this.id, name, message);
+          this.#fire("channel:nicks", this.id, name, this.nicks(channel))
+        }
+      }
       break;
     }
 
