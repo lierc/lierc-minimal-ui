@@ -128,7 +128,7 @@ Format.linkify = function(elem) {
         const before = text.substring(pos, i);
         let after;
 
-        if ( i > 0 && before[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
+        if ( i > 0 && text[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
           url = url.substring(0, url.length - 1);
           after = ')';
         }
