@@ -22,7 +22,7 @@ export class Logs {
   }
 
   populate_datalist() {
-    var path = "/connection/" + this.connection.value + "/channel";
+    const path = `/connection/${this.connection.value}/channel`;
 
     if (this.channel.value == '') {
       this.channel.value = 'loading...';
@@ -39,7 +39,7 @@ export class Logs {
         this.datalist.innerHTML = '';
 
         channels.forEach((chan) => {
-          var item = document.createElement('OPTION');
+          const item = document.createElement('OPTION');
           item.value = chan;
           this.datalist.appendChild(item);
         });
@@ -57,13 +57,13 @@ export class Logs {
   }
 
   init() {
-    var now = new Date();
+    const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.from.value = JSON.stringify(now).slice(1,11);
     this.to.value = this.from.value;
 
     this.results.addEventListener('click', (e) => {
-      var el = e.target;
+      let el = e.target;
 
       if (!el.matches('li.message time')) {
         return;
@@ -74,18 +74,18 @@ export class Logs {
       }
 
       if (this.query && el) {
-        var time = el.getAttribute('data-time');
-        var id   = el.getAttribute('data-message-id');
+        const time = el.getAttribute('data-time');
+        const id   = el.getAttribute('data-message-id');
 
-        var d = new Date(time * 1000);
-        var y = String(d.getUTCFullYear());
-        var mo = String(d.getUTCMonth() + 1);
+        const d = new Date(time * 1000);
+        const y = String(d.getUTCFullYear());
+        let mo = String(d.getUTCMonth() + 1);
         if (mo.length == 1)
-          mo = "0" + mo;
-        var day = String(d.getUTCDate());
+          mo = `0${mo}`;
+        let day = String(d.getUTCDate());
         if (day.length == 1)
-          day = "0" + day;
-        var date = [y, mo, day].join("-");
+          day = `0${day}`;
+        const date = [y, mo, day].join("-");
         this.from.value = date;
         this.to.value = date;
         this.text.value = '';
@@ -102,7 +102,7 @@ export class Logs {
     this.api.get("/connection", {
       success: (conns) => {
         conns.forEach((conn) => {
-          var item = document.createElement('OPTION');
+          const item = document.createElement('OPTION');
           item.value = conn.Id;
 
           if (conn.Config.Alias) {
@@ -120,8 +120,8 @@ export class Logs {
     });
 
     this.to.addEventListener("change", (e) => {
-      var to   = new Date(this.to.value);
-      var from = new Date(this.from.value);
+      const to   = new Date(this.to.value);
+      const from = new Date(this.from.value);
 
       if (to < from) {
         this.from.value = this.to.value;
@@ -129,8 +129,8 @@ export class Logs {
     });
 
     this.from.addEventListener("change", (e) => {
-      var to   = new Date(this.to.value);
-      var from = new Date(this.from.value);
+      const to   = new Date(this.to.value);
+      const from = new Date(this.from.value);
 
       if (to < from) {
         this.to.value = this.from.value;
@@ -146,71 +146,71 @@ export class Logs {
 
       this.results.innerHTML = '';
 
-      var conn = this.connection.value;
-      var chan = encodeURIComponent(this.channel.value);
+      const conn = this.connection.value;
+      const chan = encodeURIComponent(this.channel.value);
 
-      var from = new Date(this.from.value);
-      var to = new Date(this.to.value);
+      let from = new Date(this.from.value);
+      let to = new Date(this.to.value);
 
       if (isNaN(from) || isNaN(to)) {
-        alert("Invalid date rate '" + this.from.value + "' - '" + this.to.value + "'");
+        alert(`Invalid date rate '${this.from.value}' - '${this.to.value}'`);
         return;
       }
 
       from.setMinutes(from.getMinutes() + from.getTimezoneOffset());
       to.setMinutes(to.getMinutes() + to.getTimezoneOffset());
 
-      var from_month = String(from.getMonth() + 1);
+      let from_month = String(from.getMonth() + 1);
       if (from_month.length == 1) {
-        from_month = "0" + from_month;
+        from_month = `0${from_month}`;
       }
 
-      var from_day = String(from.getDate());
+      let from_day = String(from.getDate());
       if (from_day.length == 1) {
-        from_day = "0" + from_day;
+        from_day = `0${from_day}`;
       }
 
-      var to_month = String(to.getMonth() + 1);
+      let to_month = String(to.getMonth() + 1);
       if (to_month.length == 1) {
-        to_month = "0" + to_month;
+        to_month = `0${to_month}`;
       }
 
-      var to_day = String(to.getDate());
+      let to_day = String(to.getDate());
       if (to_day.length == 1) {
-        to_day = "0" + to_day;
+        to_day = `0${to_day}`;
       }
 
       from = [from.getYear() + 1900, from_month, from_day].join("-");
       to   = [to.getYear() + 1900, to_month, to_day].join("-");
 
-      var title;
-      var p = document.createElement('P');
+      let title;
+      const p = document.createElement('P');
 
       if (this.text.value == "") {
         title = "";
         this.query = false;
       }
       else {
-        title = "'" + this.text.value + "' in  ";
+        title = `'${this.text.value}' in  `;
         this.query = true;
       }
       p.innerText = title;
 
-      var c = document.createElement('STRONG');
+      const c = document.createElement('STRONG');
       c.innerText = this.channel.value;
       p.appendChild(c);
-      var s = document.createElement('SPAN');
+      const s = document.createElement('SPAN');
       if (from == to) {
-        s.innerText = " from " + from;
+        s.innerText = ` from ${from}`;
       }
       else {
-        s.innerText = " from " + from + " to " + to;
+        s.innerText = ` from ${from} to ${to}`;
       }
       p.appendChild(s);
       this.topic.innerHTML = '';
       this.topic.appendChild(p);
 
-      var data = {};
+      const data = {};
       if (this.text.value != "") {
         data['text'] = this.text.value;
       }
@@ -218,11 +218,11 @@ export class Logs {
         data['sender'] = this.sender.value;
       }
 
-      var path = "/connection/" + conn + "/channel/" + chan + "/date/" + from + "/" + to;
-      var query = this.api.build_query(data);
+      let path = `/connection/${conn}/channel/${chan}/date/${from}/${to}`;
+      const query = this.api.build_query(data);
 
       if (query) {
-        path += '?' + query;
+        path += `?${query}`;
       }
 
       if (this.es) {
@@ -231,18 +231,18 @@ export class Logs {
 
       this.es = new EventSource(this.api.baseurl + path);
 
-      window.history.replaceState({}, path, "/search/#!" + path);
+      window.history.replaceState({}, path, `/search/#!${path}`);
 
       this.status.textContent = "searching...";
-      var total = 0;
+      let total = 0;
 
       this.es.addEventListener("log", (e) => {
         total++;
-        var line = JSON.parse(e.data);
-        var message = line.Message;
+        const line = JSON.parse(e.data);
+        const message = line.Message;
         message.Id = line.MessageId;
         message.Highlight = e.Highlight;
-        var el = Render(message, {controls: false, full_date: true});
+        const el = Render(message, {controls: false, full_date: true});
         if (el) {
           this.results.appendChild(el);
         }
@@ -251,9 +251,9 @@ export class Logs {
       this.es.addEventListener("error", (e) => {
         this.es.close();
         this.es = null;
-        this.status.textContent = total + " results";
+        this.status.textContent = `${total} results`;
         if (this.highlight) {
-          var el = this.results.querySelector('li[data-message-id="' + this.highlight + '"]');
+          const el = this.results.querySelector(`li[data-message-id="${this.highlight}"]`);
           if (el) {
             el.scrollIntoView();
             el.classList.add('focused');
@@ -264,20 +264,20 @@ export class Logs {
   }
 
   load_url_search() {
-    var hash = window.location.hash;
+    const hash = window.location.hash;
     if (!hash) return;
 
-    var parts = hash.split("?");
-    var path = parts[0];
-    var query_string = parts[1];
-    var path_parts = path.split("/").slice(1);
+    const parts = hash.split("?");
+    const path = parts[0];
+    const query_string = parts[1];
+    const path_parts = path.split("/").slice(1);
 
     if (query_string) {
-      var pairs = query_string.split("&");
-      var query = {};
+      const pairs = query_string.split("&");
+      const query = {};
 
-      for (var i=0; i < pairs.length; i++) {
-        var kv = pairs[i].split("=");
+      for (let i=0; i < pairs.length; i++) {
+        const kv = pairs[i].split("=");
         query[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1]);
       }
 
@@ -291,7 +291,7 @@ export class Logs {
     }
 
     while (path_parts.length) {
-      var name = path_parts.shift();
+      const name = path_parts.shift();
       if (name == "connection") {
         this.connection.value = decodeURIComponent(path_parts.shift());
       }

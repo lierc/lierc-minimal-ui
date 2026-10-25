@@ -31,7 +31,7 @@ export class Editor {
   keydown(e, mods) {
     if (this.coloring) {
       if (e.which >= 48 && e.which <= 57) {
-        var i = String(9 - (57 - e.which));
+        const i = String(9 - (57 - e.which));
         this.color += i;
         e.preventDefault();
       }
@@ -44,27 +44,27 @@ export class Editor {
         this.el.classList.remove('coloring');
         this.info.classList.remove('open');
 
-        var seq = this.color;
-        var parts = seq.match(/^(?:([0-9]{1,2}),?([0-9]{1,2})?)?$/);
+        const seq = this.color;
+        const parts = seq.match(/^(?:([0-9]{1,2}),?([0-9]{1,2})?)?$/);
         this.color = "";
 
         if (parts === null) {
-          alert("Invalid color sequence: '" + seq + "'");
+          alert(`Invalid color sequence: '${seq}'`);
           return;
         }
 
-        var sel = window.getSelection();
-        var node = sel.focusNode;
-        var range = sel.getRangeAt(0);
-        var span = document.createElement('SPAN');
+        const sel = window.getSelection();
+        const node = sel.focusNode;
+        const range = sel.getRangeAt(0);
+        const span = document.createElement('SPAN');
         span.appendChild(range.extractContents());
 
         if (typeof(parts[1]) != "undefined") {
-          var i = parts[1];
-          var c = Format.color_map[parseInt(i)];
+          const i = parts[1];
+          const c = Format.color_map[parseInt(i)];
 
           if (typeof(c) === "undefined") {
-            alert("Invalid color '" + i + "' in sequence '" + seq + "'");
+            alert(`Invalid color '${i}' in sequence '${seq}'`);
             return;
           }
 
@@ -72,11 +72,11 @@ export class Editor {
           span.setAttribute('data-color-fg', i);
 
           if (typeof(parts[2]) != "undefined") {
-            var i = parts[2];
-            var c = Format.color_map[parseInt(i)];
+            const i = parts[2];
+            const c = Format.color_map[parseInt(i)];
 
             if (typeof(c) === "undefined") {
-              alert("Invalid color '" + i + "' in sequence '" + seq + "'");
+              alert(`Invalid color '${i}' in sequence '${seq}'`);
               return;
             }
 
@@ -115,14 +115,14 @@ export class Editor {
       }
 
       if (e.which == RESET) {
-        var sel = window.getSelection();
-        var range = sel.getRangeAt(0);
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
 
-        var last = this.el.lastChild;
+        const last = this.el.lastChild;
         range.setEndAfter(last);
 
-        var contents = range.extractContents();
-        var text = document.createTextNode("\u200b" + contents.textContent);
+        const contents = range.extractContents();
+        const text = document.createTextNode(`\u200b${contents.textContent}`);
         this.el.appendChild(text);
 
         range.setStart(text, 1);
@@ -139,9 +139,9 @@ export class Editor {
       }
       if (e.which == INVERT) {
         e.preventDefault();
-        var sel = window.getSelection();
-        var range = sel.getRangeAt(0);
-        var span = document.createElement('SPAN');
+        const sel = window.getSelection();
+        const range = sel.getRangeAt(0);
+        const span = document.createElement('SPAN');
         span.appendChild(range.extractContents());
         span.classList.add('invert');
         range.insertNode(span);
@@ -178,9 +178,9 @@ export class Editor {
       e.preventDefault();
       this.history.up();
 
-      var sel = window.getSelection();
-      var range = sel.getRangeAt(0);
-      var last = this.el.lastChild;
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      const last = this.el.lastChild;
       if (last) {
         range.setStartAfter(last);
         range.setEndAfter(last);
@@ -192,9 +192,9 @@ export class Editor {
       e.preventDefault();
       this.history.down();
 
-      var sel = window.getSelection();
-      var range = sel.getRangeAt(0);
-      var last = this.el.lastChild;
+      const sel = window.getSelection();
+      const range = sel.getRangeAt(0);
+      const last = this.el.lastChild;
       if (last) {
         range.setStartAfter(last);
         range.setEndAfter(last);
@@ -216,9 +216,9 @@ export class Editor {
 
   restore_selection() {
     if (this.range) {
-      var s = window.getSelection();
+      const s = window.getSelection();
       s.removeAllRanges();
-      var range = document.createRange();
+      const range = document.createRange();
       range.setStart(this.range.startContainer, this.range.startOffset);
       range.setEnd(this.range.endContainer, this.range.endOffset);
       s.addRange(range);
@@ -226,28 +226,28 @@ export class Editor {
   }
 
   append_elem(el) {
-    var sel = window.getSelection();
-    var range = sel.getRangeAt(0);
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
     range.insertNode(el);
     this.move_cursor_after(el);
   }
 
   move_cursor_after(el) {
-    var sel = window.getSelection();
-    var range = sel.getRangeAt(0);
+    const sel = window.getSelection();
+    const range = sel.getRangeAt(0);
     range.setStart(el, 1);
     range.setEnd(el, 1);
   }
 
   save_selection() {
-    var s = window.getSelection();
+    const s = window.getSelection();
     if (s.rangeCount == 0) {
       this.range = null;
       return;
     }
 
-    var range = s.getRangeAt(0);
-    var node = range.commonAncestorContainer;
+    const range = s.getRangeAt(0);
+    const node = range.commonAncestorContainer;
     if (this.el.contains(node)) {
       this.range = {
         startContainer: range.startContainer,

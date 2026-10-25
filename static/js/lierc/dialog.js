@@ -23,13 +23,12 @@ export class Dialog {
 
   
   listen() {
-    var self = this;
-    ['click', 'touchstart'].forEach(function(type) {
-      self.el.addEventListener(type, function(e) {
+    ['click', 'touchstart'].forEach((type) => {
+      this.el.addEventListener(type, (e) => {
         if (!e.target.matches(".overlay, .close"))
           return;
         e.preventDefault();
-        self.close();
+        this.close();
       });
     });
   }

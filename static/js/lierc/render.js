@@ -1,13 +1,13 @@
 import { Format } from "./format.js";
 import { RelayMsg } from "./relaymsg.js";
 
-export var Render = function(message, opts) {
+export const Render = function(message, opts) {
   if (!opts) opts = {};
   if (opts['raw']) return raw(message);
   switch (String(message.Command)) {
-  case "NICK":
-    var old = message.Prefix.Name;
-    var nick = message.Params[0];
+  case "NICK": {
+    const old = message.Prefix.Name;
+    const nick = message.Params[0];
     message.Prefix.Name = nick;
     return append(
       make("event", message),
@@ -17,51 +17,54 @@ export var Render = function(message, opts) {
         timestamp(message)
       ]
     );
+  }
 
-  case "PART":
-    var nick = message.Prefix.Name;
-    var name = message.Params[0];
-    var msg = message.Params[1];
+  case "PART": {
+    const nick = message.Prefix.Name;
+    const name = message.Params[0];
+    const msg = message.Params[1];
     return append(
       make("event", message),
       [
         make_nick(message, name),
-        make_text(' has left' + (msg ? " ("+msg+")" : "")),
+        make_text(` has left${msg ? ` (${msg})` : ""}`),
         timestamp(message)
       ]
     );
+  }
 
   case "MODE":
     if (message.Prefix.Nick == message.Params[0]) {
       return raw(message);
     }
     else {
-      var channel = message.Params[0];
+      const channel = message.Params[0];
       return append(
         make("event", message),
         [
           make_text(message.Params.slice(1).join(" ")),
-          make_text(" by " + message.Prefix.Name),
+          make_text(` by ${message.Prefix.Name}`),
           timestamp(message)
         ]
       );
     }
 
-  case "QUIT":
-    var nick = message.Prefix.Name;
-    var msg = message.Params[0];
+  case "QUIT": {
+    const nick = message.Prefix.Name;
+    const msg = message.Params[0];
     return append(
       make("event", message),
       [
         make_nick(message),
-        make_text(' has quit' + (msg ? " ("+msg+")" : "")),
+        make_text(` has quit${msg ? ` (${msg})` : ""}`),
         timestamp(message)
       ]
     );
+  }
 
-  case "JOIN":
-    var name = message.Params[0];
-    var nick = message.Prefix.Name;
+  case "JOIN": {
+    const name = message.Params[0];
+    const nick = message.Prefix.Name;
     return append(
       make("event", message),
       [
@@ -70,12 +73,13 @@ export var Render = function(message, opts) {
         timestamp(message)
       ]
     );
+  }
 
-  case "332":
-    var name = message.Params[1];
-    var text = message.Params[2];
+  case "332": {
+    const name = message.Params[1];
+    const text = message.Params[2];
 
-    var span = append(
+    const span = append(
       make_text(),
       [
         make_text("Topic: "),
@@ -86,13 +90,14 @@ export var Render = function(message, opts) {
       make("event", message),
       [ span ]
     );
+  }
 
-  case "TOPIC":
-    var nick = message.Prefix.Name;
-    var name = message.Params[0];
-    var text = message.Params[1];
+  case "TOPIC": {
+    const nick = message.Prefix.Name;
+    const name = message.Params[0];
+    const text = message.Params[1];
 
-    var span = append(
+    const span = append(
       make_text(),
       [
         make_nick(message, name),
@@ -107,15 +112,16 @@ export var Render = function(message, opts) {
         timestamp(message)
       ]
     );
+  }
 
-  case "PRIVMSG":
-    var nick = message.Prefix.Name;
+  case "PRIVMSG": {
+    const nick = message.Prefix.Name;
 
     if (message.Params.length < 2)
       return;
 
-    var name = message.Params[0];
-    var text = message.Params[1];
+    const name = message.Params[0];
+    let text = message.Params[1];
 
     if (!name.length)
       return raw(message);
@@ -123,19 +129,19 @@ export var Render = function(message, opts) {
     if (!text)
       text = "";
 
-    var from = make_nick(message, name);
-    var color = string_to_color(color_seed(message.Prefix));
-    var wrap = make_text();
+    const from = make_nick(message, name);
+    const color = string_to_color(color_seed(message.Prefix));
+    const wrap = make_text();
     wrap.setAttribute('class', 'message-text');
     from.style.color = color;
-    var msg = make_text();
+    const msg = make_text();
     msg.setAttribute('class', 'message-text-pre');
     wrap.appendChild(msg);
 
     if (text.substring(0, 1) == "\x01") {
       if (text.substring(1,7) == "ACTION") {
         decorate_nick(from, nick, '* ', ' ');
-        var action = text.substring(8).replace(/\x01$/, "");
+        const action = text.substring(8).replace(/\x01$/, "");
         msg.style.fontStyle = 'italic';
         from.style.fontStyle = 'italic';
         append(msg, Format(action));
@@ -145,11 +151,11 @@ export var Render = function(message, opts) {
       }
     }
     else {
-      decorate_nick(from, nick, '< ' + channel_prefix(name), '> ');
+      decorate_nick(from, nick, `< ${channel_prefix(name)}`, '> ');
       append(msg, Format(text));
     }
 
-    var li = make("message", message);
+    const li = make("message", message);
 
     return append(
       li,
@@ -158,22 +164,24 @@ export var Render = function(message, opts) {
         opts['controls'] !== false ? controls(message) : null
       ]
     );
+  }
 
   case "401":
   case "403":
-  case "482":
-    var text = message.Params[2] + " '" + message.Params[1] + "'";
-    var raw = make("raw", message);
-    raw.textContent = text;
-    return raw;
+  case "482": {
+    const text = `${message.Params[2]} '${message.Params[1]}'`;
+    const el = make("raw", message);
+    el.textContent = text;
+    return el;
+  }
 
-  case "NOTICE":
-    var name = message.Prefix.Name;
-    var text = message.Params[1];
+  case "NOTICE": {
+    const name = message.Prefix.Name;
+    const text = message.Params[1];
 
-    var chan = make_text(name);
+    const chan = make_text(name);
     chan.setAttribute('class', 'channel');
-    var span = append(
+    const span = append(
       make_text(' '),
       Format(text)
     );
@@ -182,32 +190,35 @@ export var Render = function(message, opts) {
       make("raw notice", message),
       [chan, span]
     );
+  }
 
-  case "CONNECT":
+  case "CONNECT": {
     if (message.Params.length != 1)
       return;
 
-    var host = message.Prefix.Name;
-    var span = make_text(host + ' ');
+    const host = message.Prefix.Name;
+    const span = make_text(`${host} `);
     span.setAttribute('class', 'host');
 
     return append(
       make("raw notice", message),
       [ span, message.Params[0] ]
     );
+  }
 
-  case "DISCONNECT":
+  case "DISCONNECT": {
     if (message.Params.length != 1)
       return;
 
-    var host = message.Prefix.Name;
-    var span = make_text(host + ' ');
+    const host = message.Prefix.Name;
+    const span = make_text(`${host} `);
     span.setAttribute('class', 'host');
 
     return append(
       make("raw notice", message),
       [ span, message.Params[0] ]
     );
+  }
 
   case "TAGMSG":
     return;
@@ -217,7 +228,7 @@ export var Render = function(message, opts) {
   };
 
   function append(node, children) {
-    for (var i=0; i < children.length; i++) {
+    for (let i=0; i < children.length; i++) {
       if (children[i] === null) {
         // do nothing
       }
@@ -236,18 +247,16 @@ export var Render = function(message, opts) {
   };
 
   function make_text(text) {
-    var el = document.createElement('SPAN');
+    const el = document.createElement('SPAN');
     if (text)
       el.textContent = text;
     return el;
   }
 
   function make_nick(message, channel) {
-    var prefix = message.Prefix.Name
-      + "!" + message.Prefix.User
-      + "@" + message.Prefix.Server;
+    const prefix = `${message.Prefix.Name}!${message.Prefix.User}@${message.Prefix.Server}`;
 
-    var el = document.createElement('SPAN');
+    const el = document.createElement('SPAN');
     el.setAttribute('data-nick', message.Prefix.Name);
     el.setAttribute('title', prefix);
     el.classList.add('message-nick');
@@ -258,7 +267,7 @@ export var Render = function(message, opts) {
   }
 
   function channel_prefix(channel) {
-    return channel && opts['show_channel'] ? channel + ":" : "";
+    return channel && opts['show_channel'] ? `${channel}:` : "";
   }
 
   function decorate_nick(el, nick, before, after) {
@@ -276,7 +285,7 @@ export var Render = function(message, opts) {
   }
 
   function raw (message) {
-    var text = "";
+    let text = "";
 
     if (message.Command.match(/^[45][0-9][0-9]$/))
       text = message.Params.join(" ");
@@ -285,49 +294,49 @@ export var Render = function(message, opts) {
     else
       text = [message.Prefix.Name, message.Command].concat(message.Params).join(" ");
 
-    var raw = make("raw", message);
+    const raw = make("raw", message);
     raw.textContent = text;
     return raw;
   }
 
   function timestamp (message) {
-    var date = new Date(message.Time * 1000);
-    var h = String(date.getHours());
+    const date = new Date(message.Time * 1000);
+    let h = String(date.getHours());
     if (h.length < 2)
-      h = "0" + h;
-    var m = String(date.getMinutes());
+      h = `0${h}`;
+    let m = String(date.getMinutes());
     if (m.length < 2)
-      m = "0" + m;
+      m = `0${m}`;
 
-    var time = document.createElement('TIME');
+    const time = document.createElement('TIME');
     time.setAttribute('data-time', message.Time);
     time.setAttribute('title', date.toString());
 
     if (opts && opts['full_date']) {
-      var mos = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
-      var mo = mos[date.getMonth()];
-      var y = date.getYear() + 1900;
-      var d = date.getDate();
-      time.textContent =  mo + " " + d + ", " + y + " " + h + ":" + m;
+      const mos = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'June', 'July', 'Aug', 'Sept', 'Oct', 'Nov', 'Dec'];
+      const mo = mos[date.getMonth()];
+      const y = date.getYear() + 1900;
+      const d = date.getDate();
+      time.textContent =  `${mo} ${d}, ${y} ${h}:${m}`;
     }
     else {
-      time.textContent = h + ":" + m;
+      time.textContent = `${h}:${m}`;
     }
 
     return time;
   }
 
   function controls (message) {
-    var controls = document.createElement('DIV');
+    const controls = document.createElement('DIV');
     controls.classList.add('message-controls', 'popup-toggle');
 
     if (message.Tags && message.Tags["msgid"]) {
-        var react = document.createElement('DIV');
+        const react = document.createElement('DIV');
         react.classList.add('message-react', 'popup-toggle');
         controls.appendChild(react);
     }
 
-    var menu = document.createElement('DIV');
+    const menu = document.createElement('DIV');
     menu.classList.add('message-menu', 'popup-toggle');
 
     controls.appendChild(menu);
@@ -336,10 +345,10 @@ export var Render = function(message, opts) {
   }
 
   function make (type, message) {
-    var li = document.createElement("LI");
+    const li = document.createElement("LI");
     li.classList.add("chat", message.Command.toLowerCase());
-    var classes = type.split(" ");
-    for (var i=0; i < classes.length; i++) {
+    const classes = type.split(" ");
+    for (let i=0; i < classes.length; i++) {
       li.classList.add(classes[i]);
     }
     if (message.Prefix.Self)
@@ -359,17 +368,17 @@ export var Render = function(message, opts) {
   }
 
   function flex () {
-    var wrap = document.createElement('DIV');
+    const wrap = document.createElement('DIV');
     wrap.setAttribute('class', 'message-flex');
-    for (var i=0; i < arguments.length; i++) {
+    for (let i=0; i < arguments.length; i++) {
       wrap.appendChild(arguments[i]);
     }
     return wrap;
   }
 
   function color_seed(prefix) {
-    var nick = prefix.Name || '';
-    var user = (prefix.User || '').replace('~', '');
+    const nick = prefix.Name || '';
+    const user = (prefix.User || '').replace('~', '');
 
     if (!user || nick.indexOf(RelayMsg.discriminator) != -1)
       return nick;
@@ -378,7 +387,7 @@ export var Render = function(message, opts) {
   }
 
   function string_to_color(str){
-    var colors = [
+    const colors = [
       "MediumVioletRed",
       "PaleVioletRed",
       "DeepPink",
@@ -422,10 +431,10 @@ export var Render = function(message, opts) {
     ];
     //colors = [ 'var(--yellow)', 'var(--orange)', 'var(--red)', 'var(--magenta)', 'var(--violet)', 'var(--blue)', 'var(--cyan)', 'var(--green)' ];
 
-    var c = 0;
-    var m = colors.length;
+    let c = 0;
+    const m = colors.length;
 
-    for (var i = 0; i < str.length; i++) {
+    for (let i = 0; i < str.length; i++) {
       c = ((c << 5) + str.charCodeAt(i)) % m
     }
 

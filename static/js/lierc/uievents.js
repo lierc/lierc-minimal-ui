@@ -2,20 +2,18 @@ import { Emoji } from "./emoji.js";
 import { Unformat } from "./format.js";
 import { Template } from "./template.js";
 
-export var UIEvents = function(app) {
-  var app = app;
-  var events = this;
-  var max_userhost_len = 63 + 10 + 1;
-  var mac = /^Mac/.test(window.navigator.platform);
+export const UIEvents = function(app) {
+  const max_userhost_len = 63 + 10 + 1;
+  const mac = /^Mac/.test(window.navigator.platform);
 
   function clickTouchEvent(el, f) {
-    ['click', 'touch'].forEach(function(type) {
+    ['click', 'touch'].forEach((type) => {
       el.addEventListener(type, f);
     });
   }
 
-  document.addEventListener("keydown", function(e) {
-    var mods = {
+  document.addEventListener("keydown", (e) => {
+    const mods = {
       meta: e.altKey,
       shift: e.shiftKey,
       ctrl: e.ctrlKey,
@@ -31,7 +29,7 @@ export var UIEvents = function(app) {
     }
     else if (e.which == 27) {
       document.querySelectorAll('.popup-toggle.open,.flex-wrap.open')
-        .forEach(function(el) {
+        .forEach((el) => {
           el.classList.remove('open');
         });
     }
@@ -47,9 +45,9 @@ export var UIEvents = function(app) {
       // down or tab
       else if (e.which == 40 || e.which == 9) {
         e.preventDefault();
-        var items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
+        const items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
-        for (var i=1; i < items.length; i++) {
+        for (let i=1; i < items.length; i++) {
           if (items[i - 1].classList.contains("selected")) {
             items[i - 1].classList.remove('selected');
             items[i].classList.add('selected');
@@ -60,9 +58,9 @@ export var UIEvents = function(app) {
       // up
       else if (e.which == 38) {
         e.preventDefault();
-        var items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
+        const items = app.elem.nav.querySelectorAll('li[data-name].candidate.match');
 
-        for (var i=0; i < items.length - 1; i++) {
+        for (let i=0; i < items.length - 1; i++) {
           if (items[i + 1].classList.contains("selected")) {
             items[i + 1].classList.remove('selected');
             items[i].classList.add('selected');
@@ -72,10 +70,10 @@ export var UIEvents = function(app) {
       }
       // enter
       else if (e.which == 13) {
-        var selected = app.elem.nav.querySelector('li.selected');
+        const selected = app.elem.nav.querySelector('li.selected');
         if (selected) {
           e.preventDefault();
-          var id = selected.getAttribute('data-panel-id');
+          const id = selected.getAttribute('data-panel-id');
           app.focus_panel(id);
           app.hide_switcher();
           return;
@@ -113,11 +111,11 @@ export var UIEvents = function(app) {
       return;
     }
 
-    var c = String.fromCharCode(e.which);
+    const c = String.fromCharCode(e.which);
 
     /* jump to panel by number */
     if (!mac && (mods['cmd'] || (!mods['ctrl'] && mods['meta'])) && c.match(/^[1-9]$/)) {
-      var panels = app.elem.nav.querySelectorAll('#channels li,#privates li');
+      const panels = app.elem.nav.querySelectorAll('#channels li,#privates li');
       if (panels[c - 1]) {
         app.focus_panel(panels[c - 1].getAttribute("data-panel-id"));
         return;
@@ -133,7 +131,7 @@ export var UIEvents = function(app) {
       if (app.focused.editor.focused) {
         if (e.which == 33 || e.which == 34) {
           app.focused.scroller.focus();
-          requestAnimationFrame(function() {
+          requestAnimationFrame(() => {
             app.focus_input();
           });
         }
@@ -155,17 +153,17 @@ export var UIEvents = function(app) {
     }
   });
 
-  app.elem.switcher.addEventListener("input", function(e) {
-    var val = app.elem.switcher.querySelector('input').value;
-    var items = app.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]');
+  app.elem.switcher.addEventListener("input", (e) => {
+    let val = app.elem.switcher.querySelector('input').value;
+    const items = app.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]');
 
     val = val.toLowerCase();
-    var matches = [];
-    var misses  = [];
+    const matches = [];
+    const misses  = [];
     if (val) {
-      for (var i=0; i < items.length; i++) {
-        var item = items[i];
-        var text = item.getAttribute("data-name").toLowerCase()
+      for (let i=0; i < items.length; i++) {
+        const item = items[i];
+        const text = item.getAttribute("data-name").toLowerCase()
 
         if (text.indexOf(val) != -1) {
           matches.push(item);
@@ -176,8 +174,8 @@ export var UIEvents = function(app) {
       }
     }
     else {
-      for (var i=0; i < items.length; i++) {
-        var item = items[i];
+      for (let i=0; i < items.length; i++) {
+        const item = items[i];
         if (item.classList.contains("unread")) {
           matches.push(item);
         }
@@ -187,25 +185,25 @@ export var UIEvents = function(app) {
       }
     }
 
-    for (var i=0; i < matches.length; i++) {
+    for (let i=0; i < matches.length; i++) {
       matches[i].classList.add("match");
     }
-    for (var i=0; i < misses.length; i++) {
+    for (let i=0; i < misses.length; i++) {
       misses[i].classList.remove("match");
     }
 
-    for (var i=0; i < items.length; i++) {
+    for (let i=0; i < items.length; i++) {
       if (items[i].classList.contains("selected")) {
         if (items[i].classList.contains("match"))
           return;
-        for (var j=i; j < items.length; j++) {
+        for (let j=i; j < items.length; j++) {
           if (items[j].classList.contains("match")) {
             items[i].classList.remove("selected");
             items[j].classList.add("selected");
             return;
           }
         }
-        for (var k=i; k >= 0; k--) {
+        for (let k=i; k >= 0; k--) {
           if (items[k].classList.contains("match")) {
             items[i].classList.remove("selected");
             items[k].classList.add("selected");
@@ -216,7 +214,7 @@ export var UIEvents = function(app) {
     }
   });
 
-  window.addEventListener("blur", function(e) {
+  window.addEventListener("blur", (e) => {
     app.window_focused = false;
 
     if (app.focused) {
@@ -224,7 +222,7 @@ export var UIEvents = function(app) {
     }
   });
 
-  window.addEventListener("focus", function(e) {
+  window.addEventListener("focus", (e) => {
     app.window_focused = true;
     app.focus_input();
     app.update_title();
@@ -234,14 +232,14 @@ export var UIEvents = function(app) {
     }
   });
 
-  document.addEventListener('click', function(e) {
+  document.addEventListener('click', (e) => {
     if (e.target.hasAttribute('data-nick')) {
       e.preventDefault();
-      var nick = e.target.getAttribute('data-nick');
-      var connection = app.focused.connection;
+      const nick = e.target.getAttribute('data-nick');
+      const connection = app.focused.connection;
       app.add_panel(nick, connection, {focus: true});
     }
-    document.querySelectorAll('.popup-toggle.open').forEach(function(el) {
+    document.querySelectorAll('.popup-toggle.open').forEach((el) => {
       if (!el.contains(e.target)) {
         el.classList.remove('open');
       }
@@ -251,17 +249,17 @@ export var UIEvents = function(app) {
   function join_click(e) {
     e.preventDefault();
     app.elem.flex_wrap.classList.remove('open');
-    var dialog = app.new_dialog("join", {
+    const dialog = app.new_dialog("join", {
       connections: Object.values(app.connections)
     });
 
-    dialog.el.addEventListener('submit', function(e) {
+    dialog.el.addEventListener('submit', (e) => {
       e.preventDefault();
-      var channel = dialog.el.querySelector('input[name=channel]').value;
-      var select = dialog.el.querySelector('select');
-      var conn = select.options[select.selectedIndex].value;
-      app.api.post('/connection/' + conn, {
-        body: "JOIN " + channel,
+      const channel = dialog.el.querySelector('input[name=channel]').value;
+      const select = dialog.el.querySelector('select');
+      const conn = select.options[select.selectedIndex].value;
+      app.api.post(`/connection/${conn}`, {
+        body: `JOIN ${channel}`,
         headers: {
           'content-type': "application/irc",
           'lierc-token' : app.post_token()
@@ -272,31 +270,31 @@ export var UIEvents = function(app) {
         },
         error: function(e) {
           app.close_dialog();
-          var res = JSON.parse(e.responseText);
-          alert("Error: " + res.error);
+          const res = JSON.parse(e.responseText);
+          alert(`Error: ${res.error}`);
           app.load_token();
         }
       });
     });
   }
 
-  document.querySelectorAll('#global-controls li.link').forEach(function(el) {
-    el.addEventListener('click', function(e) {
+  document.querySelectorAll('#global-controls li.link').forEach((el) => {
+    el.addEventListener('click', (e) => {
       app.elem.flex_wrap.classList.remove('open');
     });
   });
 
-  document.querySelectorAll('.join-channel').forEach(function(el) {
+  document.querySelectorAll('.join-channel').forEach((el) => {
     el.addEventListener('click', join_click);
   });
 
-  document.querySelectorAll('.add-connection').forEach(function(el) {
+  document.querySelectorAll('.add-connection').forEach((el) => {
     el.addEventListener('click', (e) => app.config_modal(e));
   });
 
   document.querySelectorAll('#nav .nav-title')
-    .forEach(function(el) {
-      el.addEventListener('click', function(e) {
+    .forEach((el) => {
+      el.addEventListener('click', (e) => {
         if (
           e.target.classList.contains('nav-title')
           || e.target.classList.contains('nav-title-text')
@@ -308,38 +306,38 @@ export var UIEvents = function(app) {
       });
     });
 
-  clickTouchEvent(document.querySelector('#view-log'), function(e) {
+  clickTouchEvent(document.querySelector('#view-log'), (e) => {
     e.preventDefault();
     app.open_log(app.focused);
   });
 
-  clickTouchEvent(document.querySelector('#toggle-hideevents a'), function(e) {
+  clickTouchEvent(document.querySelector('#toggle-hideevents a'), (e) => {
     e.preventDefault();
     app.focused.set_ignore_events(!app.focused.ignore_events);
-    app.update_pref(app.focused.id + "-ignore-events", app.focused.ignore_events);
+    app.update_pref(`${app.focused.id}-ignore-events`, app.focused.ignore_events);
   });
 
-  clickTouchEvent(document.querySelector('#toggle-sendtyping a'), function(e) {
+  clickTouchEvent(document.querySelector('#toggle-sendtyping a'), (e) => {
     e.preventDefault();
     app.focused.set_send_typing(!app.focused.send_typing);
-    app.update_pref(app.focused.id + "-send-typing", app.focused.send_typing);
+    app.update_pref(`${app.focused.id}-send-typing`, app.focused.send_typing);
   });
 
-  clickTouchEvent(document.querySelector('#toggle-hideembeds a'), function(e) {
+  clickTouchEvent(document.querySelector('#toggle-hideembeds a'), (e) => {
     e.preventDefault();
     app.focused.set_collapse_embeds(!app.focused.collapse_embeds);
-    app.update_pref(app.focused.id + "-collapse-embeds", app.focused.collapse_embeds);
+    app.update_pref(`${app.focused.id}-collapse-embeds`, app.focused.collapse_embeds);
   });
 
-  clickTouchEvent(document.querySelector('#toggle-nicks'), function(e) {
+  clickTouchEvent(document.querySelector('#toggle-nicks'), (e) => {
     e.preventDefault();
     app.focused.set_show_nicklist(!app.focused.show_nicklist);
-    app.update_pref(app.focused.id + "-show-nicklist", app.focused.show_nicklist);
+    app.update_pref(`${app.focused.id}-show-nicklist`, app.focused.show_nicklist);
   });
 
-  app.elem.emoji.addEventListener('click', function(e) {
+  app.elem.emoji.addEventListener('click', (e) => {
     e.preventDefault();
-    var emoji_search = document.querySelector('.emoji-search input');
+    const emoji_search = document.querySelector('.emoji-search input');
 
     if (e.target.matches('li[data-chars]')) {
       app.focus_input(true);
@@ -362,33 +360,33 @@ export var UIEvents = function(app) {
   });
 
   function send_submit() {
-    var input = app.elem.input.querySelector(".input");
-    var panel = app.panels[input.getAttribute('data-panel-id')];
+    const input = app.elem.input.querySelector(".input");
+    const panel = app.panels[input.getAttribute('data-panel-id')];
 
-    var uploading = input.querySelector('.uploading');
+    const uploading = input.querySelector('.uploading');
     if (uploading) {
       alert("Please wait for upload to complete.");
       return;
     }
 
-    var text = input.textContent.trim();
+    let text = input.textContent.trim();
     if (text == "") return;
 
     panel.editor.history.record();
     app.clear_typing();
 
-    var value = Unformat(input.innerHTML);
+    let value = Unformat(input.innerHTML);
     input.innerHTML = "";
     panel.editor.save_selection();
     value = value.replace("\u200b", ""); // ew
     text = text.replace("\u200b", ""); // ew
 
-    var connection = app.connections[panel.connection];
-    var send = [];
+    const connection = app.connections[panel.connection];
+    const send = [];
 
     if (text.substring(0,1) == "/") {
       try {
-        var val = app.commands.handle(panel, value.substring(1));
+        const val = app.commands.handle(panel, value.substring(1));
         if (val)
           send.push(val);
       }
@@ -402,31 +400,31 @@ export var UIEvents = function(app) {
       throw "Can not message a status";
     }
     else {
-      var lines = value.split(/[\r\n]/);
+      const lines = value.split(/[\r\n]/);
 
-      for (var j=0; j < lines.length; j++) {
-        var value = lines[j];
+      for (let j=0; j < lines.length; j++) {
+        const value = lines[j];
         if (!value)
           continue;
 
         // https://github.com/irssi/irssi/blob/fcd3ec467ff0e5943f34bb3a906bbe07ba6963ff/src/irc/core/irc-servers.c#L207
-        var privmsg = "PRIVMSG " + panel.name + " :";
-        var max = 510 - "!: PRIVMSG :".length - panel.name.length - connection.nick.length - max_userhost_len;
+        const privmsg = `PRIVMSG ${panel.name} :`;
+        const max = 510 - "!: PRIVMSG :".length - panel.name.length - connection.nick.length - max_userhost_len;
         if (value.length < max) {
           send.push(privmsg + value);
         }
         else {
-          var words = value.split(/(\b)/);
-          var len = 0;
-          var buf = [];
+          const words = value.split(/(\b)/);
+          let len = 0;
+          let buf = [];
 
           if (words.length > max * 20) {
             alert("This is too much text!");
             return;
           }
 
-          for (var i=0; i < words.length; i++) {
-            var word = words[i];
+          for (let i=0; i < words.length; i++) {
+            const word = words[i];
             if (len + word.length > max) {
               send.push(privmsg + buf.join(""));
               len = word.length;
@@ -446,7 +444,7 @@ export var UIEvents = function(app) {
 
     function sendlines(lines) {
       if (!lines.length) return;
-      app.api.post("/connection/" + panel.connection, {
+      app.api.post(`/connection/${panel.connection}`, {
         headers:{
           'content-type': 'application/irc',
           'lierc-token' : app.post_token()
@@ -458,7 +456,7 @@ export var UIEvents = function(app) {
             sendlines(lines);
         },
         error: function(e) {;
-          alert("Error: " + e);
+          alert(`Error: ${e}`);
           app.load_token();
         }
       });
@@ -468,18 +466,18 @@ export var UIEvents = function(app) {
     app.send_stop_typing(panel);
   }
 
-  document.getElementById('gist-upload-form').addEventListener('submit', function(e) {
+  document.getElementById('gist-upload-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    var form = e.target;
-    var submit = form.querySelector('input[name=upload]');
-    var text = form.querySelector('textarea');
-    var ext = form.querySelector('select');
-    var filename = 'files1.' + ext.options[ext.selectedIndex].value;
+    const form = e.target;
+    const submit = form.querySelector('input[name=upload]');
+    const text = form.querySelector('textarea');
+    const ext = form.querySelector('select');
+    const filename = `files1.${ext.options[ext.selectedIndex].value}`;
 
     submit.setAttribute('disabled','disabled');
     text.setAttribute('disabled','disabled');
 
-    var data = {
+    const data = {
       'public': false,
       'files': {}
     };
@@ -489,41 +487,41 @@ export var UIEvents = function(app) {
     fetch("https://api.github.com/gists", {
         'method': 'POST',
         'body': JSON.stringify(data)
-      }).then(function(res) {
+      }).then((res) => {
         if (!res.ok)
           throw Error(res.statusText);
         return res.json();
-      }).then(function(res) {
+      }).then((res) => {
         submit.removeAttribute('disabled');
         text.removeAttribute('disabled');
         text.value = '';
         app.focus_input(true);
         document.execCommand("insertText", false, res.html_url);
         document.getElementById('upload').classList.remove('open');
-      }).catch(function(e) {
+      }).catch((e) => {
         alert("I'm sorry");
         submit.removeAttribute('disabled');
         text.removeAttribute('disabled');
       });
   });
 
-  document.getElementById('image-upload-form').addEventListener('submit', function(e) {
+  document.getElementById('image-upload-form').addEventListener('submit', (e) => {
     e.preventDefault();
-    var submit = e.target.querySelector('input[name="upload"]');
-    var image = e.target.querySelector('input[name="image"]');
-    var files = image.files;
+    const submit = e.target.querySelector('input[name="upload"]');
+    const image = e.target.querySelector('input[name="image"]');
+    const files = image.files;
 
     if (files.length == 0 || !files[0].type.match(/^(?:image|video)/)) {
       alert("Must select an image or video file");
       return;
     }
 
-    var xhr = new XMLHttpRequest();
+    const xhr = new XMLHttpRequest();
 
     submit.setAttribute('disabled','disabled');
 
-    xhr.addEventListener("load", function() {
-      var res;
+    xhr.addEventListener("load", () => {
+      let res;
       try {
         res = JSON.parse(xhr.responseText);
       } catch (error) {
@@ -534,7 +532,7 @@ export var UIEvents = function(app) {
 
       if (xhr.status != 200) {
         submit.removeAttribute('disabled');
-        var err = res['data'] ? res['data']['error'] : res['error'];
+        const err = res['data'] ? res['data']['error'] : res['error'];
         alert(err);
         return;
       }
@@ -546,7 +544,7 @@ export var UIEvents = function(app) {
       }
     });
 
-    xhr.addEventListener("error", function(e) {
+    xhr.addEventListener("error", (e) => {
       submit.removeAttribute('disabled');
       app.focus_input(true);
     });
@@ -556,12 +554,12 @@ export var UIEvents = function(app) {
     xhr.send(files[0]);
   });
 
-  clickTouchEvent(document.getElementById('image-uploads'), function(e) {
+  clickTouchEvent(document.getElementById('image-uploads'), (e) => {
     if (e.target.matches('.image-delete')) {
       e.preventDefault();
-      var url = e.target.getAttribute('data-url');
-      if (confirm("Are you sure you would like to delete " + url + "?")) {
-        app.api.delete("/image/" + encodeURIComponent(url), {
+      const url = e.target.getAttribute('data-url');
+      if (confirm(`Are you sure you would like to delete ${url}?`)) {
+        app.api.delete(`/image/${encodeURIComponent(url)}`, {
           success: function() {
             app.fill_images();
           }
@@ -570,7 +568,7 @@ export var UIEvents = function(app) {
     }
   });
 
-  clickTouchEvent(document.getElementById('upload'), function(e) {
+  clickTouchEvent(document.getElementById('upload'), (e) => {
     if (e.target.matches('#upload')) {
       e.preventDefault();
       e.target.classList.toggle("open");
@@ -580,12 +578,12 @@ export var UIEvents = function(app) {
     }
   });
 
-  clickTouchEvent(document.getElementById("help"), function(e) {
+  clickTouchEvent(document.getElementById("help"), (e) => {
     e.preventDefault();
     app.new_dialog("help");
   });
 
-  clickTouchEvent(document.getElementById('logout'), function(e) {
+  clickTouchEvent(document.getElementById('logout'), (e) => {
     e.preventDefault();
 
     if (!confirm("Are you sure you want to log out?"))
@@ -594,26 +592,26 @@ export var UIEvents = function(app) {
     app.api.logout();
   });
 
-  window.addEventListener('resize', function(e) {
+  window.addEventListener('resize', (e) => {
     if (app.focused) {
       app.focused.scroll_bottom(0);
       app.focused.resize_filler();
     }
   });
 
-  document.addEventListener('copy', function(e) {
+  document.addEventListener('copy', (e) => {
     if (app.overlayed() || app.mobile)
       return;
 
     e.preventDefault();
 
-    var selected = window.getSelection().toString().split("\n");
-    var lines = [];
+    const selected = window.getSelection().toString().split("\n");
+    const lines = [];
 
-    var nick;
+    let nick;
 
-    for (var i in selected) {
-      var line = selected[i].trim();
+    for (const i in selected) {
+      const line = selected[i].trim();
 
       if (line.match(/^\d\d:\d\d$/))
         continue;
@@ -624,7 +622,7 @@ export var UIEvents = function(app) {
       }
 
       if (nick) {
-        lines.push(nick + " " + line);
+        lines.push(`${nick} ${line}`);
         nick = null;
         continue;
       }
@@ -636,7 +634,7 @@ export var UIEvents = function(app) {
     e.clipboardData.setData('Text', lines.join("\n"));
   });
 
-  document.addEventListener('paste', function(e) {
+  document.addEventListener('paste', (e) => {
     if (app.overlayed())
       return;
     if (document.activeElement.matches('#gist-upload-input'))
@@ -644,23 +642,23 @@ export var UIEvents = function(app) {
 
     e.preventDefault();
 
-    var clipboard = (e.clipboardData || e.originalEvent.clipboardData);
-    var items = clipboard.items;
-    for (var i in items) {
+    const clipboard = (e.clipboardData || e.originalEvent.clipboardData);
+    const items = clipboard.items;
+    for (const i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
-        var span = document.createElement('SPAN');
+        const span = document.createElement('SPAN');
         span.classList.add('uploading');
         span.textContent = '[Uploading image...]';
         app.focused.editor.append_elem(span);
 
         app.focus_input();
-        var blob = items[i].getAsFile();
-        var xhr = new XMLHttpRequest();
+        const blob = items[i].getAsFile();
+        const xhr = new XMLHttpRequest();
 
-        xhr.addEventListener("load", function() {
-          var res = JSON.parse(xhr.responseText);
+        xhr.addEventListener("load", () => {
+          const res = JSON.parse(xhr.responseText);
           if (xhr.status != 200) {
-            var err = res['data'] ? res['data']['error'] : res['error'];
+            const err = res['data'] ? res['data']['error'] : res['error'];
             alert(err);
             span.parentNode.removeChild(span);
             return;
@@ -680,26 +678,26 @@ export var UIEvents = function(app) {
     }
 
     app.focus_input();
-    var lines = clipboard.getData("Text").trim().split(/[\r\n]/);
-    var text = lines.map(function(line) { return line.trim(); })
-      .filter(function(line) { return line.match(/\S/); })
+    const lines = clipboard.getData("Text").trim().split(/[\r\n]/);
+    const text = lines.map((line) => { return line.trim(); })
+      .filter((line) => { return line.match(/\S/); })
       .join("\n");
     document.execCommand("insertText", false, text);
   });
 
-  clickTouchEvent(document.querySelector('.flex-wrap-left header'), function(e) {
+  clickTouchEvent(document.querySelector('.flex-wrap-left header'), (e) => {
     e.preventDefault();
     app.elem.flex_wrap.classList.toggle('open');
   });
 
-  document.addEventListener('input', function(e) {
+  document.addEventListener('input', (e) => {
     if (e.target.matches('.emoji-search input')) {
-      var list = e.target.parentNode.previousSibling;
+      const list = e.target.parentNode.previousSibling;
       Emoji.filter(list, e.target.value);
     }
   });
 
-  document.getElementById('web-notify').addEventListener('click', function(e) {
+  document.getElementById('web-notify').addEventListener('click', (e) => {
     e.preventDefault();
     if (app.notify.subscribed) {
       app.notify.unsubscribe();
@@ -712,18 +710,18 @@ export var UIEvents = function(app) {
   document.getElementById('email-notify').addEventListener('click', function(e) {
       e.preventDefault();
       this.classList.toggle('enabled');
-      var enabled = this.classList.contains('enabled');
+      const enabled = this.classList.contains('enabled');
       app.update_pref("email", enabled);
   });
 
-  app.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches('.message-menu, .message-menu *'))
       return;
 
-    var target = e.target;
-    var toggle = target;
-    var controls = target;
-    var message = target;
+    const target = e.target;
+    let toggle = target;
+    let controls = target;
+    let message = target;
 
     while (toggle && !toggle.matches('.message-menu')) {
       toggle = toggle.parentNode;
@@ -737,14 +735,14 @@ export var UIEvents = function(app) {
       message = message.parentNode;
     }
 
-    var is_monospace = message.classList.contains('monospace');
+    const is_monospace = message.classList.contains('monospace');
     toggle.classList.toggle('open');
 
     if (target.matches('.message-menu')) {
       if (toggle.classList.contains('open')) {
-        var has_child = toggle.querySelector('.message-menu-popup');
+        const has_child = toggle.querySelector('.message-menu-popup');
         if (!has_child) {
-          var html = Template('message_menu', {
+          const html = Template('message_menu', {
             is_monospace: is_monospace
           });
           toggle.insertAdjacentHTML('beforeend', html);
@@ -761,7 +759,7 @@ export var UIEvents = function(app) {
     }
     else if (target.matches('.message-monospace')) {
       controls.classList.remove('open');
-      var nick = message.querySelector('.message-nick').getAttribute('data-nick');
+      const nick = message.querySelector('.message-nick').getAttribute('data-nick');
       if (is_monospace) {
         app.remove_monospace_nick(app.focused, nick);
       }
@@ -771,41 +769,41 @@ export var UIEvents = function(app) {
     }
   });
 
-  app.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches('.embed-toggle'))
       return;
 
     e.preventDefault();
-    var toggle = e.target;
-    var embed = JSON.parse(toggle.getAttribute('data-embed'));
+    const toggle = e.target;
+    const embed = JSON.parse(toggle.getAttribute('data-embed'));
 
     toggle.classList.toggle('hidden');
     if (toggle.classList.contains('hidden')) {
-      var wrap = document.querySelector(".embed-wrap[data-embed-id='"+embed.id+"']");
+      const wrap = document.querySelector(`.embed-wrap[data-embed-id='${embed.id}']`);
       wrap.parentNode.parentNode.removeChild(wrap.parentNode);
     }
     else {
-      app.focused.scroll(function() {
-        var a = toggle.previousSibling;
+      app.focused.scroll(() => {
+        const a = toggle.previousSibling;
         app.focused.embed(a, embed, true);
       });
     }
   });
 
-  app.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches('.image-wrap img'))
       return;
 
     e.preventDefault();
-    var img  = e.target;
-    var link = e.target.parentNode;
-    var href = link.href;
+    const img  = e.target;
+    const link = e.target.parentNode;
+    const href = link.href;
 
-    var dialog = app.new_dialog("image_popup", {
+    const dialog = app.new_dialog("image_popup", {
       href: href
     });
 
-    clickTouchEvent(dialog.el, function(e) {
+    clickTouchEvent(dialog.el, (e) => {
       e.preventDefault();
       dialog.close();
     });
@@ -814,68 +812,68 @@ export var UIEvents = function(app) {
   app.elem.topic.addEventListener('click', function(e) {
     if (app.focused) {
       if (e.target.nodeName != 'A') {
-        var elem = this;
-        app.focused.scroll(function() {
+        const elem = this;
+        app.focused.scroll(() => {
           elem.classList.toggle('expanded');
         });
       }
     }
   });
 
-  app.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches('li.message time'))
         return;
 
-    var msg = e.target;
-    var panel;
+    const msg = e.target;
+    let panel;
 
-    var p = msg;
+    let p = msg;
     while ( p && !p.matches('li.message')) {
       p = p.parentNode;
     }
 
     if (p.getAttribute('data-panel-id')) {
-      var panel_id = p.getAttribute('data-panel-id');
+      const panel_id = p.getAttribute('data-panel-id');
       panel = app.panels[panel_id];
     }
     else {
       panel = app.focused;
     }
 
-    var from = new Date(msg.getAttribute('data-time') * 1000);
-    var to = new Date((msg.getAttribute('data-time') + (60 * 60 * 24)) * 1000);
-    var href = panel.log_url + '/date/';
+    const from = new Date(msg.getAttribute('data-time') * 1000);
+    const to = new Date((msg.getAttribute('data-time') + (60 * 60 * 24)) * 1000);
+    let href = `${panel.log_url}/date/`;
 
-    var from_year = from.getYear() + 1900;
-    var from_month = String(from.getMonth() + 1);
+    const from_year = from.getYear() + 1900;
+    let from_month = String(from.getMonth() + 1);
     if (from_month.length == 1) {
-      from_month = "0" + from_month;
+      from_month = `0${from_month}`;
     }
 
-    var to_year = to.getYear() + 1900;
-    var to_month = String(to.getMonth() + 1);
+    const to_year = to.getYear() + 1900;
+    let to_month = String(to.getMonth() + 1);
     if (to_month.length == 1) {
-      to_month = "0" + to_month;
+      to_month = `0${to_month}`;
     }
 
-    var from_day = String(from.getDate());
+    let from_day = String(from.getDate());
     if (from_day.length == 1) {
-      from_day = "0" + from_day;
+      from_day = `0${from_day}`;
     }
 
-    var to_day = String(to.getDate());
+    let to_day = String(to.getDate());
     if (to_day.length == 1) {
-      to_day = "0" + to_day;
+      to_day = `0${to_day}`;
     }
 
-    href += from_year + "-" + from_month + "-" + from_day + "/";
-    href += to_year + "-" + to_month + "-" + to_day + "/";
+    href += `${from_year}-${from_month}-${from_day}/`;
+    href += `${to_year}-${to_month}-${to_day}/`;
 
-    href += "message/" + p.getAttribute('data-message-id');
+    href += `message/${p.getAttribute('data-message-id')}`;
     window.open(href);
   });
 
-  app.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches(
       '.embed-wrap[data-embed-id]:not(.open),' +
       '.embed-wrap[data-embed-id]:not(.open) *'
@@ -884,29 +882,29 @@ export var UIEvents = function(app) {
 
     e.preventDefault();
 
-    var p = e.target;
+    let p = e.target;
     while (p && !p.matches('.embed-wrap[data-embed-id]')) {
       p = p.parentNode;
     }
-    var id = p.getAttribute('data-embed-id');
-    var a = document.querySelector(".embed-toggle[data-embed-id='" + id + "']");
-    var embed = JSON.parse(a.getAttribute('data-embed'));
+    const id = p.getAttribute('data-embed-id');
+    const a = document.querySelector(`.embed-toggle[data-embed-id='${id}']`);
+    const embed = JSON.parse(a.getAttribute('data-embed'));
 
     if (embed.type == "link") {
       window.open(embed.url);
       return;
     }
 
-    app.focused.scroll(function() {
+    app.focused.scroll(() => {
       p.classList.add('open');
       p.innerHTML = embed.html;
 
-      var head = document.querySelector('head');
-      p.querySelectorAll('script').forEach(function(el) {
-        var s = el.parentNode.removeChild(el);
-        var script = document.createElement('SCRIPT');
-        var attrs = s.attributes;
-        for (var i=0; i < attrs.length; i ++) {
+      const head = document.querySelector('head');
+      p.querySelectorAll('script').forEach((el) => {
+        const s = el.parentNode.removeChild(el);
+        const script = document.createElement('SCRIPT');
+        const attrs = s.attributes;
+        for (let i=0; i < attrs.length; i ++) {
           script.setAttribute(attrs[i].name, attrs[i].value);
         }
         script.innerHTML = s.innerHTML;
@@ -914,17 +912,17 @@ export var UIEvents = function(app) {
       });
     });
 
-    var h = p.clientHeight;
-    var panel = app.focused;
+    let h = p.clientHeight;
+    const panel = app.focused;
 
-    var m = new MutationObserver(function(s) {
-      var u = p.clientHeight;
+    const m = new MutationObserver((s) => {
+      const u = p.clientHeight;
       if (!panel.is_scrolled())
         panel.scroller.scrollTop += u - h;
       h = u;
     });
 
-    var c = {
+    const c = {
       childList: true,
       attributes: true,
       subtree: true,
@@ -932,16 +930,16 @@ export var UIEvents = function(app) {
     };
     m.observe(p, c);
 
-    setTimeout(function(){ m.disconnect(); }, 10000);
+    setTimeout(() =>{ m.disconnect(); }, 10000);
   });
 
-  app.elem.panel.addEventListener('click', function(e) {
+  app.elem.panel.addEventListener('click', (e) => {
     if (!e.target.matches('.message-react, .message-react *'))
       return;
 
-    var target = e.target;
-    var react = target;
-    var controls = target;
+    const target = e.target;
+    let react = target;
+    let controls = target;
 
     while (react && !react.matches('.message-react')) {
       react = react.parentNode;
@@ -954,38 +952,38 @@ export var UIEvents = function(app) {
     if (target.matches('.message-react')) {
       react.classList.toggle('open');
       if (react.classList.contains('open')) {
-        var emoji = document.querySelector('#emoji .emoji-popup').cloneNode(true);
+        const emoji = document.querySelector('#emoji .emoji-popup').cloneNode(true);
         react.appendChild(emoji);
         emoji.querySelector('.emoji-search input').focus();
         controls.classList.add('open');
       }
       else {
-        var popup = react.querySelector('.emoji-popup');
+        const popup = react.querySelector('.emoji-popup');
         popup.parentNode.removeChild(popup);
         controls.classList.remove('open');
       }
     }
     if (target.matches('li[data-chars]')) {
-      var emoji = target.getAttribute('data-chars');
-      var message = react;
+      const emoji = target.getAttribute('data-chars');
+      let message = react;
       while (message && !message.matches("li.message")) {
         message = message.parentNode;
       }
-      var id = message.getAttribute('data-message-server-id');
-      var panel = app.focused;
+      const id = message.getAttribute('data-message-server-id');
+      const panel = app.focused;
 
       react.classList.remove('open');
       controls.classList.remove('open');
-      var popup = react.querySelector('.emoji-popup');
+      const popup = react.querySelector('.emoji-popup');
       popup.parentNode.removeChild(popup);
 
       if (! (emoji && id && panel))
         return;
 
-      var tag = "@+draft/reply="+id+";+draft/react="+emoji;
+      const tag = `@+draft/reply=${id};+draft/react=${emoji}`;
 
-      app.api.post("/connection/" + panel.connection, {
-        body:  tag + " TAGMSG " + panel.name,
+      app.api.post(`/connection/${panel.connection}`, {
+        body:  `${tag} TAGMSG ${panel.name}`,
         headers: {
           'lierc-token' : app.post_token(),
           'content-type': "application/irc",
@@ -994,28 +992,28 @@ export var UIEvents = function(app) {
           app.post_tokens.push(res.token);
         },
         error: function(e) {
-          var res = JSON.parse(e.responseText);
-          alert("Error: " + res.error);
+          const res = JSON.parse(e.responseText);
+          alert(`Error: ${res.error}`);
           app.load_token();
         }
       });
     }
   });
 
-  window.addEventListener("beforeunload", function() {
+  window.addEventListener("beforeunload", () => {
     if (app.focused) {
       app.focused.update_seen();
       app.save_seen(app.focused, true);
     }
   });
 
-  app.elem.panel.addEventListener('transitionend', function(e) {
+  app.elem.panel.addEventListener('transitionend', (e) => {
     if (e.target.matches('li.chat'))
       e.target.classList.remove('loading', 'loaded');
   });
 
-  app.elem.themes.addEventListener('change', function(e) {
-    var val = app.elem.themes.value;
+  app.elem.themes.addEventListener('change', (e) => {
+    const val = app.elem.themes.value;
     app.set_theme(val);
   });
 

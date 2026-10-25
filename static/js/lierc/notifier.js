@@ -59,12 +59,12 @@ class WebPush {
           }
           subscription.unsubscribe().then(() => {
             this.set_enabled(false);
-            var part = encodeURIComponent(subscription.endpoint);;
-            this.#app.api.delete("/notification/web_push/" + part);
-          }).catch(function(e) {
+            const part = encodeURIComponent(subscription.endpoint);;
+            this.#app.api.delete(`/notification/web_push/${part}`);
+          }).catch((e) => {
             console.log("Failed to unsubscribe", e);
           });
-        }).catch(function(e) {
+        }).catch((e) => {
           console.log("Error unsubscribing", e);
         });
     });
@@ -74,7 +74,7 @@ class WebPush {
     navigator.serviceWorker.ready.then((serviceWorkerRegistration) => {
       this.#app.api.get("/notification/web_push_keys", {
         success: (res) => {
-          var vapid = base64url.decode(res['vapid_public_key']);
+          const vapid = base64url.decode(res['vapid_public_key']);
           serviceWorkerRegistration.pushManager.subscribe({
               userVisibleOnly: true,
               applicationServerKey: vapid.buffer
@@ -97,13 +97,13 @@ class WebPush {
   }
 
   build_pref(sub) {
-    var rawKey = sub.getKey ? sub.getKey('p256dh') : '';
-    var key = rawKey ?
+    const rawKey = sub.getKey ? sub.getKey('p256dh') : '';
+    const key = rawKey ?
       base64url.encode(rawKey) :
       '';
 
-    var rawAuthSecret = sub.getKey ? sub.getKey('auth') : '';
-    var authSecret = rawAuthSecret ?
+    const rawAuthSecret = sub.getKey ? sub.getKey('auth') : '';
+    const authSecret = rawAuthSecret ?
       base64url.encode(rawAuthSecret) :
       '';
 
@@ -119,7 +119,7 @@ class WebPush {
 
     if (bool) {
       if (sub) {
-        var headers = new Headers();
+        const headers = new Headers();
         headers.append(
           'content-type',
           'application/x-www-form-urlencoded; charset=UTF-8'
@@ -181,12 +181,12 @@ class APN {
   }
 
   subscribe() {
-    var per = window.safari.pushNotification.permission(this.config.push_id);
+    const per = window.safari.pushNotification.permission(this.config.push_id);
     this.check_per(per);
   }
 
   unsubscribe() {
-    var per = window.safari.pushNotification.permission(this.config.push_id);
+    const per = window.safari.pushNotification.permission(this.config.push_id);
     this.check_per(per);
   }
 
@@ -195,4 +195,4 @@ class APN {
   }
 }
 
-export var Notifier = APN.supported() ? APN : WebPush;
+export const Notifier = APN.supported() ? APN : WebPush;

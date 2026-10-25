@@ -1,8 +1,8 @@
 import { Emoji } from "./emoji.js";
 
-export var Unformat = function(html) {
-  var parser = new DOMParser();
-  var doc = parser.parseFromString(html, "text/html");
+export const Unformat = function(html) {
+  const parser = new DOMParser();
+  const doc = parser.parseFromString(html, "text/html");
   return Unformat.descend(doc, "");
 };
 
@@ -19,15 +19,15 @@ Unformat.descend = function(node, string) {
       if (node.classList && node.classList.contains('invert'))
         string += Unformat.invert;
       if (node.hasAttribute('data-color-fg')) {
-        string += "\x03" + node.getAttribute('data-color-fg');
+        string += `\x03${node.getAttribute('data-color-fg')}`;
         if (node.hasAttribute('data-color-bg')) {
-          string += "," + node.getAttribute('data-color-bg');
+          string += `,${node.getAttribute('data-color-bg')}`;
         }
       }
       if (node.hasAttribute('data-color-reset'))
         string += "\x03";
     }
-    for (var i=0; i < node.childNodes.length; i++) {
+    for (let i=0; i < node.childNodes.length; i++) {
       string = Unformat.descend(node.childNodes[i], string);
     }
     if (Unformat.tags[node.nodeName])
@@ -49,13 +49,13 @@ Unformat.tags = {
 
 Unformat.invert = "\x16";
 
-export var Format = function(text) {
-  var tokens = text.split(Format.token_re);
+export const Format = function(text) {
+  const tokens = text.split(Format.token_re);
 
-  return Format.parse([], tokens).filter(function(item) {
+  return Format.parse([], tokens).filter((item) => {
     return item.text != "";
-  }).map(function(item) {
-    var span = document.createElement('SPAN');
+  }).map((item) => {
+    const span = document.createElement('SPAN');
     span.textContent = item.text;
 
     if (item.background != null)
@@ -77,19 +77,19 @@ Format.url_re = /https?:\/\/[^\s<"]*/ig;
 Format.token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
 
 Format.emojify = function(node) {
-  var tmp = document.createElement('SPAN');
+  const tmp = document.createElement('SPAN');
   if ( node.nodeName != '#text' ) {
     return node;
   }
   if (node.nodeValue && Emoji.regex.test(node.nodeValue)) {
-    var chars = node.nodeValue.match(Emoji.regex);
-    var span = document.createElement("SPAN");
+    const chars = node.nodeValue.match(Emoji.regex);
+    const span = document.createElement("SPAN");
     tmp.textContent = node.nodeValue;
-    var escaped = tmp.innerHTML;
+    let escaped = tmp.innerHTML;
 
-    for (var j=0; j < chars.length; j++) {
-      var title = Emoji.names[chars[j]];
-      escaped = escaped.replace(new RegExp(chars[j], 'g'), '<span class="emoji" title="'+title+'">' + chars[j] + '</span>');
+    for (let j=0; j < chars.length; j++) {
+      const title = Emoji.names[chars[j]];
+      escaped = escaped.replace(new RegExp(chars[j], 'g'), `<span class="emoji" title="${title}">${chars[j]}</span>`);
     }
     span.innerHTML = escaped;
     return span;
@@ -98,11 +98,11 @@ Format.emojify = function(node) {
 };
 
 Format.linkify = function(elem) {
-  var children = elem.childNodes;
-  var length = children.length;
+  const children = elem.childNodes;
+  const length = children.length;
 
-  for (var i=0; i < length; i++) {
-    var node = children[i];
+  for (let i=0; i < length; i++) {
+    const node = children[i];
     if (node.nodeName == "A") {
       continue;
     }
@@ -117,23 +117,23 @@ Format.linkify = function(elem) {
       console.log(node);
     }
     if (node.nodeValue && node.nodeValue.match(Format.url_re)) {
-      var replace = [];
-      var text = node.nodeValue;
-      var match;
-      var pos = 0;
+      const replace = [];
+      const text = node.nodeValue;
+      let match;
+      let pos = 0;
 
       while ((match = Format.url_re.exec(text)) !== null) {
-        var url = match[0];
-        var i = match.index;
-        var before = text.substring(pos, i);
-        var after;
+        let url = match[0];
+        const i = match.index;
+        const before = text.substring(pos, i);
+        let after;
 
         if ( i > 0 && before[ i - 1 ] == '(' && url[ url.length - 1 ] == ')' ) {
           url = url.substring(0, url.length - 1);
           after = ')';
         }
 
-        var link = document.createElement('A');
+        const link = document.createElement('A');
         link.setAttribute('href', url);
         link.setAttribute('target', '_blank');
         link.setAttribute('rel', 'noreferrer');
@@ -152,12 +152,12 @@ Format.linkify = function(elem) {
         replace.push(document.createTextNode(text.substring(pos)));
       }
 
-      var p = node.parentNode;
+      const p = node.parentNode;
       if ( replace.length ) {
-        var n = Format.emojify(replace.pop());
+        let n = Format.emojify(replace.pop());
         p.replaceChild(n, node);
 
-        var o;
+        let o;
         while ( o = replace.pop() ) {
           o = Format.emojify(o);
           p.insertBefore( o, n );
@@ -221,17 +221,18 @@ Format.parse = function(acc, tokens) {
   if (tokens.length == 0)
     return acc;
 
-  var token = tokens.shift();
-  var head = acc.length ? acc[ acc.length - 1] : Format.make();
-  var node = Format.clone(head);
+  const token = tokens.shift();
+  const head = acc.length ? acc[ acc.length - 1] : Format.make();
+  let node = Format.clone(head);
 
   switch (token.substring(0, 1)) {
 
-  case "\x03":
-    var colors = token.substring(1).split(",", 2);
+  case "\x03": {
+    const colors = token.substring(1).split(",", 2);
     node.color = colors[0];
     node.background = colors[1];
     break;
+  }
 
   case "\x02":
     node.bold = ! head.bold;

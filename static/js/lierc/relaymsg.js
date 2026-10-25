@@ -1,4 +1,4 @@
-export var RelayMsg = {
+export const RelayMsg = {
   discriminator: "/",
 
   /* Chat platform allowlist
@@ -15,20 +15,20 @@ export var RelayMsg = {
 RelayMsg.parse = function(nick) {
   nick = String(nick === null || nick === undefined ? "" : nick);
 
-  var i = nick.lastIndexOf(RelayMsg.discriminator);
+  const i = nick.lastIndexOf(RelayMsg.discriminator);
 
   // Need a name before the discriminator and a suffix after it
   if (i < 1 || i == nick.length - 1)
     return null;
 
-  var platform = nick.substring(i + 1);
-  var key = platform.toLowerCase();
+  const platform = nick.substring(i + 1);
+  const key = platform.toLowerCase();
 
   // Avoid weird behavior with prototype object properties
   if (!Object.hasOwn(RelayMsg.platforms, key))
     return null;
 
-  var icon = RelayMsg.platforms[key];
+  const icon = RelayMsg.platforms[key];
 
   return {
     name: nick.substring(0, i),
@@ -38,8 +38,8 @@ RelayMsg.parse = function(nick) {
 };
 
 RelayMsg.icon = function(relay) {
-  var el = document.createElement('I');
-  el.classList.add('nick-platform', 'fa-brands', 'fa-' + relay.icon);
+  const el = document.createElement('I');
+  el.classList.add('nick-platform', 'fa-brands', `fa-${relay.icon}`);
   el.setAttribute('title', relay.platform);
   el.setAttribute('role', 'img');
   el.setAttribute('aria-label', relay.platform);
@@ -47,8 +47,8 @@ RelayMsg.icon = function(relay) {
 };
 
 RelayMsg.render = function(nick) {
-  var frag = document.createDocumentFragment();
-  var relay = RelayMsg.parse(nick);
+  const frag = document.createDocumentFragment();
+  const relay = RelayMsg.parse(nick);
 
   if (relay) {
     frag.appendChild(document.createTextNode(relay.name));

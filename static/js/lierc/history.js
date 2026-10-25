@@ -11,7 +11,7 @@ export class History {
   }
 
   up() {
-    var history = this.history.concat(this.tail());
+    const history = this.history.concat(this.tail());
 
     if (this.#index === null) {
       this.#index = 0;
@@ -24,8 +24,8 @@ export class History {
   }
 
   tail(rev) {
-    var current = this.current();
-    var tail = [EMPTY];
+    const current = this.current();
+    const tail = [EMPTY];
 
     if (current != EMPTY)
       tail.push(current);
@@ -46,7 +46,7 @@ export class History {
   }
 
   down() {
-    var history = this.history.concat(this.tail(true));
+    const history = this.history.concat(this.tail(true));
     
     if (this.#index === null) {
       this.#index = 0;

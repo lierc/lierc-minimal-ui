@@ -30,8 +30,8 @@ export class Stream {
 
   fire(name) {
     if (this.#listeners[name]) {
-      var data = Array.prototype.slice.call(arguments,1);
-      this.#listeners[name].forEach(function(listener) {
+      const data = Array.prototype.slice.call(arguments,1);
+      this.#listeners[name].forEach((listener) => {
         data.unshift(listener, 0);
         setTimeout.apply(undefined, data);
       });
@@ -39,9 +39,9 @@ export class Stream {
   }
 
   #connect() {
-    var url = this.baseurl + "/events";
+    const url = `${this.baseurl}/events`;
 
-    var es = new EventSource(url);
+    const es = new EventSource(url);
 
     es.addEventListener("irc",     this.onmessage);
     es.addEventListener("open",    this.onopen);
@@ -56,23 +56,23 @@ export class Stream {
     if (this.eventsource)
       this.eventsource.close();
 
-    var backoff = Math.max(0, Math.min(this.retries++, 15));
+    let backoff = Math.max(0, Math.min(this.retries++, 15));
 
     if (backoff == 0) {
       this.#connect();
       return;
     }
 
-    console.log("reconnecting in " + backoff + " seconds");
-    this.fire("reconnect-status", "Reconnecting in " + backoff + " seconds");
+    console.log(`reconnecting in ${backoff} seconds`);
+    this.fire("reconnect-status", `Reconnecting in ${backoff} seconds`);
 
-    var count = () => {
+    const count = () => {
       if (--backoff <= 0) {
         clearTimeout(this.timer);
         this.#connect();
       }
       else {
-        this.fire("reconnect-status", "Reconnecting in " + backoff + " seconds");
+        this.fire("reconnect-status", `Reconnecting in ${backoff} seconds`);
         this.timer = setTimeout(count, 1000);
       }
     };
@@ -81,7 +81,7 @@ export class Stream {
   }
 
   onconnect(e) {
-    var data = JSON.parse(e.data);
+    const data = JSON.parse(e.data);
     this.fire("connect", data);
   }
 
@@ -97,7 +97,7 @@ export class Stream {
 
   onmessage(e) {
     this.touch();
-    var data = JSON.parse(e.data);
+    const data = JSON.parse(e.data);
 
     if (data.Message.Command == "CREATE") {
       this.fire("create_connection", data)

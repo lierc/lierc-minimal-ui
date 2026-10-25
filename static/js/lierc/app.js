@@ -80,12 +80,12 @@ export class App {
     setInterval(() => this.ping_server(), 1000 * 15);
     setInterval(() => this.render_typing(), 500);
 
-    var check_stream = () => {
+    const check_stream = () => {
       if (this.stream)
         this.stream.check();
     };
 
-    document.addEventListener("visibilitychange", function() {
+    document.addEventListener("visibilitychange", () => {
       if (!document.hidden)
         check_stream();
     });
@@ -119,11 +119,11 @@ export class App {
   }
 
   set_connected(conn_id, status, message) {
-    var connection = this.connections[conn_id];
+    const connection = this.connections[conn_id];
     connection.connected = status;
 
-    for (var id in this.panels) {
-      var panel = this.panels[id];
+    for (const id in this.panels) {
+      const panel = this.panels[id];
       if (panel.connection == conn_id) {
         panel.set_connected(status, message);
       }
@@ -131,7 +131,7 @@ export class App {
   }
 
   set_typing(nick, msg) {
-    var tag = msg.Tags["+draft/typing"] || msg.Tags["+typing"];
+    const tag = msg.Tags["+draft/typing"] || msg.Tags["+typing"];
 
     if (tag == "paused" || tag == "done") {
       this.stop_typing(nick);
@@ -150,7 +150,7 @@ export class App {
   }
 
   stop_typing(nick) {
-    for (var i=0; i < this.typing.length; i++) {
+    for (let i=0; i < this.typing.length; i++) {
       if (this.typing[i] == nick) {
         this.typing.splice(i, 1);
         return;
@@ -159,25 +159,25 @@ export class App {
   }
 
   render_typing() {
-    var nicks = this.typing.filter(onlyUnique);
-    var len = nicks.length;
+    const nicks = this.typing.filter(onlyUnique);
+    const len = nicks.length;
 
     if ( len > 2) {
-      this.elem.typing.innerText = len + " people are typing…";
+      this.elem.typing.innerText = `${len} people are typing…`;
     } else if ( len > 0 ) {
       this.elem.typing.innerText = "";
-      var els = [];
-      for (var i=0; i < len; i++) {
-        var nick = document.createElement("STRONG")
+      const els = [];
+      for (let i=0; i < len; i++) {
+        const nick = document.createElement("STRONG")
         nick.innerText = nicks[i];
         els.push(nick);
         if (i + 1 < len) {
           els.push(document.createTextNode(" and "));
         }
       }
-      var verb = len > 1 ? 'are' : 'is';
-      els.push(document.createTextNode(" " + verb + " typing…"));
-      for (var i=0; i < els.length; i++) {
+      const verb = len > 1 ? 'are' : 'is';
+      els.push(document.createTextNode(` ${verb} typing…`));
+      for (let i=0; i < els.length; i++) {
         this.elem.typing.appendChild(els[i]);
       }
     } else {
@@ -194,10 +194,10 @@ export class App {
     if (this.connections[id])
       return;
 
-    var connection = new Connection(id, host);
+    const connection = new Connection(id, host);
     this.connections[id] = connection;
 
-    var panel = this.add_panel("status", connection.id, {status: true});
+    const panel = this.add_panel("status", connection.id, {status: true});
     panel.change_name(host);
     panel.update_topic({value: "status."});
 
@@ -206,9 +206,9 @@ export class App {
     });
 
     connection.on("private:msg", (conn, nick, message) => {
-      var panel = this.add_panel(nick, conn, {focus: false});
-      var connection = this.connections[conn];
-      var from = message.Prefix.Name != connection.nick;
+      const panel = this.add_panel(nick, conn, {focus: false});
+      const connection = this.connections[conn];
+      const from = message.Prefix.Name != connection.nick;
 
       panel.update_oldest_message_id(message.Id)
 
@@ -218,7 +218,7 @@ export class App {
       panel.append(Render(message));
       this.update_title(true);
 
-      var unfocused = !this.is_focused(panel);
+      const unfocused = !this.is_focused(panel);
       if (from && (unfocused || !panel.is_scrolled())) {
         this.play_alert()
       }
@@ -231,14 +231,14 @@ export class App {
     });
 
     connection.on("channel:error", (conn, channel, message) => {
-      var panel = this.get_panel(channel, conn);
-      var html = Render(message);
+      const panel = this.get_panel(channel, conn);
+      const html = Render(message);
       panel.append(html);
     });
 
     connection.on("channel:msg", (conn, channel, message) => {
-      var panel = this.get_panel(channel, conn);
-      var html = Render(message);
+      const panel = this.get_panel(channel, conn);
+      const html = Render(message);
 
       panel.update_oldest_message_id(message.Id)
 
@@ -261,37 +261,37 @@ export class App {
     });
 
     connection.on("channel:react", (conn, channel, message) => {
-      var panel = this.get_panel(channel, conn);
+      const panel = this.get_panel(channel, conn);
       panel.handle_reaction(message);
     });
 
     connection.on("channel:typing", (conn, channel, message) => {
-      var panel = this.get_panel(channel, conn);
+      const panel = this.get_panel(channel, conn);
       if (this.is_focused(panel)) {
         this.set_typing(message.Prefix.Name, message);
       }
     });
 
     connection.on("private:react", (conn, nick, message) => {
-      var panel = this.get_panel(nick, conn);
+      const panel = this.get_panel(nick, conn);
       panel.handle_reaction(message);
     });
 
     connection.on("privmsg:typing", (conn, nick, message) => {
-      var panel = this.get_panel(nick, conn);
+      const panel = this.get_panel(nick, conn);
       if (this.is_focused(panel)) {
         this.set_typing(message.Prefix.Name, message);
       }
     });
 
     connection.on("channel:nicks", (conn, channel, nicks) => {
-      var panel = this.get_panel(channel, conn);
+      const panel = this.get_panel(channel, conn);
       if (panel.focused)
         panel.update_nicks(nicks);
     });
 
     connection.on("channel:mode", (conn, channel, mode) => {
-      var panel = this.get_panel(channel, conn);
+      const panel = this.get_panel(channel, conn);
       panel.update_mode(mode);
     });
 
@@ -300,12 +300,12 @@ export class App {
     });
 
     connection.on("status:raw", (conn, message) => {
-      var panel = this.get_panel("status", conn);
+      const panel = this.get_panel("status", conn);
       panel.append(Render(message, {raw: true}));
     });
 
     connection.on("status", (conn, message) => {
-      var panel = this.get_panel("status", conn);
+      const panel = this.get_panel("status", conn);
       panel.append(Render(message));
     });
 
@@ -318,7 +318,7 @@ export class App {
     });
 
     connection.on("channel:topic", (conn, channel, topic) => {
-      var panel = this.get_panel(channel, conn);
+      const panel = this.get_panel(channel, conn);
       panel.update_topic(topic);
     });
   }
@@ -328,7 +328,7 @@ export class App {
   }
 
   find_default_panel() {
-    var parts = window.location.hash.split("/").slice(1);
+    const parts = window.location.hash.split("/").slice(1);
     if (parts.length == 2) {
       return App.panel_id(decodeURIComponent(parts[1]), parts[0]);
     }
@@ -346,9 +346,9 @@ export class App {
           this.config_modal();
 
         configs.forEach((conn) => {
-          var conn_id   = conn.Id;
-          var host = conn.Config.Alias || conn.Config.Host;
-          var nick = conn.Nick;
+          const conn_id   = conn.Id;
+          const host = conn.Config.Alias || conn.Config.Host;
+          const nick = conn.Nick;
           this.setup_connection(conn_id, host, nick);
         });
 
@@ -377,11 +377,11 @@ export class App {
   }
 
   connect() {
-    var stream = this.api.stream();
+    const stream = this.api.stream();
 
     stream.on('message', (e) => {
-      var conn_id = e.ConnectionId;
-      var message = e.Message;
+      const conn_id = e.ConnectionId;
+      const message = e.Message;
 
       if (e.MessageId)
         message.Id =  e.MessageId;
@@ -393,18 +393,18 @@ export class App {
     });
 
     stream.on('create_connection', (e) => {
-      var conn_id = e.ConnectionId;
-      var message = e.Message;
-      var nick    = message.Params[0];
-      var host    = message.Params[1];
+      const conn_id = e.ConnectionId;
+      const message = e.Message;
+      const nick    = message.Params[0];
+      const host    = message.Params[1];
       this.setup_connection(conn_id, host, nick);
     });
 
     stream.on('delete_connection', (e) => {
-      var conn_id = e.ConnectionId;
+      const conn_id = e.ConnectionId;
 
-      for (var id in this.panels) {
-        var panel = this.panels[id];
+      for (const id in this.panels) {
+        const panel = this.panels[id];
         if (panel.connection == conn_id) {
           this.remove_panel(id);
         }
@@ -414,7 +414,7 @@ export class App {
     });
 
     stream.on('close', (e) => {
-      for (var id in this.panels) {
+      for (const id in this.panels) {
         this.panels[id].set_disabled(true);
       }
       if (this.focused) {
@@ -446,7 +446,7 @@ export class App {
         }
       }
 
-      for (var id in this.panels) {
+      for (const id in this.panels) {
         this.panels[id].set_disabled(false);
         if (!this.focused || id != this.focused.id) {
           this.panels[id].clear_lists();
@@ -462,19 +462,19 @@ export class App {
   }
 
   get_panel(name, connection) {
-    var id = App.panel_id(name, connection);
+    const id = App.panel_id(name, connection);
     return this.panels[id];
   }
 
   add_private(conn_id, name) {
-    var path = "/connection/" + conn_id + "/nick/" + encodeURIComponent(name);
+    const path = `/connection/${conn_id}/nick/${encodeURIComponent(name)}`;
     this.api.post(path);
   }
 
   close_panel(id) {
-    var panel = this.panels[id];
+    const panel = this.panels[id];
     if (panel.type == "private") {
-      var path = "/connection/" + panel.connection + "/nick/" + encodeURIComponent(panel.name);
+      const path = `/connection/${panel.connection}/nick/${encodeURIComponent(panel.name)}`;
       this.api.delete(path);
     }
     this.remove_panel(id);
@@ -484,7 +484,7 @@ export class App {
     if (!this.panels[id])
       return;
 
-    var focused = id == this.focused.id;
+    const focused = id == this.focused.id;
     this.panels[id].remove_elems();
     delete this.panels[id];
 
@@ -519,7 +519,7 @@ export class App {
 
   add_panel(name, connection, opts) {
     if (!opts) opts = {};
-    var id = App.panel_id(name, connection);
+    const id = App.panel_id(name, connection);
 
     if (this.panels[id])
       return this.panels[id];
@@ -529,17 +529,17 @@ export class App {
       throw "Connection does not exist";
     }
 
-    var conn = this.connections[connection];
-    var type = opts['status'] ? 'status'
+    const conn = this.connections[connection];
+    const type = opts['status'] ? 'status'
       : conn.is_channel(name)
         ? 'channel' : 'private';
 
-    var panel = new Panel({
+    const panel = new Panel({
       name: name,
       id: id,
-      log_url: opts['status'] ? null : "/search/#!/connection/" + encodeURIComponent(conn.id) + "/channel/" + encodeURIComponent(name),
-      backlog_url: "/connection/" + conn.id + "/channel/" + encodeURIComponent(name) + "/events",
-      path: window.location.pathname + "#/" + conn.id + "/" + encodeURIComponent(name),
+      log_url: opts['status'] ? null : `/search/#!/connection/${encodeURIComponent(conn.id)}/channel/${encodeURIComponent(name)}`,
+      backlog_url: `/connection/${conn.id}/channel/${encodeURIComponent(name)}/events`,
+      path: `${window.location.pathname}#/${conn.id}/${encodeURIComponent(name)}`,
       closable: opts['status'] ? false : true,
       editable: opts['status'] ? true : false,
       connection: conn.id,
@@ -554,7 +554,7 @@ export class App {
     panel.update_nav();
 
     if (panel.type == "channel") {
-      var channel = conn.channel(panel.name);
+      const channel = conn.channel(panel.name);
       panel.editor.completion.nicks = channel.nicks;
       panel.update_topic({value: "No topic set"});
     }
@@ -593,8 +593,8 @@ export class App {
 
       this.elem.flex_wrap.classList.remove("open");
 
-      var id = e.currentTarget.getAttribute('data-panel-id');
-      var panel = this.panels[id];
+      const id = e.currentTarget.getAttribute('data-panel-id');
+      const panel = this.panels[id];
 
       if (e.target.classList.contains('close-panel')) {
         if (panel.type == "channel")
@@ -605,7 +605,7 @@ export class App {
           this.close_panel(id);
       }
       else if (e.target.classList.contains('edit-panel')) {
-        this.api.get("/connection/" + panel.connection, {
+        this.api.get(`/connection/${panel.connection}`, {
           success: (res) => {
             this.config_modal(null, res);
           },
@@ -679,17 +679,17 @@ export class App {
 
   update_title(highlight) {
     if (!this.focused) return;
-    var name = this.focused.name;
+    let name = this.focused.name;
 
     if (!this.window_focused && highlight) {
-      name = "*" + name;
+      name = `*${name}`;
     }
 
     this.elem.title.textContent = name;
   }
 
   post_token() {
-    var token = this.post_tokens.pop();
+    const token = this.post_tokens.pop();
     if (!token) {
       alert("No post tokens, tell Lee!");
       throw Error("No tokens");
@@ -698,22 +698,22 @@ export class App {
   }
 
   part_channel(name, connection) {
-    if (!confirm("Are you sure you want to leave " + name + "?"))
+    if (!confirm(`Are you sure you want to leave ${name}?`))
       return;
 
-    var headers = new Headers();
+    const headers = new Headers();
     headers.append('lierc-token', this.post_token());
     headers.append('content-type', 'application/irc');
 
-    this.api.post('/connection/' + connection, {
-      body: 'PART ' + name,
+    this.api.post(`/connection/${connection}`, {
+      body: `PART ${name}`,
       headers: headers,
       success: (res) => {
         this.remove_panel(App.panel_id(name, connection));
         this.post_tokens.push(res.token);
       },
       error: (e) => {
-        alert("Error: " + e);
+        alert(`Error: ${e}`);
         this.load_token();
       }
     });
@@ -722,14 +722,14 @@ export class App {
   delete_connection(connection) {
     if (!confirm("Are you sure you want to remove this connection?"))
       return;
-    this.api.delete('/connection/' + connection, {
+    this.api.delete(`/connection/${connection}`, {
       error: function(e) { alert(e); }
     });
   }
 
   channel_panels() {
-    var panels = 0
-    for (var id in this.panels) {
+    let panels = 0
+    for (const id in this.panels) {
       if (this.panels[id].type == "channel")
         panels++;
     }
@@ -740,15 +740,15 @@ export class App {
     if (this.sortable)
       panel.elem.nav.draggable = true;
 
-    var index = this.sorting.indexOf(panel.id);
+    const index = this.sorting.indexOf(panel.id);
     if (index == -1) {
       this.elem.channels.appendChild(panel.elem.nav);
       this.save_channel_order();
       return;
     }
-    var items = this.elem.channels.childNodes;
-    for (var i=0; i < items.length; i++) {
-      var id = items[i].getAttribute('data-panel-id');
+    const items = this.elem.channels.childNodes;
+    for (let i=0; i < items.length; i++) {
+      const id = items[i].getAttribute('data-panel-id');
       if (index < this.sorting.indexOf(id)) {
         this.elem.channels.insertBefore(panel.elem.nav, items[i]);
         return;
@@ -759,9 +759,9 @@ export class App {
   }
 
   fill_missed(start) {
-    this.api.get("/log/" + start, {
+    this.api.get(`/log/${start}`, {
       success: (events) => {
-        for (var i=0; i < events.length; i++) {
+        for (let i=0; i < events.length; i++) {
           this.stream.fire('message', events[i]);
         }
       },
@@ -772,17 +772,17 @@ export class App {
   }
 
   maybe_send_typing(panel, c) {
-    var conn = this.connections[panel.connection];
+    const conn = this.connections[panel.connection];
     if (!conn.caps_enabled["message-tags"])
       return;
 
     if (!panel.should_send_typing(c))
       return;
 
-    var tag = "@+typing=active"
+    const tag = "@+typing=active"
 
-    this.api.post("/connection/" + panel.connection, {
-      body:  tag + " TAGMSG " + panel.name,
+    this.api.post(`/connection/${panel.connection}`, {
+      body:  `${tag} TAGMSG ${panel.name}`,
       headers: {
         'lierc-token' : this.post_token(),
         'content-type': "application/irc",
@@ -791,22 +791,22 @@ export class App {
         this.post_tokens.push(res.token);
       },
       error: (e) => {
-        var res = JSON.parse(e.responseText);
-        alert("Error: " + res.error);
+        const res = JSON.parse(e.responseText);
+        alert(`Error: ${res.error}`);
         this.load_token();
       }
     });
   }
 
   send_stop_typing(panel) {
-    var conn = this.connections[panel.connection];
+    const conn = this.connections[panel.connection];
     if (!conn.caps_enabled["message-tags"])
       return;
 
-    var tag = "@+typing=done"
+    const tag = "@+typing=done"
 
-    this.api.post("/connection/" + panel.connection, {
-      body:  tag + " TAGMSG " + panel.name,
+    this.api.post(`/connection/${panel.connection}`, {
+      body:  `${tag} TAGMSG ${panel.name}`,
       headers: {
         'lierc-token' : this.post_token(),
         'content-type': "application/irc",
@@ -815,8 +815,8 @@ export class App {
         this.post_tokens.push(res.token);
       },
       error: (e) => {
-        var res = JSON.parse(e.responseText);
-        alert("Error: " + res.error);
+        const res = JSON.parse(e.responseText);
+        alert(`Error: ${res.error}`);
         this.load_token();
       }
     });
@@ -826,19 +826,19 @@ export class App {
     if (panel.backlog_empty) return;
 
     if (panel.connection) {
-      var connection = this.connections[panel.connection];
+      const connection = this.connections[panel.connection];
       if (!connection) return;
     }
 
     panel.set_loading(true);
 
-    var highlight = panel.id == 'highlights';
-    var limit = panel.ignore_events ? 150 : 50;
-    var name = panel.type == "status" ? "status" : panel.name;
-    var url = panel.backlog_url;
+    const highlight = panel.id == 'highlights';
+    const limit = panel.ignore_events ? 150 : 50;
+    const name = panel.type == "status" ? "status" : panel.name;
+    let url = panel.backlog_url;
 
     if (msgid)
-      url += "/" + msgid;
+      url += `/${msgid}`;
 
     this.api.get(url, {
       data: { limit: limit },
@@ -846,12 +846,12 @@ export class App {
         if (events.length < limit)
           panel.backlog_empty = true;
 
-        var list = [];
-        var reactions = [];
-        var is_search = panel.type == "search";
+        const list = [];
+        const reactions = [];
+        const is_search = panel.type == "search";
 
         events.forEach( (e) => {
-          var message = e.Message;
+          const message = e.Message;
           message.Id = e.MessageId;
           message.Highlight = e.Highlight && panel.id != 'highlights';
 
@@ -863,14 +863,14 @@ export class App {
           if (this.is_reaction(message))
             reactions.push(message);
           else {
-            var el = Render(message, {
+            const el = Render(message, {
               show_channel: is_search,
               controls: !is_search
             });
             if (el)
               list.push(el);
             if (highlight) {
-              var panel_id = App.panel_id(message.Params[0], e.ConnectionId);
+              const panel_id = App.panel_id(message.Params[0], e.ConnectionId);
               el.setAttribute('data-panel-id', panel_id);
             }
           }
@@ -879,7 +879,7 @@ export class App {
         panel.prepend(list);
         this.filling_backlog = false;
 
-        reactions.forEach(function(reaction) {
+        reactions.forEach((reaction) => {
           panel.handle_reaction(reaction);
         });
 
@@ -903,11 +903,11 @@ export class App {
   }
 
   prev_panel() {
-    var items = this.elem.nav.querySelectorAll("li");
-    for (var i=items.length - 1; i >= 0; i--) {
-      var item = items[i];
+    const items = this.elem.nav.querySelectorAll("li");
+    for (let i=items.length - 1; i >= 0; i--) {
+      const item = items[i];
       if (item.classList.contains("active") && items[i - 1]) {
-        var id = items[i - 1].getAttribute('data-panel-id');
+        const id = items[i - 1].getAttribute('data-panel-id');
         this.focus_panel(id);
         return;
       }
@@ -915,14 +915,14 @@ export class App {
   }
 
   prev_unread_panel() {
-    var items = this.elem.nav.querySelectorAll("li");
-    for (var i=items.length - 1; i >= 0; i--) {
-      var item = items[i];
+    const items = this.elem.nav.querySelectorAll("li");
+    for (let i=items.length - 1; i >= 0; i--) {
+      const item = items[i];
       if (item.classList.contains("active")) {
-        for (var j=i; j > 0; j--) {
-          var item = items[j - 1];
+        for (let j=i; j > 0; j--) {
+          const item = items[j - 1];
           if (item.classList.contains("unread")) {
-            var id = item.getAttribute('data-panel-id');
+            const id = item.getAttribute('data-panel-id');
             this.focus_panel(id);
             return;
           }
@@ -933,11 +933,11 @@ export class App {
   }
 
   next_panel() {
-    var items = this.elem.nav.querySelectorAll("li");
-    for (var i=0; i < items.length; i++) {
-      var item = items[i];
+    const items = this.elem.nav.querySelectorAll("li");
+    for (let i=0; i < items.length; i++) {
+      const item = items[i];
       if (item.classList.contains("active") && items[i + 1]) {
-        var id = items[i + 1].getAttribute('data-panel-id');
+        const id = items[i + 1].getAttribute('data-panel-id');
         this.focus_panel(id);
         return;
       }
@@ -945,14 +945,14 @@ export class App {
   }
 
   next_unread_panel() {
-    var items = this.elem.nav.querySelectorAll("li");
-    for (var i=0; i < items.length; i++) {
-      var item = items[i];
+    const items = this.elem.nav.querySelectorAll("li");
+    for (let i=0; i < items.length; i++) {
+      const item = items[i];
       if (item.classList.contains("active")) {
-        for (var j=i; j < items.length; j++) {
-          var item = items[j + 1];
+        for (let j=i; j < items.length; j++) {
+          const item = items[j + 1];
           if (item.classList.contains("unread")) {
-            var id = item.getAttribute('data-panel-id');
+            const id = item.getAttribute('data-panel-id');
             this.focus_panel(id);
             return;
           }
@@ -973,7 +973,7 @@ export class App {
       this.hide_switcher();
     }
 
-    var panel = this.panels[id];
+    const panel = this.panels[id];
 
     if (! panel)
       return;
@@ -1005,13 +1005,13 @@ export class App {
     this.update_title();
 
     if (panel.type == "channel") {
-      var conn = this.connections[panel.connection];
+      const conn = this.connections[panel.connection];
       panel.update_nicks(
         conn.nicks(conn.channel(panel.name))
       );
     }
 
-    var highlight = false;
+    let highlight = false;
     for (id in this.panels) {
       if (this.panels[id].highlighted && id != 'highlights') {
         highlight = true;
@@ -1034,10 +1034,10 @@ export class App {
   config_modal(e, connection) {
     if (e) e.preventDefault();
 
-    var vars = {};
+    const vars = {};
 
     if (connection) {
-      var config = connection.Config;
+      const config = connection.Config;
       vars.Host = config.Host;
       vars.Port = config.Port;
       vars.Ssl = config.Ssl;
@@ -1049,7 +1049,7 @@ export class App {
       vars.Channels = config.Channels.join(", ");
       vars.Highlight = config.Highlight.join(", ");
 
-      vars.action = "/connection/" + connection.Id;
+      vars.action = `/connection/${connection.Id}`;
       vars.method = "PUT";
       vars.edit = true;
     }
@@ -1073,9 +1073,9 @@ export class App {
 
     this.elem.flex_wrap.classList.remove('open');
 
-    var dialog = this.new_dialog("connection", vars);
+    const dialog = this.new_dialog("connection", vars);
 
-    var del = dialog.el.querySelector('.delete-connection');
+    const del = dialog.el.querySelector('.delete-connection');
     if (del && connection) {
       del.addEventListener('click', (e) => {
         e.preventDefault();
@@ -1086,11 +1086,11 @@ export class App {
 
     dialog.el.addEventListener("submit", (e) => {
       e.preventDefault();
-      var form = e.target;
-      var method = form.getAttribute('method');
-      var action = form.getAttribute('action');
+      const form = e.target;
+      const method = form.getAttribute('method');
+      const action = form.getAttribute('action');
 
-      var data = {
+      const data = {
         Host: form.querySelector('input[name="Host"]').value,
         Port: parseInt(form.querySelector('input[name="Port"]').value),
         Ssl:  form.querySelector('input[name="Ssl"]').checked,
@@ -1154,7 +1154,7 @@ export class App {
           return;
         }
 
-        var data = res.json();
+        const data = res.json();
         if (data["error"]) {
           console.log(data["error"]);
         }
@@ -1165,8 +1165,8 @@ export class App {
   get_prefs(cb) {
     this.api.get("/preference", {
       success: function(data) {
-        var prefs = {};
-        for (var i=0; i < data.length; i++) {
+        const prefs = {};
+        for (let i=0; i < data.length; i++) {
           try {
             prefs[data[i].name] = JSON.parse(data[i].value);
           }
@@ -1185,47 +1185,47 @@ export class App {
   }
 
   show_nicklist_pref(panel) {
-    var value = this.get_pref(panel.id + "-show-nicklist");
+    const value = this.get_pref(`${panel.id}-show-nicklist`);
     if (value != undefined)
       panel.set_show_nicklist(value);
   }
 
   send_typing_pref(panel) {
-    var value = this.get_pref(panel.id + "-send-typing");
+    const value = this.get_pref(`${panel.id}-send-typing`);
     if (value !== undefined)
       panel.set_send_typing(value);
   }
 
   ignore_events_pref(panel) {
-    var value = this.get_pref(panel.id + "-ignore-events");
+    const value = this.get_pref(`${panel.id}-ignore-events`);
     if (value !== undefined)
       panel.set_ignore_events(value);
   }
 
   collapse_embeds_pref(panel) {
-    var value = this.get_pref(panel.id + "-collapse-embeds");
+    const value = this.get_pref(`${panel.id}-collapse-embeds`);
     if (value !== undefined)
       panel.set_collapse_embeds(value);
   }
 
   monospace_nicks_pref(panel) {
-    var value = this.get_pref(panel.id + '-monospace-nicks');
+    const value = this.get_pref(`${panel.id}-monospace-nicks`);
     if (value !== undefined)
       panel.monospace_nicks = value;
   }
 
   add_monospace_nick(panel, nick) {
     panel.add_monospace_nick(nick);
-    this.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+    this.update_pref(`${panel.id}-monospace-nicks`, panel.monospace_nicks);
   }
 
   remove_monospace_nick(panel, nick) {
     panel.remove_monospace_nick(nick);
-    this.update_pref(panel.id + "-monospace-nicks", panel.monospace_nicks);
+    this.update_pref(`${panel.id}-monospace-nicks`, panel.monospace_nicks);
   }
 
   ignore_nicks_pref(panel) {
-    var value = this.get_pref(panel.id + '-ignore-nicks');
+    const value = this.get_pref(`${panel.id}-ignore-nicks`);
     if (value !== undefined)
       panel.ignore_nicks = value;
   }
@@ -1238,7 +1238,7 @@ export class App {
     if (message.Command != "PRIVMSG")
       return false;
 
-    var nick = message.Prefix.Name;
+    const nick = message.Prefix.Name;
     if (panel.ignore_nicks.indexOf(nick) != -1) {
       return true;
     }
@@ -1248,17 +1248,17 @@ export class App {
 
   add_ignore(panel, nick) {
     panel.add_ignore(nick);
-    this.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
+    this.update_pref(`${panel.id}-ignore-nicks`, panel.ignore_nicks);
   }
 
   remove_ignore(panel, nick) {
     panel.remove_ignore(nick);
-    this.update_pref(panel.id + "-ignore-nicks", panel.ignore_nicks);
+    this.update_pref(`${panel.id}-ignore-nicks`, panel.ignore_nicks);
   }
 
   update_pref(name, value) {
     this.prefs[name] = value;
-    this.api.post("/preference/" + encodeURIComponent(name), {
+    this.api.post(`/preference/${encodeURIComponent(name)}`, {
       body: JSON.stringify(value),
     });
   }
@@ -1281,8 +1281,8 @@ export class App {
   load_seen(cb) {
     this.api.get("/seen", {
       success: (res) => {
-        for (var i in res) {
-          var id = App.panel_id(res[i]["channel"], res[i]["connection"]);
+        for (const i in res) {
+          const id = App.panel_id(res[i]["channel"], res[i]["connection"]);
           this.last_seen[id] = res[i]["message_id"];
         }
         cb();
@@ -1297,19 +1297,19 @@ export class App {
     if (panel.type == "search")
       return;
 
-    var diffs = 0;
-    var id = panel.id;
-    var last_seen = panel.last_seen;
-    var send = last_seen && last_seen != this.last_seen[id];
+    const diffs = 0;
+    const id = panel.id;
+    const last_seen = panel.last_seen;
+    const send = last_seen && last_seen != this.last_seen[id];
 
     if (send || force) {
-      var parts = [
+      const parts = [
         "connection", panel.connection,
         "channel", encodeURIComponent(panel.name), "seen"
       ];
 
-      this.api.post("/" + parts.join("/"), {
-        body: "" + last_seen
+      this.api.post(`/${parts.join("/")}`, {
+        body: `${last_seen}`
       });
 
       this.last_seen[id] = last_seen;
@@ -1327,9 +1327,9 @@ export class App {
       data: this.last_seen,
       success: (res) => {
         this.missed = {};
-        for (var connection in res) {
-          for (var channel in res[connection]) {
-            var id = App.panel_id(channel, connection);
+        for (const connection in res) {
+          for (const channel in res[connection]) {
+            const id = App.panel_id(channel, connection);
             if (this.panels[id]) {
               this.apply_missed(this.panels[id], res[connection][channel]);
             }
@@ -1346,22 +1346,22 @@ export class App {
   }
 
   search_panel(panel, text) {
-    var parts = [ "connection", panel.connection
+    const parts = [ "connection", panel.connection
       , "channel", encodeURIComponent(panel.name), "last" ];
 
-    this.api.get("/" + parts.join("/"), {
+    this.api.get(`/${parts.join("/")}`, {
       data: { query: text, limit: 10 },
       success: function(messages) {
         if (messages.length > 0) {
-          panel.scroll(function() {
-            var line = document.createElement('DIV');
+          panel.scroll(() => {
+            const line = document.createElement('DIV');
             line.classList.add('search-start');
             panel.elem.list.appendChild(line);
           });
         }
 
-        for (var i=messages.length - 1; i >= 0; i--) {
-          var msg = messages[i].Message;
+        for (let i=messages.length - 1; i >= 0; i--) {
+          const msg = messages[i].Message;
           msg.Search = true;
           panel.append(Render(msg), {skip_date: true});
         }
@@ -1387,7 +1387,7 @@ export class App {
   hide_switcher() {
     this.elem.switcher.classList.remove('open');
     this.elem.nav.classList.remove('filtering');
-    this.elem.nav.querySelectorAll('li').forEach(function(li) {
+    this.elem.nav.querySelectorAll('li').forEach((li) => {
       li.classList.remove('match', 'selected', 'candidate');
     });
   }
@@ -1400,12 +1400,12 @@ export class App {
     else {
       this.elem.switcher.classList.add('open');
       this.elem.nav.classList.add('filtering');
-      this.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]').forEach(function(li) {
+      this.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]').forEach((li) => {
         li.classList.add('candidate');
         if (li.classList.contains("unread"))
           li.classList.add("match");
       });
-      var matches = this.elem.nav.querySelectorAll('li[data-name].candidate.match');
+      let matches = this.elem.nav.querySelectorAll('li[data-name].candidate.match');
       if (!matches.length)
         matches = this.elem.nav.querySelectorAll('li[data-name].candidate');
       if (matches.length) {
@@ -1416,11 +1416,11 @@ export class App {
   }
 
   make_sortable(list, on_sort) {
-    var dragging = null;
-    var orig_next = null;
+    let dragging = null;
+    let orig_next = null;
 
-    list.addEventListener("dragstart", function(e) {
-      var li = e.target.closest("li");
+    list.addEventListener("dragstart", (e) => {
+      const li = e.target.closest("li");
       if (!li || !li.draggable || li.parentNode != list)
         return;
       dragging = li;
@@ -1431,30 +1431,30 @@ export class App {
       li.classList.add("dragging");
     });
 
-    list.addEventListener("dragover", function(e) {
+    list.addEventListener("dragover", (e) => {
       if (!dragging)
         return;
       e.preventDefault();
       e.dataTransfer.dropEffect = "move";
 
-      var over = e.target.closest("li");
+      const over = e.target.closest("li");
       if (!over || over == dragging || over.parentNode != list)
         return;
 
-      var rect = over.getBoundingClientRect();
-      var after = e.clientY > rect.top + rect.height / 2;
+      const rect = over.getBoundingClientRect();
+      const after = e.clientY > rect.top + rect.height / 2;
       list.insertBefore(dragging, after ? over.nextSibling : over);
     });
 
-    list.addEventListener("drop", function(e) {
+    list.addEventListener("drop", (e) => {
       if (dragging)
         e.preventDefault();
     });
 
-    list.addEventListener("dragend", function(e) {
+    list.addEventListener("dragend", (e) => {
       if (!dragging)
         return;
-      var li = dragging;
+      const li = dragging;
       dragging = null;
       li.classList.remove("dragging");
 
@@ -1470,9 +1470,9 @@ export class App {
   }
 
   save_channel_order() {
-    var order = Array.prototype.map.call(
+    const order = Array.prototype.map.call(
       this.elem.channels.querySelectorAll('li'),
-      function(li) {
+      (li) => {
         return li.getAttribute('data-panel-id');
       });
 
@@ -1491,9 +1491,8 @@ export class App {
   }
 
   open_log(panel) {
-    var url = "/search/#!/"
-      + "/connection/" + encodeURIComponent(panel.connection)
-      + "/channel/" + encodeURIComponent(panel.name);
+    const url = `/search/#!/`
+      + `/connection/${encodeURIComponent(panel.connection)}/channel/${encodeURIComponent(panel.name)}`;
     window.open(url);
   }
 
@@ -1501,10 +1500,10 @@ export class App {
     if (this.dialog)
       this.dialog.close();
 
-    var dialog = new Dialog(name, vars);
+    const dialog = new Dialog(name, vars);
     this.elem.flex_wrap.classList.remove('open');
     dialog.append(this.elem.body);
-    var input = dialog.el.querySelector('input[type=text]')
+    const input = dialog.el.querySelector('input[type=text]')
     if (!this.mobile && input) {
       input.focus();
       input.select();
@@ -1524,7 +1523,7 @@ export class App {
       closable: false,
       editable: false,
       backlog_url: "/highlight",
-      path: window.location.pathname + "#/highlights",
+      path: `${window.location.pathname}#/highlights`,
       mobile: this.mobile,
       connected: true,
       type: "search"
@@ -1539,9 +1538,9 @@ export class App {
   }
 
   reset() {
-    var path = this.focused ? this.focused.path : "";
+    const path = this.focused ? this.focused.path : "";
 
-    for (var id in this.panels) {
+    for (const id in this.panels) {
       this.remove_panel(id);
     }
 
@@ -1563,7 +1562,7 @@ export class App {
   fill_images() {
     this.api.get("/image", {
       success: (images) => {
-        var html = Template("images", {
+        const html = Template("images", {
           images: images
         });
         this.elem.images.innerHTML = html;
@@ -1572,7 +1571,7 @@ export class App {
   }
 
   set_theme(theme, skip_save) {
-    themes.forEach(function(t) {
+    themes.forEach((t) => {
       document.body.classList.remove(t);
     });
     if (themes.indexOf(theme) != -1) {

@@ -9,13 +9,13 @@ export class API {
     if (!options)
       options = {};
 
-    var settings = {
+    const settings = {
       method: method,
       credentials: 'same-origin'
     };
 
     if (options['body']) {
-      var body = options['body'];
+      const body = options['body'];
       if (body && typeof(body) == "object") {
         settings['body'] = JSON.stringify(body);
       }
@@ -28,8 +28,8 @@ export class API {
       settings['headers'] = options['headers'];
     }
 
-    return fetch(this.baseurl + path, settings).then(function(res) {
-      var type = res.headers.get('Content-Type');
+    return fetch(this.baseurl + path, settings).then((res) => {
+      const type = res.headers.get('Content-Type');
       if (type && type.match(/^application\/javascript/)) {
         return res.json();
       }
@@ -38,18 +38,18 @@ export class API {
       }
       else {
         throw new Error(
-          "API Error: [" + res.status + "] '" + res.statusText + "'"
+          `API Error: [${res.status}] '${res.statusText}'`
         );
       }
-    }).then(function(data) {
+    }).then((data) => {
         if (data['status'] == "error") {
-          throw "API Error: " + data['error'];
+          throw `API Error: ${data['error']}`;
         }
 
         if (options['success']) {
           options['success'](data);
         }
-    }).catch(function(e) {
+    }).catch((e) => {
         if (options['error']) {
           options['error'](e);
         }
@@ -60,7 +60,7 @@ export class API {
   }
 
   build_query(params) {
-    return Object.keys(params).map(function(k) {
+    return Object.keys(params).map((k) => {
       return [
         encodeURIComponent(k),
         encodeURIComponent(params[k])
@@ -73,19 +73,19 @@ export class API {
   }
 
   auth(cb) {
-    return fetch(this.baseurl + "/auth", {
+    return fetch(`${this.baseurl}/auth`, {
       credentials: 'same-origin'
-    }).then(cb, function() {
+    }).then(cb, () => {
       // network failure
       cb({status: 0});
     });
   }
 
   logout() {
-    return fetch(this.baseurl + "/logout", {
+    return fetch(`${this.baseurl}/logout`, {
       'method': 'POST',
       'credentials': 'same-origin',
-    }).then(function(res) {
+    }).then((res) => {
       if (!res.ok)
         alert('Error!');
       else
@@ -95,7 +95,7 @@ export class API {
 
   get(path, options) {
     if (options['data'])
-      path += '?' + this.build_query(options['data']);
+      path += `?${this.build_query(options['data'])}`;
     return this.request('GET', path, options);
   }
 
@@ -105,7 +105,7 @@ export class API {
 
   delete(path, options, query) {
     if (query)
-      path += '?' + this.build_query(query);
+      path += `?${this.build_query(query)}`;
     return this.request('DELETE', path, options);
   }
 

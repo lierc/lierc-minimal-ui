@@ -20,7 +20,7 @@ export class Channel {
   }
 
   bump_nick(nick) {
-    var i = this.nicks.indexOf(nick);
+    const i = this.nicks.indexOf(nick);
     if (i != -1) {
       this.nicks.splice(i, 1);
       this.nicks.unshift(nick);
@@ -34,12 +34,12 @@ export class Channel {
   }
 
   set_mode(param) {
-    var action  = param.substring(0, 1);
-    var modes   = param.substring(1);
+    const action  = param.substring(0, 1);
+    const modes   = param.substring(1);
 
-    for (var i=0; i < modes.length; i++) {
-      var current = this.mode;
-      var mode = modes[i];
+    for (let i=0; i < modes.length; i++) {
+      const current = this.mode;
+      const mode = modes[i];
       if (action == "+" && current.indexOf(mode) == -1)
         this.mode = current + mode;
       else if (action == "-" && current.indexOf(mode) != -1)
@@ -48,12 +48,12 @@ export class Channel {
   }
 
   nick_mode(nick, param) {
-    var action  = param.substring(0, 1);
-    var modes   = param.substring(1);
+    const action  = param.substring(0, 1);
+    const modes   = param.substring(1);
 
-    for (var i=0; i < modes.length; i++ ) {
-      var current = this.nick_modes[nick];
-      var mode = modes[i];
+    for (let i=0; i < modes.length; i++ ) {
+      const current = this.nick_modes[nick];
+      const mode = modes[i];
       if (action == "+" && current.indexOf(mode) == -1)
         this.nick_modes[nick] = current + mode;
       else if (action == "-" && current.indexOf(mode) != -1)
@@ -66,7 +66,7 @@ export class Channel {
   }
 
   remove_nick(nick) {
-    var i = this.nicks.indexOf(nick);
+    const i = this.nicks.indexOf(nick);
 
     if (i != -1) {
       this.nicks.splice(i, 1);
@@ -78,7 +78,7 @@ export class Channel {
   }
 
   rename_nick(old, nick) {
-    var i = this.nicks.indexOf(old);
+    const i = this.nicks.indexOf(old);
     if (i != -1) {
       this.nicks.splice(i, 1, nick);
       this.nick_modes[nick] = this.nick_modes[old];

@@ -3,7 +3,7 @@ export class Commands {
   #names = [];
 
   constructor(app) {
-    var add_command = (name, aliases, handler) => {
+    const add_command = (name, aliases, handler) => {
       this.#names.push(name);
       this.#handlers[name] = handler;
       aliases.forEach((alias) => {
@@ -11,83 +11,84 @@ export class Commands {
       });
     };
 
-    add_command("help", ["h"], function(panel, line) {
+    add_command("help", ["h"], (panel, line) => {
       app.new_dialog("help");
       return;
     });
 
-    add_command("panel", ["p"], function(panel, line) {
-      var parts  = line.split(" ", 2);
-      var action = parts[0];
-      var rest   = parts[1];
+    add_command("panel", ["p"], (panel, line) => {
+      const parts  = line.split(" ", 2);
+      const action = parts[0];
+      const rest   = parts[1];
 
       switch (action) {
-      case "move":
-        var order = parseInt(rest);
-        var li = panel.elem.nav;
-        var ul = li.parentNode;
-        var before = ul.querySelectorAll('li:not([data-panel-id="' + panel.id + '"])')[order - 1];
+      case "move": {
+        const order = parseInt(rest);
+        const li = panel.elem.nav;
+        const ul = li.parentNode;
+        const before = ul.querySelectorAll(`li:not([data-panel-id="${panel.id}"])`)[order - 1];
         if (before) {
           ul.removeChild(li);
           ul.insertBefore(li, before);
           app.save_channel_order();
         }
         else {
-          alert("Invalid position: '" + order + "'");
+          alert(`Invalid position: '${order}'`);
         }
         break;
+      }
       default:
-        alert("Unknown command: 'panel " + line + "'");
+        alert(`Unknown command: 'panel ${line}'`);
       }
       return;
     });
 
-    add_command("join", ["j"], function(panel, line) {
-      var parts = ["JOIN", line];
+    add_command("join", ["j"], (panel, line) => {
+      const parts = ["JOIN", line];
       return parts.join(" ");
     });
 
-    add_command("nick", [], function(panel, line) {
-      var parts = ["NICK", line];
+    add_command("nick", [], (panel, line) => {
+      const parts = ["NICK", line];
       return parts.join(" ");
     });
 
-    add_command("mode", [], function(panel, line) {
-      var parts =["MODE", panel.name];
+    add_command("mode", [], (panel, line) => {
+      const parts =["MODE", panel.name];
       if (line) {
         parts.push(line);
       }
       return parts.join(" ");
     });
 
-    add_command("ignores", [], function(panel) {
-      var ignores = panel.ignore_nicks;
-      var text = "";
+    add_command("ignores", [], (panel) => {
+      const ignores = panel.ignore_nicks;
+      let text = "";
 
       if (ignores.length) {
-        text = "Ignores:\n" + ignores.join("\n");
+        text = `Ignores:\n${ignores.join("\n")}`;
       }
       else {
-        text = "No ignores for " + panel.name;
+        text = `No ignores for ${panel.name}`;
       }
 
       panel.info(text);
       return;
     });
 
-    add_command("ignore", [], function(panel, nick) {
+    add_command("ignore", [], (panel, nick) => {
       app.add_ignore(panel, nick);
-      panel.info("Ignoring " + nick + " in channel " + panel.name);
+      panel.info(`Ignoring ${nick} in channel ${panel.name}`);
       return;
     });
 
-    add_command("unignore", [], function(panel, nick) {
+    add_command("unignore", [], (panel, nick) => {
       app.remove_ignore(panel, nick);
-      panel.info("Unignored " + nick + " in channel " + panel.name);
+      panel.info(`Unignored ${nick} in channel ${panel.name}`);
       return;
     });
 
-    add_command("last", ["lastlog", "l"], function(panel, line) {
+    add_command("last", ["lastlog", "l"], (panel, line) => {
       if (panel.type == "status") {
         throw "Can not search on a status panel.";
       }
@@ -99,31 +100,31 @@ export class Commands {
       app.search_panel(panel, line);
     });
 
-    add_command("clear", [], function(panel) {
+    add_command("clear", [], (panel) => {
       panel.backlog_empty = true;
       panel.elem.list.innerHTML = '';
     });
 
-    add_command("bikin", ["bike", "biek", "beik"], function(panel) {
-      var url = ":https://www.youtube.com/watch?v=WYi-YUsYZtY";
+    add_command("bikin", ["bike", "biek", "beik"], (panel) => {
+      const url = ":https://www.youtube.com/watch?v=WYi-YUsYZtY";
       return ["PRIVMSG", panel.name, url].join(" ");
     });
 
-    add_command("stryfe", ["dragonstryfe", "dagon", "stryfin"], function(panel) {
-      var url = ":https://streamable.com/55sxk7";
+    add_command("stryfe", ["dragonstryfe", "dagon", "stryfin"], (panel) => {
+      const url = ":https://streamable.com/55sxk7";
       return ["PRIVMSG", panel.name, url].join(" ");
     });
 
-    add_command("bustin", ["bust"], function(panel) {
-      var url = ":https://www.youtube.com/watch?v=0tdyU_gW6WE";
+    add_command("bustin", ["bust"], (panel) => {
+      const url = ":https://www.youtube.com/watch?v=0tdyU_gW6WE";
       return ["PRIVMSG", panel.name, url].join(" ");
     });
 
-    add_command("trim", ["prune"], function(panel) {
+    add_command("trim", ["prune"], (panel) => {
       panel.prune();
     });
 
-    add_command("part", ["close","wc"], function(panel, line) {
+    add_command("part", ["close","wc"], (panel, line) => {
       if (panel.type == "status") {
         throw "Can not close status panel.";
       }
@@ -133,41 +134,41 @@ export class Commands {
         return;
       }
 
-      var parts = ["PART", panel.name];
+      const parts = ["PART", panel.name];
 
       if (line)
-        parts.push(":" + line);
+        parts.push(`:${line}`);
 
       return parts.join(" ");
     });
 
-    add_command("who", [], function(panel, line) {
-      var parts = ["WHO", ":" + line];
+    add_command("who", [], (panel, line) => {
+      const parts = ["WHO", `:${line}`];
       return parts.join(" ");
     });
 
-    add_command("whois", [], function(panel, line) {
-      var parts = ["WHOIS", ":" + line];
+    add_command("whois", [], (panel, line) => {
+      const parts = ["WHOIS", `:${line}`];
       return parts.join(" ");
     });
 
-    add_command("names", ["n", "nicks"], function(panel, line) {
-      var parts = ["NAMES"];
+    add_command("names", ["n", "nicks"], (panel, line) => {
+      const parts = ["NAMES"];
       if (!line) {
-        parts.push(":" + panel.name);
+        parts.push(`:${panel.name}`);
       }
       else {
-        parts.push(":" + line);
+        parts.push(`:${line}`);
       }
       document.querySelector('#toggle-nicks').click();
       return parts.join(" ");
     });
 
-    add_command("say", [""], function(panel, line) {
-      return ["PRIVMSG", panel.name, ":" + line].join(" ");
+    add_command("say", [""], (panel, line) => {
+      return ["PRIVMSG", panel.name, `:${line}`].join(" ");
     });
 
-    add_command("theme", ["color", "colors"], function(panel, line) {
+    add_command("theme", ["color", "colors"], (panel, line) => {
       switch (line) {
       case "solarized dark":
         app.set_theme("solarized-dark");
@@ -182,72 +183,72 @@ export class Commands {
       }
     });
 
-    add_command("query", ["q","msg"], function(panel, line) {
-      var args = line.split(" ", 1);
-      var rest = line.substring(args[0].length).trim();
+    add_command("query", ["q","msg"], (panel, line) => {
+      const args = line.split(" ", 1);
+      const rest = line.substring(args[0].length).trim();
 
       if (!rest.length) {
-        var connection = panel.connection;
+        const connection = panel.connection;
         app.add_panel(args[0], connection, {focus: true});
         return;
       }
 
-      var parts = ["PRIVMSG", args[0]];
-      parts.push(":" + rest);
+      const parts = ["PRIVMSG", args[0]];
+      parts.push(`:${rest}`);
 
       return parts.join(" ");
     });
 
-    add_command("me", [], function(panel, line) {
-      var parts = ["PRIVMSG", panel.name];
-      parts.push(":" + "\x01" + "ACTION " + line + "\x01");
+    add_command("me", [], (panel, line) => {
+      const parts = ["PRIVMSG", panel.name];
+      parts.push(`:` + `\x01` + `ACTION ${line}\x01`);
       return parts.join(" ");
     });
 
-    add_command("topic", ["t"], function(panel, line) {
+    add_command("topic", ["t"], (panel, line) => {
       if (panel.type != "channel") {
         throw "TOPIC only works for channels";
       }
 
-      var parts = ["TOPIC", panel.name];
+      const parts = ["TOPIC", panel.name];
 
       if (line)
-        parts.push(":" + line);
+        parts.push(`:${line}`);
 
       return parts.join(" ");
     });
 
-    add_command("quote",["raw"], function(panel, line) {
+    add_command("quote",["raw"], (panel, line) => {
       return line;
     });
 
-    add_command("pause", [], function(panel, line) {
+    add_command("pause", [], (panel, line) => {
       panel.pause_gifs = true;
       panel.set_pause_gifs(true);
       return;
     });
 
-    add_command("unpause", ["play"], function(panel, line) {
+    add_command("unpause", ["play"], (panel, line) => {
       panel.pause_gifs = false;
       panel.set_pause_gifs(false);
       return;
     });
 
-    add_command("collapse", ["hide"], function(panel, line) {
+    add_command("collapse", ["hide"], (panel, line) => {
         panel.set_collapse_embeds(true);
         return;
     });
 
-    add_command("expand", ["show"], function(panel, line) {
+    add_command("expand", ["show"], (panel, line) => {
         panel.set_collapse_embeds(false);
         return;
     });
   }
 
   completions() {
-    return this.#names.map(function(k) {
-      return "/" + k;
-    }).sort(function(a, b) {
+    return this.#names.map((k) => {
+      return `/${k}`;
+    }).sort((a, b) => {
       if (a.length == b.length) {
         return 0;
       }
@@ -266,14 +267,14 @@ export class Commands {
       throw "Newline not allowed in commands";
     }
 
-    var parts = line.split(" ", 1);
-    var command = parts[0].toLowerCase();
+    const parts = line.split(" ", 1);
+    const command = parts[0].toLowerCase();
 
     if ( command in this.#handlers ) {
-      var rest = line.substring(command.length);
+      const rest = line.substring(command.length);
       return this.#handlers[command](panel, rest.trim());
     }
 
-    throw "Unknown command " + parts[0];
+    throw `Unknown command ${parts[0]}`;
   }
 }

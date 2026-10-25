@@ -46,12 +46,12 @@ export class Completion {
   }
 
   start() {
-    var word = this.find_word();
+    const word = this.find_word();
     if (!word || word.length == 0)
       return;
     this.completions = word.text[0] == "/" ? this.commands : this.nicks;
-    var sel = window.getSelection();
-    var matches = this.find_matches(word.text);
+    const sel = window.getSelection();
+    const matches = this.find_matches(word.text);
 
     if (matches.length == 0)
       return;
@@ -66,8 +66,8 @@ export class Completion {
     if (this.index >= this.matches.length)
       this.index = 0;
 
-    var node = this.word.node;
-    var word = this.matches[this.index++];
+    const node = this.word.node;
+    let word = this.matches[this.index++];
 
     if (this.index != this.matches.length) {
       if (this.word.append) {
@@ -75,7 +75,7 @@ export class Completion {
       }
     }
 
-    var text = node.textContent;
+    const text = node.textContent;
     node.textContent = text.splice(this.word.start, this.word.length, word);
     this.word.tail = word.length;
     this.word.length = word.length;
@@ -83,29 +83,29 @@ export class Completion {
   }
 
   move_cursor(count) {
-    var node = this.word.node;
+    let node = this.word.node;
     if (node.nodeType == 1) {
       if (node.childNodes[0].nodeType == 3)
         node = node.childNodes[0];
       else
         return;
     }
-    var length = this.word.start + this.word.length;
-    var range = document.createRange();
+    const length = this.word.start + this.word.length;
+    const range = document.createRange();
     range.setStart(node, length);
     range.setEnd(node, length);
-    var sel = window.getSelection();
+    const sel = window.getSelection();
     sel.removeAllRanges();
     sel.addRange(range);
   }
 
   find_matches(word) {
     word = word.toLowerCase();
-    var matches = [];
-    var length = word.length;
+    const matches = [];
+    const length = word.length;
     
-    for (var i=0; i < this.completions.length; i++) {
-      var w = this.completions[i];
+    for (let i=0; i < this.completions.length; i++) {
+      const w = this.completions[i];
       if (w.length < length)
         continue;
       if (w.substring(0, length).toLowerCase() == word)
@@ -116,24 +116,24 @@ export class Completion {
   }
 
   find_word() {
-    var sel = window.getSelection();
-    var node = sel.focusNode;
-    var pos  = sel.focusOffset;
-    var text = node.textContent;
+    const sel = window.getSelection();
+    const node = sel.focusNode;
+    const pos  = sel.focusOffset;
+    const text = node.textContent;
 
     if (text.length == 0) {
       return null;
     }
 
-    var start = 0;
-    var end   = null;
+    let start = 0;
+    let end   = null;
 
     /* check if we are at a completable position */
     if (pos == text.length) {
       end = text.length;
     }
 		else {
-      for (var i=pos; i < text.length; i++) {
+      for (let i=pos; i < text.length; i++) {
         if (BREAK.indexOf(text[i]) != -1) {
           end = i;
           break;
@@ -142,7 +142,7 @@ export class Completion {
     }
 
     /* find start of word */
-    for (var i=pos - 1; i >= 0; i--) {
+    for (let i=pos - 1; i >= 0; i--) {
       if (BREAK.indexOf(text[i]) != -1) {
         start = i + 1;
         break;
@@ -153,9 +153,9 @@ export class Completion {
       return null;
     }
 
-    var word = text.slice(start, end);
-    var next = text.slice(end, end + 1);
-    var append = ' ';
+    const word = text.slice(start, end);
+    const next = text.slice(end, end + 1);
+    let append = ' ';
 
     if (start == 0 && end == text.length && word[0] != '/') {
       append = ': ';

@@ -1,38 +1,37 @@
-export var Embed = {
+export const Embed = {
   patterns: []
 };
 
-var embed_id = 0;
+let embed_id = 0;
 
 Embed.embed_all = function(els, panel) {
-  els.forEach(function(el) {
-    var links = el.querySelectorAll('.message-text a[href]:not(.processed)');
-    links.forEach(function(link) {
+  els.forEach((el) => {
+    const links = el.querySelectorAll('.message-text a[href]:not(.processed)');
+    links.forEach((link) => {
       Embed.embed(link, panel);
     });
   });
 };
 
 Embed.embed = function(a, panel) {
-  var href = a.href;
-  var id = embed_id++;
+  const href = a.href;
+  const id = embed_id++;
 
-  for (var i=0; i < Embed.patterns.length; i++) {
+  for (let i=0; i < Embed.patterns.length; i++) {
     if (Embed.patterns[i].test(href)) {
-      var url = "//noembed.com/embed?url="
-        + encodeURIComponent(href) + "&maxwidth=450";
+      const url = `//noembed.com/embed?url=${encodeURIComponent(href)}&maxwidth=450`;
 
       a.classList.add("processed");
 
-      fetch(url).then(function(res) {
+      fetch(url).then((res) => {
         if (!res.ok)
           throw Error(res.statusText);
         return res.json();
-      }).then(function(res) {
+      }).then((res) => {
         if (! res.error) {
-          panel.scroll(function() {
-            var toggle = document.createElement('SPAN');
-            res['id'] = 'embed-' + String(id);
+          panel.scroll(() => {
+            const toggle = document.createElement('SPAN');
+            res['id'] = `embed-${String(id)}`;
             toggle.setAttribute('data-embed', JSON.stringify(res));
             toggle.setAttribute('data-embed-id', res['id']);
             toggle.setAttribute("class", "embed-toggle");
@@ -50,14 +49,14 @@ Embed.embed = function(a, panel) {
 
 Embed.load = function() {
   fetch("//noembed.com/providers")
-    .then(function(res) {
+    .then((res) => {
       if (! res.ok)
         throw Error(res.statusText);
       return res.json();
-    }).then(function(res) {
-      for (var provider in res) {
-        var p = res[provider].patterns;
-        for (var i=0; i < p.length; i++) {
+    }).then((res) => {
+      for (const provider in res) {
+        const p = res[provider].patterns;
+        for (let i=0; i < p.length; i++) {
           Embed.patterns.push(new RegExp(p[i]));
         }
       }
