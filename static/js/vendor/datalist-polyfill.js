@@ -1,7 +1,7 @@
 /*
  * Datalist polyfill - https://github.com/mfranzke/datalist-polyfill
  * @license Copyright(c) 2017 by Maximilian Franzke
- * Supported by Christian, Johannes, @mitchhentges, @mertenhanisch, @ailintom, @Kravimir, @mischah, @hryamzik, @ottoville, @IceCreamYou, @wlekin, @eddr, @beebee1987, @mricherzhagen, @acespace90, @damien-git, @nexces, @Sora2455 and @jscho13 - many thanks for that !
+ * Supported by Christian, Johannes, @mitchhentges, @mertenhanisch, @ailintom, @Kravimir, @mischah, @hryamzik, @ottoville, @IceCreamYou, @wlekin, @eddr, @beebee1987, @mricherzhagen, @acespace90, @damien-git, @nexces, @Sora2455, @jscho13, @alexirion and @vinyfc93 - many thanks for that !
  */
 /*
  * A minimal and dependency-free vanilla JavaScript datalist polyfill.
@@ -10,7 +10,7 @@
  * Elsewhere the functionality gets emulated by a select element.
  */
 
-(function() {
+(function () {
 	'use strict';
 
 	// Performance: Set local variables
@@ -22,8 +22,9 @@
 			Boolean(dcmnt.createElement('datalist') && window.HTMLDataListElement),
 		// IE & EDGE browser detection via UserAgent
 		// TODO: obviously ugly. But sadly necessary until Microsoft enhances the UX within EDGE (compare to https://developer.microsoft.com/en-us/microsoft-edge/platform/issues/9573654/)
-		// adapted out of https://gist.github.com/gaboratorium/25f08b76eb82b1e7b91b01a0448f8b1d :
-		isGteIE10 = Boolean(ua.match(/Trident\/[6-7]\./)),
+		// Tested against the following UA strings: http://useragentstring.com/pages/useragentstring.php?name=Internet+Explorer
+		// And adapted out of https://gist.github.com/gaboratorium/25f08b76eb82b1e7b91b01a0448f8b1d :
+		isGteIE10 = Boolean(/MSIE\s1[01]./.test(ua) || /rv:11./.test(ua)),
 		isEDGE = Boolean(ua.indexOf('Edge/') !== -1);
 
 	// Let's break here, if it's even already supported ... and not IE10+ or EDGE
@@ -50,7 +51,7 @@
 		supportedTypes = ['text', 'email', 'number', 'search', 'tel', 'url'],
 		// Classes for elements
 		classNameInput = 'polyfilled',
-		classNamePolyfillingSelect = 'polyfilling',
+		classNamePolyfillingSelect = '.polyfilling',
 		// Defining a most likely unique polyfill string
 		uniquePolyfillString = '###[P0LYFlLLed]###';
 
@@ -68,21 +69,24 @@
 
 	// Define a new observer
 	if (typeof MutationObserver !== 'undefined') {
-		obs = new MutationObserver(function(mutations) {
+		obs = new MutationObserver(function (mutations) {
 			var datalistNeedsAnUpdate = false;
 
 			// Look through all mutations that just occured
-			mutations.forEach(function(mutation) {
+			mutations.forEach(function (mutation) {
 				// Check if any of the mutated nodes was a datalist
-				if (mutation.target instanceof HTMLElement &&
-				    mutation.target.tagName.toLowerCase() === "datalist" &&
-                    		    mutation.addedNodes.length > 1) {
-				    datalistNeedsAnUpdate = mutation.target;
+				if (
+					mutation.target instanceof HTMLElement &&
+					mutation.target.tagName.toLowerCase() === 'datalist' &&
+					mutation.addedNodes.length > 1
+				) {
+					datalistNeedsAnUpdate = mutation.target;
 				}
 			});
 
 			if (datalistNeedsAnUpdate) {
 				var input = dcmnt.querySelector(
+					// eslint-disable-next-line prettier/prettier
 					'input[list="' + datalistNeedsAnUpdate.id + '"]'
 				);
 
@@ -90,9 +94,8 @@
 					// Prepare the options and toggle the visiblity afterwards
 					toggleVisibility(
 						prepOptions(datalistNeedsAnUpdate, input).length,
-						datalistNeedsAnUpdate.getElementsByClassName(
-							classNamePolyfillingSelect
-						)[0]
+						// eslint-disable-next-line prettier/prettier
+						datalistNeedsAnUpdate.querySelector(classNamePolyfillingSelect)
 					);
 				}
 			}
@@ -100,7 +103,7 @@
 	}
 
 	// Function regarding the inputs interactions on keyup event
-	var inputInputList = function(event) {
+	var inputInputList = function (event) {
 		var input = event.target,
 			datalist = input.list,
 			keyOpen = event.keyCode === keyUP || event.keyCode === keyDOWN;
@@ -133,7 +136,7 @@
 		var visible = false,
 			// Creating the select if there's no instance so far (e.g. because of that it hasn't been handled or it has been dynamically inserted)
 			datalistSelect =
-				datalist.getElementsByClassName(classNamePolyfillingSelect)[0] ||
+				datalist.querySelector(classNamePolyfillingSelect) ||
 				setUpPolyfillingSelect(input, datalist);
 
 		// On an ESC or ENTER key press within the input, let's break here and afterwards hide the datalist select, but if the input contains a value or one of the opening keys have been pressed ...
@@ -168,18 +171,18 @@
 	};
 
 	// On keypress check all options for that as a substring, save the original value as a data-attribute and preset that inputs value (for sorting) for all option values (probably as well enhanced by a token)
-	var updateIEOptions = function(input, datalist) {
+	var updateIEOptions = function (input, datalist) {
 		var inputValue = getInputValue(input);
 
 		// Loop through the options
-		Array.prototype.slice.call(datalist.options, 0).forEach(function(option) {
-			// We're using .getAttribute instead of .dataset here for IE10
+		Array.prototype.slice.call(datalist.options, 0).forEach(function (option) {
+			// We're using .getAttribute instead of .dataset here for IE10-
 			var dataOriginalvalue = option.getAttribute('data-originalvalue'),
 				originalValue = dataOriginalvalue || option.value;
 
 			// In case of that the original value hasn't been saved as data so far, do that now
 			if (!dataOriginalvalue) {
-				// We're using .setAttribute instead of .dataset here for IE10
+				// We're using .setAttribute instead of .dataset here for IE10-
 				option.setAttribute('data-originalvalue', originalValue);
 			}
 
@@ -188,9 +191,9 @@
 				option.label = originalValue;
 			}
 
-			/*
+			/* As mentioned in the discussion within #GH-63:
 			Check for whether the current option is a valid suggestion and replace its value by
-				- the current input string, as IE10+ and EDGE don't do substring, but only prefix matching
+				- the current input string, as IE10+ and EDGE don't do substring, but only prefix matching (#GH-36, #GH-39)
 				- followed by a unique string that should prevent any interferance
 				- and the original string, that is still necessary e.g. for sorting within the suggestions list
 			As the value is being inserted on users selection, we'll replace that one within the upfollowing inputInputListIE function
@@ -202,7 +205,7 @@
 	};
 
 	// Check for the input and probably replace by correct options elements value
-	var inputInputListIE = function(event) {
+	var inputInputListIE = function (event) {
 		var input = event.target,
 			datalist = input.list;
 
@@ -218,19 +221,20 @@
 		var option = datalist.querySelector(
 			'option[value="' +
 				getInputValue(input).replace(/\\([\s\S])|(")/g, '\\$1$2') +
+				// eslint-disable-next-line prettier/prettier
 				'"]'
 		);
 
-		// We're using .getAttribute instead of .dataset here for IE10
+		// We're using .getAttribute instead of .dataset here for IE10-
 		if (option && option.getAttribute('data-originalvalue')) {
 			setInputValue(input, option.getAttribute('data-originalvalue'));
 		}
 	};
 
 	// Check for whether this is a valid suggestion
-	var isValidSuggestion = function(option, inputValue) {
-		var optVal = option.value.toLowerCase(),
-			inptVal = inputValue.toLowerCase(),
+	var isValidSuggestion = function (option, inputValue) {
+		var optValue = option.value.toLowerCase(),
+			inptValue = inputValue.toLowerCase(),
 			label = option.getAttribute('label'),
 			text = option.text.toLowerCase();
 
@@ -240,14 +244,15 @@
 		*/
 		return Boolean(
 			option.disabled === false &&
-				((optVal !== '' && optVal.indexOf(inptVal) !== -1) ||
-					(label && label.toLowerCase().indexOf(inptVal) !== -1) ||
-					(text !== '' && text.indexOf(inptVal) !== -1))
+				((optValue !== '' && optValue.indexOf(inptValue) !== -1) ||
+					(label && label.toLowerCase().indexOf(inptValue) !== -1) ||
+					// eslint-disable-next-line prettier/prettier
+					(text !== '' && text.indexOf(inptValue) !== -1))
 		);
 	};
 
 	// Focusin and -out events
-	var changesInputList = function(event) {
+	var changesInputList = function (event) {
 		// Check for correct element on this event delegation
 		if (!event.target.matches('input[list]')) {
 			return;
@@ -271,6 +276,7 @@
 			// Set the value of the first option to it's value - this actually triggers a redraw of the complete list
 			var firstOption = input.list.options[0];
 
+			// eslint-disable-next-line no-self-assign
 			firstOption.value = firstOption.value;
 		}
 
@@ -281,7 +287,7 @@
 
 		var // Creating the select if there's no instance so far (e.g. because of that it hasn't been handled or it has been dynamically inserted)
 			datalistSelect =
-				datalist.getElementsByClassName(classNamePolyfillingSelect)[0] ||
+				datalist.querySelector(classNamePolyfillingSelect) ||
 				setUpPolyfillingSelect(input, datalist),
 			// Either have the select set to the state to get displayed in case of that it would have been focused or because it's the target on the inputs blur - and check for general existance of any option as suggestions
 			visible =
@@ -295,7 +301,7 @@
 	};
 
 	// Prepare the input
-	var prepareInput = function(input, eventType) {
+	var prepareInput = function (input, eventType) {
 		// We'd like to prevent autocomplete on the input datalist field
 		input.setAttribute('autocomplete', 'off');
 
@@ -331,17 +337,17 @@
 	};
 
 	// Get the input value for dividing regular and mail types
-	var getInputValue = function(input) {
+	var getInputValue = function (input) {
 		// In case of type=email and multiple attribute, we would need to grab the last piece
 		// Using .getAttribute here for IE9 purpose - elsewhere it wouldn't return the newer HTML5 values correctly
 		return input.getAttribute('type') === 'email' &&
 			input.getAttribute('multiple') !== null
-			? input.value.substring(input.value.lastIndexOf(',') + 1)
+			? input.value.slice(Math.max(0, input.value.lastIndexOf(',') + 1))
 			: input.value;
 	};
 
 	// Set the input value for dividing regular and mail types
-	var setInputValue = function(input, datalistSelectValue) {
+	var setInputValue = function (input, datalistSelectValue) {
 		var lastSeperator;
 
 		// In case of type=email and multiple attribute, we need to set up the resulting inputs value differently
@@ -363,14 +369,14 @@
 	}
 
 	// Function for preparing and sorting the options/suggestions
-	var prepOptions = function(datalist, input) {
+	var prepOptions = function (datalist, input) {
 		if (typeof obs !== 'undefined') {
 			obs.disconnect();
 		}
 
 		var // Creating the select if there's no instance so far (e.g. because of that it hasn't been handled or it has been dynamically inserted)
 			datalistSelect =
-				datalist.getElementsByClassName(classNamePolyfillingSelect)[0] ||
+				datalist.querySelector(classNamePolyfillingSelect) ||
 				setUpPolyfillingSelect(input, datalist),
 			inputValue = getInputValue(input),
 			newSelectValues = dcmnt.createDocumentFragment(),
@@ -380,7 +386,7 @@
 		Array.prototype.slice
 			.call(datalist.querySelectorAll('option:not(:disabled)'))
 			// ... sort all entries and
-			.sort(function(a, b) {
+			.sort(function (a, b) {
 				var aValue = a.value,
 					bValue = b.value;
 
@@ -392,7 +398,7 @@
 
 				return aValue.localeCompare(bValue);
 			})
-			.forEach(function(opt) {
+			.forEach(function (opt) {
 				var optionValue = opt.value,
 					label = opt.getAttribute('label'),
 					text = opt.text;
@@ -400,8 +406,9 @@
 				// Put this option into the fragment that is meant to get inserted into the select. Additionally according to the specs ...
 				// TODO: This might get slightly changed/optimized in a future release
 				if (isValidSuggestion(opt, inputValue)) {
-					var textOptionPart = text.substr(
+					var textOptionPart = text.slice(
 							0,
+							// eslint-disable-next-line prettier/prettier
 							optionValue.length + textValueSeperator.length
 						),
 						optionPart = optionValue + textValueSeperator;
@@ -413,10 +420,10 @@
 						text !== optionValue &&
 						textOptionPart !== optionPart
 					) {
-						opt.innerText = optionValue + textValueSeperator + text;
+						opt.textContent = optionValue + textValueSeperator + text;
 					} else if (!opt.text) {
 						// Manipulating the option inner text, that would get displayed
-						opt.innerText = label || optionValue;
+						opt.textContent = label || optionValue;
 					}
 
 					newSelectValues.appendChild(opt);
@@ -436,13 +443,14 @@
 		datalistSelect.multiple = !touched && datalistSelectOptionsLength < 2;
 
 		// Input the unused options as siblings next to the select - and differentiate in between the regular, and the IE9 fix syntax upfront
-		(datalist.getElementsByClassName('ie9_fix')[0] || datalist).appendChild(
+		(datalist.querySelectorAll('.ie9_fix')[0] || datalist).appendChild(
+			// eslint-disable-next-line prettier/prettier
 			disabledValues
 		);
 
 		if (typeof obs !== 'undefined') {
 			obs.observe(datalist, {
-				childList: true
+				childList: true,
 			});
 		}
 
@@ -450,7 +458,7 @@
 	};
 
 	// Define function for setting up the polyfilling select
-	var setUpPolyfillingSelect = function(input, datalist) {
+	var setUpPolyfillingSelect = function (input, datalist) {
 		// Check for whether it's of one of the supported input types defined at the beginning
 		// Using .getAttribute here for IE9 purpose - elsewhere it wouldn't return the newer HTML5 values correctly
 		// and still check for an existing instance
@@ -468,7 +476,7 @@
 			datalistSelect = dcmnt.createElement('select');
 
 		// Setting a class for easier identifying that select afterwards
-		datalistSelect.setAttribute('class', classNamePolyfillingSelect);
+		datalistSelect.setAttribute('class', classNamePolyfillingSelect.slice(1));
 
 		// Set general styling related definitions
 		datalistSelect.style.position = 'absolute';
@@ -499,6 +507,7 @@
 				'-' +
 					(rects[0].width +
 						parseFloat(inputStyles.getPropertyValue('margin-' + direction))) +
+					// eslint-disable-next-line prettier/prettier
 					'px'
 			);
 			datalistSelect.style.marginTop =
@@ -507,16 +516,15 @@
 		}
 
 		// Set the polyfilling selects border-radius equally to the one by the polyfilled input
-		datalistSelect.style.borderRadius = inputStyles.getPropertyValue(
-			'border-radius'
-		);
+		datalistSelect.style.borderRadius =
+			inputStyles.getPropertyValue('border-radius');
 		datalistSelect.style.minWidth = rects[0].width + 'px';
 
 		if (touched) {
 			var messageElement = dcmnt.createElement('option');
 
 			// ... and it's first entry should contain the localized message to select an entry
-			messageElement.innerText = datalist.title;
+			messageElement.textContent = datalist.title;
 			// ... and disable this option, as it shouldn't get selected by the user
 			messageElement.disabled = true;
 			// ... and assign a dividable class to it
@@ -543,7 +551,7 @@
 	};
 
 	// Functions regarding changes to the datalist polyfilling created selects keypress
-	var datalistSelectKeyPress = function(event) {
+	var datalistSelectKeyPress = function (event) {
 		var datalistSelect = event.target,
 			datalist = datalistSelect.parentNode,
 			input = dcmnt.querySelector('input[list="' + datalist.id + '"]');
@@ -558,7 +566,7 @@
 			input.focus();
 
 			if (event.key === 'Backspace') {
-				input.value = input.value.substr(0, input.value.length - 1);
+				input.value = input.value.slice(0, -1);
 
 				// Dispatch the input event on the related input[list]
 				dispatchInputEvent(input);
@@ -571,7 +579,7 @@
 	};
 
 	// Change, Click, Blur, Keydown
-	var changeDataListSelect = function(event) {
+	var changeDataListSelect = function (event) {
 		var datalistSelect = event.currentTarget,
 			datalist = datalistSelect.parentNode,
 			input = dcmnt.querySelector('input[list="' + datalist.id + '"]');
@@ -585,7 +593,8 @@
 			// ENTER and ESC
 			visible =
 				eventType === 'keydown' &&
-				(event.keyCode !== keyENTER && event.keyCode !== keyESC);
+				event.keyCode !== keyENTER &&
+				event.keyCode !== keyESC;
 
 		// On change, click or after pressing ENTER or TAB key, input the selects value into the input on a change within the list
 		if (
@@ -623,12 +632,12 @@
 	};
 
 	// Create and dispatch the input event; divided for IE9 usage
-	var dispatchInputEvent = function(input) {
+	var dispatchInputEvent = function (input) {
 		var evt;
 
 		if (typeof Event === 'function') {
 			evt = new Event('input', {
-				bubbles: true
+				bubbles: true,
 			});
 		} else {
 			evt = dcmnt.createEvent('Event');
@@ -639,7 +648,7 @@
 	};
 
 	// Toggle the visibility of the datalist select
-	var toggleVisibility = function(visible, datalistSelect) {
+	var toggleVisibility = function (visible, datalistSelect) {
 		if (visible) {
 			datalistSelect.removeAttribute('hidden');
 		} else {
@@ -651,20 +660,20 @@
 
 	// Emulate the two properties regarding the datalist and input elements
 	// list property / https://developer.mozilla.org/en/docs/Web/API/HTMLInputElement
-	(function(constructor) {
+	(function (constructor) {
 		if (
 			constructor &&
 			constructor.prototype &&
 			constructor.prototype.list === undefined
 		) {
 			Object.defineProperty(constructor.prototype, 'list', {
-				get: function() {
+				get: function () {
 					/*
 					According to the specs ...
 					"The list IDL attribute must return the current suggestions source element, if any, or null otherwise."
 					"If there is no list attribute, or if there is no element with that ID, or if the first element with that ID is not a datalist element, then there is no suggestions source element."
 					*/
-					var element = dcmnt.getElementById(this.getAttribute('list'));
+					var element = dcmnt.querySelector('#' + this.getAttribute('list'));
 
 					return typeof this === 'object' &&
 						this instanceof constructor &&
@@ -672,24 +681,24 @@
 						element.matches('datalist')
 						? element
 						: null;
-				}
+				},
 			});
 		}
 	})(window.HTMLInputElement);
 
 	// Options property / https://developer.mozilla.org/en/docs/Web/API/HTMLDataListElement
-	(function(constructor) {
+	(function (constructor) {
 		if (
 			constructor &&
 			constructor.prototype &&
 			constructor.prototype.options === undefined
 		) {
 			Object.defineProperty(constructor.prototype, 'options', {
-				get: function() {
+				get: function () {
 					return typeof this === 'object' && this instanceof constructor
-						? this.getElementsByTagName('option')
+						? this.querySelectorAll('option')
 						: null;
-				}
+				},
 			});
 		}
 	})(window.HTMLElement);
