@@ -1146,7 +1146,10 @@ export class App {
       return;
     }
 
-    if (this.elem.scroll.scrollTop <= 1) {
+    // start loading while there's still about a screen of messages
+    // above, so older ones are in place before you reach the top
+    const scroll = this.elem.scroll;
+    if (scroll.scrollTop <= scroll.clientHeight) {
       this.fill_backlog(
         this.focused, this.focused.oldest_message_id, focus
       );
