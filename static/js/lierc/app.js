@@ -1,8 +1,19 @@
+import { API } from "./api.js";
+import { Commands } from "./commands.js";
+import { Connection } from "./connection.js";
+import { Dialog } from "./dialog.js";
+import { Emoji } from "./emoji.js";
+import { Notifier } from "./notifier.js";
+import { Panel } from "./panel.js";
+import { Render } from "./render.js";
+import { Template } from "./template.js";
+import { UIEvents } from "./uievents.js";
+
 if (!("forEach" in NodeList)) {
   NodeList.prototype.forEach = Array.prototype.forEach;
 }
 
-var App = function(url, user) {
+export var App = function(url, user) {
   var app = this;
 
   app.user = user;
@@ -42,7 +53,7 @@ var App = function(url, user) {
     title: document.getElementsByTagName('title')[0],
     nicks: document.getElementById('nicks'),
     body: document.body,
-    audio: Audio ? new Audio("/static/ent_communicator1.mp3") : undef,
+    audio: Audio ? new Audio("/static/ent_communicator1.mp3") : undefined,
     emoji: document.getElementById('emoji'),
     switcher: document.getElementById('switcher-wrap'),
     panel_name: document.getElementById('panel-name'),
@@ -59,7 +70,7 @@ var App = function(url, user) {
     var connection = app.connections[conn_id];
     connection.connected = status;
 
-    for (id in app.panels) {
+    for (var id in app.panels) {
       var panel = app.panels[id];
       if (panel.connection == conn_id) {
         panel.set_connected(status, message);
@@ -215,7 +226,7 @@ var App = function(url, user) {
 
     connection.on("private:react", function(conn, nick, message) {
       var panel = app.get_panel(nick, conn);
-      panel.handle_reaction(message.Prefix.Name, msgid, react);
+      panel.handle_reaction(message);
     });
 
     connection.on("privmsg:typing", function(conn, nick, message) {
@@ -344,7 +355,7 @@ var App = function(url, user) {
     stream.on('delete_connection', function(e) {
       var conn_id = e.ConnectionId;
 
-      for (id in app.panels) {
+      for (var id in app.panels) {
         var panel = app.panels[id];
         if (panel.connection == conn_id) {
           app.remove_panel(id);
@@ -355,7 +366,7 @@ var App = function(url, user) {
     });
 
     stream.on('close', function(e) {
-      for (id in app.panels) {
+      for (var id in app.panels) {
         app.panels[id].set_disabled(true);
       }
       if (app.focused) {
@@ -670,7 +681,7 @@ var App = function(url, user) {
 
   app.channel_panels = function() {
     var panels = 0
-    for (id in app.panels) {
+    for (var id in app.panels) {
       if (app.panels[id].type == "channel")
         panels++;
     }
@@ -1222,7 +1233,7 @@ var App = function(url, user) {
   app.load_seen = function(cb) {
     app.api.get("/seen", {
       success: function(res) {
-        for (i in res) {
+        for (var i in res) {
           var id = App.panel_id(res[i]["channel"], res[i]["connection"]);
           app.last_seen[id] = res[i]["message_id"];
         }
@@ -1268,8 +1279,8 @@ var App = function(url, user) {
       data: app.last_seen,
       success: function(res) {
         app.missed = {};
-        for (connection in res) {
-          for (channel in res[connection]) {
+        for (var connection in res) {
+          for (var channel in res[connection]) {
             var id = App.panel_id(channel, connection);
             if (app.panels[id]) {
               app.apply_missed(app.panels[id], res[connection][channel]);
@@ -1482,7 +1493,7 @@ var App = function(url, user) {
   app.reset = function() {
     var path = app.focused ? app.focused.path : "";
 
-    for (id in app.panels) {
+    for (var id in app.panels) {
       app.remove_panel(id);
     }
 

@@ -1,4 +1,6 @@
-var Unformat = function(html) {
+import { Emoji } from "./emoji.js";
+
+export var Unformat = function(html) {
   var parser = new DOMParser();
   var doc = parser.parseFromString(html, "text/html");
   return Unformat.descend(doc, "");
@@ -47,7 +49,7 @@ Unformat.tags = {
 
 Unformat.invert = "\x16";
 
-var Format = function(text) {
+export var Format = function(text) {
   var tokens = text.split(Format.token_re);
 
   return Format.parse([], tokens).filter(function(item) {

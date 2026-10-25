@@ -1,4 +1,6 @@
-var Connection = function(id, host, nick) {
+import { Channel } from "./channel.js";
+
+export var Connection = function(id, host, nick) {
   var conn = this;
 
   conn.id = id;
@@ -19,7 +21,7 @@ var Connection = function(id, host, nick) {
     listeners[name].push(func);
   };
 
-  fire = function (name) {
+  var fire = function (name) {
     if (listeners[name]) {
       var data = Array.prototype.slice.call(arguments, 1);
       listeners[name].forEach(function(listener) {

@@ -1,4 +1,4 @@
-var Stream = function(baseurl) {
+export var Stream = function(baseurl) {
   var stream = this;
 
   stream.baseurl = baseurl;

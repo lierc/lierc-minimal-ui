@@ -1,4 +1,8 @@
-var Editor = function(element) {
+import { Completion } from "./completion.js";
+import { Format } from "./format.js";
+import { History } from "./history.js";
+
+export var Editor = function(element) {
   var editor = this;
 
   var BOLD = 66;

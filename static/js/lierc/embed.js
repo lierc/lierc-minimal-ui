@@ -1,4 +1,4 @@
-var Embed = {
+export var Embed = {
   patterns: []
 };
 
@@ -55,7 +55,7 @@ Embed.load = function() {
         throw Error(res.statusText);
       return res.json();
     }).then(function(res) {
-      for (provider in res) {
+      for (var provider in res) {
         var p = res[provider].patterns;
         for (var i=0; i < p.length; i++) {
           Embed.patterns.push(new RegExp(p[i]));

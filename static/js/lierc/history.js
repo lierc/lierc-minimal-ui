@@ -1,4 +1,4 @@
-var History = function(element) {
+export var History = function(element) {
   this.el = element;
   this.limit = 10;
   this.history = [];

@@ -1,4 +1,6 @@
-var Emoji = {
+import { Template } from "./template.js";
+
+export var Emoji = {
   names: {},
   regex: new RegExp("impossibleregexthatshouldnothappen"),
   list:  document.querySelector('#emoji ul'),

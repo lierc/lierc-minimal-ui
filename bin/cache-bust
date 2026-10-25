@@ -27,6 +27,17 @@ sub version {
   return "?v=" . substr(sha1_hex(<$fh>), 0, 10);
 }
 
+my $importmap = do {
+  my @modules = map { s{^\Q$root\E}{}r } sort glob "$root/static/js/lierc/*.js";
+  my @entries = map { '        "' . $_ . '": "' . $_ . version($_) . '"' } @modules;
+  join "\n",
+    '    {',
+    '      "imports": {',
+    join(",\n", @entries),
+    '      }',
+    '    }';
+};
+
 for my $html (@ARGV) {
   open my $in, '<', $html or die "$html: $!\n";
   my $src = do { local $/; <$in> };
@@ -35,6 +46,10 @@ for my $html (@ARGV) {
   (my $out = $src) =~ s{
     ((?:src|href)=")(/static/[^"?]+)(?:\?v=[^"]*)?(")
   }{$1 . $2 . version($2) . $3}gex;
+
+  # imported modules don't go through src=, so map each one to its
+  # versioned URL in the page's import map
+  $out =~ s{(<script type="importmap">).*?(</script>)}{$1\n$importmap\n    $2}s;
 
   next if $out eq $src;
 

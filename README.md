@@ -13,3 +13,8 @@ some perl modules to work.
 Before deploying, run `make bust`. It adds a `?v=<hash>` cache
 buster to each `/static/` asset referenced in the HTML files, so
 browsers fetch changed assets. Commit the updated HTML files.
+
+The files in `static/js/lierc/` are ES modules. Pages load them
+through an inline `<script type="module">`, and `make bust` fills
+in each page's `<script type="importmap">` so imported modules are
+versioned too. A new module is picked up automatically.

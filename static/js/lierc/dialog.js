@@ -1,4 +1,6 @@
-var Dialog = function(template, vars) {
+import { Template } from "./template.js";
+
+export var Dialog = function(template, vars) {
   this.open = false;
   this.el = document.createElement('DIV');
   this.el.classList.add('overlay');

@@ -81,20 +81,42 @@
     <script type="text/javascript" src="/static/js/vendor/handlebars.js?v=604619841e"></script>
     <script type="text/javascript" src="/static/js/vendor/datalist-polyfill.js?v=19d7d86751"></script>
     <script type="text/javascript" src="/static/js/templates.js?v=97ffc738be"></script>
-    <script type="text/javascript" src="/static/js/lierc/api.js?v=47fb4f053f"></script>
-    <script type="text/javascript" src="/static/js/lierc/format.js?v=e5b8cf8005"></script>
-    <script type="text/javascript" src="/static/js/lierc/emoji.js?v=80e534f967"></script>
-    <script type="text/javascript" src="/static/js/lierc/relaymsg.js?v=eb03320117"></script>
-    <script type="text/javascript" src="/static/js/lierc/render.js?v=1d2f4a682d"></script>
-    <script type="text/javascript" src="/static/js/lierc/template.js?v=cf6ad76f6b"></script>
-    <script type="text/javascript" src="/static/js/lierc/logs.js?v=20fac6e1f5"></script>
 
-    <script type="text/javascript">
+    <script type="importmap">
+    {
+      "imports": {
+        "/static/js/lierc/api.js": "/static/js/lierc/api.js?v=eb2b014e42",
+        "/static/js/lierc/app.js": "/static/js/lierc/app.js?v=d3fffaeade",
+        "/static/js/lierc/auth.js": "/static/js/lierc/auth.js?v=42c1a812b7",
+        "/static/js/lierc/channel.js": "/static/js/lierc/channel.js?v=33f56decac",
+        "/static/js/lierc/commands.js": "/static/js/lierc/commands.js?v=d6fafd1542",
+        "/static/js/lierc/completion.js": "/static/js/lierc/completion.js?v=03e1379ab3",
+        "/static/js/lierc/connection.js": "/static/js/lierc/connection.js?v=9ce36b47c6",
+        "/static/js/lierc/dialog.js": "/static/js/lierc/dialog.js?v=b2f96427f4",
+        "/static/js/lierc/editor.js": "/static/js/lierc/editor.js?v=f1c9f25f9a",
+        "/static/js/lierc/embed.js": "/static/js/lierc/embed.js?v=ff5a57b8dc",
+        "/static/js/lierc/emoji.js": "/static/js/lierc/emoji.js?v=34fdd7b434",
+        "/static/js/lierc/format.js": "/static/js/lierc/format.js?v=e9710b3931",
+        "/static/js/lierc/history.js": "/static/js/lierc/history.js?v=7953d76361",
+        "/static/js/lierc/logs.js": "/static/js/lierc/logs.js?v=b0de4f5363",
+        "/static/js/lierc/notifier.js": "/static/js/lierc/notifier.js?v=72d46368ec",
+        "/static/js/lierc/panel.js": "/static/js/lierc/panel.js?v=7a14302c8f",
+        "/static/js/lierc/relaymsg.js": "/static/js/lierc/relaymsg.js?v=8035200784",
+        "/static/js/lierc/render.js": "/static/js/lierc/render.js?v=a8e8dfb82e",
+        "/static/js/lierc/stream.js": "/static/js/lierc/stream.js?v=bdf0845ac9",
+        "/static/js/lierc/template.js": "/static/js/lierc/template.js?v=af8a0455df",
+        "/static/js/lierc/uievents.js": "/static/js/lierc/uievents.js?v=bed80d70e9"
+      }
+    }
+    </script>
+
+    <script type="module">
+      import { Emoji } from "/static/js/lierc/emoji.js";
+      import { Logs } from "/static/js/lierc/logs.js";
+
       Emoji.load();
-      document.addEventListener("DOMContentLoaded", function(e) {
-        var logs = new Logs("/api");
-        logs.init();
-      });
+      var logs = new Logs("/api");
+      logs.init();
     </script>
   </body>
 </html>

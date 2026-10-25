@@ -1,4 +1,7 @@
-var Logs = function(url) {
+import { API } from "./api.js";
+import { Render } from "./render.js";
+
+export var Logs = function(url) {
   var logs = this;
   logs.api = new API(url);
   logs.es = null;

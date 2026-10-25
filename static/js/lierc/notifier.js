@@ -185,4 +185,4 @@ APN.supported = function() {
   return 'safari' in window && 'pushNotification' in window.safari
 };
 
-var Notifier = APN.supported() ? APN : WebPush;
+export var Notifier = APN.supported() ? APN : WebPush;

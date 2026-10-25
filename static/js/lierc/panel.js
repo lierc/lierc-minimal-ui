@@ -1,4 +1,9 @@
-var Panel = function(opts) {
+import { Editor } from "./editor.js";
+import { Embed } from "./embed.js";
+import { Format } from "./format.js";
+import { Template } from "./template.js";
+
+export var Panel = function(opts) {
   var panel = this;
 
   panel.name = opts.name;

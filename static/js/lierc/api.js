@@ -1,4 +1,6 @@
-var API = function(baseurl) {
+import { Stream } from "./stream.js";
+
+export var API = function(baseurl) {
   var api = this;
   api.baseurl = baseurl;
 

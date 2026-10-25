@@ -1,4 +1,4 @@
-var Commands = function(app) {
+export var Commands = function(app) {
   var app = app;
   var commands = this;
   var handlers = {};

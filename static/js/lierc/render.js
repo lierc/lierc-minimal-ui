@@ -1,4 +1,7 @@
-var Render = function(message, opts) {
+import { Format } from "./format.js";
+import { RelayMsg } from "./relaymsg.js";
+
+export var Render = function(message, opts) {
   if (!opts) opts = {};
   if (opts['raw']) return raw(message);
   switch (String(message.Command)) {

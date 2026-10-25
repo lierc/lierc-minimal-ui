@@ -1,4 +1,8 @@
-var UIEvents = function(app) {
+import { Emoji } from "./emoji.js";
+import { Unformat } from "./format.js";
+import { Template } from "./template.js";
+
+export var UIEvents = function(app) {
   var app = app;
   var events = this;
   var max_userhost_len = 63 + 10 + 1;
@@ -156,8 +160,8 @@ var UIEvents = function(app) {
     var items = app.elem.nav.querySelectorAll('#meta-channels li[data-name], #channels li[data-name], #privates li[data-name]');
 
     val = val.toLowerCase();
-    matches = [];
-    misses  = [];
+    var matches = [];
+    var misses  = [];
     if (val) {
       for (var i=0; i < items.length; i++) {
         var item = items[i];
@@ -608,7 +612,7 @@ var UIEvents = function(app) {
 
     var nick;
 
-    for (i in selected) {
+    for (var i in selected) {
       var line = selected[i].trim();
 
       if (line.match(/^\d\d:\d\d$/))
@@ -642,7 +646,7 @@ var UIEvents = function(app) {
 
     var clipboard = (e.clipboardData || e.originalEvent.clipboardData);
     var items = clipboard.items;
-    for (i in items) {
+    for (var i in items) {
       if (items[i].type && items[i].type.match(/^image\//)) {
         var span = document.createElement('SPAN');
         span.classList.add('uploading');

@@ -1,4 +1,6 @@
-var Auth = function(baseurl) {
+import { Dialog } from "./dialog.js";
+
+export var Auth = function(baseurl) {
   var baseurl = baseurl;
 
   this.auth = function(complete) {

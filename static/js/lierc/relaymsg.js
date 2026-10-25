@@ -1,4 +1,4 @@
-var RelayMsg = {
+export var RelayMsg = {
   discriminator: "/",
 
   /* Chat platform allowlist

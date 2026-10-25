@@ -1,4 +1,4 @@
-var Channel = function(name) {
+export var Channel = function(name) {
   this.name = name;
 
   this.topic = {
