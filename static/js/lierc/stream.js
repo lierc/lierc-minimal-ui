@@ -5,6 +5,10 @@ var Stream = function(baseurl) {
   stream.retries = 0;
   stream.eventsource = null;
   stream.last_id = null;
+  stream.last_event = Date.now();
+
+  // server sends a ping every 15 seconds
+  var heartbeat_timeout = 40000;
 
   var listeners = {};
 
@@ -32,6 +36,7 @@ var Stream = function(baseurl) {
     es.addEventListener("irc",     stream.onmessage);
     es.addEventListener("open",    stream.onopen);
     es.addEventListener("error",   stream.close);
+    es.addEventListener("ping",    stream.touch);
 
     stream.eventsource = es;
     stream.timer = null;
@@ -70,12 +75,18 @@ var Stream = function(baseurl) {
     stream.fire("connect", data);
   };
 
+  stream.touch = function() {
+    stream.last_event = Date.now();
+  };
+
   stream.onopen = function() {
+    stream.touch();
     stream.fire("open");
     stream.retries = 0;
   };
 
   stream.onmessage = function(e) {
+    stream.touch();
     var data = JSON.parse(e.data);
 
     if (data.Message.Command == "CREATE") {
@@ -97,6 +108,13 @@ var Stream = function(baseurl) {
   };
 
   stream.check = function() {
+    // a half-open connection (e.g. after sleep) stays OPEN forever
+    if (stream.eventsource && stream.eventsource.readyState == 1
+        && Date.now() - stream.last_event > heartbeat_timeout) {
+      console.log("no heartbeat, forcing reconnect");
+      stream.close();
+    }
+
     if (! stream.timer ) {
       if (stream.retries == 0 && (! stream.eventsource || stream.eventsource.readyState != 1)) {
         stream.fire("close");
@@ -125,6 +143,8 @@ var Stream = function(baseurl) {
     if (stream.eventsource) {
       stream.eventsource.removeEventListener("irc", stream.onmessage);
       stream.eventsource.removeEventListener("open", stream.onopen);
+      stream.eventsource.removeEventListener("error", stream.close);
+      stream.eventsource.removeEventListener("ping", stream.touch);
       stream.eventsource.close();
     }
 
