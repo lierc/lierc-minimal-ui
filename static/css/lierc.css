@@ -1777,27 +1777,79 @@ body.solarized-dark #nicks ul li a:hover {
 }
 
 .emoji-search {
-  display: block;
+  display: flex;
+  gap: 5px;
   padding: 5px;
 }
 
 .emoji-search input {
   display: block;
+  flex: 1 1 auto;
+  min-width: 0;
   font-size: 15px;
-  width: 100%;
   box-sizing: border-box;
   padding: 5px;
   border: 1px solid #ccc;
 }
 
-.emoji-popup ul {
+.emoji-tone {
+  flex: 0 0 auto;
+  padding: 0 6px;
+  border: 1px solid #ccc;
+  background: #fff;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.emoji-groups {
+  display: flex;
+  border-bottom: 1px solid #ccc;
+}
+
+.emoji-groups button {
+  flex: 1 1 0;
+  padding: 4px 0;
+  border: none;
+  background: none;
+  font-size: 16px;
+  line-height: 20px;
+  cursor: pointer;
+}
+
+.emoji-groups button:hover {
+  background: #fff;
+}
+
+.emoji-list {
   -webkit-overflow-scrolling: touch;
+  position: relative;
   box-sizing: border-box;
   max-height: 200px;
   overflow: auto;
-  padding: 5px;
-  margin: 0;
+  padding: 0 5px 5px;
   background: #fff;
+}
+
+.emoji-group h3 {
+  position: sticky;
+  top: 0;
+  margin: 0;
+  padding: 6px 2px 2px;
+  background: #fff;
+  color: #666;
+  font-size: 11px;
+  font-weight: normal;
+}
+
+.emoji-popup ul {
+  padding: 0;
+  margin: 0;
+}
+
+/* items are inline-block, which would otherwise override [hidden] */
+.emoji-popup [hidden] {
+  display: none;
 }
 .emoji-popup li {
   list-style: none;

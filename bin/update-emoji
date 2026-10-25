@@ -1,61 +1,96 @@
 #!/usr/bin/env perl
 
+# Builds static/emoji.json for the emoji picker from Unicode's
+# emoji-test.txt (names, groups, skin tone variants) and CLDR
+# annotations (search keywords). Prints the JSON to stdout.
+#
+# Pinned a version behind the latest so most devices can draw them.
+
 use strict;
 use warnings;
 
-use LWP::UserAgent;
-use JSON::XS;
-use HTML::Entities;
+use HTTP::Tiny;
+use JSON::PP;
 
-my %annotations;
-open my $fh, "-|:encoding(utf8)", "./bin/cldr-annotations" or die $!;
+my $EMOJI_VERSION = "17.0";
+my $CLDR_RELEASE  = "release-48";
 
-while (<$fh>) {
-  if (/cp="([^"]+)">([^<]*)</) {
-    $annotations{$1}{keywords} = [ map decode_entities($_), split /\s+\|\s+/, $2 ];
-  }
-  elsif (/cp="([^"]+)" type="tts">([^<]*)</) {
-    $annotations{$1}{tts} = decode_entities $2;
+my $emoji_url = "https://www.unicode.org/Public/$EMOJI_VERSION.0/emoji/emoji-test.txt";
+my $cldr_url  = "https://raw.githubusercontent.com/unicode-org/cldr/$CLDR_RELEASE/common";
+
+my $http = HTTP::Tiny->new;
+
+sub fetch {
+  my $url = shift;
+  my $res = $http->get($url);
+  die "$url: $res->{status} $res->{reason}\n" unless $res->{success};
+  my $content = $res->{content};
+  utf8::decode($content);
+  return $content;
+}
+
+sub decode_xml {
+  my $s = shift;
+  $s =~ s/&#x([0-9a-f]+);/chr hex $1/gie;
+  $s =~ s/&#(\d+);/chr $1/ge;
+  my %entities = (amp => "&", lt => "<", gt => ">", quot => '"', apos => "'");
+  $s =~ s/&(amp|lt|gt|quot|apos);/$entities{$1}/g;
+  return $s;
+}
+
+# keywords by emoji, with and without the U+FE0F variation selector
+my %keywords;
+for my $file ("annotations/en.xml", "annotationsDerived/en.xml") {
+  for (split /\n/, fetch("$cldr_url/$file")) {
+    next unless /<annotation cp="([^"]+)">([^<]*)</;
+    my $cp = decode_xml($1);
+    $keywords{$cp} ||= [ map { decode_xml($_) } split /\s*\|\s*/, $2 ];
   }
 }
 
-my $url = "http://unicode.org/emoji/charts-beta/full-emoji-list.html";
-my $ua  = LWP::UserAgent->new;
+my $TONE = qr/(?:light|medium-light|medium|medium-dark|dark) skin tone/;
 
-my @emoji;
+my (@groups, %by_name);
+my $group;
 
-my $res = $ua->get($url);
-
-die $res->status unless $res->is_success;
-
-my @lines = split "\n", $res->decoded_content;
-my %current;
-
-for (@lines) {
-  if (m{<td class='chars'>([^<]+)}) {
-    my @chars = split "", $1;
-    $current{chars} = $1;
-    $current{codes} = [ map { sprintf "%X", ord $_ } @chars ];
-
-
-    $current{codes} = [];
-    $current{annotations} = [];
-    my @name;
-
-    for my $char (@chars) {
-      push @{ $current{codes} }, sprintf "%X", ord $char;
-      if ( my $a = $annotations{$char} ) {
-        push @{ $current{annotations} }, @{ $a->{keywords} || [] };
-        push @name, $a->{tts};
-      }
-    }
-
-    $current{name} = ucfirst join " ", @name;
-
-    push @emoji, {%current};
-    %current = ();
+for (split /\n/, fetch($emoji_url)) {
+  if (/^# group: (.+)$/) {
+    $group = $1 eq "Component" ? undef : { name => $1, emoji => [] };
+    push @groups, $group if $group;
     next;
   }
+  next unless $group;
+  next unless /^[0-9A-F ]+;\s*fully-qualified\s*#\s*(\S+)\s+E[\d.]+\s+(.+)$/;
+  my ($chars, $name) = ($1, $2);
+
+  # single skin tone variants go with their base emoji; combinations
+  # of tones (e.g. people holding hands) are left out of the picker
+  if ($name =~ /^(.+): $TONE$/) {
+    my $base = $by_name{$1};
+    push @{ $base->{tones} }, $chars if $base;
+    next;
+  }
+  next if $name =~ /$TONE/;
+
+  (my $bare = $chars) =~ s/\x{FE0F}//g;
+  my @words = @{ $keywords{$chars} || $keywords{$bare} || [] };
+
+  my $emoji = {
+    chars    => $chars,
+    name     => ucfirst $name,
+    keywords => lc join(" ", @words),
+  };
+  push @{ $group->{emoji} }, $emoji;
+  $by_name{$name} = $emoji;
 }
 
-print JSON::XS->new->utf8->canonical->pretty->encode(\@emoji);
+# one emoji per line so updates diff cleanly
+my $json = JSON::PP->new->canonical;
+binmode STDOUT, ":encoding(UTF-8)";
+print qq({\n"version": "$EMOJI_VERSION",\n"groups": [\n);
+print join ",\n", map {
+  my $g = $_;
+  sprintf qq({"name": %s, "emoji": [\n%s\n]}), $json->encode($g->{name}),
+    join ",\n", map { $json->encode($_) } @{ $g->{emoji} };
+} @groups;
+print "\n]}\n";

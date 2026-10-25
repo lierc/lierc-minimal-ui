@@ -76,25 +76,37 @@ export const Format = function(text) {
 Format.url_re = /https?:\/\/[^\s<>"]*/ig;
 Format.token_re = /(\x03\d{0,2}(?:,\d{1,2})?|\x0F|\x1D|\x1F|\x16|\x02)/;
 
+// wrap each emoji in a text node in <span class="emoji" title="name">
 Format.emojify = function(node) {
-  const tmp = document.createElement('SPAN');
-  if ( node.nodeName != '#text' ) {
+  if (node.nodeName != '#text' || !node.nodeValue) {
     return node;
   }
-  if (node.nodeValue && Emoji.regex.test(node.nodeValue)) {
-    const chars = node.nodeValue.match(Emoji.regex);
-    const span = document.createElement("SPAN");
-    tmp.textContent = node.nodeValue;
-    let escaped = tmp.innerHTML;
 
-    for (let j=0; j < chars.length; j++) {
-      const title = Emoji.names[chars[j]];
-      escaped = escaped.replace(new RegExp(chars[j], 'g'), `<span class="emoji" title="${title}">${chars[j]}</span>`);
-    }
-    span.innerHTML = escaped;
-    return span;
+  const text = node.nodeValue;
+  const matches = [...text.matchAll(Emoji.regex)];
+  if (!matches.length) {
+    return node;
   }
-  return node;
+
+  const span = document.createElement("SPAN");
+  let pos = 0;
+  for (const match of matches) {
+    if (match.index > pos)
+      span.appendChild(document.createTextNode(text.slice(pos, match.index)));
+
+    const emoji = document.createElement("SPAN");
+    emoji.className = "emoji";
+    if (Emoji.names[match[0]])
+      emoji.title = Emoji.names[match[0]];
+    emoji.textContent = match[0];
+    span.appendChild(emoji);
+
+    pos = match.index + match[0].length;
+  }
+  if (pos < text.length)
+    span.appendChild(document.createTextNode(text.slice(pos)));
+
+  return span;
 };
 
 // cut a url at the first ")" that doesn't close a "(" inside it, so

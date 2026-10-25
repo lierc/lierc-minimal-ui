@@ -4,9 +4,9 @@ bust:
 
 .PHONY: emoji
 emoji:
-	bin/update-emoji > static/emoji-data.json
-	cat static/emoji-data.json | gzip > static/emoji-data.json.gz
-	cat static/emoji-data.json | brotli > static/emoji-data.json.br
+	bin/update-emoji > static/emoji.json
+	cat static/emoji.json | gzip > static/emoji.json.gz
+	cat static/emoji.json | brotli > static/emoji.json.br
 
 .PHONY: vendor
 vendor:

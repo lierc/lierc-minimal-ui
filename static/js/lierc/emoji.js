@@ -1,89 +1,178 @@
 import { Template } from "./template.js";
 
+const TONE_NAMES = ["light", "medium-light", "medium", "medium-dark", "dark"];
+const TONE_BUTTON = ["✋", "✋🏻", "✋🏼", "✋🏽", "✋🏾", "✋🏿"];
+const RECENT_MAX = 24;
+
+// One picker, shared by the message input and reactions: open() moves
+// it into whichever element is opening it.
 export const Emoji = {
   names: {},
-  regex: new RegExp("impossibleregexthatshouldnothappen"),
-  list:  document.querySelector('#emoji ul'),
-};
-
-Emoji.filter = function(list, text) {
-  const items = list.querySelectorAll('li');
-  const len = items.length;
-
-  if (!text) {
-    for (let i=0; i < len; i++) {
-      items[i].style.display = 'inline-block';
-    }
-    return;
-  }
-
-  const t = text.toLowerCase();
-
-  for (let i=0; i < len; i++) {
-    if (items[i].getAttribute('data-keywords').indexOf(t) != -1) {
-      items[i].style.display = 'inline-block';
-    }
-    else if (items[i].getAttribute('data-name').indexOf(t) != -1) {
-      items[i].style.display = 'inline-block';
-    }
-    else {
-      items[i].style.display = 'none';
-    }
-  }
+  // every standard emoji sequence, including skin tones and ZWJ sequences
+  regex: /\p{RGI_Emoji}/gv,
+  popup: document.querySelector('#emoji .emoji-popup'),
+  groups: [],
+  recent: [],
+  tone: 0,
+  // called with (pref name, value) when recents or the skin tone change
+  save: () => {},
 };
 
 Emoji.load = async function() {
-  const safari = navigator.userAgent.indexOf('Safari') != -1
-    && navigator.userAgent.indexOf('Chrome') == -1;
-
-  const response = await fetch("/static/emoji-data.json");
+  const response = await fetch("/static/emoji.json");
   if (!response.ok)
     throw Error(response.statusText);
-  const res = await response.json();
+  const data = await response.json();
 
-  const codepoints = [];
-  const length = res.length;
-  const data = [];
-  for (let i=0; i < length; i++) {
-    const annotations = res[i]['annotations'] || [];
-    data.push({
-      chars: res[i]['chars'],
-      keywords: annotations.join(" ").toLowerCase(),
-      name: res[i]['name']
-    });
-
-    Emoji.names[ res[i]['chars'] ] = res[i]['name'];
-
-    let code = "";
-    for (let j=0; j < res[i]['codes'].length; j++) {
-      code += `\\u{${res[i]['codes'][j]}}`;
+  Emoji.groups = data.groups;
+  for (const group of data.groups) {
+    for (const e of group.emoji) {
+      Emoji.names[e.chars] = e.name;
+      (e.tones || []).forEach((tone, i) => {
+        Emoji.names[tone] = `${e.name}: ${TONE_NAMES[i]} skin tone`;
+      });
     }
-    codepoints.push(code);
   }
-  const sorted = codepoints.sort((a, b) => {
-    if (a.length > b.length)
-      return -1;
-    else if (a.length == b.length)
-      return 0;
-    else
-      return 1;
+
+  if (Emoji.popup)
+    Emoji.render();
+};
+
+Emoji.render = function() {
+  const popup = Emoji.popup;
+  const list = popup.querySelector('.emoji-list');
+  const nav = popup.querySelector('.emoji-groups');
+
+  nav.innerHTML = Template("emoji_nav", {
+    groups: [{ name: "recent", title: "Recently used", chars: "🕘" }].concat(
+      Emoji.groups.map((g) => ({ name: g.name, title: g.name, chars: g.emoji[0].chars }))
+    )
+  });
+  list.innerHTML = Template("emoji_group", { name: "recent", title: "Recently used", emoji: [] });
+  Emoji.render_recent();
+  Emoji.update_tone_button();
+
+  // a group per frame, so the page doesn't stall on ~2000 elements
+  const groups = Emoji.groups.slice();
+  const append_group = () => {
+    const group = groups.shift();
+    if (!group)
+      return;
+    list.insertAdjacentHTML('beforeend', Template("emoji_group", {
+      name: group.name,
+      title: group.name,
+      emoji: group.emoji.map(Emoji.item),
+    }));
+    window.requestAnimationFrame(append_group);
+  };
+  window.requestAnimationFrame(append_group);
+
+  popup.addEventListener('click', (e) => {
+    const li = e.target.closest('li[data-chars]');
+    if (li)
+      Emoji.use(li.getAttribute('data-chars'));
+
+    const group = e.target.closest('.emoji-groups button');
+    if (group)
+      Emoji.show_group(group.getAttribute('data-group'));
+
+    if (e.target.closest('.emoji-tone'))
+      Emoji.set_tone((Emoji.tone + 1) % TONE_BUTTON.length);
   });
 
-  Emoji.regex = new RegExp(`(${sorted.join("|")})`, "ug");
+  popup.addEventListener('input', (e) => {
+    if (e.target.matches('.emoji-search input'))
+      Emoji.filter(e.target.value);
+  });
 
-  function append_chunk () {
-    const chunk = data.splice(0, 50);
-    if (chunk.length > 0) {
-      const html = Template("emoji", { emoji:  chunk });
-      Emoji.list.insertAdjacentHTML('beforeend', html);
-    }
-    if (chunk.length == 50) {
-      window.requestAnimationFrame(append_chunk);
-    }
+  // enter picks the first match
+  popup.querySelector('.emoji-search').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const first = list.querySelector('.emoji-group:not([hidden]) li:not([hidden])');
+    if (first)
+      first.click();
+  });
+};
+
+// template variables for an emoji, shown in the current skin tone
+Emoji.item = function(e) {
+  const chars = Emoji.tone && e.tones ? e.tones[Emoji.tone - 1] : e.chars;
+  return { chars, base: e.chars, tones: (e.tones || []).join(" "), name: e.name, keywords: e.keywords };
+};
+
+Emoji.render_recent = function() {
+  const section = Emoji.popup.querySelector('.emoji-group[data-group="recent"]');
+  section.querySelector('ul').innerHTML = Template("emoji", {
+    emoji: Emoji.recent.map((chars) => ({ chars, name: Emoji.names[chars] || "", keywords: "" }))
+  });
+  section.hidden = Emoji.recent.length == 0;
+};
+
+// move the picker into `container`, reset it, and show it from the top
+Emoji.open = function(container, focus) {
+  if (!Emoji.popup)
+    return;
+  container.appendChild(Emoji.popup);
+  const input = Emoji.popup.querySelector('.emoji-search input');
+  input.value = '';
+  if (Emoji.groups.length) {
+    Emoji.filter('');
+    Emoji.render_recent();
   }
+  Emoji.popup.querySelector('.emoji-list').scrollTop = 0;
+  if (focus)
+    input.focus();
+};
 
-  if (Emoji.list) {
-    window.requestAnimationFrame(append_chunk);
+Emoji.use = function(chars) {
+  Emoji.recent = [chars].concat(Emoji.recent.filter((c) => c != chars)).slice(0, RECENT_MAX);
+  Emoji.save("emoji-recent", Emoji.recent);
+};
+
+Emoji.show_group = function(name) {
+  const input = Emoji.popup.querySelector('.emoji-search input');
+  if (input.value) {
+    input.value = '';
+    Emoji.filter('');
+  }
+  const list = Emoji.popup.querySelector('.emoji-list');
+  const section = list.querySelector(`.emoji-group[data-group="${CSS.escape(name)}"]`);
+  if (section)
+    list.scrollTop = section.offsetTop;
+};
+
+Emoji.set_tone = function(tone) {
+  Emoji.tone = tone;
+  Emoji.save("emoji-tone", tone);
+  Emoji.update_tone_button();
+  for (const li of Emoji.popup.querySelectorAll('li[data-tones]')) {
+    const tones = li.getAttribute('data-tones').split(" ");
+    const chars = tone ? tones[tone - 1] : li.getAttribute('data-base');
+    li.setAttribute('data-chars', chars);
+    li.textContent = chars;
   }
 };
 
+Emoji.update_tone_button = function() {
+  const button = Emoji.popup.querySelector('.emoji-tone');
+  button.textContent = TONE_BUTTON[Emoji.tone];
+  button.title = Emoji.tone ? `Skin tone: ${TONE_NAMES[Emoji.tone - 1]}` : "Skin tone";
+};
+
+Emoji.filter = function(text) {
+  const t = text.toLowerCase();
+  for (const section of Emoji.popup.querySelectorAll('.emoji-group')) {
+    let shown = 0;
+    for (const li of section.querySelectorAll('li')) {
+      const match = !t
+        || li.getAttribute('data-keywords').includes(t)
+        || li.getAttribute('data-name').toLowerCase().includes(t);
+      li.hidden = !match;
+      if (match)
+        shown++;
+    }
+    // recents would only repeat matches from the other groups
+    const recent = section.getAttribute('data-group') == "recent";
+    section.hidden = !shown || (recent && !!t);
+  }
+};

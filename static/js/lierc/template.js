@@ -128,7 +128,18 @@ const templates = {
   },
 
   emoji: (v) => each(v.emoji, (e) => html`
-    <li data-chars="${e.chars}" data-keywords="${e.keywords}" data-name="${e.name}" title="${e.name}">${e.chars}</li>
+    <li data-chars="${e.chars}"${e.tones ? html` data-base="${e.base}" data-tones="${e.tones}"` : ""} data-keywords="${e.keywords}" data-name="${e.name}" title="${e.name}">${e.chars}</li>
+  `),
+
+  emoji_group: (v) => html`
+    <section class="emoji-group" data-group="${v.name}">
+      <h3>${v.title}</h3>
+      <ul>${templates.emoji(v)}</ul>
+    </section>
+  `,
+
+  emoji_nav: (v) => each(v.groups, (g) => html`
+    <button type="button" data-group="${g.name}" title="${g.title}">${g.chars}</button>
   `),
 
   help: () => html`

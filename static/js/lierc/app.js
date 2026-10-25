@@ -117,6 +117,10 @@ export class App {
     await this.load_seen();
     await this.load_token();
     this.init();
+
+    Emoji.recent = this.prefs['emoji-recent'] || [];
+    Emoji.tone = this.prefs['emoji-tone'] || 0;
+    Emoji.save = (name, value) => this.update_pref(name, value);
     Emoji.load();
     this.notify = new Notifier(this);
   }

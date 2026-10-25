@@ -336,25 +336,16 @@ export const UIEvents = function(app) {
 
   app.elem.emoji.addEventListener('click', (e) => {
     e.preventDefault();
-    const emoji_search = document.querySelector('.emoji-search input');
 
     if (e.target.matches('li[data-chars]')) {
       app.focus_input(true);
       document.execCommand("insertText", false, e.target.getAttribute('data-chars'));
-
       app.elem.emoji.classList.remove("open");
-      emoji_search.value = '';
-      Emoji.filter(app.elem.emoji, '');
     }
     if (e.target.matches('#emoji')) {
       e.target.classList.toggle('open');
-      if (!app.mobile) {
-        if (e.target.classList.contains('open')) {
-          emoji_search.value = '';
-          Emoji.filter(app.elem.emoji, '');
-          emoji_search.focus();
-        }
-      }
+      if (e.target.classList.contains('open'))
+        Emoji.open(app.elem.emoji, !app.mobile);
     }
   });
 
@@ -686,13 +677,6 @@ export const UIEvents = function(app) {
     app.elem.flex_wrap.classList.toggle('open');
   });
 
-  document.addEventListener('input', (e) => {
-    if (e.target.matches('.emoji-search input')) {
-      const list = e.target.parentNode.previousSibling;
-      Emoji.filter(list, e.target.value);
-    }
-  });
-
   document.getElementById('web-notify').addEventListener('click', (e) => {
     e.preventDefault();
     if (app.notify.subscribed) {
@@ -948,14 +932,10 @@ export const UIEvents = function(app) {
     if (target.matches('.message-react')) {
       react.classList.toggle('open');
       if (react.classList.contains('open')) {
-        const emoji = document.querySelector('#emoji .emoji-popup').cloneNode(true);
-        react.appendChild(emoji);
-        emoji.querySelector('.emoji-search input').focus();
+        Emoji.open(react, true);
         controls.classList.add('open');
       }
       else {
-        const popup = react.querySelector('.emoji-popup');
-        popup.parentNode.removeChild(popup);
         controls.classList.remove('open');
       }
     }
@@ -970,8 +950,6 @@ export const UIEvents = function(app) {
 
       react.classList.remove('open');
       controls.classList.remove('open');
-      const popup = react.querySelector('.emoji-popup');
-      popup.parentNode.removeChild(popup);
 
       app.send_reaction(panel, id, emoji, false);
     }
