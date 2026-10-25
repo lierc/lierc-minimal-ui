@@ -8,18 +8,23 @@ export class Auth {
   }
 
   async auth(complete) {
+    let user;
     try {
       const res = await fetch(`${this.#baseurl}/auth`, {
         'credentials': 'same-origin'
       });
       if (!res.ok)
         throw Error(res.statusText);
-      complete(await res.json());
+      user = await res.json();
     }
     catch (e) {
       console.log(e);
       this.#modal_overlay(complete);
+      return;
     }
+
+    // outside the try: an error starting the app isn't a failed login
+    complete(user);
   }
 
   #modal_overlay(complete) {
@@ -46,6 +51,7 @@ export class Auth {
         body += `&username=${encodeURIComponent(user)}`;
       }
 
+      let user;
       try {
         const res = await fetch(`${this.#baseurl}/${action}`, {
           'credentials': 'same-origin',
@@ -57,13 +63,15 @@ export class Auth {
         });
         if (!res.ok)
           throw Error(res.statusText);
-        const data = await res.json();
-        dialog.close();
-        complete(data);
+        user = await res.json();
       }
       catch (e) {
         alert(`Sorry: ${e}`);
+        return;
       }
+
+      dialog.close();
+      complete(user);
     });
 
     overlay.querySelector('.login-toggle').addEventListener('click', (e) => {
