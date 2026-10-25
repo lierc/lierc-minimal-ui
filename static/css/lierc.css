@@ -35,11 +35,14 @@ body {
   color: var(--base03);
 }
 
+/* emoji fonts go before Font Awesome, which also has glyphs for a few
+   hundred emoji; it's only here for the icon characters in buttons */
 body,input {
   font-family: BlinkMacSystemFont, "San Francisco",
     "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
     "Fira Sans", "Droid Sans", "Helvetica Neue",
-    sans-serif, var(--fa-family-classic);
+    sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Noto Color Emoji",
+    emoji, var(--fa-family-classic);
 }
 
 a:link {
