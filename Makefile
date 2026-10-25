@@ -22,5 +22,4 @@ emoji:
 
 .PHONY: vendor
 vendor:
-	curl https://raw.githubusercontent.com/RubaXa/Sortable/master/Sortable.js > static/js/vendor/Sortable.js
 	curl https://raw.githubusercontent.com/mfranzke/datalist-polyfill/master/datalist-polyfill.js > static/js/vendor/datalist-polyfill.js

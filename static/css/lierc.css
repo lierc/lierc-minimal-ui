@@ -785,6 +785,10 @@ body.solarized-dark #input .input:focus {
   list-style: none;
 }
 
+.nav li.dragging {
+  opacity: 0.5;
+}
+
 .nav li.active:hover,
 .nav li.active {
   background: var(--cyan);

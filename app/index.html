@@ -10,7 +10,7 @@
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/fontawesome.min.css?v=69aaf8f88a"></link>
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/solid.min.css?v=79cc2bdfdd"></link>
     <link type="text/css" rel="stylesheet" href="/static/font-awesome/css/brands.min.css?v=bbacc07258"></link>
-    <link type="text/css" rel="stylesheet" href="/static/css/lierc.css?v=5f0dbc81f0"></link>
+    <link type="text/css" rel="stylesheet" href="/static/css/lierc.css?v=959de2cadb"></link>
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/favicon.png">
     <meta name="description" content="Chat on IRC in a web browser">
@@ -36,12 +36,12 @@
             <input id="switcher" placeholder="Jump to…" type="text" spellcheck="false" autocorrect="false">
           </div>
           <h2 class="nav-title networks expandable collapsed"><span class="nav-title-text">Networks</span> <span class="count">0</span><span class="add-connection fa-solid fa-plus" title="Add a connection"></span></h2>
-          <ul class="nav sortable" id="status"></ul>
+          <ul class="nav" id="status"></ul>
           <ul class="nav" id="meta-channels"></ul>
           <h2 class="nav-title"><span class="nav-title-text">Channels</span> <span class="count">0</span><span class="join-channel fa-solid fa-plus" title="Join a channel"></span></h2>
-          <ul class="nav sortable" id="channels"></ul>
+          <ul class="nav" id="channels"></ul>
           <h2 class="nav-title"><span class="nav-title-text">Privates</span> <span class="count">0</span></h2>
-          <ul class="nav sortable" id="privates"></ul>
+          <ul class="nav" id="privates"></ul>
 
           <ul id="global-controls">
             <li class="join-channel"><a>Join channel</a></li>
@@ -151,10 +151,9 @@
 
     <script type="text/javascript" src="/static/js/vendor/base64.js?v=bc52ceef63"></script>
     <script type="text/javascript" src="/static/js/vendor/handlebars.js?v=604619841e"></script>
-    <script type="text/javascript" src="/static/js/vendor/Sortable.js?v=29515f74c5"></script>
 
     <script type="text/javascript" src="/static/js/lierc/api.js?v=47fb4f053f"></script>
-    <script type="text/javascript" src="/static/js/lierc/app.js?v=dbc8ee8980"></script>
+    <script type="text/javascript" src="/static/js/lierc/app.js?v=ab4f82854e"></script>
     <script type="text/javascript" src="/static/js/lierc/auth.js?v=9d4eb0753c"></script>
     <script type="text/javascript" src="/static/js/lierc/channel.js?v=397889d6da"></script>
     <script type="text/javascript" src="/static/js/lierc/commands.js?v=c488a307be"></script>

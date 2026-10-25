@@ -24,6 +24,7 @@ var App = function(url, user) {
   app.prefs = {};
   app.touchstart = "ontouchstart" in document.documentElement;
   app.mobile = App.detect_mobile();
+  app.sortable = !app.mobile && !app.touchstart;
   app.post_tokens = [];
   app.theme = 'default';
   app.typing = [];
@@ -677,6 +678,9 @@ var App = function(url, user) {
   };
 
   app.insert_sorted_nav = function(panel) {
+    if (app.sortable)
+      panel.elem.nav.draggable = true;
+
     var index = app.sorting.indexOf(panel.id);
     if (index == -1) {
       app.elem.channels.appendChild(panel.elem.nav);
@@ -1352,6 +1356,60 @@ var App = function(url, user) {
     }
   };
 
+  app.make_sortable = function(list, on_sort) {
+    var dragging = null;
+    var orig_next = null;
+
+    list.addEventListener("dragstart", function(e) {
+      var li = e.target.closest("li");
+      if (!li || !li.draggable || li.parentNode != list)
+        return;
+      dragging = li;
+      orig_next = li.nextSibling;
+      e.dataTransfer.effectAllowed = "move";
+      // firefox won't start a drag without data
+      e.dataTransfer.setData("text/plain", li.getAttribute("data-panel-id"));
+      li.classList.add("dragging");
+    });
+
+    list.addEventListener("dragover", function(e) {
+      if (!dragging)
+        return;
+      e.preventDefault();
+      e.dataTransfer.dropEffect = "move";
+
+      var over = e.target.closest("li");
+      if (!over || over == dragging || over.parentNode != list)
+        return;
+
+      var rect = over.getBoundingClientRect();
+      var after = e.clientY > rect.top + rect.height / 2;
+      list.insertBefore(dragging, after ? over.nextSibling : over);
+    });
+
+    list.addEventListener("drop", function(e) {
+      if (dragging)
+        e.preventDefault();
+    });
+
+    list.addEventListener("dragend", function(e) {
+      if (!dragging)
+        return;
+      var li = dragging;
+      dragging = null;
+      li.classList.remove("dragging");
+
+      // drag was cancelled, put it back
+      if (e.dataTransfer.dropEffect == "none") {
+        list.insertBefore(li, orig_next);
+        return;
+      }
+
+      if (li.nextSibling != orig_next)
+        on_sort();
+    });
+  };
+
   app.save_channel_order = function() {
     var order = Array.prototype.map.call(
       app.elem.channels.querySelectorAll('li'),
@@ -1473,16 +1531,8 @@ var App = function(url, user) {
 
   // setup
 
-  if (!app.mobile && !app.touchstart) {
-    document.querySelectorAll('.sortable').forEach(function(el) {
-      Sortable.create(el, {
-        delay: 0,
-        onSort: function(e) {
-          app.save_channel_order();
-        }
-      });
-    });
-  }
+  if (app.sortable)
+    app.make_sortable(app.elem.channels, app.save_channel_order);
 
   setInterval(app.check_scroll, 250);
   setInterval(app.ping_server, 1000 * 15);
