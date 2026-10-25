@@ -1080,7 +1080,8 @@ var App = function(url, user) {
 
         // ping failed, force a reconnect of stream...
         if (res.status == 0) {
-          app.stream.close();
+          if (app.stream)
+            app.stream.close();
           return;
         }
 
@@ -1480,6 +1481,18 @@ var App = function(url, user) {
   setInterval(app.check_scroll, 250);
   setInterval(app.ping_server, 1000 * 15);
   setInterval(app.render_typing, 500);
+
+  function check_stream() {
+    if (app.stream)
+      app.stream.check();
+  }
+
+  document.addEventListener("visibilitychange", function() {
+    if (!document.hidden)
+      check_stream();
+  });
+  window.addEventListener("online", check_stream);
+  window.addEventListener("pageshow", check_stream);
   app.setup_highlights();
 
   app.get_prefs(function(prefs) {
