@@ -6,6 +6,10 @@ all: $(templates)
 $(templates): $(handlebars)
 	handlebars $(handlebars) > $(templates)
 
+.PHONY: bust
+bust: $(templates)
+	bin/cache-bust index.html search.html home.html
+
 .PHONY: watch
 watch:
 	bin/watch --exec make --dir templates --ignore .swp

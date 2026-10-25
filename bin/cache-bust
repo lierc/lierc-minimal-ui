@@ -1,0 +1,45 @@
+#!/usr/bin/env perl
+
+# Rewrites each local /static/ src or href in the given HTML files
+# to end with ?v=<hash of file contents>, replacing any existing ?v=.
+
+use strict;
+use warnings;
+
+use FindBin;
+use Digest::SHA qw(sha1_hex);
+
+my $root = "$FindBin::Bin/..";
+
+die "usage: $0 file.html [...]\n" unless @ARGV;
+
+sub version {
+  my $path = shift;
+  my $file = "$root$path";
+
+  unless (-f $file) {
+    warn "missing $file, skipping\n";
+    return "";
+  }
+
+  open my $fh, '<:raw', $file or die "$file: $!\n";
+  local $/;
+  return "?v=" . substr(sha1_hex(<$fh>), 0, 10);
+}
+
+for my $html (@ARGV) {
+  open my $in, '<', $html or die "$html: $!\n";
+  my $src = do { local $/; <$in> };
+  close $in;
+
+  (my $out = $src) =~ s{
+    ((?:src|href)=")(/static/[^"?]+)(?:\?v=[^"]*)?(")
+  }{$1 . $2 . version($2) . $3}gex;
+
+  next if $out eq $src;
+
+  open my $fh, '>', $html or die "$html: $!\n";
+  print $fh $out;
+  close $fh;
+  print "updated $html\n";
+}
