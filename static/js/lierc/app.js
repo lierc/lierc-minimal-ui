@@ -516,8 +516,11 @@ export class App {
     if (!opts) opts = {};
     const id = App.panel_id(name, connection);
 
-    if (this.panels[id])
+    if (this.panels[id]) {
+      if (opts['focus'] === true)
+        this.focus_panel(id);
       return this.panels[id];
+    }
 
     if (!this.connections[connection]) {
       console.log("Connection does not exist", connection);
