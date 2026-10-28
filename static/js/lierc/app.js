@@ -1176,6 +1176,14 @@ export class App {
       return;
     }
 
+    // The API's error bodies are JSON; nginx's (a 502 while the API is
+    // down or restarting) are HTML.
+    const type = res.headers.get('Content-Type');
+    if (!type?.match(/^application\/javascript/)) {
+      console.log(await res.text());
+      return;
+    }
+
     const data = await res.json();
     if (data["error"]) {
       console.log(data["error"]);
