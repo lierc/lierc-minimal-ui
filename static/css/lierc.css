@@ -213,25 +213,25 @@ div.flex-wrap {
 
   /* filtering: the switcher is narrowing the list down to matches */
   &.filtering {
-    h2 {
+    & h2 {
       display: none;
     }
 
-    h2.collapsed + .nav {
+    & h2.collapsed + .nav {
       height: auto;
       overflow: auto;
       transition: none;
     }
 
-    li {
+    & li {
       display: none;
     }
 
-    #status li.match {
+    & #status li.match {
       display: none;
     }
 
-    li.match {
+    & li.match {
       display: block;
     }
   }
