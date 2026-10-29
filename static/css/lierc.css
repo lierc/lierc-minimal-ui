@@ -1883,7 +1883,7 @@ p.embed-source {
   padding: 2px;
   font-size: 15px;
   line-height: 15px;
-  background: #fff;
+  background: transparent;
   border: 1px solid #ccc;
   border-radius: 4px;
   z-index: 99;
