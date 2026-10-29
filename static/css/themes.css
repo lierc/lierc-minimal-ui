@@ -271,6 +271,9 @@ body.catppuccin-mocha {
   --sidebar-menu-link-hover: var(--grey-555);
 
   --spinner: var(--warning);           /* loading older messages */
+  --highlight-bg: var(--tint-highlight);   /* rows that mention you */
+  --typing-text: var(--grey-666);
+  --last-read: var(--warning);          /* the new-messages line */
 
   --date-text: var(--base01);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
@@ -330,6 +333,9 @@ body.solarized {
   --sidebar-menu-link-hover: var(--grey-555);
 
   --spinner: var(--warning);           /* loading older messages */
+  --highlight-bg: var(--tint-highlight);   /* rows that mention you */
+  --typing-text: var(--grey-666);
+  --last-read: var(--warning);          /* the new-messages line */
 
   --date-text: var(--base01);
   --meta-text: var(--grey-555);
@@ -389,6 +395,9 @@ body.solarized-dark {
   --sidebar-menu-link-hover: var(--grey-555);
 
   --spinner: var(--warning);           /* loading older messages */
+  --highlight-bg: var(--tint-highlight);   /* rows that mention you */
+  --typing-text: var(--grey-666);
+  --last-read: var(--warning);          /* the new-messages line */
 
   --date-text: var(--base1);
   --meta-text: var(--base1);
@@ -486,6 +495,9 @@ body.slack {
   --sidebar-menu-link-hover: #fff;
 
   --spinner: #1264a3;
+  --highlight-bg: rgba(242, 199, 68, 0.2);   /* rows that mention you */
+  --typing-text: #616061;
+  --last-read: #e01e5a;          /* the new-messages line */
 
   --date-text: #1d1c1d;
   --meta-text: #1d1c1d;
@@ -549,6 +561,9 @@ body.catppuccin-mocha {
   --sidebar-menu-link-hover: var(--ctp-text);
 
   --spinner: var(--ctp-peach);
+  --highlight-bg: color-mix(in srgb, var(--ctp-mauve) 15%, transparent);   /* rows that mention you */
+  --typing-text: var(--ctp-overlay1);
+  --last-read: var(--ctp-peach);          /* the new-messages line */
 
   --date-text: var(--ctp-overlay1);
   --meta-text: var(--ctp-subtext0);

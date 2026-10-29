@@ -936,7 +936,7 @@ ul.channel-controls li a:hover {
     }
 
     &.highlight {
-      --row-bg: var(--tint-highlight);
+      --row-bg: var(--highlight-bg);
       background: var(--row-bg);
     }
 
@@ -1040,7 +1040,7 @@ ul.channel-controls li a:hover {
   }
 
   & .last-read {
-    border-top: 2px dotted var(--warning) !important;
+    border-top: 2px dotted var(--last-read) !important;
     position: relative;
     z-index: 9;
     background: var(--panel-bg);
@@ -1058,7 +1058,7 @@ ul.channel-controls li a:hover {
       top: -6px;
       right: 0px;
       background: var(--panel-bg);
-      color: var(--warning);
+      color: var(--last-read);
       font-size: 10px;
       line-height: 10px;
       font-style: italic;
@@ -1552,7 +1552,7 @@ p.embed-source {
   width: 100%;
   font-size: 12px;
   height: 1em;
-  color: var(--grey-666);
+  color: var(--typing-text);
 }
 
 #input .input {
