@@ -1429,11 +1429,11 @@ p.embed-source {
   background:
     linear-gradient(var(--row-bg, transparent), var(--row-bg, transparent)),
     var(--panel-bg);
-  border: 1px solid var(--border);
+  border: 1px solid var(--button-outline);
   border-radius: 4px;
   z-index: 99;
   display: none;
-  color: var(--grey-666);
+  color: var(--button-icon);
 
   li.message.monospace.consecutive & {
     top: -2px;
@@ -1450,7 +1450,7 @@ p.embed-source {
 
   &.open,
   &:hover {
-    color: var(--black);
+    color: var(--button-icon-hover);
   }
 
   &::before {
@@ -1602,12 +1602,12 @@ p.embed-source {
   &.open:hover::before,
   &.open::before {
     content: '\f599';
-    color: var(--black);
+    color: var(--button-icon-hover);
   }
 
   &:hover::before {
     content: '\f11a';
-    color: var(--black);
+    color: var(--button-icon-hover);
   }
 
   &::before {
@@ -1616,7 +1616,7 @@ p.embed-source {
     filter: grayscale(100%);
     font-family: var(--fa-family-classic);
     font-size: 18px;
-    color: var(--grey-666);
+    color: var(--button-icon);
     height: 18px;
     line-height: 18px;
     padding: 9px 5px 8px 5px;
@@ -1629,7 +1629,7 @@ p.embed-source {
 
   &::before {
     content: '\f0ee';
-    color: var(--grey-666);
+    color: var(--button-icon);
     display: inline-block;
     filter: grayscale(100%);
     font-family: var(--fa-family-classic);
@@ -1642,7 +1642,7 @@ p.embed-source {
 
   &.open::before,
   &:hover::before {
-    color: var(--black);
+    color: var(--button-icon-hover);
   }
 }
 

@@ -275,6 +275,9 @@ body.catppuccin-mocha {
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
   --media-toggle: #7600bd;         /* image and embed show/hide arrows */
+  --button-icon: var(--grey-666);          /* react, emoji and upload buttons */
+  --button-icon-hover: var(--black);
+  --button-outline: var(--border);       /* the react button's box */
 
   --date-text: var(--base01);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
@@ -339,6 +342,9 @@ body.solarized {
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
   --media-toggle: #7600bd;         /* image and embed show/hide arrows */
+  --button-icon: var(--grey-666);          /* react, emoji and upload buttons */
+  --button-icon-hover: var(--black);
+  --button-outline: var(--border);       /* the react button's box */
 
   --date-text: var(--base01);
   --meta-text: var(--grey-555);
@@ -403,6 +409,9 @@ body.solarized-dark {
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
   --media-toggle: #7600bd;         /* image and embed show/hide arrows */
+  --button-icon: var(--grey-666);          /* react, emoji and upload buttons */
+  --button-icon-hover: var(--black);
+  --button-outline: var(--border);       /* the react button's box */
 
   --date-text: var(--base1);
   --meta-text: var(--base1);
@@ -505,6 +514,9 @@ body.slack {
   --typing-text: #616061;
   --last-read: #e01e5a;          /* the new-messages line */
   --media-toggle: #616061;         /* image and embed show/hide arrows */
+  --button-icon: #616061;          /* react, emoji and upload buttons */
+  --button-icon-hover: #1d1c1d;
+  --button-outline: #dddddd;       /* the react button's box */
 
   --date-text: #1d1c1d;
   --meta-text: #1d1c1d;
@@ -573,6 +585,9 @@ body.catppuccin-mocha {
   --typing-text: var(--ctp-overlay1);
   --last-read: var(--ctp-peach);          /* the new-messages line */
   --media-toggle: var(--ctp-mauve);         /* image and embed show/hide arrows */
+  --button-icon: var(--ctp-overlay1);          /* react, emoji and upload buttons */
+  --button-icon-hover: var(--ctp-text);
+  --button-outline: var(--ctp-surface1);       /* the react button's box */
 
   --date-text: var(--ctp-overlay1);
   --meta-text: var(--ctp-subtext0);
