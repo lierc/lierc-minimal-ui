@@ -1771,7 +1771,7 @@ p.embed-source {
     cursor: pointer;
 
     &:hover {
-      background: var(--grey-eee);
+      background: var(--popup-hover);
     }
   }
 }
@@ -1779,11 +1779,13 @@ p.embed-source {
 .emoji-popup,
 .upload-popup {
   box-shadow: 0 1px 3px rgba(0,0,0,0.5);
-  background: var(--grey-eee);
-  border-top: 1px solid var(--white);
-  border-left: 1px solid var(--white);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  background: var(--popup-bg);
+  color: var(--popup-text);
+  border-top: 1px solid var(--popup-bevel);
+  border-left: 1px solid var(--popup-bevel);
+  border-right: 1px solid var(--popup-border);
+  border-bottom: 1px solid var(--popup-border);
+  color-scheme: var(--color-scheme);
   max-width: 310px;
 
   @media (max-width: 800px) {
@@ -1804,15 +1806,15 @@ p.embed-source {
     font-size: 15px;
     box-sizing: border-box;
     padding: 5px;
-    border: 1px solid var(--border);
+    border: 1px solid var(--popup-border);
   }
 }
 
 .emoji-tone {
   flex: 0 0 auto;
   padding: 0 6px;
-  border: 1px solid var(--border);
-  background: var(--white);
+  border: 1px solid var(--popup-border);
+  background: var(--popup-surface);
   font-size: 16px;
   line-height: 20px;
   cursor: pointer;
@@ -1820,7 +1822,7 @@ p.embed-source {
 
 .emoji-groups {
   display: flex;
-  border-bottom: 1px solid var(--border);
+  border-bottom: 1px solid var(--popup-border);
 
   & button {
     flex: 1 1 0;
@@ -1832,7 +1834,7 @@ p.embed-source {
     cursor: pointer;
 
     &:hover {
-      background: var(--white);
+      background: var(--popup-surface);
     }
   }
 }
@@ -1844,7 +1846,7 @@ p.embed-source {
   max-height: 200px;
   overflow: auto;
   padding: 0 5px 5px;
-  background: var(--white);
+  background: var(--popup-surface);
 }
 
 .emoji-group h3 {
@@ -1852,8 +1854,8 @@ p.embed-source {
   top: 0;
   margin: 0;
   padding: 6px 2px 2px;
-  background: var(--white);
-  color: var(--grey-666);
+  background: var(--popup-surface);
+  color: var(--popup-muted);
   font-size: 11px;
   font-weight: normal;
 }
@@ -1878,6 +1880,7 @@ p.embed-source {
   bottom: 0px;
   background: var(--overlay-bg);
   text-align: center;
+  color-scheme: var(--color-scheme);
 
   & select,
   & label,
@@ -1935,7 +1938,7 @@ p.embed-source {
 
   & hr {
     border: none;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--popup-border);
     height: 0;
   }
 
@@ -1945,18 +1948,18 @@ p.embed-source {
     margin-top: 12px;
     padding-top: 12px;
     border: none;
-    border-top: 1px solid var(--border);
+    border-top: 1px solid var(--popup-border);
   }
 
   & h2 {
     font-size: 18px;
     margin-top: 0;
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--popup-border);
     margin-bottom: 12px;
   }
 
   & label {
-    color: var(--grey-555);
+    color: var(--popup-label);
     margin-bottom: 3px;
   }
 
@@ -1985,11 +1988,12 @@ img.image-popup {
   text-align: left;
   margin: 20px auto;
   font-size: 12px;
-  background: var(--grey-eee);
-  border-top: 1px solid var(--white);
-  border-left: 1px solid var(--white);
-  border-right: 1px solid var(--border);
-  border-bottom: 1px solid var(--border);
+  background: var(--popup-bg);
+  color: var(--popup-text);
+  border-top: 1px solid var(--popup-bevel);
+  border-left: 1px solid var(--popup-bevel);
+  border-right: 1px solid var(--popup-border);
+  border-bottom: 1px solid var(--popup-border);
   box-shadow: 0 0 4px rgba(0,0,0,0.5);
   border-radius: 2px;
   padding: 15px;
@@ -2012,7 +2016,7 @@ p.note {
 }
 
 .dialog a.close {
-  color: var(--black);
+  color: var(--popup-text-strong);
   display: inline-block;
   float: right;
   font-size: 12px;
@@ -2027,7 +2031,8 @@ p.note {
 .help {
   display: none;
   width: 350px;
-  background: var(--grey-eee);
+  background: var(--popup-bg);
+  color: var(--popup-text);
   margin: 20px auto;
   font-size: 15px;
   padding: 20px;
@@ -2052,7 +2057,7 @@ p.note {
   }
 
   & h3 {
-    border-bottom: 1px solid var(--border);
+    border-bottom: 1px solid var(--popup-border);
     margin: 0;
     margin-bottom: 10px;
   }
@@ -2079,7 +2084,7 @@ p.note {
     right: 0px;
     margin: 0;
     font-size: 15px;
-    background: var(--grey-eee);
+    background: var(--popup-bg);
     border-top: none;
     border-left: none;
     border-right: none;

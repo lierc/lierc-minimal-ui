@@ -29,6 +29,7 @@
 
 /* Latte (light) */
 body.catppuccin-latte {
+  --ctp-scheme: light;
   --ctp-rosewater: #dc8a78;
   --ctp-flamingo:  #dd7878;
   --ctp-pink:      #ea76cb;
@@ -59,6 +60,7 @@ body.catppuccin-latte {
 
 /* Frappé (dark) */
 body.catppuccin-frappe {
+  --ctp-scheme: dark;
   --ctp-rosewater: #f2d5cf;
   --ctp-flamingo:  #eebebe;
   --ctp-pink:      #f4b8e4;
@@ -89,6 +91,7 @@ body.catppuccin-frappe {
 
 /* Macchiato (dark) */
 body.catppuccin-macchiato {
+  --ctp-scheme: dark;
   --ctp-rosewater: #f4dbd6;
   --ctp-flamingo:  #f0c6c6;
   --ctp-pink:      #f5bde6;
@@ -119,6 +122,7 @@ body.catppuccin-macchiato {
 
 /* Mocha (dark) */
 body.catppuccin-mocha {
+  --ctp-scheme: dark;
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo:  #f2cdcd;
   --ctp-pink:      #f5c2e7;
@@ -286,6 +290,18 @@ body.catppuccin-mocha {
   --meta-controls-bg: var(--tint-controls);
   --meta-controls-hover: var(--grey-efefef);
 
+  /* dialogs, the emoji picker and the image uploader */
+  --popup-bg: var(--grey-eee);
+  --popup-text: var(--base03);
+  --popup-text-strong: var(--black);
+  --popup-surface: var(--white);
+  --popup-hover: var(--grey-eee);
+  --popup-muted: var(--grey-666);
+  --popup-label: var(--grey-555);
+  --popup-border: var(--border);
+  --popup-bevel: var(--white);
+  --color-scheme: normal;          /* form controls inside them */
+
   --image-border: var(--grey-eee);
   --image-border-hover: var(--border);
   --embed-border: var(--grey-ddd);
@@ -356,6 +372,18 @@ body.solarized {
   --meta-controls-bg: var(--tint-controls);
   --meta-controls-hover: var(--grey-efefef);
 
+  /* dialogs, the emoji picker and the image uploader */
+  --popup-bg: var(--grey-eee);
+  --popup-text: var(--base03);
+  --popup-text-strong: var(--black);
+  --popup-surface: var(--white);
+  --popup-hover: var(--grey-eee);
+  --popup-muted: var(--grey-666);
+  --popup-label: var(--grey-555);
+  --popup-border: var(--border);
+  --popup-bevel: var(--white);
+  --color-scheme: normal;          /* form controls inside them */
+
   --image-border: var(--grey-eee);
   --image-border-hover: var(--border);
   --embed-border: var(--grey-ddd);
@@ -425,6 +453,18 @@ body.solarized-dark {
   --meta-border: var(--base03);           /* nick list edges */
   --meta-controls-bg: var(--tint-controls);
   --meta-controls-hover: var(--base03);
+
+  /* dialogs, the emoji picker and the image uploader */
+  --popup-bg: var(--base03);
+  --popup-text: var(--base1);
+  --popup-text-strong: var(--white);
+  --popup-surface: var(--base02);
+  --popup-hover: var(--base01);
+  --popup-muted: var(--base0);
+  --popup-label: var(--base1);
+  --popup-border: var(--base01);
+  --popup-bevel: var(--base02);
+  --color-scheme: dark;          /* form controls inside them */
 
   --image-border: var(--base01);
   --image-border-hover: var(--base00);
@@ -534,6 +574,18 @@ body.slack {
   --meta-controls-bg: var(--tint-controls);
   --meta-controls-hover: #f0f0f0;
 
+  /* dialogs, the emoji picker and the image uploader */
+  --popup-bg: #fff;
+  --popup-text: #1d1c1d;
+  --popup-text-strong: #1d1c1d;
+  --popup-surface: #fff;
+  --popup-hover: #f0f0f0;
+  --popup-muted: #616061;
+  --popup-label: #616061;
+  --popup-border: #dddddd;
+  --popup-bevel: #fff;
+  --color-scheme: light;          /* form controls inside them */
+
   --image-border: #dddddd;
   --image-border-hover: #bbbbbb;
   --embed-border: #dddddd;
@@ -607,6 +659,18 @@ body.catppuccin-mocha {
   --meta-border: var(--ctp-surface0);           /* nick list edges */
   --meta-controls-bg: var(--ctp-mantle);
   --meta-controls-hover: var(--ctp-surface0);
+
+  /* dialogs, the emoji picker and the image uploader */
+  --popup-bg: var(--ctp-mantle);
+  --popup-text: var(--ctp-text);
+  --popup-text-strong: var(--ctp-text);
+  --popup-surface: var(--ctp-base);
+  --popup-hover: var(--ctp-surface0);
+  --popup-muted: var(--ctp-overlay1);
+  --popup-label: var(--ctp-subtext0);
+  --popup-border: var(--ctp-surface1);
+  --popup-bevel: var(--ctp-surface0);
+  --color-scheme: var(--ctp-scheme);          /* form controls inside them */
 
   --image-border: var(--ctp-surface1);
   --image-border-hover: var(--ctp-overlay0);
