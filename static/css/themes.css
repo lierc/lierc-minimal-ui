@@ -282,6 +282,9 @@ body.catppuccin-mocha {
   --date-text: var(--base01);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
   --meta-text-hover: var(--black);
+  --meta-border: var(--grey-eee);           /* nick list edges */
+  --meta-controls-bg: var(--tint-controls);
+  --meta-controls-hover: var(--grey-efefef);
 
   --image-border: var(--grey-eee);
   --image-border-hover: var(--border);
@@ -349,6 +352,9 @@ body.solarized {
   --date-text: var(--base01);
   --meta-text: var(--grey-555);
   --meta-text-hover: var(--black);
+  --meta-border: var(--grey-eee);           /* nick list edges */
+  --meta-controls-bg: var(--tint-controls);
+  --meta-controls-hover: var(--grey-efefef);
 
   --image-border: var(--grey-eee);
   --image-border-hover: var(--border);
@@ -416,6 +422,9 @@ body.solarized-dark {
   --date-text: var(--base1);
   --meta-text: var(--base1);
   --meta-text-hover: var(--white);
+  --meta-border: var(--base03);           /* nick list edges */
+  --meta-controls-bg: var(--tint-controls);
+  --meta-controls-hover: var(--base03);
 
   --image-border: var(--base01);
   --image-border-hover: var(--base00);
@@ -521,6 +530,9 @@ body.slack {
   --date-text: #1d1c1d;
   --meta-text: #1d1c1d;
   --meta-text-hover: #1264a3;
+  --meta-border: #dddddd;           /* nick list edges */
+  --meta-controls-bg: var(--tint-controls);
+  --meta-controls-hover: #f0f0f0;
 
   --image-border: #dddddd;
   --image-border-hover: #bbbbbb;
@@ -592,6 +604,9 @@ body.catppuccin-mocha {
   --date-text: var(--ctp-overlay1);
   --meta-text: var(--ctp-subtext0);
   --meta-text-hover: var(--ctp-text);
+  --meta-border: var(--ctp-surface0);           /* nick list edges */
+  --meta-controls-bg: var(--ctp-mantle);
+  --meta-controls-hover: var(--ctp-surface0);
 
   --image-border: var(--ctp-surface1);
   --image-border-hover: var(--ctp-overlay0);

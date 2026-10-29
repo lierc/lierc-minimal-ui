@@ -768,8 +768,8 @@ ul.channel-controls {
   list-style: none;
   margin: 0;
   padding: 0;
-  background: var(--tint-controls);
-  border-bottom: 3px solid var(--grey-eee);
+  background: var(--meta-controls-bg);
+  border-bottom: 3px solid var(--meta-border);
 
   & li a {
     display: block;
@@ -801,13 +801,13 @@ ul.channel-controls {
 }
 
 ul.channel-controls li a:hover {
-  background: var(--grey-efefef);
+  background: var(--meta-controls-hover);
 }
 
 .channel-meta {
   width: 150px;
   overflow: hidden;
-  border-left: 1px solid var(--grey-eee);
+  border-left: 1px solid var(--meta-border);
   flex-grow: 0;
   flex-shrink: 0;
   display: none;
