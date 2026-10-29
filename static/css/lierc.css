@@ -73,7 +73,7 @@ dd {
     inset: 0 0 auto;
     height: 11px;
     pointer-events: none;
-    background: var(--base03);
+    background: var(--sidebar-bg);
     -webkit-background-clip: text;
     background-clip: text;
   }
@@ -170,7 +170,7 @@ div.flex-wrap {
 
   &.highlighted::before,
   &.unread::before {
-    color: var(--orange);
+    color: var(--sidebar-highlight);
     content: "\f005";
   }
 
@@ -183,7 +183,7 @@ div.flex-wrap {
     opacity: 1;
     content: "\f006";
     font-family: var(--fa-family-classic);
-    color: var(--base00);
+    color: var(--sidebar-muted);
     font-size: 12px;
     line-height: 12px;
     width: 16px;
@@ -204,7 +204,7 @@ div.flex-wrap {
   box-sizing: border-box;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-  background: var(--base03);
+  background: var(--sidebar-bg);
   overflow: auto;
 
   @media (max-width: 800px) {
@@ -288,7 +288,7 @@ div.flex-wrap {
     content: "\f1e6";
     opacity: 1;
     font-family: var(--fa-family-classic);
-    color: var(--base00);
+    color: var(--sidebar-muted);
     font-size: 12px;
     line-height: 12px;
     width: 16px;
@@ -301,7 +301,7 @@ div.flex-wrap {
   padding: 0 10px 0 5px;
   margin: 15px 0 5px 0;
   font-size: 15px;
-  color: var(--base1);
+  color: var(--sidebar-link);
   font-weight: normal;
 }
 
@@ -319,13 +319,13 @@ div.flex-wrap {
 }
 
 .nav-title.expandable:hover {
-  color: var(--white);
+  color: var(--sidebar-text-strong);
 }
 
 .nav li {
   cursor: pointer;
   padding: 5px 0px 5px 5px;
-  color: var(--base01);
+  color: var(--sidebar-text);
   font-size: 15px;
   line-height: 15px;
   list-style: none;
@@ -343,7 +343,7 @@ div.flex-wrap {
     font-size: 15px;
     height: 15px;
     opacity: 0;
-    color: var(--base1);
+    color: var(--sidebar-link);
 
     @media (max-width: 800px) {
       opacity: 1;
@@ -364,7 +364,7 @@ div.flex-wrap {
   &.active a.panel-log,
   &.active a.edit-panel,
   &.active a.close-panel {
-    color: var(--white);
+    color: var(--sidebar-text-strong);
   }
 
   &:hover a.panel-log,
@@ -376,22 +376,22 @@ div.flex-wrap {
   & a.panel-log:hover,
   & a.edit-panel:hover,
   & a.close-panel:hover {
-    color: var(--white);
+    color: var(--sidebar-text-strong);
   }
 
   &.unread a.panel-name {
     font-weight: bold;
-    color: var(--white);
+    color: var(--sidebar-text-strong);
   }
 
   &.highlighted::before {
     content: "\f111";
-    color: var(--orange);
+    color: var(--sidebar-highlight);
   }
 
   &.disconnected::before {
     content: "\f1e6";
-    color: var(--red);
+    color: var(--sidebar-alert);
   }
 
   &::before {
@@ -410,30 +410,30 @@ div.flex-wrap {
 
   &.active:hover,
   &.active {
-    background: var(--cyan);
+    background: var(--sidebar-active);
   }
 
   &.active.disconnected a,
   &.active a {
-    color: var(--white);
+    color: var(--sidebar-text-strong);
   }
 
   &.selected a,
   &.selected {
-    background: var(--blue) !important;
-    color: var(--white) !important;
+    background: var(--sidebar-selected) !important;
+    color: var(--sidebar-text-strong) !important;
   }
 
   &:hover {
-    background: var(--base02);
+    background: var(--sidebar-hover);
   }
 
   & a {
-    color: var(--base1);
+    color: var(--sidebar-link);
   }
 
   &.disconnected a {
-    color: var(--base0);
+    color: var(--sidebar-link-disconnected);
   }
 }
 
@@ -443,7 +443,7 @@ div.flex-wrap {
   cursor: pointer;
   float: right;
   margin-top: 6px;
-  color: var(--base1);
+  color: var(--sidebar-link);
   font-size: 12px;
 
   @media (max-width: 800px) {
@@ -476,7 +476,7 @@ div.flex-wrap {
 
 .nav-title .join-channel:hover,
 .nav-title .add-connection:hover {
-  color: var(--white);
+  color: var(--sidebar-text-strong);
 }
 
 /* the menu under the header's chevron */
@@ -488,7 +488,7 @@ div.flex-wrap {
   text-align: right;
   margin: 0px;
   padding: 0px;
-  background: var(--base3);
+  background: var(--sidebar-menu-bg);
   width: 100%;
 
   @media (max-width: 800px) {
@@ -506,7 +506,7 @@ div.flex-wrap {
   }
 
   & li:hover {
-    background: var(--base2);
+    background: var(--sidebar-menu-hover);
   }
 
   .flex-wrap.open & {
@@ -555,11 +555,11 @@ div.flex-wrap {
   }
 
   & li:hover a {
-    color: var(--grey-555);
+    color: var(--sidebar-menu-link-hover);
   }
 
   & li a {
-    color: var(--grey-777);
+    color: var(--sidebar-menu-link);
     text-decoration: none;
   }
 }
@@ -607,7 +607,7 @@ div.flex-wrap {
   padding: 8px 0px 8px 15px;
   text-shadow: none;
   cursor: pointer;
-  color: var(--white);
+  color: var(--sidebar-text-strong);
 
   @media (max-width: 800px) {
     display: inline-block;
@@ -622,10 +622,10 @@ div.header-right {
   flex-grow: 0;
   flex-shrink: 0;
   box-sizing: border-box;
-  background: var(--base03);
+  background: var(--sidebar-bg);
   font-size: 15px;
   line-height: 15px;
-  color: var(--base00);
+  color: var(--sidebar-muted);
   position: relative;
   cursor: pointer;
 
@@ -634,7 +634,7 @@ div.header-right {
     padding: 8px 0 8px 10px;
     font-size: 15px;
     line-height: 15px;
-    color: var(--white);
+    color: var(--sidebar-text-strong);
     font-weight: bold;
     -webkit-user-select: none;
     display: inline-block;
@@ -646,14 +646,14 @@ div.header-right {
   }
 
   &:hover {
-    background: var(--base02);
+    background: var(--sidebar-hover);
   }
 }
 
 #global-controls-toggle {
   display: inline-block;
   -webkit-user-select: none;
-  color: var(--base00);
+  color: var(--sidebar-muted);
   padding: 8px 10px 8px 10px;
   cursor: pointer;
 
@@ -664,7 +664,7 @@ div.header-right {
 
 header:hover #panel-name,
 header:hover #global-controls-toggle {
-  color: var(--white);
+  color: var(--sidebar-text-strong);
 }
 
 /* the star next to the title on mobile, where the nav is hidden */
@@ -677,7 +677,7 @@ header:hover #global-controls-toggle {
     width: 16px;
     display: inline-block;
     text-align: center;
-    color: var(--orange);
+    color: var(--sidebar-highlight);
     content: "\f005";
     position: absolute;
     top: 7px;

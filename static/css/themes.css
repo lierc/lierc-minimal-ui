@@ -80,6 +80,22 @@
   --input-coloring-focus-border: var(--coloring-border);
   --input-coloring-focus-ring: var(--coloring-ring);
 
+  --sidebar-bg: var(--base03);       /* sidebar and header bar */
+  --sidebar-hover: var(--base02);
+  --sidebar-text: var(--base01);
+  --sidebar-text-strong: var(--white); /* title, unread and active items */
+  --sidebar-link: var(--base1);
+  --sidebar-link-disconnected: var(--base0);
+  --sidebar-muted: var(--base00);
+  --sidebar-highlight: var(--orange);
+  --sidebar-alert: var(--red);
+  --sidebar-active: var(--cyan);
+  --sidebar-selected: var(--blue);
+  --sidebar-menu-bg: var(--base3);   /* the menu under the header's chevron */
+  --sidebar-menu-hover: var(--base2);
+  --sidebar-menu-link: var(--grey-777);
+  --sidebar-menu-link-hover: var(--grey-555);
+
   --date-text: var(--base01);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
   --meta-text-hover: var(--black);
@@ -117,6 +133,22 @@ body.solarized {
   --input-coloring-focus-border: var(--coloring-border);
   --input-coloring-focus-ring: var(--coloring-ring);
 
+  --sidebar-bg: var(--base03);       /* sidebar and header bar */
+  --sidebar-hover: var(--base02);
+  --sidebar-text: var(--base01);
+  --sidebar-text-strong: var(--white); /* title, unread and active items */
+  --sidebar-link: var(--base1);
+  --sidebar-link-disconnected: var(--base0);
+  --sidebar-muted: var(--base00);
+  --sidebar-highlight: var(--orange);
+  --sidebar-alert: var(--red);
+  --sidebar-active: var(--cyan);
+  --sidebar-selected: var(--blue);
+  --sidebar-menu-bg: var(--base3);   /* the menu under the header's chevron */
+  --sidebar-menu-hover: var(--base2);
+  --sidebar-menu-link: var(--grey-777);
+  --sidebar-menu-link-hover: var(--grey-555);
+
   --date-text: var(--base01);
   --meta-text: var(--grey-555);
   --meta-text-hover: var(--black);
@@ -153,6 +185,22 @@ body.solarized-dark {
   --input-coloring-border: var(--base01);
   --input-coloring-focus-border: var(--base0);
   --input-coloring-focus-ring: var(--base0);
+
+  --sidebar-bg: var(--base03);       /* sidebar and header bar */
+  --sidebar-hover: var(--base02);
+  --sidebar-text: var(--base01);
+  --sidebar-text-strong: var(--white); /* title, unread and active items */
+  --sidebar-link: var(--base1);
+  --sidebar-link-disconnected: var(--base0);
+  --sidebar-muted: var(--base00);
+  --sidebar-highlight: var(--orange);
+  --sidebar-alert: var(--red);
+  --sidebar-active: var(--cyan);
+  --sidebar-selected: var(--blue);
+  --sidebar-menu-bg: var(--base3);   /* the menu under the header's chevron */
+  --sidebar-menu-hover: var(--base2);
+  --sidebar-menu-link: var(--grey-777);
+  --sidebar-menu-link-hover: var(--grey-555);
 
   --date-text: var(--base1);
   --meta-text: var(--base1);
