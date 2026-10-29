@@ -23,6 +23,27 @@
   --green:     #859900;
 }
 
+/* Catppuccin Mocha palette (https://github.com/catppuccin/catppuccin) */
+:root {
+  --mocha-crust:     #11111b;
+  --mocha-mantle:    #181825;
+  --mocha-base:      #1e1e2e;
+  --mocha-surface0:  #313244;
+  --mocha-surface1:  #45475a;
+  --mocha-surface2:  #585b70;
+  --mocha-overlay0:  #6c7086;
+  --mocha-overlay1:  #7f849c;
+  --mocha-subtext0:  #a6adc8;
+  --mocha-subtext1:  #bac2de;
+  --mocha-text:      #cdd6f4;
+  --mocha-lavender:  #b4befe;
+  --mocha-blue:      #89b4fa;
+  --mocha-green:     #a6e3a1;
+  --mocha-peach:     #fab387;
+  --mocha-red:       #f38ba8;
+  --mocha-mauve:     #cba6f7;
+}
+
 /* Colours and fonts that are the same in every theme. To make one follow
    the theme, move it into the theme blocks below. */
 :root {
@@ -70,6 +91,10 @@
   --topic-bg: transparent;
   --nicks-toggle-bg: var(--white);
   --foot-bg: transparent;
+  --link: var(--blue);
+  --link-visited: var(--violet);
+  --info-bg: var(--grey-eee);                 /* /info and server lines */
+  --info-text: var(--grey-333);
 
   --input-bg: transparent;
   --input-border: var(--border);
@@ -125,6 +150,10 @@ body.solarized {
   --topic-bg: var(--base2);
   --nicks-toggle-bg: var(--base2);
   --foot-bg: var(--base2);
+  --link: var(--blue);
+  --link-visited: var(--violet);
+  --info-bg: var(--grey-eee);                 /* /info and server lines */
+  --info-text: var(--grey-333);
 
   --input-bg: var(--base3);
   --input-border: var(--border);
@@ -180,6 +209,10 @@ body.solarized-dark {
   --topic-bg: var(--base03);
   --nicks-toggle-bg: var(--base03);
   --foot-bg: transparent;
+  --link: var(--blue);
+  --link-visited: var(--violet);
+  --info-bg: var(--grey-eee);                 /* /info and server lines */
+  --info-text: var(--grey-333);
 
   --input-bg: transparent;
   --input-border: var(--base01);
@@ -227,4 +260,63 @@ body.solarized-dark {
   --reaction-self-bg: rgba(38, 139, 210, 0.25);
   --reaction-self-bg-hover: rgba(38, 139, 210, 0.35);
   --reaction-self-count: var(--white);
+}
+
+body.catppuccin-mocha {
+  --panel-bg: var(--mocha-base);
+  --panel-text: var(--mocha-text);
+  --topic-bg: var(--mocha-mantle);
+  --nicks-toggle-bg: var(--mocha-mantle);
+  --foot-bg: transparent;
+  --link: var(--mocha-blue);
+  --link-visited: var(--mocha-lavender);
+  --info-bg: var(--mocha-surface0);                 /* /info and server lines */
+  --info-text: var(--mocha-subtext1);
+
+  --input-bg: transparent;
+  --input-border: var(--mocha-surface1);
+  --input-focus-border: var(--mocha-lavender);
+  --input-focus-ring: var(--mocha-lavender);
+  --input-disabled-bg: var(--mocha-surface0);
+  --input-coloring-border: var(--mocha-green);
+  --input-coloring-focus-border: var(--mocha-green);
+  --input-coloring-focus-ring: var(--mocha-green);
+
+  --sidebar-bg: var(--mocha-crust);
+  --sidebar-hover: var(--mocha-surface0);
+  --sidebar-text: var(--mocha-overlay1);
+  --sidebar-text-strong: var(--mocha-text);
+  --sidebar-link: var(--mocha-subtext0);
+  --sidebar-link-disconnected: var(--mocha-overlay0);
+  --sidebar-muted: var(--mocha-overlay1);
+  --sidebar-highlight: var(--mocha-peach);
+  --sidebar-alert: var(--mocha-red);
+  --sidebar-active: var(--mocha-surface1);
+  --sidebar-selected: var(--mocha-surface2);
+  --sidebar-menu-bg: var(--mocha-mantle);
+  --sidebar-menu-hover: var(--mocha-surface0);
+  --sidebar-menu-link: var(--mocha-subtext0);
+  --sidebar-menu-link-hover: var(--mocha-text);
+
+  --spinner: var(--mocha-peach);
+
+  --date-text: var(--mocha-overlay1);
+  --meta-text: var(--mocha-subtext0);
+  --meta-text-hover: var(--mocha-text);
+
+  --image-border: var(--mocha-surface1);
+  --image-border-hover: var(--mocha-overlay0);
+  --embed-border: var(--mocha-surface1);
+  --embed-border-hover: var(--mocha-overlay0);
+  --embed-open-border: none;
+  --embed-open-border-hover: none;
+
+  --reaction-bg: var(--mocha-surface0);
+  --reaction-bg-hover: var(--mocha-surface1);
+  --reaction-border: var(--mocha-surface1);
+  --reaction-border-hover: var(--mocha-overlay0);
+  --reaction-count: var(--mocha-subtext0);
+  --reaction-self-bg: color-mix(in srgb, var(--mocha-mauve) 20%, transparent);
+  --reaction-self-bg-hover: color-mix(in srgb, var(--mocha-mauve) 30%, transparent);
+  --reaction-self-count: var(--mocha-mauve);
 }

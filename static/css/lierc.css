@@ -34,15 +34,15 @@ body, input {
 }
 
 a:link {
-  color: var(--blue);
+  color: var(--link);
 }
 
 a:visited {
-  color: var(--violet);
+  color: var(--link-visited);
 }
 
 a:hover {
-  color: var(--violet);
+  color: var(--link-visited);
 }
 
 /* p and dd are global on purpose: kept from the old ".nick-popup h3, p"
@@ -890,17 +890,17 @@ ul.channel-controls li a:hover {
 
   & li.info.monospace,
   & li.info {
-    --row-bg: var(--grey-eee);
+    --row-bg: var(--info-bg);
     background: var(--row-bg);
     padding: 2px 10px;
     white-space: pre-wrap;
-    color: var(--grey-333);
+    color: var(--info-text);
     font-family: var(--font-mono);
     font-size: 15px;
   }
 
   & li.chat.info:hover {
-    --row-bg: var(--grey-eee);
+    --row-bg: var(--info-bg);
     background: var(--row-bg);
   }
 
