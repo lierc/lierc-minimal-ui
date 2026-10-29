@@ -1,6 +1,5 @@
 import { Emoji } from "./emoji.js";
 import { Unformat } from "./format.js";
-import { Template } from "./template.js";
 
 export const UIEvents = function(app) {
   const max_userhost_len = 63 + 10 + 1;
@@ -636,61 +635,6 @@ export const UIEvents = function(app) {
       this.classList.toggle('enabled');
       const enabled = this.classList.contains('enabled');
       app.update_pref("email", enabled);
-  });
-
-  app.elem.panel.addEventListener('click', (e) => {
-    if (!e.target.matches('.message-menu, .message-menu *'))
-      return;
-
-    const target = e.target;
-    let toggle = target;
-    let controls = target;
-    let message = target;
-
-    while (toggle && !toggle.matches('.message-menu')) {
-      toggle = toggle.parentNode;
-    }
-
-    while (controls && !controls.matches('.message-controls')) {
-      controls = controls.parentNode;
-    }
-
-    while (message && !message.matches('li.message')) {
-      message = message.parentNode;
-    }
-
-    const is_monospace = message.classList.contains('monospace');
-    toggle.classList.toggle('open');
-
-    if (target.matches('.message-menu')) {
-      if (toggle.classList.contains('open')) {
-        const has_child = toggle.querySelector('.message-menu-popup');
-        if (!has_child) {
-          const html = Template('message_menu', {
-            is_monospace: is_monospace
-          });
-          toggle.insertAdjacentHTML('beforeend', html);
-        }
-        controls.classList.add('open');
-      }
-      else {
-        controls.classList.remove('open');
-      }
-    }
-    else if (target.matches('.message-privmsg')) {
-      controls.classList.remove('open');
-      message.querySelector('.message-nick').click();
-    }
-    else if (target.matches('.message-monospace')) {
-      controls.classList.remove('open');
-      const nick = message.querySelector('.message-nick').getAttribute('data-nick');
-      if (is_monospace) {
-        app.remove_monospace_nick(app.focused, nick);
-      }
-      else {
-        app.add_monospace_nick(app.focused, nick);
-      }
-    }
   });
 
   app.elem.panel.addEventListener('click', (e) => {

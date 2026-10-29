@@ -282,15 +282,6 @@ const templates = {
     </section>
   `,
 
-  message_menu: (v) => html`
-    <div class="message-menu-popup">
-      <ul>
-        <li class="message-privmsg">Direct message</li>
-        <li class="message-monospace">Monospace text ${v.is_monospace ? "off" : "on"}</li>
-      </ul>
-    </div>
-  `,
-
   // no surrounding whitespace: callers use the element as firstChild
   nav_item: (v) => html`<li data-panel-id="${v.id}"><a class="panel-name">${v.name}</a>${
     v.editable ? html`<a class="fa-solid fa-pencil edit edit-panel" title="Edit"></a>` : ""}${

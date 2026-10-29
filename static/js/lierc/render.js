@@ -340,20 +340,17 @@ export const Render = function(message, opts) {
     return time;
   }
 
+  // a reaction needs the message's msgid, so without one there are no controls
   function controls (message) {
+    if (!message.Tags?.["msgid"])
+      return null;
+
     const controls = document.createElement('DIV');
     controls.classList.add('message-controls', 'popup-toggle');
 
-    if (message.Tags?.["msgid"]) {
-        const react = document.createElement('DIV');
-        react.classList.add('message-react', 'popup-toggle');
-        controls.appendChild(react);
-    }
-
-    const menu = document.createElement('DIV');
-    menu.classList.add('message-menu', 'popup-toggle');
-
-    controls.appendChild(menu);
+    const react = document.createElement('DIV');
+    react.classList.add('message-react', 'popup-toggle');
+    controls.appendChild(react);
 
     return controls;
   }
