@@ -177,6 +177,16 @@ export class Commands {
       case "solarized light":
         app.set_theme("solarized");
         break;
+      case "catppuccin latte":
+        app.set_theme("catppuccin-latte");
+        break;
+      case "catppuccin frappe":
+      case "catppuccin frappé":
+        app.set_theme("catppuccin-frappe");
+        break;
+      case "catppuccin macchiato":
+        app.set_theme("catppuccin-macchiato");
+        break;
       case "catppuccin":
       case "catppuccin mocha":
         app.set_theme("catppuccin-mocha");
