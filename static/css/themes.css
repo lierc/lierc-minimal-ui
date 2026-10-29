@@ -409,6 +409,41 @@ body.solarized-dark {
   --reaction-self-bg: rgba(38, 139, 210, 0.25);
   --reaction-self-bg-hover: rgba(38, 139, 210, 0.35);
   --reaction-self-count: var(--white);
+
+  /* the nick colours that are too dark to read on base02, lightened in
+     OKLCH to 4.5:1 contrast with their hue kept */
+  --nick-0: #ff57b5; /* MediumVioletRed */
+  --nick-1: #e27699; /* PaleVioletRed */
+  --nick-2: #ff5ba2; /* DeepPink */
+  --nick-4: #ff6655; /* Red */
+  --nick-5: #ff6758; /* #da1717 */
+  --nick-6: #fa695f; /* FireBrick */
+  --nick-7: #ff646d; /* Crimson */
+  --nick-8: #e97574; /* IndianRed */
+  --nick-12: #ff674c; /* Tomato */
+  --nick-13: #ff6842; /* OrangeRed */
+  --nick-14: #ee7464; /* Maroon */
+  --nick-15: #ee736f; /* #bb4545 */
+  --nick-16: #e37d4e; /* #c56232 */
+  --nick-17: #d28658; /* SaddleBrown */
+  --nick-18: #e77c36; /* Chocolate */
+  --nick-19: #d08842; /* Peru */
+  --nick-20: #c29020; /* DarkGoldenrod */
+  --nick-22: #8e90e5; /* #6363b3 */
+  --nick-23: #6595ff; /* MediumBlue */
+  --nick-24: #7991ff; /* #4040ff */
+  --nick-25: #6b94ff; /* RoyalBlue */
+  --nick-26: #619ed1; /* SteelBlue */
+  --nick-27: #6698f0; /* CornflowerBlue */
+  --nick-28: #3e9bff; /* DodgerBlue */
+  --nick-32: #9489ff; /* MediumSlateBlue */
+  --nick-33: #9589ff; /* SlateBlue */
+  --nick-34: #958ee4; /* DarkSlateBlue */
+  --nick-35: #b37efa; /* Indigo */
+  --nick-36: #f154ef; /* #bd0bbd */
+  --nick-37: #e269df; /* DarkMagenta */
+  --nick-38: #cb70ff; /* DarkOrchid */
+  --nick-39: #c773ff; /* DarkViolet */
 }
 
 /* Catppuccin, all four flavours */
