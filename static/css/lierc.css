@@ -858,21 +858,23 @@ ul.channel-controls li a:hover {
   list-style: none;
 
   /* spinner shown while older messages load: a ring with one solid arc,
-     over a faint track of the same colour */
+     over a faint track of the same colour. It's a plain 24px block (the
+     old icon spinner's row), with the ring painted inside its padding:
+     vertical margins here would collapse out of the list, and the panel
+     sizes its filler from the list's height. */
   &::before {
     content: "";
     display: block;
-    box-sizing: border-box;
+    box-sizing: content-box;
     width: 18px;
     height: 18px;
-    /* a 24px row, like the old icon spinner. A top margin would collapse
-       through the list, so the ring is nudged down instead. */
-    margin: 0 auto 6px;
-    position: relative;
-    top: 3px;
-    border: 2px solid color-mix(in srgb, var(--spinner) 25%, transparent);
-    border-top-color: var(--spinner);
-    border-radius: 50%;
+    padding: 3px;
+    margin: 0 auto;
+    background: conic-gradient(var(--spinner) 0 25%,
+      color-mix(in srgb, var(--spinner) 25%, transparent) 0) content-box;
+    /* keep only a 2px band at the edge of the circle */
+    mask: radial-gradient(farthest-side, transparent calc(100% - 2.5px),
+      #000 calc(100% - 2px) calc(100% - 0.5px), transparent) content-box;
     opacity: 0;
   }
 
