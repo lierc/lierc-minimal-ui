@@ -397,58 +397,17 @@ export const Render = function(message, opts) {
     return user;
   }
 
+  // A nick's colour is one of 40 slots, --nick-0 to --nick-39, which
+  // themes.css defines and any theme can override. The hash picks the slot,
+  // so a nick keeps its slot across themes.
   function string_to_color(str){
-    const colors = [
-      "MediumVioletRed",
-      "PaleVioletRed",
-      "DeepPink",
-      "HotPink",
-      "Red",
-      "#da1717", // "DarkRed",
-      "FireBrick",
-      "Crimson",
-      "IndianRed",
-      "Orange",
-      "DarkOrange",
-      "Coral",
-      "Tomato",
-      "OrangeRed",
-      "Maroon",
-      "#bb4545", // "Brown",
-      "#c56232", // "Sienna",
-      "SaddleBrown",
-      "Chocolate",
-      "Peru",
-      "DarkGoldenrod",
-      "Goldenrod",
-      "#6363b3", // "MidnightBlue",
-      "MediumBlue",
-      "#4040ff", // "Blue",
-      "RoyalBlue",
-      "SteelBlue",
-      "CornflowerBlue",
-      "DodgerBlue",
-      "DeepSkyBlue",
-      "LightSkyBlue",
-      "SkyBlue",
-      "MediumSlateBlue",
-      "SlateBlue",
-      "DarkSlateBlue",
-      "Indigo",
-      "#bd0bbd", // "Purple",
-      "DarkMagenta",
-      "DarkOrchid",
-      "DarkViolet"
-    ];
-    //colors = [ 'var(--yellow)', 'var(--orange)', 'var(--red)', 'var(--magenta)', 'var(--violet)', 'var(--blue)', 'var(--cyan)', 'var(--green)' ];
-
+    const m = 40;
     let c = 0;
-    const m = colors.length;
 
     for (let i = 0; i < str.length; i++) {
       c = ((c << 5) + str.charCodeAt(i)) % m
     }
 
-    return colors[c];
+    return `var(--nick-${c})`;
   }
 };

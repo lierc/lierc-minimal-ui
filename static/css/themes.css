@@ -42,6 +42,14 @@
   --mocha-peach:     #fab387;
   --mocha-red:       #f38ba8;
   --mocha-mauve:     #cba6f7;
+  --mocha-rosewater: #f5e0dc;
+  --mocha-flamingo:  #f2cdcd;
+  --mocha-pink:      #f5c2e7;
+  --mocha-maroon:    #eba0ac;
+  --mocha-yellow:    #f9e2af;
+  --mocha-teal:      #94e2d5;
+  --mocha-sky:       #89dceb;
+  --mocha-sapphire:  #74c7ec;
 }
 
 /* Colours and fonts that are the same in every theme. To make one follow
@@ -82,6 +90,52 @@
     sans-serif;
   --font-mono: "Menlo", "Inconsolata", "Consolas",
     "Droid Sans Mono", "Monaco", monospace;
+}
+
+/* Nick colours. render.js hashes each user to one of these 40 slots, so a
+   theme can recolour them (overriding any or all) without moving anyone
+   to a different slot. */
+:root {
+  --nick-0: MediumVioletRed;
+  --nick-1: PaleVioletRed;
+  --nick-2: DeepPink;
+  --nick-3: HotPink;
+  --nick-4: Red;
+  --nick-5: #da1717;
+  --nick-6: FireBrick;
+  --nick-7: Crimson;
+  --nick-8: IndianRed;
+  --nick-9: Orange;
+  --nick-10: DarkOrange;
+  --nick-11: Coral;
+  --nick-12: Tomato;
+  --nick-13: OrangeRed;
+  --nick-14: Maroon;
+  --nick-15: #bb4545;
+  --nick-16: #c56232;
+  --nick-17: SaddleBrown;
+  --nick-18: Chocolate;
+  --nick-19: Peru;
+  --nick-20: DarkGoldenrod;
+  --nick-21: Goldenrod;
+  --nick-22: #6363b3;
+  --nick-23: MediumBlue;
+  --nick-24: #4040ff;
+  --nick-25: RoyalBlue;
+  --nick-26: SteelBlue;
+  --nick-27: CornflowerBlue;
+  --nick-28: DodgerBlue;
+  --nick-29: DeepSkyBlue;
+  --nick-30: LightSkyBlue;
+  --nick-31: SkyBlue;
+  --nick-32: MediumSlateBlue;
+  --nick-33: SlateBlue;
+  --nick-34: DarkSlateBlue;
+  --nick-35: Indigo;
+  --nick-36: #bd0bbd;
+  --nick-37: DarkMagenta;
+  --nick-38: DarkOrchid;
+  --nick-39: DarkViolet;
 }
 
 /* Default theme */
@@ -319,4 +373,46 @@ body.catppuccin-mocha {
   --reaction-self-bg: color-mix(in srgb, var(--mocha-mauve) 20%, transparent);
   --reaction-self-bg-hover: color-mix(in srgb, var(--mocha-mauve) 30%, transparent);
   --reaction-self-count: var(--mocha-mauve);
+
+  /* nicks cycle through the 14 accent colours */
+  --nick-0: var(--mocha-rosewater);
+  --nick-1: var(--mocha-flamingo);
+  --nick-2: var(--mocha-pink);
+  --nick-3: var(--mocha-mauve);
+  --nick-4: var(--mocha-red);
+  --nick-5: var(--mocha-maroon);
+  --nick-6: var(--mocha-peach);
+  --nick-7: var(--mocha-yellow);
+  --nick-8: var(--mocha-green);
+  --nick-9: var(--mocha-teal);
+  --nick-10: var(--mocha-sky);
+  --nick-11: var(--mocha-sapphire);
+  --nick-12: var(--mocha-blue);
+  --nick-13: var(--mocha-lavender);
+  --nick-14: var(--mocha-rosewater);
+  --nick-15: var(--mocha-flamingo);
+  --nick-16: var(--mocha-pink);
+  --nick-17: var(--mocha-mauve);
+  --nick-18: var(--mocha-red);
+  --nick-19: var(--mocha-maroon);
+  --nick-20: var(--mocha-peach);
+  --nick-21: var(--mocha-yellow);
+  --nick-22: var(--mocha-green);
+  --nick-23: var(--mocha-teal);
+  --nick-24: var(--mocha-sky);
+  --nick-25: var(--mocha-sapphire);
+  --nick-26: var(--mocha-blue);
+  --nick-27: var(--mocha-lavender);
+  --nick-28: var(--mocha-rosewater);
+  --nick-29: var(--mocha-flamingo);
+  --nick-30: var(--mocha-pink);
+  --nick-31: var(--mocha-mauve);
+  --nick-32: var(--mocha-red);
+  --nick-33: var(--mocha-maroon);
+  --nick-34: var(--mocha-peach);
+  --nick-35: var(--mocha-yellow);
+  --nick-36: var(--mocha-green);
+  --nick-37: var(--mocha-teal);
+  --nick-38: var(--mocha-sky);
+  --nick-39: var(--mocha-sapphire);
 }
