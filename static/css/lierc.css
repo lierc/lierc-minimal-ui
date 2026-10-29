@@ -108,7 +108,8 @@ a:hover {
 
 #panel ol li.info.monospace,
 #panel ol li.info {
-  background: #eee;
+  --row-bg: #eee;
+  background: var(--row-bg);
   padding: 2px 10px;
   white-space: pre-wrap;
   color: #333;
@@ -119,7 +120,8 @@ a:hover {
 }
 
 #panel ol li.chat.info:hover {
-  background: #eee;
+  --row-bg: #eee;
+  background: var(--row-bg);
 }
 
 #panel ol li.chat {
@@ -138,25 +140,30 @@ a:hover {
 }
 
 #panel ol li.chat:hover {
-  background: rgba(0, 0, 0, 0.02);
+  --row-bg: rgba(0, 0, 0, 0.02);
+  background: var(--row-bg);
 }
 
 #panel ol li.chat.self {
-  background: rgba(49, 168, 255, 0.10);
+  --row-bg: rgba(49, 168, 255, 0.10);
+  background: var(--row-bg);
 }
 
 #panel ol li.chat.disconnect,
 #panel ol li.chat.connect {
-  background: rgba(49, 168, 255, 0.10);
+  --row-bg: rgba(49, 168, 255, 0.10);
+  background: var(--row-bg);
 }
 
 #panel ol li.chat.highlight {
-  background: rgba(118, 49, 255, 0.15);
+  --row-bg: rgba(118, 49, 255, 0.15);
+  background: var(--row-bg);
 }
 
 #panel ol li.chat.focused,
 #panel ol li.chat.search {
-  background: rgba(255, 239, 49, 0.2);
+  --row-bg: rgba(255, 239, 49, 0.2);
+  background: var(--row-bg);
 }
 
 #panel ol li.filler {
@@ -1341,15 +1348,16 @@ div.flex-wrap {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  background: #fff;
+  --panel-bg: #fff;
+  background: var(--panel-bg);
 }
 
 body.solarized .flex-wrap-right {
-  background: var(--base3);
+  --panel-bg: var(--base3);
 }
 
 body.solarized-dark .flex-wrap-right {
-  background: var(--base02);
+  --panel-bg: var(--base02);
   color: #fff;
 }
 
@@ -1883,7 +1891,11 @@ p.embed-source {
   padding: 2px;
   font-size: 15px;
   line-height: 15px;
-  background: transparent;
+  /* the row's tint (--row-bg, often translucent) over the solid panel
+     colour, so the button matches its message but hides the text under it */
+  background:
+    linear-gradient(var(--row-bg, transparent), var(--row-bg, transparent)),
+    var(--panel-bg);
   border: 1px solid #ccc;
   border-radius: 4px;
   z-index: 99;
