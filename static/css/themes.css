@@ -165,7 +165,6 @@ body.catppuccin-mocha {
   --warning: #ffa130;                /* disconnected bar, last-read and lastlog markers */
   --required: red;
   --notice-channel: #02c702;
-  --media-toggle: #7600bd;           /* image and embed show/hide arrows */
   --focus-border: #7a9cd3;
   --focus-ring: #9ec0f7;
   --coloring-border: #83d37a;        /* input while choosing an IRC colour */
@@ -274,6 +273,7 @@ body.catppuccin-mocha {
   --highlight-bg: var(--tint-highlight);   /* rows that mention you */
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
+  --media-toggle: #7600bd;         /* image and embed show/hide arrows */
 
   --date-text: var(--base01);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
@@ -336,6 +336,7 @@ body.solarized {
   --highlight-bg: var(--tint-highlight);   /* rows that mention you */
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
+  --media-toggle: #7600bd;         /* image and embed show/hide arrows */
 
   --date-text: var(--base01);
   --meta-text: var(--grey-555);
@@ -398,6 +399,7 @@ body.solarized-dark {
   --highlight-bg: var(--tint-highlight);   /* rows that mention you */
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
+  --media-toggle: #7600bd;         /* image and embed show/hide arrows */
 
   --date-text: var(--base1);
   --meta-text: var(--base1);
@@ -498,6 +500,7 @@ body.slack {
   --highlight-bg: rgba(242, 199, 68, 0.2);   /* rows that mention you */
   --typing-text: #616061;
   --last-read: #e01e5a;          /* the new-messages line */
+  --media-toggle: #616061;         /* image and embed show/hide arrows */
 
   --date-text: #1d1c1d;
   --meta-text: #1d1c1d;
@@ -564,6 +567,7 @@ body.catppuccin-mocha {
   --highlight-bg: color-mix(in srgb, var(--ctp-mauve) 15%, transparent);   /* rows that mention you */
   --typing-text: var(--ctp-overlay1);
   --last-read: var(--ctp-peach);          /* the new-messages line */
+  --media-toggle: var(--ctp-mauve);         /* image and embed show/hide arrows */
 
   --date-text: var(--ctp-overlay1);
   --meta-text: var(--ctp-subtext0);
