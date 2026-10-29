@@ -238,6 +238,7 @@ body.catppuccin-mocha {
   --panel-text: var(--base03);
   --topic-bg: transparent;
   --nicks-toggle-bg: var(--white);
+  --nicks-toggle-icon: var(--magenta);   /* the ⋮ that shows the nick list */
   --foot-bg: transparent;
   --link: var(--blue);
   --link-visited: var(--violet);
@@ -301,6 +302,7 @@ body.solarized {
   --panel-text: var(--base03);
   --topic-bg: var(--base2);
   --nicks-toggle-bg: var(--base2);
+  --nicks-toggle-icon: var(--magenta);   /* the ⋮ that shows the nick list */
   --foot-bg: var(--base2);
   --link: var(--blue);
   --link-visited: var(--violet);
@@ -364,6 +366,7 @@ body.solarized-dark {
   --panel-text: var(--white);
   --topic-bg: var(--base03);
   --nicks-toggle-bg: var(--base03);
+  --nicks-toggle-icon: var(--magenta);   /* the ⋮ that shows the nick list */
   --foot-bg: transparent;
   --link: var(--blue);
   --link-visited: var(--violet);
@@ -465,6 +468,7 @@ body.slack {
   --panel-text: #1d1c1d;
   --topic-bg: #fff;
   --nicks-toggle-bg: #fff;
+  --nicks-toggle-icon: #616061;   /* the ⋮ that shows the nick list */
   --foot-bg: transparent;
   --link: #1264a3;
   --link-visited: #1264a3;
@@ -532,6 +536,7 @@ body.catppuccin-mocha {
   --panel-text: var(--ctp-text);
   --topic-bg: var(--ctp-mantle);
   --nicks-toggle-bg: var(--ctp-mantle);
+  --nicks-toggle-icon: var(--ctp-pink);   /* the ⋮ that shows the nick list */
   --foot-bg: transparent;
   --link: var(--ctp-blue);
   --link-visited: var(--ctp-lavender);
