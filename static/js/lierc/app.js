@@ -74,17 +74,15 @@ export class App {
     setInterval(() => this.ping_server(), 1000 * 15);
     setInterval(() => this.render_typing(), 500);
 
-    const check_stream = () => {
-      if (this.stream)
-        this.stream.check();
-    };
+    const wake_stream = () => this.stream?.wake();
 
     document.addEventListener("visibilitychange", () => {
       if (!document.hidden)
-        check_stream();
+        wake_stream();
     });
-    window.addEventListener("online", check_stream);
-    window.addEventListener("pageshow", check_stream);
+    window.addEventListener("pageshow", wake_stream);
+    window.addEventListener("online", () => this.stream?.reconnect());
+    window.addEventListener("offline", () => this.stream?.close());
     this.setup_highlights();
 
     this.#start();

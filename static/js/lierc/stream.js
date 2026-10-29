@@ -1,5 +1,7 @@
-// server sends a ping every 15 seconds
-const heartbeat_timeout = 40000;
+// server sends a ping every 5 seconds
+const heartbeat_timeout = 15000;
+// on wake a healthy stream has pinged within the last interval
+const wake_timeout = 7000;
 
 export class Stream {
   #listeners = {};
@@ -115,10 +117,25 @@ export class Stream {
       this.eventsource.close();
   }
 
-  check() {
+  // the page became visible again, possibly after sleep
+  wake() {
+    this.check(wake_timeout);
+  }
+
+  // the network changed, so the old connection is likely dead; skip any
+  // backoff left from failed attempts while offline
+  reconnect() {
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.retries = 0;
+    this.close();
+    this.check();
+  }
+
+  check(timeout = heartbeat_timeout) {
     // a half-open connection (e.g. after sleep) stays OPEN forever
     if (this.eventsource?.readyState == 1
-        && Date.now() - this.last_event > heartbeat_timeout) {
+        && Date.now() - this.last_event > timeout) {
       console.log("no heartbeat, forcing reconnect");
       this.close();
     }
