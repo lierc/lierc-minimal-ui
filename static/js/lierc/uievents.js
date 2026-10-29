@@ -4,6 +4,7 @@ import { Unformat } from "./format.js";
 export const UIEvents = function(app) {
   const max_userhost_len = 63 + 10 + 1;
   const mac = /^Mac/.test(window.navigator.platform);
+  const narrow = window.matchMedia('(max-width: 800px)'); // lierc.css's mobile layout
 
   function clickTouchEvent(el, f) {
     ['click', 'touch'].forEach((type) => {
@@ -243,6 +244,13 @@ export const UIEvents = function(app) {
         el.classList.remove('open');
       }
     });
+    // The header's menu closes the same way. On mobile the open menu is the
+    // whole screen (the nav replaces the chat), so it stays open there.
+    if (app.elem.flex_wrap.classList.contains('open')
+        && !narrow.matches
+        && !e.target.closest('.flex-wrap-left header, #global-controls')) {
+      app.elem.flex_wrap.classList.remove('open');
+    }
   });
 
   function join_click(e) {
