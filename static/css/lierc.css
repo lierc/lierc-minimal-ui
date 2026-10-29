@@ -1021,7 +1021,7 @@ ul.channel-controls li a:hover {
       width: 100%;
       height: 0px;
       border: 0;
-      border-top: 1px solid var(--base1);
+      border-top: 1px solid var(--date-line);
       margin: 0;
       padding: 0;
       z-index: 1;

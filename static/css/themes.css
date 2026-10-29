@@ -284,6 +284,7 @@ body.catppuccin-mocha {
   --button-outline: var(--border);       /* the react button's box */
 
   --date-text: var(--base01);
+  --date-line: var(--base1);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
   --meta-text-hover: var(--black);
   --meta-border: var(--grey-eee);           /* nick list edges */
@@ -366,6 +367,7 @@ body.solarized {
   --button-outline: var(--border);       /* the react button's box */
 
   --date-text: var(--base01);
+  --date-line: var(--base1);
   --meta-text: var(--grey-555);
   --meta-text-hover: var(--black);
   --meta-border: var(--grey-eee);           /* nick list edges */
@@ -448,6 +450,7 @@ body.solarized-dark {
   --button-outline: var(--border);       /* the react button's box */
 
   --date-text: var(--base1);
+  --date-line: var(--base1);
   --meta-text: var(--base1);
   --meta-text-hover: var(--white);
   --meta-border: var(--base03);           /* nick list edges */
@@ -568,6 +571,7 @@ body.slack {
   --button-outline: #dddddd;       /* the react button's box */
 
   --date-text: #1d1c1d;
+  --date-line: #dddddd;
   --meta-text: #1d1c1d;
   --meta-text-hover: #1264a3;
   --meta-border: #dddddd;           /* nick list edges */
@@ -654,6 +658,7 @@ body.catppuccin-mocha {
   --button-outline: var(--ctp-surface1);       /* the react button's box */
 
   --date-text: var(--ctp-overlay1);
+  --date-line: var(--ctp-surface1);
   --meta-text: var(--ctp-subtext0);
   --meta-text-hover: var(--ctp-text);
   --meta-border: var(--ctp-surface0);           /* nick list edges */
