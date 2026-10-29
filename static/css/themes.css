@@ -96,6 +96,8 @@
   --sidebar-menu-link: var(--grey-777);
   --sidebar-menu-link-hover: var(--grey-555);
 
+  --spinner: var(--warning);           /* loading older messages */
+
   --date-text: var(--base01);
   --meta-text: var(--grey-555);                 /* channel controls and nick list */
   --meta-text-hover: var(--black);
@@ -149,6 +151,8 @@ body.solarized {
   --sidebar-menu-link: var(--grey-777);
   --sidebar-menu-link-hover: var(--grey-555);
 
+  --spinner: var(--warning);           /* loading older messages */
+
   --date-text: var(--base01);
   --meta-text: var(--grey-555);
   --meta-text-hover: var(--black);
@@ -201,6 +205,8 @@ body.solarized-dark {
   --sidebar-menu-hover: var(--base2);
   --sidebar-menu-link: var(--grey-777);
   --sidebar-menu-link-hover: var(--grey-555);
+
+  --spinner: var(--warning);           /* loading older messages */
 
   --date-text: var(--base1);
   --meta-text: var(--base1);
