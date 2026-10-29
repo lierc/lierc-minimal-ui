@@ -23,39 +23,79 @@
   --green:     #859900;
 }
 
+/* Colours and fonts that are the same in every theme. To make one follow
+   the theme, move it into the theme blocks below. */
+:root {
+  --white: #fff;
+  --black: #000;
+  --grey-333: #333;
+  --grey-555: #555;
+  --grey-666: #666;
+  --grey-777: #777;
+  --grey-999: #999;
+  --grey-ddd: #ddd;
+  --grey-eee: #eee;
+  --grey-efefef: #efefef;
+  --border: #ccc;
+
+  --warning: #ffa130;                /* disconnected bar, last-read and lastlog markers */
+  --required: red;
+  --notice-channel: #02c702;
+  --media-toggle: #7600bd;           /* image and embed show/hide arrows */
+  --focus-border: #7a9cd3;
+  --focus-ring: #9ec0f7;
+  --coloring-border: #83d37a;        /* input while choosing an IRC colour */
+  --coloring-ring: #a9f79e;
+
+  --tint-hover: rgba(0, 0, 0, 0.02);           /* message row tints */
+  --tint-self: rgba(49, 168, 255, 0.10);
+  --tint-highlight: rgba(118, 49, 255, 0.15);
+  --tint-focused: rgba(255, 239, 49, 0.2);
+  --tint-controls: rgba(0, 0, 0, 0.03);
+  --media-outline: rgba(0, 0, 0, 0.025);
+  --overlay-bg: rgba(0, 0, 0, 0.5);
+
+  --font-ui: BlinkMacSystemFont, "San Francisco",
+    "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell",
+    "Fira Sans", "Droid Sans", "Helvetica Neue",
+    sans-serif;
+  --font-mono: "Menlo", "Inconsolata", "Consolas",
+    "Droid Sans Mono", "Monaco", monospace;
+}
+
 /* Default theme */
 :root {
-  --panel-bg: #fff;                  /* message area, date separator, last-read marker */
+  --panel-bg: var(--white);                  /* message area, date separator, last-read marker */
   --panel-text: var(--base03);
   --topic-bg: transparent;
-  --nicks-toggle-bg: #fff;
+  --nicks-toggle-bg: var(--white);
   --foot-bg: transparent;
 
   --input-bg: transparent;
-  --input-border: #ccc;
-  --input-focus-border: #7a9cd3;
-  --input-focus-ring: #9ec0f7;
-  --input-disabled-bg: #eee;
-  --input-coloring-border: #83d37a;
-  --input-coloring-focus-border: #83d37a;
-  --input-coloring-focus-ring: #a9f79e;
+  --input-border: var(--border);
+  --input-focus-border: var(--focus-border);
+  --input-focus-ring: var(--focus-ring);
+  --input-disabled-bg: var(--grey-eee);
+  --input-coloring-border: var(--coloring-border);
+  --input-coloring-focus-border: var(--coloring-border);
+  --input-coloring-focus-ring: var(--coloring-ring);
 
   --date-text: var(--base01);
-  --meta-text: #555;                 /* channel controls and nick list */
-  --meta-text-hover: #000;
+  --meta-text: var(--grey-555);                 /* channel controls and nick list */
+  --meta-text-hover: var(--black);
 
-  --image-border: #eee;
-  --image-border-hover: #ccc;
-  --embed-border: #ddd;
-  --embed-border-hover: #ccc;
+  --image-border: var(--grey-eee);
+  --image-border-hover: var(--border);
+  --embed-border: var(--grey-ddd);
+  --embed-border-hover: var(--border);
   --embed-open-border: none;
   --embed-open-border-hover: none;
 
   --reaction-bg: rgba(0, 0, 0, 0.05);
   --reaction-bg-hover: rgba(0, 0, 0, 0.09);
-  --reaction-border: #ccc;
-  --reaction-border-hover: #999;
-  --reaction-count: #666;
+  --reaction-border: var(--border);
+  --reaction-border-hover: var(--grey-999);
+  --reaction-count: var(--grey-666);
   --reaction-self-bg: rgba(38, 139, 210, 0.15);
   --reaction-self-bg-hover: rgba(38, 139, 210, 0.25);
   --reaction-self-count: var(--blue);
@@ -69,30 +109,30 @@ body.solarized {
   --foot-bg: var(--base2);
 
   --input-bg: var(--base3);
-  --input-border: #ccc;
-  --input-focus-border: #7a9cd3;
-  --input-focus-ring: #9ec0f7;
+  --input-border: var(--border);
+  --input-focus-border: var(--focus-border);
+  --input-focus-ring: var(--focus-ring);
   --input-disabled-bg: var(--base3);
-  --input-coloring-border: #83d37a;
-  --input-coloring-focus-border: #83d37a;
-  --input-coloring-focus-ring: #a9f79e;
+  --input-coloring-border: var(--coloring-border);
+  --input-coloring-focus-border: var(--coloring-border);
+  --input-coloring-focus-ring: var(--coloring-ring);
 
   --date-text: var(--base01);
-  --meta-text: #555;
-  --meta-text-hover: #000;
+  --meta-text: var(--grey-555);
+  --meta-text-hover: var(--black);
 
-  --image-border: #eee;
-  --image-border-hover: #ccc;
-  --embed-border: #ddd;
-  --embed-border-hover: #ccc;
+  --image-border: var(--grey-eee);
+  --image-border-hover: var(--border);
+  --embed-border: var(--grey-ddd);
+  --embed-border-hover: var(--border);
   --embed-open-border: none;
   --embed-open-border-hover: none;
 
   --reaction-bg: rgba(0, 0, 0, 0.05);
   --reaction-bg-hover: rgba(0, 0, 0, 0.09);
-  --reaction-border: #ccc;
-  --reaction-border-hover: #999;
-  --reaction-count: #666;
+  --reaction-border: var(--border);
+  --reaction-border-hover: var(--grey-999);
+  --reaction-count: var(--grey-666);
   --reaction-self-bg: rgba(38, 139, 210, 0.15);
   --reaction-self-bg-hover: rgba(38, 139, 210, 0.25);
   --reaction-self-count: var(--blue);
@@ -100,7 +140,7 @@ body.solarized {
 
 body.solarized-dark {
   --panel-bg: var(--base02);
-  --panel-text: #fff;
+  --panel-text: var(--white);
   --topic-bg: var(--base03);
   --nicks-toggle-bg: var(--base03);
   --foot-bg: transparent;
@@ -109,14 +149,14 @@ body.solarized-dark {
   --input-border: var(--base01);
   --input-focus-border: var(--base0);
   --input-focus-ring: var(--base0);
-  --input-disabled-bg: #eee;
+  --input-disabled-bg: var(--grey-eee);
   --input-coloring-border: var(--base01);
   --input-coloring-focus-border: var(--base0);
   --input-coloring-focus-ring: var(--base0);
 
   --date-text: var(--base1);
   --meta-text: var(--base1);
-  --meta-text-hover: #fff;
+  --meta-text-hover: var(--white);
 
   --image-border: var(--base01);
   --image-border-hover: var(--base00);
@@ -132,5 +172,5 @@ body.solarized-dark {
   --reaction-count: var(--base1);
   --reaction-self-bg: rgba(38, 139, 210, 0.25);
   --reaction-self-bg-hover: rgba(38, 139, 210, 0.35);
-  --reaction-self-count: #fff;
+  --reaction-self-count: var(--white);
 }
