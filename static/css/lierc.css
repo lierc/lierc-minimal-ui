@@ -1,22 +1,3 @@
-:root {
-  --base03:    #002b36;
-  --base02:    #073642;
-  --base01:    #586e75;
-  --base00:    #657b83;
-  --base0:     #839496;
-  --base1:     #93a1a1;
-  --base2:     #eee8d5;
-  --base3:     #fdf6e3;
-  --yellow:    #b58900;
-  --orange:    #cb4b16;
-  --red:       #dc322f;
-  --magenta:   #d33682;
-  --violet:    #6c71c4;
-  --blue:      #268bd2;
-  --cyan:      #2aa198;
-  --green:     #859900;
-}
-
 html,body {
   overflow: hidden;
   background: var(--base03);
@@ -221,25 +202,16 @@ a:hover {
 
 #panel ol .date-separator time {
   font-weight: bold;
-  color: var(--base01);
+  color: var(--date-text);
   font-size: 12px;
   height: 12px;
   line-height: 12px;
   text-align: center;
   display: inline-block;
-  background: #fff;
+  background: var(--panel-bg);
   padding: 2px 10px;
   -webkit-user-select: none;
   cursor: default;
-}
-
-body.solarized #panel ol .date-separator time {
-  background: var(--base3);
-}
-
-body.solarized-dark #panel ol .date-separator time {
-  background: var(--base02);
-  color: var(--base1);
 }
 
 #panel ol .date-separator hr {
@@ -299,17 +271,7 @@ body.solarized-dark #panel ol .date-separator time {
   border-top: 2px dotted #ffa130 !important;
   position: relative;
   z-index: 9;
-  background: #fff;
-}
-
-body.solarized #panel ol .last-read:before,
-body.solarized #panel ol .last-read {
-  background: var(--base3);
-}
-
-body.solarized-dark #panel ol .last-read:before,
-body.solarized-dark #panel ol .last-read {
-  background: var(--base02);
+  background: var(--panel-bg);
 }
 
 #panel ol .last-read + li.chat {
@@ -324,7 +286,7 @@ body.solarized-dark #panel ol .last-read {
   padding: 0 10px;
   top: -6px;
   right: 0px;
-  background: #fff;
+  background: var(--panel-bg);
   color: #ffa130;
   font-size: 10px;
   line-height: 10px;
@@ -434,20 +396,12 @@ body.solarized-dark #panel ol .last-read {
   display: inline-block;
   max-width: 100%;
   box-sizing: border-box;
-  border: 1px solid #eee;
+  border: 1px solid var(--image-border);
   outline: 2px solid rgba(0,0,0,0.025);
 }
 
-body.solarized-dark .image-wrap a {
-  border: 1px solid var(--base01);
-}
-
 .image-wrap a:hover {
-  border: 1px solid #ccc;
-}
-
-body.solarized-dark .image-wrap a:hover {
-  border: 1px solid var(--base00);
+  border: 1px solid var(--image-border-hover);
 }
 
 .image-wrap audio,
@@ -473,10 +427,7 @@ body.solarized-dark .image-wrap a:hover {
   right: 0px;
   bottom: 0px;
   position: relative;
-}
-
-body.solarized #foot {
-  background: var(--base2);
+  background: var(--foot-bg);
 }
 
 .invert {
@@ -509,7 +460,8 @@ body.solarized #foot {
   font-size: 15px;
   line-height: 15px;
   min-height: 19px;
-  border: 1px solid #ccc;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
   padding: 5px;
   margin: 0;
   white-space: pre-wrap;
@@ -519,32 +471,24 @@ body.solarized #foot {
     sans-serif;
 }
 
-body.solarized #input .input {
-  background: var(--base3);
-}
-body.solarized-dark #input .input {
-  border: 1px solid var(--base01);
-}
-
 #input .input.disabled {
-  background: #eee;
+  background: var(--input-disabled-bg);
 }
 
-#input .input.coloring:focus,
 #input .input.coloring {
-  border: 1px solid #83d37a;
+  border: 1px solid var(--input-coloring-border);
   box-shadow: 0 0 0 1px #a9f79e;
 }
 
-#input .input:focus {
-  border: 1px solid #7a9cd3;
-  box-shadow: 0 0 0 1px #9ec0f7;
-  border-radius: 2px;
+#input .input.coloring:focus {
+  border: 1px solid var(--input-coloring-focus-border);
+  box-shadow: 0 0 0 1px var(--input-coloring-focus-ring);
 }
 
-body.solarized-dark #input .input:focus {
-  border: 1px solid var(--base0);
-  box-shadow: 0 0 0 1px var(--base0);
+#input .input:focus {
+  border: 1px solid var(--input-focus-border);
+  box-shadow: 0 0 0 1px var(--input-focus-ring);
+  border-radius: 2px;
 }
 
 .nav#meta-channels {
@@ -821,14 +765,7 @@ body.disconnected #reconnect {
   min-height: 15px;
   display: flex;
   box-shadow: 0 0px 6px rgba(0,0,0,0.2);
-}
-
-body.solarized #topic {
-  background: var(--base2);
-}
-
-body.solarized-dark #topic {
-  background: var(--base03);
+  background: var(--topic-bg);
 }
 
 #topic.expanded {
@@ -1348,17 +1285,8 @@ div.flex-wrap {
   display: flex;
   flex-direction: column;
   overflow: hidden;
-  --panel-bg: #fff;
   background: var(--panel-bg);
-}
-
-body.solarized .flex-wrap-right {
-  --panel-bg: var(--base3);
-}
-
-body.solarized-dark .flex-wrap-right {
-  --panel-bg: var(--base02);
-  color: #fff;
+  color: var(--panel-text);
 }
 
 body[data-panel-type=channel] .channel-meta {
@@ -1375,7 +1303,7 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
 
 #toggle-nicks {
   color: #fff;
-  background: #fff;
+  background: var(--nicks-toggle-bg);
   position: absolute;
   top: 0px;
   right: 0px;
@@ -1385,25 +1313,8 @@ body[data-panel-type=channel].show-nicklist .channel-meta {
   cursor: pointer;
 }
 
-body.solarized #toggle-nicks {
-  background: var(--base2);
-}
-
-body.solarized-dark #toggle-nicks {
-  background: var(--base03);
-}
-
-.show-nicklist #toggle-nicks,
 #toggle-nicks:hover {
-  background: #fff;
-}
-
-body.solarized #toggle-nicks:hover {
-  background: var(--base3);
-}
-
-body.solarized-dark #toggle-nicks:hover {
-  background: var(--base02);
+  background: var(--panel-bg);
 }
 
 ul.channel-controls {
@@ -1456,11 +1367,7 @@ ul.channel-controls li a:hover {
   flex-direction: column;
   -webkit-overflow-scrolling: touch;
   -webkit-user-select: none;
-  color: #555;
-}
-
-body.solarized-dark .channel-meta {
-  color: var(--base1);
+  color: var(--meta-text);
 }
 
 #nicks {
@@ -1484,19 +1391,11 @@ body.solarized-dark .channel-meta {
 
 #nicks ul li a {
   cursor: pointer;
-  color: #555;
-}
-
-body.solarized-dark #nicks ul li a {
-  color: var(--base1);
+  color: var(--meta-text);
 }
 
 #nicks ul li a:hover {
-  color: #000;
-}
-
-body.solarized-dark #nicks ul li a:hover {
-  color: #fff;
+  color: var(--meta-text-hover);
 }
 
 .flex-wrap-panel {
@@ -1784,16 +1683,12 @@ body.solarized-dark #nicks ul li a:hover {
   overflow: hidden;
   max-width: 100%;
   box-sizing: border-box;
-  border: 1px solid #ddd;
+  border: 1px solid var(--embed-border);
   cursor: pointer;
   max-width: 500px;
   outline: 2px solid rgba(0,0,0,0.025);
   position: relative;
   flex: 1 1 auto;
-}
-
-body.solarized-dark .embed-wrap {
-  border: 1px solid var(--base01);
 }
 
 .embed-wrap-wrap {
@@ -1805,9 +1700,8 @@ body.solarized-dark .embed-wrap {
   flex: 0 0 100%;
 }
 
-.embed-wrap.open:hover,
 .embed-wrap.open {
-  border: none;
+  border: var(--embed-open-border);
   border-radius: 0px;
   cursor: auto;
   max-width: none;
@@ -1815,12 +1709,12 @@ body.solarized-dark .embed-wrap {
   background: none;
 }
 
-.embed-wrap:hover {
-  border: 1px solid #ccc;
+.embed-wrap.open:hover {
+  border: var(--embed-open-border-hover);
 }
 
-body.solarized-dark .embed-wrap:hover {
-  border: 1px solid var(--base00);
+.embed-wrap:hover {
+  border: 1px solid var(--embed-border-hover);
 }
 
 .embed-wrap p,
@@ -1943,13 +1837,13 @@ li.message:hover .message-controls,
 }
 
 .reactions .reaction {
-  background: rgba(0,0,0,0.05);
+  background: var(--reaction-bg);
   display: inline-flex;
   align-items: center;
   gap: 4px;
   text-align: center;
   padding: 3px 6px;
-  border: 1px solid #ccc;
+  border: 1px solid var(--reaction-border);
   box-sizing: border-box;
   border-radius: 10px;
   color: inherit;
@@ -1959,8 +1853,8 @@ li.message:hover .message-controls,
 }
 
 .reactions .reaction:hover {
-  background: rgba(0,0,0,0.09);
-  border-color: #999;
+  background: var(--reaction-bg-hover);
+  border-color: var(--reaction-border-hover);
 }
 
 .reactions .reaction-emoji {
@@ -1971,47 +1865,20 @@ li.message:hover .message-controls,
 .reactions .reaction-count {
   font-size: 13px;
   font-weight: bold;
-  color: #666;
+  color: var(--reaction-count);
 }
 
 .reactions .reaction.self {
-  background: rgba(38, 139, 210, 0.15);
+  background: var(--reaction-self-bg);
   border-color: var(--blue);
 }
 
 .reactions .reaction.self:hover {
-  background: rgba(38, 139, 210, 0.25);
+  background: var(--reaction-self-bg-hover);
 }
 
 .reactions .reaction.self .reaction-count {
-  color: var(--blue);
-}
-
-body.solarized-dark .reactions .reaction {
-  background: rgba(255,255,255,0.07);
-  border-color: var(--base01);
-}
-
-body.solarized-dark .reactions .reaction:hover {
-  background: rgba(255,255,255,0.13);
-  border-color: var(--base00);
-}
-
-body.solarized-dark .reactions .reaction-count {
-  color: var(--base1);
-}
-
-body.solarized-dark .reactions .reaction.self {
-  background: rgba(38, 139, 210, 0.25);
-  border-color: var(--blue);
-}
-
-body.solarized-dark .reactions .reaction.self:hover {
-  background: rgba(38, 139, 210, 0.35);
-}
-
-body.solarized-dark .reactions .reaction.self .reaction-count {
-  color: #fff;
+  color: var(--reaction-self-count);
 }
 
 #color-info {

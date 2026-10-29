@@ -1,0 +1,136 @@
+/* Colours and themes. lierc.css only refers to the variables defined here.
+
+   A theme is one block that sets every theme variable below; app.js puts
+   the theme's name on <body> (no class means the default theme). */
+
+/* Solarized palette (https://ethanschoonover.com/solarized/) */
+:root {
+  --base03:    #002b36;
+  --base02:    #073642;
+  --base01:    #586e75;
+  --base00:    #657b83;
+  --base0:     #839496;
+  --base1:     #93a1a1;
+  --base2:     #eee8d5;
+  --base3:     #fdf6e3;
+  --yellow:    #b58900;
+  --orange:    #cb4b16;
+  --red:       #dc322f;
+  --magenta:   #d33682;
+  --violet:    #6c71c4;
+  --blue:      #268bd2;
+  --cyan:      #2aa198;
+  --green:     #859900;
+}
+
+/* Default theme */
+:root {
+  --panel-bg: #fff;                  /* message area, date separator, last-read marker */
+  --panel-text: var(--base03);
+  --topic-bg: transparent;
+  --nicks-toggle-bg: #fff;
+  --foot-bg: transparent;
+
+  --input-bg: transparent;
+  --input-border: #ccc;
+  --input-focus-border: #7a9cd3;
+  --input-focus-ring: #9ec0f7;
+  --input-disabled-bg: #eee;
+  --input-coloring-border: #83d37a;
+  --input-coloring-focus-border: #83d37a;
+  --input-coloring-focus-ring: #a9f79e;
+
+  --date-text: var(--base01);
+  --meta-text: #555;                 /* channel controls and nick list */
+  --meta-text-hover: #000;
+
+  --image-border: #eee;
+  --image-border-hover: #ccc;
+  --embed-border: #ddd;
+  --embed-border-hover: #ccc;
+  --embed-open-border: none;
+  --embed-open-border-hover: none;
+
+  --reaction-bg: rgba(0, 0, 0, 0.05);
+  --reaction-bg-hover: rgba(0, 0, 0, 0.09);
+  --reaction-border: #ccc;
+  --reaction-border-hover: #999;
+  --reaction-count: #666;
+  --reaction-self-bg: rgba(38, 139, 210, 0.15);
+  --reaction-self-bg-hover: rgba(38, 139, 210, 0.25);
+  --reaction-self-count: var(--blue);
+}
+
+body.solarized {
+  --panel-bg: var(--base3);
+  --panel-text: var(--base03);
+  --topic-bg: var(--base2);
+  --nicks-toggle-bg: var(--base2);
+  --foot-bg: var(--base2);
+
+  --input-bg: var(--base3);
+  --input-border: #ccc;
+  --input-focus-border: #7a9cd3;
+  --input-focus-ring: #9ec0f7;
+  --input-disabled-bg: var(--base3);
+  --input-coloring-border: #83d37a;
+  --input-coloring-focus-border: #83d37a;
+  --input-coloring-focus-ring: #a9f79e;
+
+  --date-text: var(--base01);
+  --meta-text: #555;
+  --meta-text-hover: #000;
+
+  --image-border: #eee;
+  --image-border-hover: #ccc;
+  --embed-border: #ddd;
+  --embed-border-hover: #ccc;
+  --embed-open-border: none;
+  --embed-open-border-hover: none;
+
+  --reaction-bg: rgba(0, 0, 0, 0.05);
+  --reaction-bg-hover: rgba(0, 0, 0, 0.09);
+  --reaction-border: #ccc;
+  --reaction-border-hover: #999;
+  --reaction-count: #666;
+  --reaction-self-bg: rgba(38, 139, 210, 0.15);
+  --reaction-self-bg-hover: rgba(38, 139, 210, 0.25);
+  --reaction-self-count: var(--blue);
+}
+
+body.solarized-dark {
+  --panel-bg: var(--base02);
+  --panel-text: #fff;
+  --topic-bg: var(--base03);
+  --nicks-toggle-bg: var(--base03);
+  --foot-bg: transparent;
+
+  --input-bg: transparent;
+  --input-border: var(--base01);
+  --input-focus-border: var(--base0);
+  --input-focus-ring: var(--base0);
+  --input-disabled-bg: #eee;
+  --input-coloring-border: var(--base01);
+  --input-coloring-focus-border: var(--base0);
+  --input-coloring-focus-ring: var(--base0);
+
+  --date-text: var(--base1);
+  --meta-text: var(--base1);
+  --meta-text-hover: #fff;
+
+  --image-border: var(--base01);
+  --image-border-hover: var(--base00);
+  --embed-border: var(--base01);
+  --embed-border-hover: var(--base00);
+  --embed-open-border: 1px solid var(--base01);
+  --embed-open-border-hover: 1px solid var(--base00);
+
+  --reaction-bg: rgba(255, 255, 255, 0.07);
+  --reaction-bg-hover: rgba(255, 255, 255, 0.13);
+  --reaction-border: var(--base01);
+  --reaction-border-hover: var(--base00);
+  --reaction-count: var(--base1);
+  --reaction-self-bg: rgba(38, 139, 210, 0.25);
+  --reaction-self-bg-hover: rgba(38, 139, 210, 0.35);
+  --reaction-self-count: #fff;
+}
