@@ -1,5 +1,6 @@
 import { API } from "./api.js";
 import { Render } from "./render.js";
+import { apply_theme } from "./theme.js";
 
 export class Logs {
   constructor(url) {
@@ -74,7 +75,22 @@ export class Logs {
     this.populate_datalist();
   }
 
+  // the theme picked in the app, saved as the "theme" preference
+  async load_theme() {
+    try {
+      const prefs = await this.api.get("/preference");
+      const pref = prefs.find((p) => p.name == "theme");
+      if (pref)
+        apply_theme(JSON.parse(pref.value));
+    }
+    catch (e) {
+      console.log(e);
+    }
+  }
+
   init() {
+    this.load_theme();
+
     const now = new Date();
     now.setMinutes(now.getMinutes() - now.getTimezoneOffset());
     this.from.value = JSON.stringify(now).slice(1,11);

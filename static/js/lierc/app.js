@@ -6,14 +6,13 @@ import { Emoji } from "./emoji.js";
 import { Notifier } from "./notifier.js";
 import { Panel } from "./panel.js";
 import { Render } from "./render.js";
+import { apply_theme } from "./theme.js";
 import { UIEvents } from "./uievents.js";
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
 
-const themes = ["solarized-dark", "solarized", "slack", "catppuccin-latte",
-  "catppuccin-frappe", "catppuccin-macchiato", "catppuccin-mocha"];
 
 export class App {
   constructor(url, user) {
@@ -1568,12 +1567,7 @@ export class App {
   }
 
   set_theme(theme, skip_save) {
-    themes.forEach((t) => {
-      document.body.classList.remove(t);
-    });
-    if (themes.indexOf(theme) != -1) {
-      document.body.classList.add(theme);
-    }
+    apply_theme(theme);
     if (this.theme != theme) {
       this.theme = theme;
       this.elem.themes.value = theme;

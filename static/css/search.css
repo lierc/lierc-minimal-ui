@@ -1,21 +1,24 @@
 #log-search {
   display: block;
   padding: 5px 10px;
+  color-scheme: var(--color-scheme);
 }
 
+/* the search form takes the theme's dialog colours */
 .flex-wrap-left {
-  background: #eee;
+  background: var(--popup-bg);
+  color: var(--popup-text);
 }
 
 #log-search label {
   font-weight: bold;
-  color: #666;
+  color: var(--popup-muted);
   font-size: 14px;
   display: block;
 }
 
 #status {
-  color: #666;
+  color: var(--popup-muted);
   text-align: center;
 }
 
@@ -41,7 +44,7 @@
 
 p.note {
   font-size: 12px;
-  color: #666;
+  color: var(--popup-muted);
 }
 
 span.note {
