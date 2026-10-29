@@ -446,6 +446,68 @@ body.solarized-dark {
   --nick-39: #c773ff; /* DarkViolet */
 }
 
+/* Slack: its classic default sidebar theme, Aubergine
+   (#3F0E40,#350D36,#1164A3,#FFFFFF,#350D36,#FFFFFF,#2BAC76,#CD2553),
+   with Slack's light message area */
+body.slack {
+  --panel-bg: #fff;
+  --panel-text: #1d1c1d;
+  --topic-bg: #fff;
+  --nicks-toggle-bg: #fff;
+  --foot-bg: transparent;
+  --link: #1264a3;
+  --link-visited: #1264a3;
+  --info-bg: #f8f8f8;
+  --info-text: #1d1c1d;
+
+  --input-bg: transparent;
+  --input-border: #bbbbbb;
+  --input-focus-border: #1d9bd1;
+  --input-focus-ring: color-mix(in srgb, #1d9bd1 30%, transparent);
+  --input-disabled-bg: #f8f8f8;
+  --input-coloring-border: var(--coloring-border);
+  --input-coloring-focus-border: var(--coloring-border);
+  --input-coloring-focus-ring: var(--coloring-ring);
+
+  --sidebar-bg: #3f0e40;
+  --sidebar-hover: #350d36;
+  --sidebar-text: #cfc3cf;
+  --sidebar-text-strong: #fff;
+  --sidebar-link: #cfc3cf;
+  --sidebar-link-disconnected: #9a879a;
+  --sidebar-muted: #bcabbc;
+  --sidebar-highlight: #cd2553;      /* mention badge */
+  --sidebar-alert: #e01e5a;
+  --sidebar-active: #1164a3;
+  --sidebar-selected: #0e5795;
+  --sidebar-menu-bg: #fff;
+  --sidebar-menu-hover: #1264a3;
+  --sidebar-menu-link: #1d1c1d;
+  --sidebar-menu-link-hover: #fff;
+
+  --spinner: #1264a3;
+
+  --date-text: #1d1c1d;
+  --meta-text: #1d1c1d;
+  --meta-text-hover: #1264a3;
+
+  --image-border: #dddddd;
+  --image-border-hover: #bbbbbb;
+  --embed-border: #dddddd;
+  --embed-border-hover: #bbbbbb;
+  --embed-open-border: none;
+  --embed-open-border-hover: none;
+
+  --reaction-bg: rgba(29, 28, 29, 0.06);
+  --reaction-bg-hover: rgba(29, 28, 29, 0.1);
+  --reaction-border: transparent;
+  --reaction-border-hover: rgba(29, 28, 29, 0.3);
+  --reaction-count: #1d1c1d;
+  --reaction-self-bg: #e8f5fa;
+  --reaction-self-bg-hover: #d6eef8;
+  --reaction-self-count: #1264a3;
+}
+
 /* Catppuccin, all four flavours */
 body.catppuccin-latte,
 body.catppuccin-frappe,

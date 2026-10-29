@@ -177,6 +177,9 @@ export class Commands {
       case "solarized light":
         app.set_theme("solarized");
         break;
+      case "slack":
+        app.set_theme("slack");
+        break;
       case "catppuccin latte":
         app.set_theme("catppuccin-latte");
         break;

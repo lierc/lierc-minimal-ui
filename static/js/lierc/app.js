@@ -12,7 +12,7 @@ function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
 }
 
-const themes = ["solarized-dark", "solarized", "catppuccin-latte",
+const themes = ["solarized-dark", "solarized", "slack", "catppuccin-latte",
   "catppuccin-frappe", "catppuccin-macchiato", "catppuccin-mocha"];
 
 export class App {
