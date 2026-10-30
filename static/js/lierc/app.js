@@ -117,7 +117,11 @@ export class App {
     Emoji.recent = this.prefs['emoji-recent'] || [];
     Emoji.tone = this.prefs['emoji-tone'] || 0;
     Emoji.save = (name, value) => this.update_pref(name, value);
-    Emoji.load();
+    Emoji.load().then(() => {
+      for (const id in this.panels) {
+        this.panels[id].refresh_reactions();
+      }
+    });
     this.notify = new Notifier(this);
   }
 

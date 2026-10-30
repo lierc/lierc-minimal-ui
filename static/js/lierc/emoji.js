@@ -94,6 +94,17 @@ Emoji.render = function() {
   });
 };
 
+// Slack-style tooltip for a reaction: "lee and bob reacted with thumbs up".
+// Before emoji.json loads there are no names, so the emoji itself is used.
+Emoji.reaction_title = function(chars, nicks) {
+  const name = Emoji.names[chars];
+  const what = name ? name[0].toLowerCase() + name.slice(1) : chars;
+  const who = nicks.length > 1
+    ? `${nicks.slice(0, -1).join(", ")} and ${nicks[nicks.length - 1]}`
+    : nicks[0];
+  return `${who} reacted with ${what}`;
+};
+
 // template variables for an emoji, shown in the current skin tone
 Emoji.item = function(e) {
   const chars = Emoji.tone && e.tones ? e.tones[Emoji.tone - 1] : e.chars;

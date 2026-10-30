@@ -1,5 +1,6 @@
 import { Editor } from "./editor.js";
 import { Embed } from "./embed.js";
+import { Emoji } from "./emoji.js";
 import { Format } from "./format.js";
 import { safe, Template } from "./template.js";
 
@@ -1002,13 +1003,20 @@ export class Panel {
     const nick = this.get_nick();
 
     group.setAttribute('data-nicks', nicks.join(","));
-    group.setAttribute('title', nicks.join(", "));
+    group.setAttribute('title', Emoji.reaction_title(group.getAttribute('data-emoji'), nicks));
     group.querySelector('.reaction-count').textContent = nicks.length;
 
     if (nick && nicks.indexOf(nick) != -1)
       group.classList.add('self');
     else
       group.classList.remove('self');
+  }
+
+  // redo the tooltips once the emoji names have loaded
+  refresh_reactions() {
+    for (const group of this.elem.list.querySelectorAll('.reactions .reaction')) {
+      this.update_reaction(group, this.reaction_nicks(group));
+    }
   }
 
   apply_reaction(text, reaction) {
