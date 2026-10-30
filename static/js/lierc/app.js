@@ -36,7 +36,6 @@ export class App {
     this.touchstart = "ontouchstart" in document.documentElement;
     this.mobile = App.detect_mobile();
     this.sortable = !this.mobile && !this.touchstart;
-    this.post_tokens = [];
     this.theme = 'default';
     this.typing = [];
 
@@ -111,7 +110,6 @@ export class App {
     }
 
     await this.load_seen();
-    await this.load_token();
     this.init();
 
     Emoji.recent = this.prefs['emoji-recent'] || [];
@@ -688,34 +686,22 @@ export class App {
     this.elem.title.textContent = name;
   }
 
-  post_token() {
-    const token = this.post_tokens.pop();
-    if (!token) {
-      alert("No post tokens, tell Lee!");
-      throw Error("No tokens");
-    }
-    return token;
-  }
-
   async part_channel(name, connection) {
     if (!confirm(`Are you sure you want to leave ${name}?`))
       return;
 
     const headers = new Headers();
-    headers.append('lierc-token', this.post_token());
     headers.append('content-type', 'application/irc');
 
     try {
-      const res = await this.api.post(`/connection/${connection}`, {
+      await this.api.post(`/connection/${connection}`, {
         body: `PART ${name}`,
         headers: headers
       });
       this.remove_panel(App.panel_id(name, connection));
-      this.post_tokens.push(res.token);
     }
     catch (e) {
       alert(`Error: ${e}`);
-      this.load_token();
     }
   }
 
@@ -784,18 +770,15 @@ export class App {
     const tag = "@+typing=active"
 
     try {
-      const res = await this.api.post(`/connection/${panel.connection}`, {
+      await this.api.post(`/connection/${panel.connection}`, {
         body:  `${tag} TAGMSG ${panel.name}`,
         headers: {
-          'lierc-token' : this.post_token(),
           'content-type': "application/irc",
         }
       });
-      this.post_tokens.push(res.token);
     }
     catch (e) {
       alert(`Error: ${e}`);
-      this.load_token();
     }
   }
 
@@ -807,18 +790,15 @@ export class App {
     const tag = "@+typing=done"
 
     try {
-      const res = await this.api.post(`/connection/${panel.connection}`, {
+      await this.api.post(`/connection/${panel.connection}`, {
         body:  `${tag} TAGMSG ${panel.name}`,
         headers: {
-          'lierc-token' : this.post_token(),
           'content-type': "application/irc",
         }
       });
-      this.post_tokens.push(res.token);
     }
     catch (e) {
       alert(`Error: ${e}`);
-      this.load_token();
     }
   }
 
@@ -912,18 +892,15 @@ export class App {
     const tag = `@+draft/reply=${id};${remove ? "+draft/unreact=" : "+draft/react="}${emoji}`;
 
     try {
-      const res = await this.api.post(`/connection/${panel.connection}`, {
+      await this.api.post(`/connection/${panel.connection}`, {
         body:  `${tag} TAGMSG ${panel.name}`,
         headers: {
-          'lierc-token' : this.post_token(),
           'content-type': "application/irc",
         }
       });
-      this.post_tokens.push(res.token);
     }
     catch (e) {
       alert(`Error: ${e}`);
-      this.load_token();
     }
   }
 
@@ -1289,19 +1266,6 @@ export class App {
     });
   }
 
-  // never rejects: startup carries on without tokens if this fails
-  async load_token() {
-    try {
-      const data = await this.api.get("/token");
-      this.post_tokens.push(data.token);
-      if (data.extra) {
-        this.post_tokens = this.post_tokens.concat(data.extra);
-      }
-    }
-    catch (e) {
-    }
-  }
-
   // never rejects: startup carries on without seen state if this fails
   async load_seen() {
     try {
@@ -1566,7 +1530,6 @@ export class App {
     this.setup_highlights();
 
     await this.load_seen();
-    await this.load_token();
     this.init();
   }
 

@@ -266,20 +266,17 @@ export const UIEvents = function(app) {
       const select = dialog.el.querySelector('select');
       const conn = select.options[select.selectedIndex].value;
       try {
-        const res = await app.api.post(`/connection/${conn}`, {
+        await app.api.post(`/connection/${conn}`, {
           body: `JOIN ${channel}`,
           headers: {
             'content-type': "application/irc",
-            'lierc-token' : app.post_token()
           }
         });
-        app.post_tokens.push(res.token);
         app.close_dialog();
       }
       catch (e) {
         app.close_dialog();
         alert(`Error: ${e}`);
-        app.load_token();
       }
     });
   }
@@ -443,18 +440,15 @@ export const UIEvents = function(app) {
     async function sendlines(lines) {
       for (const line of lines) {
         try {
-          const res = await app.api.post(`/connection/${panel.connection}`, {
+          await app.api.post(`/connection/${panel.connection}`, {
             headers:{
               'content-type': 'application/irc',
-              'lierc-token' : app.post_token()
             },
             body: line
           });
-          app.post_tokens.push(res.token);
         }
         catch (e) {
           alert(`Error: ${e}`);
-          app.load_token();
           return;
         }
       }
