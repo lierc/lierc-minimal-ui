@@ -2,16 +2,26 @@
 const heartbeat_timeout = 15000;
 // on wake a healthy stream has pinged within the last interval
 const wake_timeout = 7000;
+// a wake ping is answered on the stream within this time
+const wake_ping_timeout = 5000;
+// how many message ids to remember for dropping repeats
+const seen_limit = 1000;
 
 export class Stream {
   #listeners = {};
   #check_timer;
+  #seen = new Set();
+  #events = 0;
 
   constructor(baseurl) {
     this.baseurl = baseurl;
     this.retries = 0;
     this.eventsource = null;
+    // the newest message id seen, and the newest the server has
     this.last_id = null;
+    this.latest_id = null;
+    // names this stream in wake pings, from its stream event
+    this.stream_id = null;
     this.last_event = Date.now();
 
     // bound once so destroy() can remove the same listeners
@@ -19,6 +29,8 @@ export class Stream {
     this.onopen = this.onopen.bind(this);
     this.close = this.close.bind(this);
     this.touch = this.touch.bind(this);
+    this.onping = this.onping.bind(this);
+    this.onstream = this.onstream.bind(this);
 
     this.#connect();
     this.#check_timer = setInterval(() => this.check(), 1000);
@@ -46,9 +58,11 @@ export class Stream {
     es.addEventListener("irc",     this.onmessage);
     es.addEventListener("open",    this.onopen);
     es.addEventListener("error",   this.close);
-    es.addEventListener("ping",    this.touch);
+    es.addEventListener("ping",    this.onping);
+    es.addEventListener("stream",  this.onstream);
 
     this.eventsource = es;
+    this.stream_id = null;
     this.timer = null;
   }
 
@@ -87,6 +101,45 @@ export class Stream {
 
   touch() {
     this.last_event = Date.now();
+    this.#events++;
+  }
+
+  onstream(e) {
+    this.stream_id = JSON.parse(e.data).id;
+  }
+
+  // pings carry the newest message id the server has for us; older
+  // servers send only the time
+  onping(e) {
+    this.touch();
+    let id;
+    try {
+      id = JSON.parse(e.data).last_id;
+    }
+    catch (err) {
+      return;
+    }
+    if (typeof id != "number")
+      return;
+
+    this.latest_id = id;
+    if (this.last_id === null)
+      this.last_id = id;
+    else if (id > this.last_id)
+      this.fire("behind", this.last_id);
+  }
+
+  // records a message id, returning false if it was already seen. Ids can
+  // arrive out of order, so only exact repeats are dropped.
+  saw(id) {
+    if (this.#seen.has(id))
+      return false;
+    this.#seen.add(id);
+    if (this.#seen.size > seen_limit)
+      this.#seen.delete(this.#seen.values().next().value);
+    if (this.last_id === null || id > this.last_id)
+      this.last_id = id;
+    return true;
   }
 
   onopen() {
@@ -106,8 +159,8 @@ export class Stream {
       this.fire("delete_connection", data);
     }
     else {
-      if (data.MessageId)
-        this.last_id = data.MessageId;
+      if (data.MessageId && !this.saw(data.MessageId))
+        return;
       this.fire("message", data);
     }
   }
@@ -117,9 +170,39 @@ export class Stream {
       this.eventsource.close();
   }
 
-  // the page became visible again, possibly after sleep
-  wake() {
-    this.check(wake_timeout);
+  // the page became visible again, possibly after sleep: ask the server to
+  // ping this stream, which fails at once if the server has dropped it
+  async wake() {
+    if (this.eventsource?.readyState != 1 || !this.stream_id) {
+      this.check(wake_timeout);
+      return;
+    }
+
+    const es = this.eventsource;
+    const events = this.#events;
+    let res = null;
+    try {
+      res = await fetch(`${this.baseurl}/events/${this.stream_id}/ping`, {
+        method: 'POST',
+        credentials: 'same-origin'
+      });
+    }
+    catch (e) {
+    }
+
+    if (this.eventsource !== es)
+      return;
+    if (!res?.ok) {
+      console.log("wake ping failed, reconnecting");
+      this.reconnect();
+      return;
+    }
+    setTimeout(() => {
+      if (this.eventsource === es && this.#events == events) {
+        console.log("no ping after wake, reconnecting");
+        this.reconnect();
+      }
+    }, wake_ping_timeout);
   }
 
   // the network changed, so the old connection is likely dead; skip any
@@ -166,7 +249,8 @@ export class Stream {
       this.eventsource.removeEventListener("irc", this.onmessage);
       this.eventsource.removeEventListener("open", this.onopen);
       this.eventsource.removeEventListener("error", this.close);
-      this.eventsource.removeEventListener("ping", this.touch);
+      this.eventsource.removeEventListener("ping", this.onping);
+      this.eventsource.removeEventListener("stream", this.onstream);
       this.eventsource.close();
     }
   }
