@@ -180,6 +180,9 @@ export class Commands {
       case "slack":
         app.set_theme("slack");
         break;
+      case "slack dark":
+        app.set_theme("slack-dark");
+        break;
       case "catppuccin latte":
         app.set_theme("catppuccin-latte");
         break;

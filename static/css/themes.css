@@ -484,41 +484,6 @@ body.solarized-dark {
   --reaction-self-bg: rgba(38, 139, 210, 0.25);
   --reaction-self-bg-hover: rgba(38, 139, 210, 0.35);
   --reaction-self-count: var(--white);
-
-  /* the nick colours that are too dark to read on base02, lightened in
-     OKLCH to 4.5:1 contrast with their hue kept */
-  --nick-0: #ff57b5; /* MediumVioletRed */
-  --nick-1: #e27699; /* PaleVioletRed */
-  --nick-2: #ff5ba2; /* DeepPink */
-  --nick-4: #ff6655; /* Red */
-  --nick-5: #ff6758; /* #da1717 */
-  --nick-6: #fa695f; /* FireBrick */
-  --nick-7: #ff646d; /* Crimson */
-  --nick-8: #e97574; /* IndianRed */
-  --nick-12: #ff674c; /* Tomato */
-  --nick-13: #ff6842; /* OrangeRed */
-  --nick-14: #ee7464; /* Maroon */
-  --nick-15: #ee736f; /* #bb4545 */
-  --nick-16: #e37d4e; /* #c56232 */
-  --nick-17: #d28658; /* SaddleBrown */
-  --nick-18: #e77c36; /* Chocolate */
-  --nick-19: #d08842; /* Peru */
-  --nick-20: #c29020; /* DarkGoldenrod */
-  --nick-22: #8e90e5; /* #6363b3 */
-  --nick-23: #6595ff; /* MediumBlue */
-  --nick-24: #7991ff; /* #4040ff */
-  --nick-25: #6b94ff; /* RoyalBlue */
-  --nick-26: #619ed1; /* SteelBlue */
-  --nick-27: #6698f0; /* CornflowerBlue */
-  --nick-28: #3e9bff; /* DodgerBlue */
-  --nick-32: #9489ff; /* MediumSlateBlue */
-  --nick-33: #9589ff; /* SlateBlue */
-  --nick-34: #958ee4; /* DarkSlateBlue */
-  --nick-35: #b37efa; /* Indigo */
-  --nick-36: #f154ef; /* #bd0bbd */
-  --nick-37: #e269df; /* DarkMagenta */
-  --nick-38: #cb70ff; /* DarkOrchid */
-  --nick-39: #c773ff; /* DarkViolet */
 }
 
 /* Slack: its classic default sidebar theme, Aubergine
@@ -605,6 +570,132 @@ body.slack {
   --reaction-self-bg: #e8f5fa;
   --reaction-self-bg-hover: #d6eef8;
   --reaction-self-count: #1264a3;
+}
+
+/* Slack Dark: the Slack theme's Aubergine sidebar with Slack's dark-mode
+   message area */
+body.slack-dark {
+  --panel-bg: #1a1d21;
+  --panel-text: #d1d2d3;
+  --topic-bg: #1a1d21;
+  --nicks-toggle-bg: #1a1d21;
+  --nicks-toggle-icon: #ababad;   /* the ⋮ that shows the nick list */
+  --foot-bg: transparent;
+  --link: #1d9bd1;
+  --link-visited: #1d9bd1;
+  --info-bg: #222529;
+  --info-text: #d1d2d3;
+
+  --input-bg: transparent;
+  --input-border: #565856;
+  --input-focus-border: #1d9bd1;
+  --input-focus-ring: color-mix(in srgb, #1d9bd1 30%, transparent);
+  --input-disabled-bg: #222529;
+  --input-coloring-border: var(--coloring-border);
+  --input-coloring-focus-border: var(--coloring-border);
+  --input-coloring-focus-ring: var(--coloring-ring);
+
+  --sidebar-bg: #3f0e40;
+  --sidebar-hover: #350d36;
+  --sidebar-text: #cfc3cf;
+  --sidebar-text-strong: #fff;
+  --sidebar-link: #cfc3cf;
+  --sidebar-link-disconnected: #9a879a;
+  --sidebar-muted: #bcabbc;
+  --sidebar-highlight: #cd2553;      /* mention badge */
+  --sidebar-alert: #e01e5a;
+  --sidebar-active: #1164a3;
+  --sidebar-selected: #0e5795;
+  --sidebar-menu-bg: #222529;
+  --sidebar-menu-hover: #1264a3;
+  --sidebar-menu-link: #d1d2d3;
+  --sidebar-menu-link-hover: #fff;
+
+  --spinner: #1d9bd1;
+  --highlight-bg: rgba(242, 199, 68, 0.12);   /* rows that mention you */
+  --typing-text: #ababad;
+  --last-read: #e01e5a;          /* the new-messages line */
+  --media-toggle: #ababad;         /* image and embed show/hide arrows */
+  --button-icon: #ababad;          /* react, emoji and upload buttons */
+  --button-icon-hover: #d1d2d3;
+  --button-outline: #35373b;       /* the react button's box */
+
+  --date-text: #d1d2d3;
+  --date-line: #35373b;
+  --meta-text: #d1d2d3;
+  --meta-text-hover: #1d9bd1;
+  --meta-border: #35373b;           /* nick list edges */
+  --meta-controls-bg: #222529;
+  --meta-controls-hover: #2c2d30;
+
+  /* dialogs, the emoji picker and the image uploader */
+  --popup-bg: #222529;
+  --popup-text: #d1d2d3;
+  --popup-text-strong: #f8f8f8;
+  --popup-surface: #1a1d21;
+  --popup-hover: #2c2d30;
+  --popup-muted: #ababad;
+  --popup-label: #ababad;
+  --popup-border: #35373b;
+  --popup-bevel: #222529;
+  --color-scheme: dark;          /* form controls inside them */
+
+  --image-border: #35373b;
+  --image-border-hover: #565856;
+  --embed-border: #35373b;
+  --embed-border-hover: #565856;
+  --embed-open-border: none;
+  --embed-open-border-hover: none;
+
+  --reaction-bg: rgba(255, 255, 255, 0.06);
+  --reaction-bg-hover: rgba(255, 255, 255, 0.1);
+  --reaction-border: transparent;
+  --reaction-border-hover: rgba(255, 255, 255, 0.3);
+  --reaction-count: #d1d2d3;
+  --reaction-self-bg: rgba(29, 155, 209, 0.2);
+  --reaction-self-bg-hover: rgba(29, 155, 209, 0.3);
+  --reaction-self-count: #1d9bd1;
+
+  --tint-hover: rgba(255, 255, 255, 0.03);   /* message row hover */
+}
+
+/* Dark backgrounds: the nick colours too dark to read on Solarized Dark's
+   base02 (#073642), lightened in OKLCH to 4.5:1 contrast with their hue
+   kept. Slack Dark's #1a1d21 is darker, so they clear 4.5:1 there too. */
+body.solarized-dark,
+body.slack-dark {
+  --nick-0: #ff57b5; /* MediumVioletRed */
+  --nick-1: #e27699; /* PaleVioletRed */
+  --nick-2: #ff5ba2; /* DeepPink */
+  --nick-4: #ff6655; /* Red */
+  --nick-5: #ff6758; /* #da1717 */
+  --nick-6: #fa695f; /* FireBrick */
+  --nick-7: #ff646d; /* Crimson */
+  --nick-8: #e97574; /* IndianRed */
+  --nick-12: #ff674c; /* Tomato */
+  --nick-13: #ff6842; /* OrangeRed */
+  --nick-14: #ee7464; /* Maroon */
+  --nick-15: #ee736f; /* #bb4545 */
+  --nick-16: #e37d4e; /* #c56232 */
+  --nick-17: #d28658; /* SaddleBrown */
+  --nick-18: #e77c36; /* Chocolate */
+  --nick-19: #d08842; /* Peru */
+  --nick-20: #c29020; /* DarkGoldenrod */
+  --nick-22: #8e90e5; /* #6363b3 */
+  --nick-23: #6595ff; /* MediumBlue */
+  --nick-24: #7991ff; /* #4040ff */
+  --nick-25: #6b94ff; /* RoyalBlue */
+  --nick-26: #619ed1; /* SteelBlue */
+  --nick-27: #6698f0; /* CornflowerBlue */
+  --nick-28: #3e9bff; /* DodgerBlue */
+  --nick-32: #9489ff; /* MediumSlateBlue */
+  --nick-33: #9589ff; /* SlateBlue */
+  --nick-34: #958ee4; /* DarkSlateBlue */
+  --nick-35: #b37efa; /* Indigo */
+  --nick-36: #f154ef; /* #bd0bbd */
+  --nick-37: #e269df; /* DarkMagenta */
+  --nick-38: #cb70ff; /* DarkOrchid */
+  --nick-39: #c773ff; /* DarkViolet */
 }
 
 /* Catppuccin, all four flavours */
