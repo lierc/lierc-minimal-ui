@@ -144,8 +144,21 @@ Emoji.open = function(container, focus) {
     Emoji.render_recent();
   }
   Emoji.popup.querySelector('.emoji-list').scrollTop = 0;
+  Emoji.place(container);
   if (focus)
     input.focus();
+};
+
+// The picker opens upward from its button, unless that would cut it off at
+// the top of the window or of the scrolling message list it's in; then it
+// opens downward. Call it once the picker is showing.
+Emoji.place = function(container) {
+  const popup = Emoji.popup;
+  popup.classList.remove('below');
+  const list = container.closest('#panel-scroll');
+  const top = Math.max(0, list ? list.getBoundingClientRect().top : 0);
+  if (popup.getBoundingClientRect().top < top)
+    popup.classList.add('below');
 };
 
 Emoji.use = function(chars) {

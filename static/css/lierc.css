@@ -1773,6 +1773,12 @@ p.embed-source {
   right: 0px;
   padding: 0px;
 
+  /* opening upward would cut it off at the top (Emoji.place) */
+  &.below {
+    bottom: auto;
+    top: 100%;
+  }
+
   .message-react & {
     width: 310px;
     right: -39px;
