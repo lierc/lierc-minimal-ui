@@ -364,8 +364,18 @@ export class App {
   }
 
   async add_recent_privates() {
+    // rows come oldest first; keep the newest 5, plus any active in the last 3 days
     const privates = await this.api.get("/privates");
-    privates.forEach((priv) => {
+    const keep = 5;
+    const cutoff = Date.now() - 3 * 24 * 60 * 60 * 1000;
+    const recent = privates.filter((priv, i) => {
+      if (i >= privates.length - keep)
+        return true;
+      // postgres timestamp, e.g. "2026-10-29 12:34:56.789"; treat an unparsable one as recent
+      const time = Date.parse(String(priv.time).replace(" ", "T"));
+      return isNaN(time) || time >= cutoff;
+    });
+    recent.forEach((priv) => {
       this.add_panel(priv.nick, priv.connection, {
         focus: false,
         dont_save: true
