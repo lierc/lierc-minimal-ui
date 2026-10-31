@@ -142,6 +142,10 @@ const templates = {
     <button type="button" data-group="${g.name}" title="${g.title}">${g.chars}</button>
   `),
 
+  emoji_complete: (v) => each(v.matches, (m) => html`
+    <li data-index="${m.index}"${m.selected ? html` class="selected"` : ""}><span class="chars">${m.chars}</span> ${m.code}</li>
+  `),
+
   help: () => html`
     <aside class="dialog help">
       <a href="#" class="close">close</a>

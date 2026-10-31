@@ -34,6 +34,10 @@ export const UIEvents = function(app) {
         });
     }
 
+    /* the :name emoji list takes its keys first, before enter sends */
+    if (app.focused?.editor.emoji.keydown(e))
+      return;
+
     /* task switcher is open, special keys */
     if (app.elem.switcher.classList.contains('open')) {
       //escape

@@ -1,4 +1,5 @@
 import { Completion } from "./completion.js";
+import { EmojiComplete } from "./emoji-complete.js";
 import { Format } from "./format.js";
 import { History } from "./history.js";
 
@@ -17,6 +18,7 @@ export class Editor {
     this.el = element;
     this.info = document.getElementById('color-info');
     this.completion = new Completion(element);
+    this.emoji = new EmojiComplete(element, document.getElementById('emoji-complete'));
     this.history = new History(element);
     this.focused = false;
     this.coloring = false;
@@ -25,7 +27,10 @@ export class Editor {
 
     this.el.addEventListener("blur", (e) => this.blur(e));
     this.el.addEventListener("focus", (e) => this.focus(e));
-    this.el.addEventListener("input", (e) => this.save_selection(e));
+    this.el.addEventListener("input", (e) => {
+      this.save_selection(e);
+      this.emoji.update();
+    });
   }
 
   keydown(e, mods) {
@@ -207,6 +212,7 @@ export class Editor {
 
   blur() {
     this.focused = false;
+    this.emoji.close();
   }
 
   focus() {

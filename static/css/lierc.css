@@ -1592,6 +1592,44 @@ p.embed-source {
 }
 
 /* emoji and upload buttons */
+/* the :name emoji list above the input (emoji-complete.js) */
+#emoji-complete {
+  position: absolute;
+  bottom: 100%;
+  left: 5px;
+  z-index: 999;
+  width: 400px;
+  max-width: calc(100% - 10px);
+  max-height: 16em;   /* 8 rows */
+  overflow-y: auto;
+  margin: 0;
+  padding: 4px 0;
+  list-style: none;
+  /* as the emoji picker's list: some themes' --popup-hover is --popup-bg */
+  background: var(--popup-surface);
+  color: var(--popup-text);
+  border: 1px solid var(--popup-border);
+  border-radius: 6px;
+
+  li {
+    padding: 0 10px;
+    line-height: 2em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+
+  li.selected,
+  li:hover {
+    background: var(--popup-hover);
+  }
+
+  .chars {
+    margin-right: 6px;
+  }
+}
+
 #emoji {
   cursor: pointer;
 
