@@ -572,8 +572,7 @@ body.slack {
   --reaction-self-count: #1264a3;
 }
 
-/* Slack Dark: the Slack theme's Aubergine sidebar with Slack's dark-mode
-   message area */
+/* Slack Dark: Slack's dark mode, with its near-black sidebar */
 body.slack-dark {
   --panel-bg: #1a1d21;
   --panel-text: #d1d2d3;
@@ -595,13 +594,13 @@ body.slack-dark {
   --input-coloring-focus-border: var(--coloring-border);
   --input-coloring-focus-ring: var(--coloring-ring);
 
-  --sidebar-bg: #3f0e40;
-  --sidebar-hover: #350d36;
-  --sidebar-text: #cfc3cf;
+  --sidebar-bg: #19171d;
+  --sidebar-hover: #27242c;
+  --sidebar-text: #ababad;
   --sidebar-text-strong: #fff;
-  --sidebar-link: #cfc3cf;
-  --sidebar-link-disconnected: #9a879a;
-  --sidebar-muted: #bcabbc;
+  --sidebar-link: #d1d2d3;
+  --sidebar-link-disconnected: #8b8b8f;
+  --sidebar-muted: #9a9b9e;
   --sidebar-highlight: #cd2553;      /* mention badge */
   --sidebar-alert: #e01e5a;
   --sidebar-active: #1164a3;
