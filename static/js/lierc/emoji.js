@@ -8,6 +8,8 @@ const RECENT_MAX = 24;
 // it into whichever element is opening it.
 export const Emoji = {
   names: {},
+  // what's typed between colons for each emoji, in picker order
+  codes: [],
   // every standard emoji sequence, including skin tones and ZWJ sequences
   regex: /\p{RGI_Emoji}/gv,
   popup: document.querySelector('#emoji .emoji-popup'),
@@ -25,9 +27,11 @@ Emoji.load = async function() {
   const data = await response.json();
 
   Emoji.groups = data.groups;
+  Emoji.codes = [];
   for (const group of data.groups) {
     for (const e of group.emoji) {
       Emoji.names[e.chars] = e.name;
+      Emoji.codes.push({ code: Emoji.shortcode(e.name), chars: e.chars, tones: e.tones });
       (e.tones || []).forEach((tone, i) => {
         Emoji.names[tone] = `${e.name}: ${TONE_NAMES[i]} skin tone`;
       });
@@ -36,6 +40,15 @@ Emoji.load = async function() {
 
   if (Emoji.popup)
     Emoji.render();
+};
+
+// the name typed between colons: "Flag: Japan" is flag_japan
+Emoji.shortcode = function(name) {
+  return name.toLowerCase()
+    .replace(/\s+/g, "_")
+    .replace(/[^\p{L}\p{N}_-]/gu, "")
+    .replace(/_+/g, "_")
+    .replace(/^_|_$/g, "");
 };
 
 Emoji.render = function() {
