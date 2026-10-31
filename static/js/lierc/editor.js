@@ -29,8 +29,9 @@ export class Editor {
     this.el.addEventListener("focus", (e) => this.focus(e));
     this.el.addEventListener("input", (e) => {
       this.save_selection(e);
-      this.emoji.update();
+      this.emoji.update(e);
     });
+    this.el.addEventListener("compositionend", () => this.emoji.update());
   }
 
   keydown(e, mods) {

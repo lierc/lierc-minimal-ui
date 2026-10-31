@@ -4,9 +4,13 @@
 import { Emoji } from "./emoji.js";
 import { Template } from "./template.js";
 
-// the characters a typed name can hold, as Emoji.shortcode keeps them
+// the characters a typed name can hold, as Emoji.shortcode keeps them;
+// it starts with a letter or digit, so emoticons like :-o stay text
 const NAME = /^[\p{L}\p{N}_-]$/u;
+const NAME_START = /^[\p{L}\p{N}]$/u;
 const MIN_QUERY = 2;
+// rows rendered at once; a longer query narrows the rest
+const MAX_ROWS = 100;
 
 // The :query ending at pos in text, if there is one: its ":" starts the
 // text or follows whitespace, and at least MIN_QUERY name characters come
@@ -20,6 +24,10 @@ export function query_at(text, pos) {
   let start = end;
   while (start > 0 && NAME.test(text[start - 1]))
     start--;
+
+  // drop leading "-" and "_", which can't start a name
+  while (start < end && !NAME_START.test(text[start]))
+    start++;
 
   const colon = start - 1;
   if (colon < 0 || text[colon] != ":")
@@ -59,6 +67,12 @@ export class EmojiComplete {
   #index = 0;
   #node = null;
   #query = null;
+  // closes the list once the cursor leaves the end of the :query
+  #on_selection = () => {
+    const sel = window.getSelection();
+    if (!sel.isCollapsed || sel.focusNode !== this.#node || sel.focusOffset != this.#query?.end)
+      this.close();
+  };
 
   constructor(input, list) {
     this.#input = input;
@@ -78,8 +92,11 @@ export class EmojiComplete {
   }
 
   // after each input event: open, refresh or close the list for the
-  // :query before the cursor, or insert a completed :name:
-  update() {
+  // :query before the cursor, or insert a completed :name:. Input while an
+  // IME is composing waits for compositionend, which calls this again.
+  update(e) {
+    if (e?.isComposing)
+      return;
     const sel = window.getSelection();
     const node = sel.focusNode;
     if (!Emoji.codes.length || !sel.isCollapsed || !node
@@ -116,7 +133,9 @@ export class EmojiComplete {
 
   // true if it handled the key, which only happens while the list is open
   keydown(e) {
-    if (!this.#open || e.ctrlKey || e.metaKey || e.altKey)
+    // keyCode 229: the key belongs to an IME composition
+    if (!this.#open || e.isComposing || e.keyCode == 229
+        || e.ctrlKey || e.metaKey || e.altKey)
       return false;
     switch (e.key) {
     case "ArrowDown":
@@ -143,6 +162,7 @@ export class EmojiComplete {
     if (!this.#open)
       return;
     this.#open = false;
+    document.removeEventListener("selectionchange", this.#on_selection);
     this.#list.hidden = true;
     this.#list.innerHTML = "";
     this.#matches = [];
@@ -152,12 +172,14 @@ export class EmojiComplete {
 
   #render() {
     this.#list.innerHTML = Template("emoji_complete", {
-      matches: this.#matches.map((c, i) => ({
+      matches: this.#matches.slice(0, MAX_ROWS).map((c, i) => ({
         index: i, chars: toned(c), code: c.code, selected: i == this.#index
       }))
     });
     this.#list.hidden = false;
     this.#list.scrollTop = 0;
+    if (!this.#open)
+      document.addEventListener("selectionchange", this.#on_selection);
     this.#open = true;
   }
 
