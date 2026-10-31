@@ -435,12 +435,13 @@ export class App {
       }
     });
 
+    // a ping says the server has messages we haven't seen
+    stream.on('behind', (last_id) => this.fill_missed(stream, last_id));
+
     stream.on('open', (e) => {
       this.elem.body.classList.remove('disconnected');
-      if (this.focused) {
-        if (stream.last_id) {
-          this.fill_missed(stream.last_id);
-        }
+      if (stream.last_id !== null) {
+        this.fill_missed(stream, stream.last_id);
       }
 
       for (const id in this.panels) {
@@ -747,16 +748,35 @@ export class App {
     this.elem.channels.appendChild(panel.elem.nav);
   }
 
-  async fill_missed(start) {
+  // fetches stream's messages after start, one fill at a time; if the
+  // server has moved on meanwhile, fills again
+  async fill_missed(stream, start) {
+    if (this.filling_missed)
+      return;
+
+    // everything up to here exists in /log, or never will (a deleted
+    // connection's messages), so we're caught up to it after the fill
+    const target = stream.latest_id;
+    this.filling_missed = true;
     try {
       const events = await this.api.get(`/log/${start}`);
-      for (let i=0; i < events.length; i++) {
-        this.stream.fire('message', events[i]);
+      for (const e of events) {
+        if (!e.MessageId || stream.saw(e.MessageId))
+          stream.fire('message', e);
       }
     }
     catch (e) {
       this.reset();
+      return;
     }
+    finally {
+      this.filling_missed = false;
+    }
+
+    if (target > stream.last_id)
+      stream.last_id = target;
+    if (stream.latest_id > stream.last_id)
+      this.fill_missed(stream, stream.last_id);
   }
 
   async maybe_send_typing(panel, c) {
