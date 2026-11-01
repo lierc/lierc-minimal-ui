@@ -166,7 +166,7 @@ body.catppuccin-mocha {
   --grey-efefef: #efefef;
   --border: #ccc;
 
-  --warning: #ffa130;                /* disconnected bar, last-read and lastlog markers */
+  --warning: #ffa130;                /* the default theme's disconnected bar and markers */
   --required: red;
   --notice-channel: #02c702;
   --focus-border: #7a9cd3;
@@ -273,6 +273,9 @@ body.catppuccin-mocha {
   --highlight-bg: var(--tint-highlight);   /* rows that mention you */
   --typing-text: var(--grey-666);
   --last-read: var(--warning);          /* the new-messages line */
+  --lastlog: var(--warning);            /* where /last's results start */
+  --reconnect-bg: var(--warning);       /* the disconnected bar */
+  --reconnect-text: var(--white);
   --media-toggle: #7600bd;         /* image and embed show/hide arrows */
   --button-icon: var(--grey-666);          /* react, emoji and upload buttons */
   --button-icon-hover: var(--black);
@@ -349,10 +352,13 @@ body.solarized {
   --sidebar-menu-link: var(--grey-777);
   --sidebar-menu-link-hover: var(--grey-555);
 
-  --spinner: var(--warning);           /* loading older messages */
+  --spinner: var(--orange);           /* loading older messages */
   --highlight-bg: var(--tint-highlight);   /* rows that mention you */
   --typing-text: var(--grey-666);
-  --last-read: var(--warning);          /* the new-messages line */
+  --last-read: var(--orange);          /* the new-messages line */
+  --lastlog: var(--orange);            /* where /last's results start */
+  --reconnect-bg: var(--orange);       /* the disconnected bar */
+  --reconnect-text: var(--base3);
   --media-toggle: #7600bd;         /* image and embed show/hide arrows */
   --button-icon: var(--grey-666);          /* react, emoji and upload buttons */
   --button-icon-hover: var(--black);
@@ -429,10 +435,13 @@ body.solarized-dark {
   --sidebar-menu-link: var(--grey-777);
   --sidebar-menu-link-hover: var(--grey-555);
 
-  --spinner: var(--warning);           /* loading older messages */
+  --spinner: var(--orange);           /* loading older messages */
   --highlight-bg: var(--tint-highlight);   /* rows that mention you */
   --typing-text: var(--grey-666);
-  --last-read: var(--warning);          /* the new-messages line */
+  --last-read: var(--orange);          /* the new-messages line */
+  --lastlog: var(--orange);            /* where /last's results start */
+  --reconnect-bg: var(--orange);       /* the disconnected bar */
+  --reconnect-text: var(--base3);
   --media-toggle: #7600bd;         /* image and embed show/hide arrows */
   --button-icon: var(--grey-666);          /* react, emoji and upload buttons */
   --button-icon-hover: var(--black);
@@ -516,6 +525,9 @@ body.slack {
   --highlight-bg: rgba(242, 199, 68, 0.2);   /* rows that mention you */
   --typing-text: #616061;
   --last-read: #e01e5a;          /* the new-messages line */
+  --lastlog: #e01e5a;            /* where /last's results start */
+  --reconnect-bg: #ecb22e;       /* the disconnected bar */
+  --reconnect-text: #1d1c1d;
   --media-toggle: #616061;         /* image and embed show/hide arrows */
   --button-icon: #616061;          /* react, emoji and upload buttons */
   --button-icon-hover: #1d1c1d;
@@ -597,6 +609,9 @@ body.slack-dark {
   --highlight-bg: rgba(242, 199, 68, 0.12);   /* rows that mention you */
   --typing-text: #ababad;
   --last-read: #e01e5a;          /* the new-messages line */
+  --lastlog: #e01e5a;            /* where /last's results start */
+  --reconnect-bg: #ecb22e;       /* the disconnected bar */
+  --reconnect-text: #1d1c1d;
   --media-toggle: #ababad;         /* image and embed show/hide arrows */
   --button-icon: #ababad;          /* react, emoji and upload buttons */
   --button-icon-hover: #d1d2d3;
@@ -722,6 +737,9 @@ body.catppuccin-mocha {
   --highlight-bg: color-mix(in srgb, var(--ctp-mauve) 15%, transparent);   /* rows that mention you */
   --typing-text: var(--ctp-overlay1);
   --last-read: var(--ctp-peach);          /* the new-messages line */
+  --lastlog: var(--ctp-peach);            /* where /last's results start */
+  --reconnect-bg: var(--ctp-peach);       /* the disconnected bar */
+  --reconnect-text: var(--ctp-base);
   --media-toggle: var(--ctp-mauve);         /* image and embed show/hide arrows */
   --button-icon: var(--ctp-overlay1);          /* react, emoji and upload buttons */
   --button-icon-hover: var(--ctp-text);

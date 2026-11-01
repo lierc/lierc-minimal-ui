@@ -694,8 +694,8 @@ header:hover #global-controls-toggle {
     flex-shrink: 0;
     display: block;
     width: 100%;
-    background: var(--warning);
-    color: var(--white);
+    background: var(--reconnect-bg);
+    color: var(--reconnect-text);
     padding: 8px 10px;
     font-size: 15px;
     line-height: 15px;
@@ -1068,7 +1068,7 @@ ul.channel-controls li a:hover {
 
   /* where /last's results start */
   & .search-start {
-    border-top: 1px dashed var(--warning) !important;
+    border-top: 1px dashed var(--lastlog) !important;
     position: relative;
     z-index: 9;
 
@@ -1080,8 +1080,8 @@ ul.channel-controls li a:hover {
       padding: 0 10px;
       top: -8px;
       right: 0px;
-      background: var(--white);
-      color: var(--warning);
+      background: var(--panel-bg);
+      color: var(--lastlog);
       font-size: 10px;
       font-style: italic;
       font-weight: bold;
