@@ -35,6 +35,8 @@ export class Panel {
     this.missed = false;
     this.highlighted = false;
     this.focused = false;
+    // counts focuses, so a backlog fill can tell if it outlived its focus
+    this.focus_count = 0;
     this.backlog_empty = false;
     this.reactions = [];
     this.monospace_nicks = [];
@@ -175,6 +177,7 @@ export class Panel {
 
     this.first_focus = false;
     this.focused = true;
+    this.focus_count++;
     this.resize_filler();
     if (! this.mobile)
       this.elem.input.focus();

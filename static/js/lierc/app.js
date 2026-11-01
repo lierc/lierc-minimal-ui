@@ -853,8 +853,19 @@ export class App {
     if (msgid)
       url += `/${msgid}`;
 
+    const focus_count = panel.focus_count;
+
     try {
       const events = await this.api.get(url, { data: { limit: limit } });
+
+      // the panel was switched away from while this was loading, which
+      // reset its backlog; applying the response now would leave stale
+      // state (backlog_empty, a detached list) for the next focus
+      if (!panel.focused || panel.focus_count != focus_count) {
+        panel.set_loading(false);
+        return;
+      }
+
       if (events.length < limit)
         panel.backlog_empty = true;
 
