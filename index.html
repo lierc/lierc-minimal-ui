@@ -3,151 +3,365 @@
   <head>
     <meta charset="utf-8">
     <link rel="icon" type="image/png" href="/favicon.png">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#002b36">
     <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
     <meta name="description" content="Chat on IRC in a web browser">
     <meta name="keywords" content="IRC,cloud,HTTP,chat,browser,irccloud,relaychat,party">
     <meta name="author" content="Lee Aylward">
     <title>Relaychat Party: Chat on IRC in a web browser</title>
     <style type="text/css">
-:root {
-  --base03:    #002b36;
-  --base02:    #073642;
-  --base01:    #586e75;
-  --base00:    #657b83;
-  --base0:     #839496;
-  --base1:     #93a1a1;
-  --base2:     #eee8d5;
-  --base3:     #fdf6e3;
-  --yellow:    #b58900;
-  --orange:    #cb4b16;
-  --red:       #dc322f;
-  --magenta:   #d33682;
-  --violet:    #6c71c4;
-  --blue:      #268bd2;
-  --cyan:      #2aa198;
-  --green:     #859900;
-}
+      :root {
+        --navy: #002b36;      /* the app's sidebar and header */
+        --navy-raised: #073642;
+        --ink: #073642;
+        --muted: #586e75;
+        --rule: #e4e8e9;
+        --cyan: #2aa198;      /* the app's active channel */
+        --cyan-dark: #1f7a73;
+        --magenta: #d33682;
+        --blue: #268bd2;
+        --violet: #6c71c4;
+        --orange: #cb4b16;
+        --amber: #ffa130;     /* the app's last-read line */
 
-      body {
-        font-family: -apple-system, BlinkMacSystemFont,
-          "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
-          "Fira Sans", "Droid Sans", "Helvetica Neue", 
-          sans-serif, FontAwesome;
-        background: #fff;
-        padding: 0;
-        margin: 0;
-        color: #000;
+        --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+          "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+          "Helvetica Neue", sans-serif;
       }
-      #login {
-        font-size: 18px;
-      }
-      #login a {
-        font-weight: bold;
-      }
-      main {
-        max-width: 700px;
-        margin: 0 auto;
-      }
-      section {
-        margin: 0 auto;
-        max-width: 600px;
-        position: relative;
-        text-align: center;
-        border-bottom: 1px solid #ccc;
-        padding: 20px 0;
-        margin-bottom: 20px;
-      }
-      section ul {
-        margin: 20px auto;
-        list-style: none;
-        padding: 0;
-      }
-      section li {
-        font-size: 18px;
-        margin-bottom: 10px;
-        padding: 0;
-      }
-      header h1 span {
-        font-weight: normal;
-      }
-      header {
-        background: var(--base03);
-        color: #fff;
-        padding: 20px 0;
-      }
-      header h1 {
-        text-shadow: 0 0 1px rgba(117, 10, 10, 0.5);
-        font-size: 32px;
-        text-align: center;
-        margin: 0;
-        padding: 0;
-        max-width: 400px;
-        margin: 0 auto;
-      }
-      a img {
-        display: block;
+
+      * {
         box-sizing: border-box;
       }
-      footer {
-        max-width: 700px;
-        margin: 0 auto;
-      }
-      footer ul {
-        list-style: none;
-        text-align: center;
+
+      body {
         margin: 0;
-        padding: 0;
-        margin-bottom: 20px;
+        background: #fff;
+        color: var(--ink);
+        font-family: var(--font);
+        font-size: 17px;
+        line-height: 1.55;
       }
-      footer ul a {
-        text-decoration: none;
-      }
-      footer ul li {
-        display: inline;
-        margin: 0;
-        padding: 0;
-      }
+
       a {
         color: var(--blue);
+      }
+
+      a:focus-visible {
+        outline: 2px solid var(--amber);
+        outline-offset: 2px;
+      }
+
+      .wrap {
+        max-width: 960px;
+        margin: 0 auto;
+        padding: 0 24px;
+
+        @media (max-width: 600px) {
+          padding: 0 16px;
+        }
+      }
+
+      /* ===== The navy band: bar and hero ===== */
+
+      .band {
+        background: var(--navy);
+        color: #fff;
+        padding-bottom: 56px;
+      }
+
+      .bar {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding-top: 18px;
+        padding-bottom: 18px;
+      }
+
+      .wordmark {
+        margin: 0;
+        font-size: 22px;
+        font-weight: 700;
+        letter-spacing: -0.01em;
+      }
+
+      .bar nav a {
+        color: #93a1a1;
+        text-decoration: none;
+        margin-left: 20px;
+
+        &:hover {
+          color: #fff;
+        }
+      }
+
+      .hero {
+        display: grid;
+        grid-template-columns: 1fr 1.05fr;
+        gap: 48px;
+        align-items: center;
+        padding-top: 40px;
+
+        @media (max-width: 820px) {
+          grid-template-columns: 1fr;
+          gap: 36px;
+          padding-top: 16px;
+        }
+      }
+
+      .hero h2 {
+        margin: 0 0 16px;
+        font-size: 44px;
+        line-height: 1.08;
+        font-weight: 700;
+        letter-spacing: -0.02em;
+
+        @media (max-width: 600px) {
+          font-size: 34px;
+        }
+      }
+
+      .hero p {
+        margin: 0 0 28px;
+        color: #c3cccc;
+        max-width: 30em;
+      }
+
+      .actions {
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+      }
+
+      .button {
+        display: inline-block;
+        padding: 11px 20px;
+        border-radius: 4px;
+        font-size: 16px;
+        font-weight: 600;
+        text-decoration: none;
+        border: 1px solid transparent;
+      }
+
+      .button.primary {
+        background: var(--cyan);
+        color: #fff;
+
+        &:hover {
+          background: var(--cyan-dark);
+        }
+      }
+
+      .button.secondary {
+        color: #fff;
+        border-color: #3d5a62;
+
+        &:hover {
+          border-color: #93a1a1;
+        }
+      }
+
+      /* ===== The channel preview, drawn like the app ===== */
+
+      .preview {
+        margin: 0;
+        background: #fff;
+        color: var(--navy);
+        border-radius: 6px;
+        overflow: hidden;
+        box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
+        font-size: 14px;
+        line-height: 1.4;
+      }
+
+      .preview-top {
+        background: var(--navy-raised);
+        color: #fff;
+        padding: 9px 14px;
+        font-weight: 600;
+      }
+
+      .preview ol {
+        list-style: none;
+        margin: 0;
+        padding: 6px 0;
+      }
+
+      .preview li {
+        display: flex;
+        gap: 8px;
+        padding: 4px 14px;
+      }
+
+      .preview time {
+        flex: 0 0 auto;
+        color: #999;
+        font-size: 12px;
+        line-height: 19px;
+        font-variant-numeric: tabular-nums;
+      }
+
+      .preview .nick {
+        font-weight: 700;
+      }
+
+      .preview .mention {
+        background: rgba(118, 49, 255, 0.1);
+      }
+
+      .preview .last-read {
+        position: relative;
+        border-top: 2px dotted var(--amber);
+        margin: 6px 0;
+        padding: 0;
+
+        &::after {
+          content: "last read";
+          position: absolute;
+          right: 10px;
+          top: -8px;
+          padding: 0 8px;
+          background: #fff;
+          color: var(--amber);
+          font-size: 10px;
+          font-style: italic;
+          font-weight: 700;
+        }
+      }
+
+      .preview .reaction {
+        display: inline-block;
+        margin: 2px 0 0 48px;
+        padding: 0 7px;
+        border: 1px solid rgba(38, 139, 210, 0.5);
+        background: rgba(38, 139, 210, 0.12);
+        border-radius: 10px;
+        font-size: 13px;
+
+        & b {
+          color: var(--blue);
+          font-weight: 600;
+          font-size: 12px;
+        }
+      }
+
+      .preview .typing {
+        padding: 6px 14px 10px;
+        color: #666;
+        font-size: 12px;
+        font-style: italic;
+      }
+
+      /* ===== Features ===== */
+
+      .features {
+        padding-top: 56px;
+        padding-bottom: 40px;
+
+        & h2 {
+          margin: 0 0 24px;
+          font-size: 24px;
+          letter-spacing: -0.01em;
+        }
+      }
+
+      .features dl {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        column-gap: 48px;
+        row-gap: 24px;
+        margin: 0;
+
+        @media (max-width: 700px) {
+          grid-template-columns: 1fr;
+        }
+      }
+
+      .features dt {
+        font-weight: 700;
+        margin-bottom: 2px;
+      }
+
+      .features dd {
+        margin: 0;
+        color: var(--muted);
+      }
+
+      footer {
+        border-top: 1px solid var(--rule);
+        padding-top: 20px;
+        padding-bottom: 32px;
+        color: var(--muted);
+        font-size: 15px;
       }
     </style>
   </head>
   <body>
-    <header>
-      <h1 title="IRC, with pictures">:relaychat:<span> 👋</span></h1>
-    </header>
+    <div class="band">
+      <header class="bar wrap">
+        <h1 class="wordmark" title="IRC, with pictures">:relaychat: 👋</h1>
+        <nav>
+          <a href="/login/">Log in</a>
+          <a href="/register/">Register</a>
+        </nav>
+      </header>
 
-    <main>
-      <!--googleoff: all-->
-      <section>
-      <div id="login"><a href="/login/">Log in</a> or <a href="/register/">register</a></div>
+      <section class="hero wrap">
+        <div>
+          <h2>IRC that stays connected when you close the tab.</h2>
+          <p>Relaychat keeps your networks and channels running on our server, so you can pick up the conversation in any browser, on your laptop or your phone.</p>
+          <div class="actions">
+            <a class="button primary" href="/register/">Create an account</a>
+            <a class="button secondary" href="/login/">Log in</a>
+          </div>
+        </div>
+
+        <figure class="preview" aria-label="A channel in relaychat">
+          <div class="preview-top">#lierc</div>
+          <ol>
+            <li><time>10:02</time><span><span class="nick" style="color:#6c71c4">&lt;mira&gt;</span> back from lunch, what did i miss?</span></li>
+            <li><time>10:03</time><span><span class="nick" style="color:#cb4b16">&lt;kenji&gt;</span> check the line below, that's where you stopped</span></li>
+            <li class="last-read" aria-hidden="true"></li>
+            <li class="mention"><time>10:14</time><span><span class="nick" style="color:#d33682">&lt;tobias&gt;</span> mira: your build passed 🎉</span></li>
+          </ol>
+          <span class="reaction">🎉 <b>2</b></span>
+          <div class="typing">kenji is typing…</div>
+        </figure>
       </section>
-      <!--googleon: all-->
+    </div>
 
-      <section style="border-bottom:none;padding:0">
-        <p>A pretty good IRC client. Check it out!</p>
-      </section>
+    <main class="features wrap">
+      <h2>What you get</h2>
+      <dl>
+        <div>
+          <dt>Notifications for missed mentions</dt>
+          <dd>Pick your highlight words, and get an email or push notification when someone mentions you while you're away.</dd>
+        </div>
+        <div>
+          <dt>Last-read tracking</dt>
+          <dd>Each channel marks where you stopped reading, on every device.</dd>
+        </div>
+        <div>
+          <dt>Made for phones too</dt>
+          <dd>A mobile layout you can add to your home screen like an app.</dd>
+        </div>
+        <div>
+          <dt>Searchable logs</dt>
+          <dd>Look back through a channel by date, sender or text.</dd>
+        </div>
+        <div>
+          <dt>IRCv3 reactions and typing</dt>
+          <dd>React to messages and see who's typing, on networks that support them.</dd>
+        </div>
+        <div>
+          <dt>SASL login</dt>
+          <dd>Sign in to networks with SASL PLAIN.</dd>
+        </div>
+      </dl>
+    </main>
 
-      <a href="https://i.imgur.com/LR2PubJ.png" target="_blank"><img alt="Relaychat party" src="https://i.imgur.com/LR2PubJ.png" width="100%"></a>
-
-      <section>
-        <h2>Features</h2>
-        <ul>
-          <li>Configurable highlight terms</li>
-          <li>Notifications for missed mentions</li>
-          <li>Mobile user-interface</li>
-          <li>Last-read message tracking</li>
-          <li>SASL PLAIN auth</li>
-          <li>IRCv3 reactions</li>
-          <li>IRCv3 typing indication</li>
-        </ul>
-      </section>
-
-    <footer>
-      <ul>
-        <li><a href="https://github.com/lierc">Github project</a></li>
-      </ul>
+    <footer class="wrap">
+      Relaychat is open source. <a href="https://github.com/lierc">See the project on GitHub</a>.
     </footer>
   </body>
 </html>
