@@ -227,65 +227,6 @@ const templates = {
     </section>
   `,
 
-  login: () => html`
-    <section class="dialog login">
-      <div class="login-wrap">
-      <a href="#" class="close reset-toggle">Reset password</a>
-      <h2>Login</h2>
-      <form method="POST" class="login-form">
-        <fieldset class="input-group">
-          <label for="email">Email address or username</label>
-          <input name="email" type="text" value="" required>
-        </fieldset>
-        <fieldset class="input-group">
-          <label for="pass">Password</label>
-          <input name="pass" type="password" value="" required>
-        </fieldset>
-        <fieldset class="submit-group">
-          <input type="submit" name="auth" value="Log In">
-        </fieldset>
-      </form>
-
-
-      <hr/>
-
-      <h2>Register</h2>
-      <form method="POST">
-        <fieldset class="input-group">
-          <label for="username">Username</label>
-          <input name="username" type="text" value="" required>
-        </fieldset>
-        <fieldset class="input-group">
-          <label for="email">Email address</label>
-          <input name="email" type="email" value="" required>
-        </fieldset>
-        <fieldset class="input-group">
-          <label for="pass">Password</label>
-          <input name="pass" type="password" value="" required>
-        </fieldset>
-        <fieldset class="submit-group">
-          <input type="submit" name="register" value="Register">
-        </fieldset>
-      </form>
-      </div>
-
-      <div class="reset-wrap">
-      <a href="#" class="close login-toggle">Login</a>
-      <h2>Reset password</h2>
-      <form method="POST">
-        <fieldset class="input-group">
-          <label for="email">Email address</label>
-          <input name="email" type="email" value="" required>
-        </fieldset>
-        <fieldset class="submit-group">
-          <input type="submit" name="auth" value="This doesn't work" disabled>
-        </fieldset>
-      </form>
-      </div>
-
-    </section>
-  `,
-
   // no surrounding whitespace: callers use the element as firstChild
   nav_item: (v) => html`<li data-panel-id="${v.id}"><a class="panel-name">${v.name}</a>${
     v.editable ? html`<a class="fa-solid fa-pencil edit edit-panel" title="Edit"></a>` : ""}${

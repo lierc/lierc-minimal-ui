@@ -1872,15 +1872,6 @@ p.embed-source {
 
 /* ===== Dialogs and overlays ===== */
 
-.login hr {
-  border: none;
-  margin: 20px 0;
-}
-
-.reset-wrap {
-  display: none;
-}
-
 .overlay {
   z-index: 9999999;
   position: fixed;
