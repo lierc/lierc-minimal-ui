@@ -5,7 +5,13 @@
 
 html, body {
   overflow: hidden;
-  background: var(--base03);
+}
+
+/* on body, not html: the theme variables are set on body. With no html
+   background, body's fills the whole canvas, which browsers also sample
+   for their toolbar colour when there's no theme-color */
+body {
+  background: var(--sidebar-bg);
 }
 
 body {

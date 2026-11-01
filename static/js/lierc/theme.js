@@ -15,8 +15,18 @@ export function apply_theme(theme) {
   if (themes.indexOf(theme) != -1) {
     document.body.classList.add(theme);
   }
+  update_theme_color();
   try {
     localStorage.setItem("theme", theme);
   }
   catch (e) {}
+}
+
+// Sets <meta name="theme-color"> to the theme's header colour, which
+// browsers and in-app browser views use for their own toolbars.
+export function update_theme_color() {
+  const meta = document.querySelector('meta[name="theme-color"]');
+  const color = getComputedStyle(document.body).getPropertyValue("--sidebar-bg").trim();
+  if (meta && color)
+    meta.setAttribute("content", color);
 }
