@@ -1,32 +1,52 @@
-// The login, register and reset pages: post a form to its data-api endpoint,
-// showing the API's error on failure. On success a form goes to the app, or,
-// with data-success="message", is replaced by the element named in
-// data-message.
+// The login, register, reset and verify pages: post a form to its data-api
+// endpoint, showing the API's error on failure. On success a form goes to
+// the app, or, with data-success="message", is replaced by the element named
+// in data-message.
 //
-// The reset page has a form with data-token. The emailed link carries the
-// token after "#" (so it never reaches the server or its logs); it's read
-// once, removed from the address bar, and sent as "token" in the body.
+// The reset and verify pages are opened from emailed links that carry a
+// token after "#" (so it never reaches the server or its logs). It's read
+// once, removed from the address bar, and sent as "token" in a POST body.
 
 const token_form = document.querySelector("form[data-token]");
+const verify_page = document.querySelector("main[data-verify]");
 let token = "";
 
-if (token_form) {
-  // a link mangled on the way (a bad % escape) counts as no token, so the
-  // email form shows and a new link can be requested
+// a link mangled on the way (a bad % escape) counts as no token
+function read_token() {
+  let t = "";
   try {
-    token = decodeURIComponent(location.hash.slice(1));
+    t = decodeURIComponent(location.hash.slice(1));
   }
-  catch (e) {
-    token = "";
-  }
+  catch (e) {}
   if (location.hash)
     history.replaceState(null, "", location.pathname);
+  // opening a link in a tab already on the page only changes the hash
+  window.addEventListener("hashchange", () => location.reload());
+  return t;
+}
+
+if (token_form) {
+  // no token: the email form, so a new link can be requested
+  token = read_token();
   const shown = token ? token_form : document.querySelector("form[data-api]:not([data-token])");
   shown.hidden = false;
   shown.querySelector("input:not([type=submit])")?.focus();
-
-  // opening the link in a tab already on /reset/ only changes the hash
-  window.addEventListener("hashchange", () => location.reload());
+}
+else if (verify_page) {
+  // confirms without logging in, so it works whoever is logged in
+  token = read_token();
+  const show = (id) => document.getElementById(id).hidden = false;
+  if (!token) {
+    show("invalid");
+  }
+  else {
+    fetch("/api/verify", {
+      method: "POST",
+      credentials: "same-origin",
+      body: new URLSearchParams({ token: token }),
+    }).then((res) => show(res.ok ? "confirmed" : "invalid"))
+      .catch(() => show("invalid"));
+  }
 }
 else {
   // someone already logged in goes straight to the app
