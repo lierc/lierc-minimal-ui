@@ -40,7 +40,7 @@ const templates = {
         <div class="input-h-group">
           <fieldset class="input-group">
             <label for="host">Address <span class="required">*</span></label>
-            <input name="Host" type="text" value="${v.Host}" placeholder="irc.freenode.com" required>
+            <input name="Host" type="text" value="${v.Host}" placeholder="irc.libera.chat" required>
           </fieldset>
           <fieldset class="input-group">
             <label for="port">Port <span class="required">*</span></label>

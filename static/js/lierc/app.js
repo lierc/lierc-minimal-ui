@@ -1101,11 +1101,11 @@ export class App {
       vars.Highlight = this.user.user;
 
       if (Object.keys(this.connections).length == 0) {
-        vars.Host = "irc.freenode.com";
+        vars.Host = "irc.libera.chat";
         vars.Port = "6697";
         vars.Ssl = true;
         vars.Channels = "#lierc";
-        vars.Alias = "freenode";
+        vars.Alias = "libera";
       }
 
       vars.action = "/connection";
