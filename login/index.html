@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
+    <link type="text/css" rel="stylesheet" href="/static/css/auth.css?v=bbfc6e5647">
+    <title>Log in · relaychat.party</title>
+  </head>
+  <body>
+    <header>
+      <h1><a href="/">:relaychat:<span> 👋</span></a></h1>
+    </header>
+
+    <main>
+      <form method="POST" data-api="/api/auth">
+        <h2>Log in</h2>
+        <p class="error" role="alert"></p>
+        <label for="email">Email or username</label>
+        <input type="text" name="email" id="email" autocomplete="username" autocorrect="off" autocapitalize="none" required autofocus>
+        <label for="pass">Password</label>
+        <input type="password" name="pass" id="pass" autocomplete="current-password" required>
+        <input type="submit" value="Log in">
+        <p class="alt">No account? <a href="/register/">Register</a></p>
+      </form>
+    </main>
+
+    <script src="/static/js/auth-page.js?v=f1d7351aae"></script>
+  </body>
+</html>

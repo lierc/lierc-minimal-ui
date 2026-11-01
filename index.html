@@ -40,31 +40,13 @@
         color: #000;
       }
       #login {
-        background: #eee;
-        padding: 10px;
-        color: #333;
-        display: inline-block;
+        font-size: 18px;
       }
       #login p {
         margin: 0;
       }
       #login a {
         font-weight: bold;
-      }
-      #login input {
-        margin-bottom: 10px;
-      }
-      #login label {
-        margin-bottom: 5px;
-      }
-      #login input, #login label {
-        display: block;
-        width: 150px;
-        font-size: 16px;
-        font-family: -apple-system, BlinkMacSystemFont,
-          "Segoe UI", "Roboto", "Oxygen", "Ubuntu", "Cantarell", 
-          "Fira Sans", "Droid Sans", "Helvetica Neue", 
-          sans-serif, FontAwesome;
       }
       main {
         max-width: 700px;
@@ -142,14 +124,7 @@
     <main>
       <!--googleoff: all-->
       <section>
-      <form id="login" method="POST" action="/api/auth">
-        <label for="email">Email or username</label>
-        <input type="text" name="email" id="email" placeholder="test@example.com" autocorrect="off" autocapitalize="none">
-        <label for="pass">Password</label>
-        <input type="password" name="pass" id="pass">
-        <input type="submit" value="Log in" id="submit">
-        <p><a href="/app">Click here to register.</a></p>
-      </form>
+      <div id="login"><a href="/login/">Log in</a> or <a href="/register/">register</a></div>
       </section>
       <!--googleon: all-->
 
@@ -196,31 +171,6 @@
         login.appendChild(link);
       });
 
-    document.getElementById('login').addEventListener('submit', function(e) {
-      e.preventDefault();
-
-      var submit = document.getElementById('submit');
-      submit.setAttribute('disabled', 'disabled');
-
-      var email = encodeURIComponent(document.getElementById('email').value);
-      var pass = encodeURIComponent(document.getElementById('pass').value);
-
-      fetch("/api/auth", {
-          method: "POST",
-          credentials: 'same-origin',
-          headers: {
-            'content-type': 'application/x-www-form-urlencoded; charset=UTF-8'
-          },
-          body: 'email='+email+'&pass='+pass
-        }).then(function(res) {
-          if (!res.ok)
-            throw Error("Invalid username or password");
-          window.location = "/app/";
-        }).catch(function(e) {
-          alert(e);
-          submit.removeAttribute('disabled');
-        });
-    });
     </script>
   </body>
 </html>

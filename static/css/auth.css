@@ -1,0 +1,110 @@
+/* the standalone login and register pages */
+
+:root {
+  --header-bg: #002b36;
+  --link: #268bd2;
+  --error: #dc322f;
+  --panel-bg: #eee;
+  --text: #333;
+  --input-border: #ccc;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+html, body {
+  height: 100%;
+}
+
+body {
+  display: flex;
+  flex-direction: column;
+  margin: 0;
+  background: #fff;
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
+}
+
+header {
+  background: var(--header-bg);
+  color: #fff;
+  padding: 20px 16px;
+  text-align: center;
+}
+
+header h1 {
+  margin: 0;
+  font-size: 32px;
+}
+
+header a {
+  color: inherit;
+  text-decoration: none;
+}
+
+header h1 span {
+  font-weight: normal;
+}
+
+main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+form {
+  width: 100%;
+  max-width: 300px;
+  background: var(--panel-bg);
+  padding: 20px;
+  border-radius: 4px;
+}
+
+h2 {
+  margin: 0 0 16px;
+  font-size: 20px;
+}
+
+label {
+  display: block;
+  margin-bottom: 5px;
+}
+
+input {
+  display: block;
+  width: 100%;
+  margin-bottom: 12px;
+  padding: 6px 8px;
+  font: inherit;
+  font-size: 16px;
+  border: 1px solid var(--input-border);
+  border-radius: 2px;
+}
+
+input[type="submit"] {
+  margin: 4px 0 0;
+  cursor: pointer;
+}
+
+.error {
+  color: var(--error);
+  margin: 0 0 12px;
+}
+
+.error:empty {
+  display: none;
+}
+
+.alt {
+  margin: 16px 0 0;
+  text-align: center;
+}
+
+a {
+  color: var(--link);
+}
