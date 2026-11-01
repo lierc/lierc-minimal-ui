@@ -1,6 +1,6 @@
 .PHONY: bust
 bust:
-	bin/cache-bust index.html app/index.html search/index.html unsubscribe/index.html login/index.html register/index.html
+	bin/cache-bust index.html app/index.html search/index.html unsubscribe/index.html login/index.html register/index.html reset/index.html
 
 .PHONY: emoji
 emoji:

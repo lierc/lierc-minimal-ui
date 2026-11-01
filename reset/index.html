@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#002b36">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
+    <link type="text/css" rel="stylesheet" href="/static/css/auth.css?v=c918062935">
+    <title>Reset your password · relaychat.party</title>
+  </head>
+  <body>
+    <header class="bar">
+      <h1 class="wordmark"><a href="/" title="IRC, with pictures">:relaychat: 👋</a></h1>
+      <nav><a href="/login/">Log in</a></nav>
+    </header>
+
+    <main>
+      <!-- shown when the page was opened without a token -->
+      <form method="POST" data-api="/api/reset" data-success="message" data-message="sent" id="request" hidden>
+        <h2>Reset your password</h2>
+        <p class="error" role="alert"></p>
+        <label for="email">Email address</label>
+        <input type="email" name="email" id="email" autocomplete="email" required autofocus>
+        <input type="submit" value="Send reset link">
+        <p class="alt"><a href="/login/">Back to log in</a></p>
+      </form>
+
+      <section class="panel" id="sent" hidden>
+        <h2>Check your email</h2>
+        <p>If an account uses that address, we've sent it a link to reset your password.</p>
+        <p class="alt"><a href="/login/">Back to log in</a></p>
+      </section>
+
+      <!-- shown when the page was opened from the emailed link -->
+      <form method="POST" data-api="/api/reset/confirm" data-token id="choose" hidden>
+        <h2>Choose a new password</h2>
+        <p class="error" role="alert"></p>
+        <label for="pass">New password</label>
+        <input type="password" name="pass" id="pass" autocomplete="new-password" required>
+        <input type="submit" value="Save password">
+        <p class="alt"><a href="/reset/">Request a new link</a></p>
+      </form>
+    </main>
+
+    <script src="/static/js/auth-page.js?v=2a78572f05"></script>
+  </body>
+</html>

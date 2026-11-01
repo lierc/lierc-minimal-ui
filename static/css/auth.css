@@ -89,7 +89,8 @@ main {
 }
 
 /* drawn like the home page's channel preview */
-form {
+form,
+.panel {
   width: 100%;
   max-width: 340px;
   background: #fff;
@@ -151,6 +152,17 @@ input[type="submit"] {
     opacity: 0.6;
     cursor: default;
   }
+}
+
+.panel p {
+  margin: 0 0 12px;
+}
+
+/* the reset link under the login page's password field */
+.forgot {
+  margin: -8px 0 12px;
+  font-size: 14px;
+  text-align: right;
 }
 
 .error {
