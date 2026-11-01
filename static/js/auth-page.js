@@ -35,18 +35,25 @@ if (token_form) {
 else if (verify_page) {
   // confirms without logging in, so it works whoever is logged in
   token = read_token();
-  const show = (id) => document.getElementById(id).hidden = false;
-  if (!token) {
-    show("invalid");
-  }
-  else {
+  const show = (id) => {
+    for (const panel of ["confirmed", "invalid", "error"])
+      document.getElementById(panel).hidden = panel != id;
+  };
+  // only a 400 means the link itself is bad; anything else (a server error,
+  // no connection) may pass on a retry with the token kept in memory
+  const confirm = () => {
     fetch("/api/verify", {
       method: "POST",
       credentials: "same-origin",
       body: new URLSearchParams({ token: token }),
-    }).then((res) => show(res.ok ? "confirmed" : "invalid"))
-      .catch(() => show("invalid"));
-  }
+    }).then((res) => show(res.ok ? "confirmed" : res.status == 400 ? "invalid" : "error"))
+      .catch(() => show("error"));
+  };
+  document.getElementById("retry").addEventListener("click", confirm);
+  if (token)
+    confirm();
+  else
+    show("invalid");
 }
 else {
   // someone already logged in goes straight to the app

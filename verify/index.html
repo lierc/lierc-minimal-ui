@@ -23,6 +23,13 @@
         <p class="alt"><a href="/app/">Open relaychat</a></p>
       </section>
 
+      <!-- the request failed (network or server error): the link may be fine -->
+      <section class="panel" id="error" hidden>
+        <h2>Couldn't confirm</h2>
+        <p>Something went wrong confirming your email address. Check your connection and try again.</p>
+        <input type="submit" value="Try again" id="retry">
+      </section>
+
       <section class="panel" id="invalid" hidden>
         <h2>Link not valid</h2>
         <p>This confirmation link has expired or isn't valid.</p>
@@ -30,6 +37,6 @@
       </section>
     </main>
 
-    <script src="/static/js/auth-page.js?v=5c76bd7d18"></script>
+    <script src="/static/js/auth-page.js?v=45d1d8c79e"></script>
   </body>
 </html>
