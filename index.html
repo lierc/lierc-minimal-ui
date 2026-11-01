@@ -42,9 +42,6 @@
       #login {
         font-size: 18px;
       }
-      #login p {
-        margin: 0;
-      }
       #login a {
         font-weight: bold;
       }
@@ -152,25 +149,5 @@
         <li><a href="https://github.com/lierc">Github project</a></li>
       </ul>
     </footer>
-    <script type="text/javascript">
-    fetch("/api/auth", {
-        'credentials': 'same-origin'
-      }).then(function(res) {
-        if (!res.ok)
-          throw Error(res.statusText);
-        return res.json();
-      }).then(function(res) {
-        var  p = document.createElement('P');
-        p.textContent = "Hello, " + res['user'];
-        var link = document.createElement('A');
-        link.setAttribute('href', '/app/');
-        link.textContent = "Launch the chats!";
-        var login = document.getElementById('login');
-        login.innerHTML = '';
-        login.appendChild(p);
-        login.appendChild(link);
-      });
-
-    </script>
   </body>
 </html>
