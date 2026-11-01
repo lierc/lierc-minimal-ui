@@ -187,9 +187,11 @@
         padding: 6px 0;
       }
 
+      /* the time on the right, as in the app */
       .preview li {
         display: flex;
-        gap: 8px;
+        justify-content: space-between;
+        gap: 12px;
         padding: 4px 14px;
       }
 
@@ -231,7 +233,7 @@
 
       .preview .reaction {
         display: inline-block;
-        margin: 2px 0 0 48px;
+        margin: 2px 0 0 14px;
         padding: 0 7px;
         border: 1px solid rgba(38, 139, 210, 0.5);
         background: rgba(38, 139, 210, 0.12);
@@ -287,10 +289,11 @@
         color: var(--muted);
       }
 
-      footer {
+      /* a class, so its padding isn't lost to .wrap's */
+      .footer {
         border-top: 1px solid var(--rule);
-        padding-top: 20px;
-        padding-bottom: 32px;
+        padding-top: 28px;
+        padding-bottom: 40px;
         color: var(--muted);
         font-size: 15px;
       }
@@ -317,12 +320,12 @@
         </div>
 
         <figure class="preview" aria-label="A channel in relaychat">
-          <div class="preview-top">#lierc</div>
+          <div class="preview-top">#relaychat</div>
           <ol>
-            <li><time>10:02</time><span><span class="nick" style="color:#6c71c4">&lt;mira&gt;</span> back from lunch, what did i miss?</span></li>
-            <li><time>10:03</time><span><span class="nick" style="color:#cb4b16">&lt;kenji&gt;</span> check the line below, that's where you stopped</span></li>
+            <li><span><span class="nick" style="color:#6c71c4">&lt;mira&gt;</span> back from lunch, what did i miss?</span><time>10:02</time></li>
+            <li><span><span class="nick" style="color:#cb4b16">&lt;kenji&gt;</span> check the line below, that's where you stopped</span><time>10:03</time></li>
             <li class="last-read" aria-hidden="true"></li>
-            <li class="mention"><time>10:14</time><span><span class="nick" style="color:#d33682">&lt;tobias&gt;</span> mira: your build passed 🎉</span></li>
+            <li class="mention"><span><span class="nick" style="color:#d33682">&lt;tobias&gt;</span> mira: your build passed 🎉</span><time>10:14</time></li>
           </ol>
           <span class="reaction">🎉 <b>2</b></span>
           <div class="typing">kenji is typing…</div>
@@ -360,7 +363,7 @@
       </dl>
     </main>
 
-    <footer class="wrap">
+    <footer class="footer wrap">
       Relaychat runs <a href="https://github.com/lierc">lierc</a>, an open source IRC client.
     </footer>
   </body>
