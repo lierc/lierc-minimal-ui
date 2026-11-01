@@ -105,9 +105,8 @@ export class App {
       document.getElementById('email-notify')
         .classList.add('enabled');
     }
-    if (this.prefs['theme']) {
-      this.set_theme(this.prefs['theme'], true);
-    }
+    // always, so a theme cached from another account or device is replaced
+    this.set_theme(this.prefs['theme'] || 'default', true);
 
     await this.load_seen();
     this.init();

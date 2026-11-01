@@ -5,7 +5,9 @@ export const themes = ["solarized-dark", "solarized", "slack", "slack-dark",
   "catppuccin-mocha"];
 
 // Puts the named theme's class on <body>; "default" or an unknown name
-// leaves the default theme.
+// leaves the default theme. The theme is also kept in localStorage, which
+// an inline script at the top of each page's <body> reads to apply it
+// before the first paint, instead of after the preferences load.
 export function apply_theme(theme) {
   themes.forEach((t) => {
     document.body.classList.remove(t);
@@ -13,4 +15,8 @@ export function apply_theme(theme) {
   if (themes.indexOf(theme) != -1) {
     document.body.classList.add(theme);
   }
+  try {
+    localStorage.setItem("theme", theme);
+  }
+  catch (e) {}
 }

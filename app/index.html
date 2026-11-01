@@ -21,6 +21,8 @@
     <title>relaychat.party 🍆</title>
   </head>
   <body noscroll>
+    <!-- the cached theme, applied before the first paint (see theme.js) -->
+    <script>try { var t = localStorage.getItem("theme"); if (t && t != "default" && /^[a-z-]+$/.test(t)) document.body.classList.add(t); } catch (e) {}</script>
     <div class="remove-blur" aria-hidden="true"></div>
     <div class="flex-wrap">
       <div class="flex-wrap-left">
@@ -127,7 +129,7 @@
     {
       "imports": {
         "/static/js/lierc/api.js": "/static/js/lierc/api.js?v=91adf76b92",
-        "/static/js/lierc/app.js": "/static/js/lierc/app.js?v=f460e3e4df",
+        "/static/js/lierc/app.js": "/static/js/lierc/app.js?v=f8ff57aeee",
         "/static/js/lierc/auth.js": "/static/js/lierc/auth.js?v=8439ea0763",
         "/static/js/lierc/channel.js": "/static/js/lierc/channel.js?v=d47521e56f",
         "/static/js/lierc/commands.js": "/static/js/lierc/commands.js?v=cd79d9d3c2",
@@ -140,14 +142,14 @@
         "/static/js/lierc/emoji.js": "/static/js/lierc/emoji.js?v=348f2b2b2d",
         "/static/js/lierc/format.js": "/static/js/lierc/format.js?v=2b26984243",
         "/static/js/lierc/history.js": "/static/js/lierc/history.js?v=6c7a26078c",
-        "/static/js/lierc/logs.js": "/static/js/lierc/logs.js?v=ceef74f33d",
+        "/static/js/lierc/logs.js": "/static/js/lierc/logs.js?v=64ea8c655d",
         "/static/js/lierc/notifier.js": "/static/js/lierc/notifier.js?v=7a9ecd561b",
         "/static/js/lierc/panel.js": "/static/js/lierc/panel.js?v=618583887d",
         "/static/js/lierc/relaymsg.js": "/static/js/lierc/relaymsg.js?v=6ade5dded3",
         "/static/js/lierc/render.js": "/static/js/lierc/render.js?v=229ba502ba",
         "/static/js/lierc/stream.js": "/static/js/lierc/stream.js?v=c2bc0ba6fa",
         "/static/js/lierc/template.js": "/static/js/lierc/template.js?v=077964e9a1",
-        "/static/js/lierc/theme.js": "/static/js/lierc/theme.js?v=b478121309",
+        "/static/js/lierc/theme.js": "/static/js/lierc/theme.js?v=db8edc5806",
         "/static/js/lierc/uievents.js": "/static/js/lierc/uievents.js?v=0faee2f1dd"
       }
     }

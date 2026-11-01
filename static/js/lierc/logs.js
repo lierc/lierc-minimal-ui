@@ -80,8 +80,7 @@ export class Logs {
     try {
       const prefs = await this.api.get("/preference");
       const pref = prefs.find((p) => p.name == "theme");
-      if (pref)
-        apply_theme(JSON.parse(pref.value));
+      apply_theme(pref ? JSON.parse(pref.value) : "default");
     }
     catch (e) {
       console.log(e);
