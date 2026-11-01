@@ -166,16 +166,17 @@ div.flex-wrap {
   padding: 10px 0 0 0;
 }
 
+/* lined up with the section titles, its star after the text */
 .nav li[data-panel-id=highlights] {
-  padding: 6px 0 6px 5px;
+  padding: 6px 0 6px 9px;
   margin: 0;
   font-size: 15px;
   line-height: 15px;
   font-weight: normal;
   cursor: pointer;
 
-  &.highlighted::before,
-  &.unread::before {
+  &.highlighted::after,
+  &.unread::after {
     color: var(--sidebar-highlight);
     content: "\f005";
   }
@@ -185,20 +186,23 @@ div.flex-wrap {
     font-weight: bold;
   }
 
+  /* no status slot in front, unlike other nav items */
   &::before {
-    opacity: 1;
+    display: none;
+  }
+
+  &::after {
     content: "\f006";
     font-family: var(--fa-family-classic);
     color: var(--sidebar-muted);
     font-size: 12px;
     line-height: 12px;
-    width: 16px;
-    display: inline-block;
-    text-align: center;
+    font-weight: normal;
+    margin-left: 6px;
   }
 
   @media (max-width: 800px) {
-    padding: 10px 0 10px 5px;
+    padding: 10px 0 10px 9px;
   }
 }
 
@@ -290,16 +294,14 @@ div.flex-wrap {
   padding: 5px 10px 5px 5px;
   margin: 0;
 
-  &::before {
+  /* after the count, so the title lines up with the others */
+  &::after {
     content: "\f1e6";
-    opacity: 1;
     font-family: var(--fa-family-classic);
     color: var(--sidebar-muted);
     font-size: 12px;
     line-height: 12px;
-    width: 16px;
-    display: inline-block;
-    text-align: center;
+    margin-left: 6px;
   }
 }
 
@@ -318,10 +320,6 @@ div.flex-wrap {
 .nav-title-text {
   display: inline-block;
   padding-left: 4px;
-}
-
-.nav-title.networks .nav-title-text {
-  padding-left: 0;
 }
 
 .nav-title.expandable:hover {
