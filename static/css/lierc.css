@@ -1325,6 +1325,7 @@ li.event time,
   cursor: pointer;
   max-width: 500px;
   outline: 2px solid var(--media-outline);
+  border-radius: 4px;
   position: relative;
   flex: 1 1 auto;
 
@@ -1352,12 +1353,19 @@ li.event time,
     margin: 5px 15px;
   }
 
+  & h2 {
+    font-size: 14px;
+    line-height: 1.3;
+    margin-top: 10px;
+  }
+
   & p.description {
     font-size: 12px;
+    line-height: 1.45;
   }
 
   & > .embed-thumb ~ * {
-    margin-left: 120px;
+    margin-right: 125px;
   }
 
   &:has(> .embed-thumb) {
@@ -1390,7 +1398,7 @@ li.event time,
   background-size: cover;
   position: absolute;
   top: 0;
-  left: 0;
+  right: 0;
   bottom: 0;
   width: 110px;
 }
