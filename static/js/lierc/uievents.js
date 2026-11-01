@@ -826,7 +826,7 @@ export const UIEvents = function(app) {
     if (target.matches('.message-react')) {
       react.classList.toggle('open');
       if (react.classList.contains('open')) {
-        Emoji.open(react, true);
+        Emoji.open(react, !app.mobile);
         controls.classList.add('open');
       }
       else {
