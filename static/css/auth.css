@@ -1,12 +1,19 @@
-/* the standalone login and register pages */
+/* the login and register pages, styled to match the home page */
 
 :root {
-  --header-bg: #002b36;
-  --link: #268bd2;
-  --error: #dc322f;
-  --panel-bg: #eee;
-  --text: #333;
-  --input-border: #ccc;
+  --navy: #002b36;
+  --ink: #073642;
+  --muted: #586e75;
+  --border: #c9d1d3;
+  --cyan: #2aa198;
+  --cyan-dark: #1f7a73;
+  --blue: #268bd2;
+  --red: #dc322f;
+  --amber: #ffa130;
+
+  --font: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
+    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
+    "Helvetica Neue", sans-serif;
 }
 
 * {
@@ -21,32 +28,56 @@ body {
   display: flex;
   flex-direction: column;
   margin: 0;
-  background: #fff;
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Roboto",
-    "Oxygen", "Ubuntu", "Cantarell", "Fira Sans", "Droid Sans",
-    "Helvetica Neue", sans-serif;
+  background: var(--navy);
+  color: var(--ink);
+  font-family: var(--font);
+  font-size: 16px;
+  line-height: 1.5;
 }
 
-header {
-  background: var(--header-bg);
-  color: #fff;
-  padding: 20px 16px;
-  text-align: center;
+a {
+  color: var(--blue);
 }
 
-header h1 {
+a:focus-visible {
+  outline: 2px solid var(--amber);
+  outline-offset: 2px;
+}
+
+/* the same bar as the home page */
+.bar {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 18px 24px;
+
+  @media (max-width: 600px) {
+    padding: 18px 16px;
+  }
+}
+
+.wordmark {
   margin: 0;
-  font-size: 32px;
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: -0.01em;
+
+  & a {
+    color: #fff;
+    text-decoration: none;
+  }
 }
 
-header a {
-  color: inherit;
+.bar nav a {
+  color: #93a1a1;
   text-decoration: none;
-}
 
-header h1 span {
-  font-weight: normal;
+  &:hover {
+    color: #fff;
+  }
 }
 
 main {
@@ -54,46 +85,81 @@ main {
   display: flex;
   align-items: center;
   justify-content: center;
-  padding: 16px;
+  padding: 16px 16px 64px;
 }
 
+/* drawn like the home page's channel preview */
 form {
   width: 100%;
-  max-width: 300px;
-  background: var(--panel-bg);
-  padding: 20px;
-  border-radius: 4px;
+  max-width: 340px;
+  background: #fff;
+  padding: 28px 28px 24px;
+  border-radius: 6px;
+  box-shadow: 0 18px 40px rgba(0, 0, 0, 0.35);
 }
 
 h2 {
-  margin: 0 0 16px;
-  font-size: 20px;
+  margin: 0 0 20px;
+  font-size: 26px;
+  line-height: 1.15;
+  letter-spacing: -0.02em;
 }
 
 label {
   display: block;
-  margin-bottom: 5px;
+  margin-bottom: 4px;
+  font-size: 14px;
+  font-weight: 600;
 }
 
 input {
   display: block;
   width: 100%;
-  margin-bottom: 12px;
-  padding: 6px 8px;
+  margin-bottom: 16px;
+  padding: 9px 10px;
   font: inherit;
-  font-size: 16px;
-  border: 1px solid var(--input-border);
-  border-radius: 2px;
+  color: inherit;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  background: #fff;
+
+  &:focus {
+    outline: none;
+    border-color: var(--cyan);
+    box-shadow: 0 0 0 3px rgba(42, 161, 152, 0.25);
+  }
 }
 
 input[type="submit"] {
-  margin: 4px 0 0;
+  margin: 8px 0 0;
+  padding: 11px 20px;
+  border: none;
+  background: var(--cyan);
+  color: #fff;
+  font-weight: 600;
   cursor: pointer;
+
+  &:hover {
+    background: var(--cyan-dark);
+  }
+
+  &:focus-visible {
+    box-shadow: 0 0 0 3px var(--amber);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: default;
+  }
 }
 
 .error {
-  color: var(--error);
-  margin: 0 0 12px;
+  margin: 0 0 16px;
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(220, 50, 47, 0.08);
+  color: var(--red);
+  font-size: 14px;
 }
 
 .error:empty {
@@ -101,10 +167,8 @@ input[type="submit"] {
 }
 
 .alt {
-  margin: 16px 0 0;
+  margin: 18px 0 0;
+  color: var(--muted);
+  font-size: 14px;
   text-align: center;
-}
-
-a {
-  color: var(--link);
 }
