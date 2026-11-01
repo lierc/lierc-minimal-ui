@@ -171,8 +171,6 @@ body.catppuccin-mocha {
   --notice-channel: #02c702;
   --focus-border: #7a9cd3;
   --focus-ring: #9ec0f7;
-  --coloring-border: #83d37a;        /* input while choosing an IRC colour */
-  --coloring-ring: #a9f79e;
 
   --tint-hover: rgba(0, 0, 0, 0.02);           /* message row tints */
   --tint-self: rgba(49, 168, 255, 0.10);
@@ -254,9 +252,6 @@ body.catppuccin-mocha {
   --input-focus-border: var(--focus-border);
   --input-focus-ring: var(--focus-ring);
   --input-disabled-bg: var(--grey-eee);
-  --input-coloring-border: var(--coloring-border);
-  --input-coloring-focus-border: var(--coloring-border);
-  --input-coloring-focus-ring: var(--coloring-ring);
 
   --sidebar-bg: var(--base03);       /* sidebar and header bar */
   --sidebar-hover: var(--base02);
@@ -337,9 +332,6 @@ body.solarized {
   --input-focus-border: var(--focus-border);
   --input-focus-ring: var(--focus-ring);
   --input-disabled-bg: var(--base3);
-  --input-coloring-border: var(--coloring-border);
-  --input-coloring-focus-border: var(--coloring-border);
-  --input-coloring-focus-ring: var(--coloring-ring);
 
   --sidebar-bg: var(--base03);       /* sidebar and header bar */
   --sidebar-hover: var(--base02);
@@ -420,9 +412,6 @@ body.solarized-dark {
   --input-focus-border: var(--base0);
   --input-focus-ring: var(--base0);
   --input-disabled-bg: var(--grey-eee);
-  --input-coloring-border: var(--base01);
-  --input-coloring-focus-border: var(--base0);
-  --input-coloring-focus-ring: var(--base0);
 
   --sidebar-bg: var(--base03);       /* sidebar and header bar */
   --sidebar-hover: var(--base02);
@@ -506,9 +495,6 @@ body.slack {
   --input-focus-border: #1d9bd1;
   --input-focus-ring: color-mix(in srgb, #1d9bd1 30%, transparent);
   --input-disabled-bg: #f8f8f8;
-  --input-coloring-border: var(--coloring-border);
-  --input-coloring-focus-border: var(--coloring-border);
-  --input-coloring-focus-ring: var(--coloring-ring);
 
   --sidebar-bg: #3f0e40;
   --sidebar-hover: #350d36;
@@ -590,9 +576,6 @@ body.slack-dark {
   --input-focus-border: #1d9bd1;
   --input-focus-ring: color-mix(in srgb, #1d9bd1 30%, transparent);
   --input-disabled-bg: #222529;
-  --input-coloring-border: var(--coloring-border);
-  --input-coloring-focus-border: var(--coloring-border);
-  --input-coloring-focus-ring: var(--coloring-ring);
 
   --sidebar-bg: #19171d;
   --sidebar-hover: #27242c;
@@ -718,9 +701,6 @@ body.catppuccin-mocha {
   --input-focus-border: var(--ctp-lavender);
   --input-focus-ring: var(--ctp-lavender);
   --input-disabled-bg: var(--ctp-surface0);
-  --input-coloring-border: var(--ctp-green);
-  --input-coloring-focus-border: var(--ctp-green);
-  --input-coloring-focus-ring: var(--ctp-green);
 
   --sidebar-bg: var(--ctp-crust);
   --sidebar-hover: var(--ctp-surface0);

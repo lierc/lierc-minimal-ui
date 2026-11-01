@@ -1,13 +1,11 @@
 import { Completion } from "./completion.js";
 import { EmojiComplete } from "./emoji-complete.js";
-import { Format } from "./format.js";
 import { History } from "./history.js";
 
 const BOLD = 66;
 const ITALIC = 73;
 const UNDERLINE = 85;
 const INVERT = 191;
-const COLOR = 67;
 const RESET = 79;
 const TAB = 9;
 const UP = 38;
@@ -16,13 +14,10 @@ const DOWN = 40;
 export class Editor {
   constructor(element) {
     this.el = element;
-    this.info = document.getElementById('color-info');
     this.completion = new Completion(element);
     this.emoji = new EmojiComplete(element, document.getElementById('emoji-complete'));
     this.history = new History(element);
     this.focused = false;
-    this.coloring = false;
-    this.color = "";
     this.range = null;
 
     this.el.addEventListener("blur", (e) => this.blur(e));
@@ -35,91 +30,7 @@ export class Editor {
   }
 
   keydown(e, mods) {
-    if (this.coloring) {
-      if (e.which >= 48 && e.which <= 57) {
-        const i = String(9 - (57 - e.which));
-        this.color += i;
-        e.preventDefault();
-      }
-      else if (e.which == 188) {
-        this.color += ",";
-        e.preventDefault();
-      }
-      else {
-        this.coloring = false;
-        this.el.classList.remove('coloring');
-        this.info.classList.remove('open');
-
-        const seq = this.color;
-        const parts = seq.match(/^(?:([0-9]{1,2}),?([0-9]{1,2})?)?$/);
-        this.color = "";
-
-        if (parts === null) {
-          alert(`Invalid color sequence: '${seq}'`);
-          return;
-        }
-
-        const sel = window.getSelection();
-        const node = sel.focusNode;
-        const range = sel.getRangeAt(0);
-        const span = document.createElement('SPAN');
-        span.appendChild(range.extractContents());
-
-        if (typeof(parts[1]) != "undefined") {
-          const i = parts[1];
-          const c = Format.color_map[parseInt(i)];
-
-          if (typeof(c) === "undefined") {
-            alert(`Invalid color '${i}' in sequence '${seq}'`);
-            return;
-          }
-
-          span.style.color = c;
-          span.setAttribute('data-color-fg', i);
-
-          if (typeof(parts[2]) != "undefined") {
-            const i = parts[2];
-            const c = Format.color_map[parseInt(i)];
-
-            if (typeof(c) === "undefined") {
-              alert(`Invalid color '${i}' in sequence '${seq}'`);
-              return;
-            }
-
-            span.style.backgroundColor = c;
-            span.setAttribute('data-color-bg', i);
-          }
-        }
-        else {
-          span.style.color = "#000";
-          span.style.backgroundColor = "#fff";
-          span.setAttribute('data-color-reset', 1);
-        }
-
-        range.insertNode(span);
-
-        if (span.textContent == "") {
-          span.textContent = "\u200b";
-          range.setStart(span, 1);
-          range.setEnd(span, 1);
-        }
-      }
-    }
-
-    else if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
-      if (e.which == COLOR) {
-        this.coloring = !this.coloring;
-        if (this.coloring) {
-          this.el.classList.add('coloring');
-          this.info.classList.add('open');
-        }
-        else {
-          this.el.classList.remove('coloring');
-          this.info.classList.remove('open');
-        }
-        return;
-      }
-
+    if (mods['meta'] && !mods['shift'] && !mods['ctrl']) {
       if (e.which == RESET) {
         const sel = window.getSelection();
         const range = sel.getRangeAt(0);

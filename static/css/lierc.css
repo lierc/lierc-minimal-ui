@@ -1573,17 +1573,6 @@ p.embed-source {
     background: var(--input-disabled-bg);
   }
 
-  /* while picking an IRC colour */
-  &.coloring {
-    border: 1px solid var(--input-coloring-border);
-    box-shadow: 0 0 0 1px var(--coloring-ring);
-  }
-
-  &.coloring:focus {
-    border: 1px solid var(--input-coloring-focus-border);
-    box-shadow: 0 0 0 1px var(--input-coloring-focus-ring);
-  }
-
   &:focus {
     border: 1px solid var(--input-focus-border);
     box-shadow: 0 0 0 1px var(--input-focus-ring);
@@ -1681,29 +1670,6 @@ p.embed-source {
   &.open::before,
   &:hover::before {
     color: var(--button-icon-hover);
-  }
-}
-
-/* the IRC colour codes, shown while picking a colour */
-#color-info {
-  margin-top: 5px;
-  width: 0px;
-  overflow: hidden;
-  text-align: right;
-  transition: width 1s;
-
-  &.open {
-    width: auto;
-  }
-
-  & td {
-    font-family: var(--font-mono);
-    font-size: 10px;
-    color: var(--white);
-    padding: 2px;
-    width: 12px;
-    text-align: center;
-    text-shadow: -1px -1px 0px rgba(0,0,0,0.75);
   }
 }
 

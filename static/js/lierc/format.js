@@ -18,14 +18,6 @@ Unformat.descend = function(node, string) {
     if (node.nodeType == 1) {
       if (node.classList?.contains('invert'))
         string += Unformat.invert;
-      if (node.hasAttribute('data-color-fg')) {
-        string += `\x03${node.getAttribute('data-color-fg')}`;
-        if (node.hasAttribute('data-color-bg')) {
-          string += `,${node.getAttribute('data-color-bg')}`;
-        }
-      }
-      if (node.hasAttribute('data-color-reset'))
-        string += "\x03";
     }
     for (let i=0; i < node.childNodes.length; i++) {
       string = Unformat.descend(node.childNodes[i], string);
