@@ -11,7 +11,14 @@ const token_form = document.querySelector("form[data-token]");
 let token = "";
 
 if (token_form) {
-  token = decodeURIComponent(location.hash.slice(1));
+  // a link mangled on the way (a bad % escape) counts as no token, so the
+  // email form shows and a new link can be requested
+  try {
+    token = decodeURIComponent(location.hash.slice(1));
+  }
+  catch (e) {
+    token = "";
+  }
   if (location.hash)
     history.replaceState(null, "", location.pathname);
   const shown = token ? token_form : document.querySelector("form[data-api]:not([data-token])");
