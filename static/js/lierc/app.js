@@ -1152,7 +1152,11 @@ export class App {
         this.close_dialog();
       }
       catch (e) {
-        alert("i'm sorry");
+        // the API's message names the field to fix; the dialog stays open
+        const prefix = "API Error: ";
+        alert(typeof e == "string" && e.startsWith(prefix)
+          ? e.slice(prefix.length)
+          : "Couldn't save the connection");
       }
     });
   }
