@@ -194,6 +194,18 @@ export class App {
     this.elem.typing.innerText = "";
   }
 
+  // Shows a connection's new network name on its status panel.
+  rename_connection(id, host) {
+    const connection = this.connections[id];
+    if (!connection)
+      return;
+    connection.host = host;
+    for (const panel of Object.values(this.panels)) {
+      if (panel.connection == id && panel.type == "status")
+        panel.change_name(host);
+    }
+  }
+
   setup_connection(id, host, nick) {
     if (this.connections[id])
       return;
@@ -1083,12 +1095,10 @@ export class App {
       vars.Host = config.Host;
       vars.Port = config.Port;
       vars.Ssl = config.Ssl;
-      vars.Nick = config.Nick;
       vars.User = config.User;
       vars.Pass = config.Pass;
       vars.Alias = config.Alias;
       vars.SASL = config.SASL;
-      vars.Channels = config.Channels.join(", ");
       vars.Highlight = config.Highlight.join(", ");
 
       vars.action = `/connection/${connection.Id}`;
@@ -1129,19 +1139,27 @@ export class App {
     dialog.el.addEventListener("submit", async (e) => {
       e.preventDefault();
       const form = e.target;
+      // Save stores the settings without restarting the connection
+      const save_only = connection && e.submitter?.name == "save";
       const method = form.getAttribute('method');
-      const action = form.getAttribute('action');
+      const action = save_only
+        ? `${form.getAttribute('action')}/config`
+        : form.getAttribute('action');
 
       const data = {
         Host: form.querySelector('input[name="Host"]').value,
         Port: parseInt(form.querySelector('input[name="Port"]').value),
         Ssl:  form.querySelector('input[name="Ssl"]').checked,
         SASL:  form.querySelector('input[name="SASL"]').checked,
-        Nick: form.querySelector('input[name="Nick"]').value,
+        // like Channels, only a new connection's form has Nick: after
+        // that, /nick changes it
+        Nick: form.querySelector('input[name="Nick"]')?.value,
         User: form.querySelector('input[name="User"]').value,
         Pass: form.querySelector('input[name="Pass"]').value,
         Alias: form.querySelector('input[name="Alias"]').value,
-        Channels: form.querySelector('input[name="Channels"]').value.split(/\s*,\s*/),
+        // only a new connection's form has Channels: after that, joining
+        // and leaving channels changes them
+        Channels: form.querySelector('input[name="Channels"]')?.value.split(/\s*,\s*/) ?? [],
         Highlight: form.querySelector('input[name="Highlight"]').value.split(/\s*,\s*/),
       };
 
@@ -1149,6 +1167,10 @@ export class App {
         await this.api.request(method, action, {
           body: JSON.stringify(data)
         });
+        // without a reconnect no create_connection event renames the
+        // status panel, so rename it here
+        if (save_only)
+          this.rename_connection(connection.Id, data.Alias.trim() || data.Host.trim());
         this.close_dialog();
       }
       catch (e) {

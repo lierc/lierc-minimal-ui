@@ -2028,6 +2028,12 @@ p.note {
   text-align: right;
 }
 
+p.note.save-note {
+  clear: both;
+  padding-top: 8px;
+  text-align: left;
+}
+
 .dialog a.close {
   color: var(--popup-text-strong);
   display: inline-block;

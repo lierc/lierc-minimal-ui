@@ -51,10 +51,12 @@ const templates = {
             <input name="Ssl" type="checkbox"${v.Ssl ? safe(" checked=checked") : ""}>
           </fieldset>
         </div>
+        ${v.edit ? "" : html`
         <fieldset class="input-group">
           <label for="nick">Nickname <span class="required">*</span></label>
           <input name="Nick" type="text" value="${v.Nick}" required>
         </fieldset>
+        `}
         <div class="input-h-group">
           <fieldset class="input-group">
             <label for="user">Username</label>
@@ -72,12 +74,14 @@ const templates = {
           </fieldset>
         </div>
         <hr>
+        ${v.edit ? "" : html`
         <fieldset class="input-group">
           <label for="channels">Channels
             <span>(comma separated)</span>
           </label>
           <input name="Channels" type="text" value="${v.Channels}">
         </fieldset>
+        `}
         <fieldset class="input-group">
           <label for="highlight">Highlight words (comma separated)</label>
           <input name="Highlight" type="text" value="${v.Highlight}">
@@ -90,11 +94,15 @@ const templates = {
         <fieldset class="submit-group">
           ${v.edit ? html`
           <input type="submit" value="&#xf071; Delete" class="delete-connection">
+          <input type="submit" name="save" value="Save">
           <input type="submit" name="connect" value="Save & Reconnect" style="font-weight:bold">
           ` : html`
           <input type="submit" name="connect" value="Connect">
           `}
           <p style="float:right" class="note"><span class="required">*</span> required</p>
+          ${v.edit ? html`
+          <p class="note save-note">Save applies highlights and the alias now, and everything else the next time you Save & Reconnect. To change your nick use /nick; to join or leave channels, use /join or close a channel's panel.</p>
+          ` : ""}
         </fieldset>
       </form>
     </section>
