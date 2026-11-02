@@ -1127,6 +1127,20 @@ export class App {
 
     const dialog = this.new_dialog("connection", vars);
 
+    // Enter presses the form's first button, Save & Reconnect; in the
+    // highlight and alias fields it means Save, which doesn't reconnect
+    const save = dialog.el.querySelector('input[name="save"]');
+    if (save) {
+      for (const input of dialog.el.querySelectorAll('input[name="Highlight"], input[name="Alias"]')) {
+        input.addEventListener('keydown', (e) => {
+          if (e.key == "Enter") {
+            e.preventDefault();
+            save.click();
+          }
+        });
+      }
+    }
+
     const del = dialog.el.querySelector('.delete-connection');
     if (del && connection) {
       del.addEventListener('click', (e) => {
@@ -1139,7 +1153,7 @@ export class App {
     dialog.el.addEventListener("submit", async (e) => {
       e.preventDefault();
       const form = e.target;
-      // Save stores the settings without restarting the connection
+      // Save stores only the highlights and alias, without reconnecting
       const save_only = connection && e.submitter?.name == "save";
       const method = form.getAttribute('method');
       const action = save_only
@@ -1164,13 +1178,17 @@ export class App {
       };
 
       try {
+        const body = save_only
+          ? { Highlight: data.Highlight, Alias: data.Alias }
+          : data;
         await this.api.request(method, action, {
-          body: JSON.stringify(data)
+          body: JSON.stringify(body)
         });
         // without a reconnect no create_connection event renames the
-        // status panel, so rename it here
+        // status panel, so rename it here (the saved host if the alias
+        // was cleared)
         if (save_only)
-          this.rename_connection(connection.Id, data.Alias.trim() || data.Host.trim());
+          this.rename_connection(connection.Id, data.Alias.trim() || connection.Config.Host);
         this.close_dialog();
       }
       catch (e) {

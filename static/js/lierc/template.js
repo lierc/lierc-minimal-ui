@@ -73,6 +73,11 @@ const templates = {
             <label style="float:left;width:auto" for="sasl">Require SASL</label>
           </fieldset>
         </div>
+        ${v.edit ? html`
+        <fieldset class="section-actions">
+          <input type="submit" name="connect" value="Save & Reconnect" style="font-weight:bold">
+        </fieldset>
+        ` : ""}
         <hr>
         ${v.edit ? "" : html`
         <fieldset class="input-group">
@@ -90,19 +95,19 @@ const templates = {
           <label for="alias">Network alias</label>
           <input name="Alias" type="text" value="${v.Alias}">
         </fieldset>
+        ${v.edit ? html`
+        <fieldset class="section-actions">
+          <input type="submit" name="save" value="Save">
+        </fieldset>
+        ` : ""}
 
         <fieldset class="submit-group">
           ${v.edit ? html`
           <input type="submit" value="&#xf071; Delete" class="delete-connection">
-          <input type="submit" name="save" value="Save">
-          <input type="submit" name="connect" value="Save & Reconnect" style="font-weight:bold">
           ` : html`
           <input type="submit" name="connect" value="Connect">
           `}
           <p style="float:right" class="note"><span class="required">*</span> required</p>
-          ${v.edit ? html`
-          <p class="note save-note">Save applies highlights and the alias now, and everything else the next time you Save & Reconnect. To change your nick use /nick; to join or leave channels, use /join or close a channel's panel.</p>
-          ` : ""}
         </fieldset>
       </form>
     </section>
