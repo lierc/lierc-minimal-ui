@@ -1957,10 +1957,16 @@ p.embed-source {
 
   /* the edit dialog's Save & Reconnect and Save, each under its fields */
   & .section-actions {
-    margin: 0;
+    margin: 12px 0 0;
     padding: 0;
     border: none;
-    text-align: right;
+    display: flex;
+    align-items: center;
+
+    /* the button on the left, "* required" on the right */
+    & .note {
+      margin-left: auto;
+    }
   }
 
   & .submit-group {
@@ -2044,7 +2050,18 @@ p.note {
 }
 
 .delete-connection {
-  margin-right: 5px;
+  color: var(--red);
+  background: transparent;
+  border: 1px solid var(--red);
+  border-radius: 2px;
+  padding: 3px 8px;
+  cursor: pointer;
+
+  &:hover,
+  &:focus-visible {
+    color: #fff;
+    background: var(--red);
+  }
 }
 
 /* ===== Help ===== */

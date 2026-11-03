@@ -1184,11 +1184,13 @@ export class App {
         await this.api.request(method, action, {
           body: JSON.stringify(body)
         });
-        // without a reconnect no create_connection event renames the
-        // status panel, so rename it here (the saved host if the alias
-        // was cleared)
-        if (save_only)
-          this.rename_connection(connection.Id, data.Alias.trim() || connection.Config.Host);
+        // without a reconnect (Save, or Save & Reconnect with the same
+        // server settings) no create_connection event renames the status
+        // panel, so rename it here: to the host if the alias was cleared,
+        // the saved one for Save, which doesn't save the form's
+        if (connection)
+          this.rename_connection(connection.Id, data.Alias.trim()
+            || (save_only ? connection.Config.Host : data.Host.trim()));
         this.close_dialog();
       }
       catch (e) {

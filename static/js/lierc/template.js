@@ -76,6 +76,7 @@ const templates = {
         ${v.edit ? html`
         <fieldset class="section-actions">
           <input type="submit" name="connect" value="Save & Reconnect" style="font-weight:bold">
+          <p class="note"><span class="required">*</span> required</p>
         </fieldset>
         ` : ""}
         <hr>
@@ -106,8 +107,8 @@ const templates = {
           <input type="submit" value="&#xf071; Delete" class="delete-connection">
           ` : html`
           <input type="submit" name="connect" value="Connect">
-          `}
           <p style="float:right" class="note"><span class="required">*</span> required</p>
+          `}
         </fieldset>
       </form>
     </section>
