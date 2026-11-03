@@ -1095,6 +1095,7 @@ export class App {
       vars.Host = config.Host;
       vars.Port = config.Port;
       vars.Ssl = config.Ssl;
+      vars.Nick = config.Nick;
       vars.User = config.User;
       vars.Pass = config.Pass;
       vars.Alias = config.Alias;
@@ -1165,9 +1166,9 @@ export class App {
         Port: parseInt(form.querySelector('input[name="Port"]').value),
         Ssl:  form.querySelector('input[name="Ssl"]').checked,
         SASL:  form.querySelector('input[name="SASL"]').checked,
-        // like Channels, only a new connection's form has Nick: after
-        // that, /nick changes it
-        Nick: form.querySelector('input[name="Nick"]')?.value,
+        // Save & Reconnect with a changed nick reconnects with it (how a
+        // nick the server refuses gets fixed); /nick also changes it
+        Nick: form.querySelector('input[name="Nick"]').value,
         User: form.querySelector('input[name="User"]').value,
         Pass: form.querySelector('input[name="Pass"]').value,
         Alias: form.querySelector('input[name="Alias"]').value,
