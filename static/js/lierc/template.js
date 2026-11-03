@@ -51,10 +51,12 @@ const templates = {
             <input name="Ssl" type="checkbox"${v.Ssl ? safe(" checked=checked") : ""}>
           </fieldset>
         </div>
+        ${v.edit && v.connected ? "" : html`
         <fieldset class="input-group">
           <label for="nick">Nickname <span class="required">*</span></label>
           <input name="Nick" type="text" value="${v.Nick}" required>
         </fieldset>
+        `}
         <div class="input-h-group">
           <fieldset class="input-group">
             <label for="user">Username</label>

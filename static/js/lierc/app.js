@@ -1105,6 +1105,10 @@ export class App {
       vars.action = `/connection/${connection.Id}`;
       vars.method = "PUT";
       vars.edit = true;
+      // while it's connected the nick is changed with /nick; the field is
+      // only for a closed connection, such as one whose nick the server
+      // refused
+      vars.connected = this.connections[connection.Id]?.connected;
     }
     else {
       vars.Nick = this.user.user;
@@ -1166,9 +1170,11 @@ export class App {
         Port: parseInt(form.querySelector('input[name="Port"]').value),
         Ssl:  form.querySelector('input[name="Ssl"]').checked,
         SASL:  form.querySelector('input[name="SASL"]').checked,
-        // Save & Reconnect with a changed nick reconnects with it (how a
-        // nick the server refuses gets fixed); /nick also changes it
-        Nick: form.querySelector('input[name="Nick"]').value,
+        // a new connection's form has Nick, and so does a closed one's,
+        // where Save & Reconnect with a changed nick reconnects with it
+        // (how a nick the server refuses gets fixed); otherwise the API
+        // keeps the saved nick, which /nick changes
+        Nick: form.querySelector('input[name="Nick"]')?.value,
         User: form.querySelector('input[name="User"]').value,
         Pass: form.querySelector('input[name="Pass"]').value,
         Alias: form.querySelector('input[name="Alias"]').value,
