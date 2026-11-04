@@ -243,9 +243,7 @@ const templates = {
 
   // no surrounding whitespace: callers use the element as firstChild
   nav_item: (v) => html`<li data-panel-id="${v.id}"><a class="panel-name">${v.name}</a>${
-    v.editable ? html`<a class="fa-solid fa-pencil edit edit-panel" title="Edit"></a>` : ""}${
-    v.closable ? html`<a class="fa-solid fa-xmark close-panel" title="Close"></a>` : ""}${
-    v.log_url ? html`<a class="fa-solid fa-file-lines panel-log" title="View logs" href="${v.log_url}" target="_blank"></a>` : ""}</li>`,
+    v.editable ? html`<a class="fa-solid fa-pencil edit edit-panel" title="Edit"></a>` : ""}</li>`,
 
   nick: (v) => html`<li><a class="nick-list-nick" data-nick="${v.nick}" data-nick-order="${v.order}">${v.sigil}${v.nick}</a></li>`,
 };

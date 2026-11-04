@@ -604,7 +604,6 @@ export class App {
       log_url: opts['status'] ? null : `/search/#!/connection/${encodeURIComponent(conn.id)}/channel/${encodeURIComponent(name)}`,
       backlog_url: `/connection/${conn.id}/channel/${encodeURIComponent(name)}/events`,
       path: `${window.location.pathname}#/${conn.id}/${encodeURIComponent(name)}`,
-      closable: opts['status'] ? false : true,
       editable: opts['status'] ? true : false,
       connection: conn.id,
       connected: conn.connected,
@@ -652,9 +651,6 @@ export class App {
     this.send_typing_pref(panel);
 
     panel.elem.nav.addEventListener('click', async (e) => {
-      if (e.target.classList.contains("panel-log"))
-        return;
-
       e.preventDefault();
 
       this.elem.flex_wrap.classList.remove("open");
@@ -662,15 +658,7 @@ export class App {
       const id = e.currentTarget.getAttribute('data-panel-id');
       const panel = this.panels[id];
 
-      if (e.target.classList.contains('close-panel')) {
-        if (panel.type == "channel")
-          this.part_channel(panel.name, panel.connection);
-        else if (panel.type == "status")
-          this.delete_connection(panel.connection);
-        else
-          this.close_panel(id);
-      }
-      else if (e.target.classList.contains('edit-panel')) {
+      if (e.target.classList.contains('edit-panel')) {
         try {
           const res = await this.api.get(`/connection/${panel.connection}`);
           this.config_modal(null, res);
@@ -1644,7 +1632,6 @@ export class App {
     this.highlights = new Panel({
       name: "All Highlights",
       id: "highlights",
-      closable: false,
       editable: false,
       backlog_url: "/highlight",
       path: `${window.location.pathname}#/highlights`,

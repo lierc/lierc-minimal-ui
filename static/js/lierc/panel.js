@@ -22,7 +22,6 @@ export class Panel {
     this.type = opts.type;
     this.connection = opts.connection;
     this.editable = opts.editable;
-    this.closable = opts.closable;
     this.log_url = opts.log_url;
     this.backlog_url = opts.backlog_url;
     this.path = opts.path;
@@ -197,9 +196,7 @@ export class Panel {
   build_nav() {
     const html = Template('nav_item', {
       name: this.name,
-      closable: this.closable,
       editable: this.editable,
-      log_url: this.log_url,
       id: this.id,
     });
 

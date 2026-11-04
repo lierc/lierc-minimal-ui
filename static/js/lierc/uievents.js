@@ -319,6 +319,12 @@ export const UIEvents = function(app) {
     app.open_log(app.focused);
   });
 
+  clickTouchEvent(document.querySelector('#part-channel'), (e) => {
+    e.preventDefault();
+    if (app.focused?.type == "channel")
+      app.part_channel(app.focused.name, app.focused.connection);
+  });
+
   clickTouchEvent(document.querySelector('#toggle-hideevents a'), (e) => {
     e.preventDefault();
     app.focused.set_ignore_events(!app.focused.ignore_events);
