@@ -34,7 +34,9 @@ export class App {
     this.panels = {};
     this.focused = null;
     this.last_panel_id = null;
-    this.window_focused = true;
+    // false for a page opened or reloaded in a background tab, until it's
+    // first focused (uievents.js keeps it current from then on)
+    this.window_focused = document.hasFocus();
     // what arrived in the focused panel while the window was in the
     // background, which doesn't mark that panel unread (see update_favicon)
     this.background = {unread: false, highlighted: false};
