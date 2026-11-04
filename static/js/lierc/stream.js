@@ -12,6 +12,8 @@ export class Stream {
   #check_timer;
   #seen = new Set();
   #events = 0;
+  // whether the current eventsource has opened
+  #opened = false;
 
   constructor(baseurl) {
     this.baseurl = baseurl;
@@ -28,6 +30,7 @@ export class Stream {
     this.onmessage = this.onmessage.bind(this);
     this.onopen = this.onopen.bind(this);
     this.close = this.close.bind(this);
+    this.onerror = this.onerror.bind(this);
     this.touch = this.touch.bind(this);
     this.onping = this.onping.bind(this);
     this.onstream = this.onstream.bind(this);
@@ -57,11 +60,12 @@ export class Stream {
 
     es.addEventListener("irc",     this.onmessage);
     es.addEventListener("open",    this.onopen);
-    es.addEventListener("error",   this.close);
+    es.addEventListener("error",   this.onerror);
     es.addEventListener("ping",    this.onping);
     es.addEventListener("stream",  this.onstream);
 
     this.eventsource = es;
+    this.#opened = false;
     this.stream_id = null;
     this.timer = null;
   }
@@ -143,6 +147,7 @@ export class Stream {
   }
 
   onopen() {
+    this.#opened = true;
     this.touch();
     this.fire("open");
     this.retries = 0;
@@ -168,6 +173,17 @@ export class Stream {
   close() {
     if (this.eventsource)
       this.eventsource.close();
+  }
+
+  // An error closes the stream; check() reconnects it. One before the
+  // stream opened is a failed connect, which fires "connect-failed": an
+  // EventSource can't tell a 401 (logged out) from a 502 or a network
+  // error, so the app asks /auth.
+  onerror() {
+    const failed = !this.#opened;
+    this.close();
+    if (failed)
+      this.fire("connect-failed");
   }
 
   // the page became visible again, possibly after sleep: ask the server to
@@ -248,7 +264,7 @@ export class Stream {
     if (this.eventsource) {
       this.eventsource.removeEventListener("irc", this.onmessage);
       this.eventsource.removeEventListener("open", this.onopen);
-      this.eventsource.removeEventListener("error", this.close);
+      this.eventsource.removeEventListener("error", this.onerror);
       this.eventsource.removeEventListener("ping", this.onping);
       this.eventsource.removeEventListener("stream", this.onstream);
       this.eventsource.close();

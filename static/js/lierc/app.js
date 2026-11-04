@@ -463,6 +463,10 @@ export class App {
     // a ping says the server has messages we haven't seen
     stream.on('behind', (last_id) => this.fill_missed(stream, last_id));
 
+    // the stream may have been refused because we're logged out, which
+    // ping_server's /auth check finds out, going to the login page
+    stream.on('connect-failed', () => this.ping_server());
+
     stream.on('open', (e) => {
       this.elem.body.classList.remove('disconnected');
       if (stream.last_id !== null) {
