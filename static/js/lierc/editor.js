@@ -143,18 +143,45 @@ export class Editor {
     }
   }
 
+  // append_elem inserts el at the caret, or where the caret last was in the
+  // input, or at the end of the input, and puts the caret after it.
   append_elem(el) {
-    const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
-    range.insertNode(el);
+    this.caret().insertNode(el);
     this.move_cursor_after(el);
   }
 
-  move_cursor_after(el) {
+  // caret is the selection's range when it's inside the input; otherwise a
+  // new range at the saved position, or collapsed at the end of the input.
+  caret() {
     const sel = window.getSelection();
-    const range = sel.getRangeAt(0);
-    range.setStart(el, 1);
-    range.setEnd(el, 1);
+    if (sel.rangeCount > 0) {
+      const range = sel.getRangeAt(0);
+      if (this.el.contains(range.commonAncestorContainer))
+        return range;
+    }
+
+    const range = document.createRange();
+    if (this.range && this.el.contains(this.range.startContainer) && this.el.contains(this.range.endContainer)) {
+      range.setStart(this.range.startContainer, this.range.startOffset);
+      range.setEnd(this.range.endContainer, this.range.endOffset);
+    }
+    else {
+      range.selectNodeContents(this.el);
+      range.collapse(false);
+    }
+    return range;
+  }
+
+  move_cursor_after(el) {
+    if (!this.el.contains(el))
+      return;
+    const range = document.createRange();
+    range.setStartAfter(el);
+    range.collapse(true);
+    const sel = window.getSelection();
+    sel.removeAllRanges();
+    sel.addRange(range);
+    this.save_selection();
   }
 
   save_selection() {

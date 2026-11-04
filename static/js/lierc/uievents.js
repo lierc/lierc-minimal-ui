@@ -588,9 +588,9 @@ export const UIEvents = function(app) {
         const span = document.createElement('SPAN');
         span.classList.add('uploading');
         span.textContent = '[Uploading image...]';
+        app.focus_input();
         app.focused.editor.append_elem(span);
 
-        app.focus_input();
         // clipboard items can't be read once the paste event is over
         const type = items[i].type;
         const blob = items[i].getAsFile();
