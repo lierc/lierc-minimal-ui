@@ -29,6 +29,8 @@ export class Panel {
     this.connected = opts.connected;
     this.network = opts.network;
     this.get_nick = opts.get_nick || (() => null);
+    // called whenever the nav's state (unread, highlighted) may change
+    this.on_change = opts.on_change || (() => {});
     this.mobile = opts.mobile;
 
     this.unread = false;
@@ -236,6 +238,7 @@ export class Panel {
     }
 
     this.elem.nav.setAttribute("data-name", this.name);
+    this.on_change();
   }
 
   update_seen() {

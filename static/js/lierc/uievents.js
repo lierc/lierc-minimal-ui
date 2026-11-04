@@ -228,6 +228,7 @@ export const UIEvents = function(app) {
 
   window.addEventListener("focus", (e) => {
     app.window_focused = true;
+    app.clear_background();
     app.focus_input();
     app.update_title();
 

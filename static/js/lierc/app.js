@@ -4,6 +4,7 @@ import { Commands } from "./commands.js";
 import { Connection } from "./connection.js";
 import { Dialog } from "./dialog.js";
 import { Emoji } from "./emoji.js";
+import { Favicon, favicon_state } from "./favicon.js";
 import { Notifier } from "./notifier.js";
 import { Panel } from "./panel.js";
 import { Render } from "./render.js";
@@ -34,6 +35,10 @@ export class App {
     this.focused = null;
     this.last_panel_id = null;
     this.window_focused = true;
+    // what arrived in the focused panel while the window was in the
+    // background, which doesn't mark that panel unread (see update_favicon)
+    this.background = {unread: false, highlighted: false};
+    this.favicon = new Favicon(document.querySelector('link[rel="icon"]'), "/favicon.png");
     this.default_panel = null;
     this.default_focused = false;
     this.prefs = {};
@@ -237,6 +242,8 @@ export class App {
 
       panel.append(Render(message));
       this.update_title(true);
+      if (from)
+        this.note_background(panel, true);
 
       const unfocused = !this.is_focused(panel);
       if (from && (unfocused || !panel.is_scrolled())) {
@@ -268,6 +275,8 @@ export class App {
       if (html) {
         panel.append(html);
         this.update_title(true);
+        if (message.Prefix.Name != this.connections[conn].nick)
+          this.note_background(panel, message.Highlight);
 
         if (message.Highlight) {
           if (!this.is_focused(panel) || !panel.is_scrolled()) {
@@ -523,6 +532,30 @@ export class App {
     }
 
     this.update_nav_counts();
+    this.update_favicon();
+  }
+
+  // note_background records a message from someone else arriving in the
+  // focused panel while the window is in the background; highlight is
+  // whether it counts as one (a highlight, or any private message).
+  note_background(panel, highlight) {
+    if (this.window_focused || this.focused?.id != panel.id)
+      return;
+    this.background.unread = true;
+    if (highlight)
+      this.background.highlighted = true;
+    this.update_favicon();
+  }
+
+  // the window has focus again: what arrived in the focused panel has been
+  // seen
+  clear_background() {
+    this.background = {unread: false, highlighted: false};
+    this.update_favicon();
+  }
+
+  update_favicon() {
+    this.favicon.show(favicon_state(Object.values(this.panels), this.background));
   }
 
   update_nav_counts() {
@@ -575,7 +608,8 @@ export class App {
       mobile: this.mobile,
       type: type,
       network: conn.host,
-      get_nick: () => conn.nick
+      get_nick: () => conn.nick,
+      on_change: () => this.update_favicon()
     });
 
     if (this.last_seen[panel.id])
