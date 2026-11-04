@@ -1,4 +1,5 @@
 import { API } from "./api.js";
+import { is_auth_failure } from "./auth.js";
 import { Commands } from "./commands.js";
 import { Connection } from "./connection.js";
 import { Dialog } from "./dialog.js";
@@ -8,6 +9,9 @@ import { Panel } from "./panel.js";
 import { Render } from "./render.js";
 import { apply_theme } from "./theme.js";
 import { UIEvents } from "./uievents.js";
+
+// How often the app checks its session with GET /auth.
+const PING_INTERVAL = 90 * 1000;
 
 function onlyUnique(value, index, self) {
   return self.indexOf(value) === index;
@@ -70,7 +74,7 @@ export class App {
       this.make_sortable(this.elem.channels, () => this.save_channel_order());
 
     setInterval(() => this.check_scroll(), 250);
-    setInterval(() => this.ping_server(), 1000 * 15);
+    setInterval(() => this.ping_server(), PING_INTERVAL);
     setInterval(() => this.render_typing(), 500);
 
     const wake_stream = () => this.stream?.wake();
@@ -1235,8 +1239,11 @@ export class App {
     if (res.status == 200)
       return;
 
-    if (res.status == 401) {
-      //window.location.reload();
+    // logged out (the session expired, or the user logged out elsewhere):
+    // show the login page. Only the API's own 401 counts; anything else
+    // (a 502 while it restarts, a proxy's error) may pass.
+    if (await is_auth_failure(res)) {
+      window.location = "/login/";
       return;
     }
 
