@@ -39,7 +39,7 @@ export class App {
     this.window_focused = document.hasFocus();
     // what arrived in the focused panel while the window was in the
     // background, which doesn't mark that panel unread (see update_favicon)
-    this.background = {unread: false, highlighted: false};
+    this.background = {unread: false, highlights: 0};
     this.favicon = new Favicon(document.querySelector('link[rel="icon"]'), "/favicon.png");
     this.default_panel = null;
     this.default_focused = false;
@@ -545,19 +545,20 @@ export class App {
       return;
     this.background.unread = true;
     if (highlight)
-      this.background.highlighted = true;
+      this.background.highlights++;
     this.update_favicon();
   }
 
   // the window has focus again: what arrived in the focused panel has been
   // seen
   clear_background() {
-    this.background = {unread: false, highlighted: false};
+    this.background = {unread: false, highlights: 0};
     this.update_favicon();
   }
 
   update_favicon() {
-    this.favicon.show(favicon_state(Object.values(this.panels), this.background));
+    const {state, count} = favicon_state(Object.values(this.panels), this.background);
+    this.favicon.show(state, count);
   }
 
   update_nav_counts() {
@@ -721,6 +722,11 @@ export class App {
     if (this.focused?.id == panel.id) {
       return;
     }
+
+    // the server's counts are of everything unseen, so they replace (not add
+    // to) what's been counted here, unless more has been counted since
+    const highlights = (panel.type == 'private' ? missed.messages : missed.highlights) || 0;
+    panel.highlights = Math.max(panel.highlights, highlights);
 
     if (missed.messages) {
       panel.unread = true;

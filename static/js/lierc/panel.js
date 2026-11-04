@@ -36,6 +36,8 @@ export class Panel {
     this.unread = false;
     this.missed = false;
     this.highlighted = false;
+    // unseen highlights and private messages from others, for the favicon
+    this.highlights = 0;
     this.focused = false;
     // counts focuses, so a backlog fill can tell if it outlived its focus
     this.focus_count = 0;
@@ -186,6 +188,7 @@ export class Panel {
     this.unread = false;
     this.missed = false;
     this.highlighted = false;
+    this.highlights = 0;
     this.update_nav();
     this.scroll_bottom(0);
     setTimeout(() => { this.scroll_bottom(0) } , 10);
@@ -621,6 +624,8 @@ export class Panel {
         this.unread = true;
         if (el.classList.contains("highlight"))
           this.highlighted = true;
+        if (!el.classList.contains("self") && (el.classList.contains("highlight") || this.type == "private"))
+          this.highlights++;
         this.update_nav();
       }
       else if (el.classList.contains("event") && ! this.ignore_events) {
