@@ -819,7 +819,8 @@ export class App {
       });
     }
     catch (e) {
-      alert(`Error: ${e}`);
+      // typing notifications are sent as you type, so a failure (such
+      // as the connection not being set up yet) isn't worth an alert
     }
   }
 
@@ -839,7 +840,7 @@ export class App {
       });
     }
     catch (e) {
-      alert(`Error: ${e}`);
+      // as for maybe_send_typing: not worth an alert
     }
   }
 
