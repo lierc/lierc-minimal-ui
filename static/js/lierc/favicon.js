@@ -3,7 +3,7 @@
 // message. The background stays as it is.
 
 const colors = {
-  unread: "#2f80ed",
+  unread: "#b0e0e6", // powder blue
   highlighted: "#e5383b",
 };
 
