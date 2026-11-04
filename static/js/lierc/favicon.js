@@ -1,6 +1,6 @@
-// The tab's icon shows whether anything is unread: a blue dot for unread
-// messages, a red one when any of them is a highlight or a private
-// message.
+// The tab's icon shows whether anything is unread: its "#" turns blue for
+// unread messages, and red when any of them is a highlight or a private
+// message. The background stays as it is.
 
 const colors = {
   unread: "#2f80ed",
@@ -28,7 +28,7 @@ export function favicon_state(panels, background) {
   return unread ? "unread" : "none";
 }
 
-// Favicon draws src with each state's dot once it has loaded, and points
+// Favicon draws src with each state's colour once it has loaded, and points
 // link at the image for the state shown. Until then, or if src can't be
 // loaded or drawn, link keeps src.
 export class Favicon {
@@ -45,8 +45,8 @@ export class Favicon {
       try {
         this.#images = {
           none: src,
-          unread: dotted(img, colors.unread),
-          highlighted: dotted(img, colors.highlighted),
+          unread: recolored(img, colors.unread),
+          highlighted: recolored(img, colors.highlighted),
         };
       }
       catch (e) {
@@ -75,25 +75,47 @@ export class Favicon {
   }
 }
 
-// dotted is img with a dot of color, in a white ring, at its bottom right,
-// as a PNG data URL.
-function dotted(img, color) {
-  const size = img.naturalWidth || 64;
+// recolored is img with its mark (the colour furthest from the background,
+// which is the top left pixel's) turned into color, as a PNG data URL.
+// Each pixel keeps how far it lies from the background towards the mark,
+// so anti-aliased edges stay smooth and the background is unchanged.
+function recolored(img, color) {
+  const w = img.naturalWidth || 64;
+  const h = img.naturalHeight || 64;
   const canvas = document.createElement("canvas");
-  canvas.width = canvas.height = size;
+  canvas.width = w;
+  canvas.height = h;
   const ctx = canvas.getContext("2d");
-  ctx.drawImage(img, 0, 0, size, size);
+  ctx.drawImage(img, 0, 0, w, h);
+  const image = ctx.getImageData(0, 0, w, h);
+  const d = image.data;
 
-  const r = size * 0.2;
-  const ring = size * 0.05;
-  const c = size - r - ring;
-  ctx.beginPath();
-  ctx.arc(c, c, r + ring, 0, 2 * Math.PI);
-  ctx.fillStyle = "#fff";
-  ctx.fill();
-  ctx.beginPath();
-  ctx.arc(c, c, r, 0, 2 * Math.PI);
-  ctx.fillStyle = color;
-  ctx.fill();
+  const bg = [d[0], d[1], d[2]];
+  let mark = bg;
+  let furthest = 0;
+  for (let i = 0; i < d.length; i += 4) {
+    const dist = (d[i] - bg[0]) ** 2 + (d[i + 1] - bg[1]) ** 2 + (d[i + 2] - bg[2]) ** 2;
+    if (dist > furthest) {
+      furthest = dist;
+      mark = [d[i], d[i + 1], d[i + 2]];
+    }
+  }
+  if (furthest == 0)
+    return canvas.toDataURL("image/png");
+
+  const to = hex(color);
+  const axis = [mark[0] - bg[0], mark[1] - bg[1], mark[2] - bg[2]];
+  for (let i = 0; i < d.length; i += 4) {
+    let t = ((d[i] - bg[0]) * axis[0] + (d[i + 1] - bg[1]) * axis[1] + (d[i + 2] - bg[2]) * axis[2]) / furthest;
+    t = Math.min(1, Math.max(0, t));
+    for (let c = 0; c < 3; c++)
+      d[i + c] = Math.round(bg[c] + (to[c] - bg[c]) * t);
+  }
+  ctx.putImageData(image, 0, 0);
   return canvas.toDataURL("image/png");
+}
+
+// hex is "#rrggbb" as [r, g, b].
+function hex(color) {
+  return [1, 3, 5].map((i) => parseInt(color.slice(i, i + 2), 16));
 }
