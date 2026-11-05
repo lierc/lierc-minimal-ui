@@ -155,6 +155,12 @@ export class Panel {
     for (const li of existing.values()) {
       li.remove();
     }
+
+    // shown under the list by CSS
+    if (sorted.length)
+      list.setAttribute('data-count', `${sorted.length} ${sorted.length == 1 ? "member" : "members"}`);
+    else
+      list.removeAttribute('data-count');
   }
 
   focus() {
@@ -284,6 +290,7 @@ export class Panel {
     while (nicks.firstChild) {
       nicks.removeChild(nicks.firstChild);
     }
+    nicks.removeAttribute('data-count');
   }
 
   prepend(els) {

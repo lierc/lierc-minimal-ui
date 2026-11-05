@@ -848,6 +848,16 @@ ul.channel-controls li a:hover {
       color: var(--meta-text-hover);
     }
   }
+
+  /* the member count, set by Panel.update_nicks */
+  & ul[data-count]::after {
+    content: attr(data-count);
+    display: block;
+    padding: 8px 15px 10px;
+    font-size: 12px;
+    color: var(--meta-text);
+    opacity: 0.6;
+  }
 }
 
 /* ===== Message list ===== */
