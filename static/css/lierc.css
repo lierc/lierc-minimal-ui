@@ -1579,10 +1579,6 @@ p.embed-source {
     box-shadow: 0 0 0 1px var(--input-focus-ring);
     border-radius: 2px;
   }
-
-  @media (max-width: 800px) {
-    flex-direction: row-reverse;
-  }
 }
 
 #input {
@@ -1658,7 +1654,8 @@ p.embed-source {
 #emoji {
   cursor: pointer;
 
-  @media (max-width: 800px) {
+  /* phones and tablets have an emoji keyboard */
+  @media (hover: none) and (pointer: coarse) {
     display: none;
   }
 
