@@ -1678,11 +1678,11 @@ p.embed-source {
     display: inline-block;
     filter: grayscale(100%);
     font-family: var(--fa-family-classic);
-    font-size: 18px;
+    font-size: 16px;
     color: var(--button-icon);
-    height: 18px;
-    line-height: 18px;
-    padding: 6px 5px 7px 5px;
+    height: 16px;
+    line-height: 16px;
+    padding: 7px 5px 8px 5px;
     cursor: pointer;
   }
 }
@@ -1696,10 +1696,10 @@ p.embed-source {
     display: inline-block;
     filter: grayscale(100%);
     font-family: var(--fa-family-classic);
-    font-size: 18px;
-    height: 18px;
-    line-height: 18px;
-    padding: 6px 5px 7px 5px;
+    font-size: 16px;
+    height: 16px;
+    line-height: 16px;
+    padding: 7px 5px 8px 5px;
     cursor: pointer;
   }
 
