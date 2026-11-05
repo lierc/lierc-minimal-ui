@@ -325,6 +325,12 @@ export const UIEvents = function(app) {
       app.part_channel(app.focused.name, app.focused.connection);
   });
 
+  clickTouchEvent(document.querySelector('#close-private'), (e) => {
+    e.preventDefault();
+    if (app.focused?.type == "private")
+      app.close_panel(app.focused.id);
+  });
+
   clickTouchEvent(document.querySelector('#toggle-hideevents a'), (e) => {
     e.preventDefault();
     app.focused.set_ignore_events(!app.focused.ignore_events);

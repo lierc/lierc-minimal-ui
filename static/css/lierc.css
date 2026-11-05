@@ -713,9 +713,9 @@ header:hover #global-controls-toggle {
   }
 }
 
-/* on a channel the nick list is shown only when toggled on; on mobile it
-   replaces the messages */
-body[data-panel-type=channel] {
+/* on a channel or private panel the controls (and a channel's nick list)
+   are shown only when toggled on; on mobile they replace the messages */
+body:is([data-panel-type=channel], [data-panel-type=private]) {
   & .channel-meta {
     display: none;
   }
@@ -786,7 +786,8 @@ ul.channel-controls {
   content: "\f0f6";
 }
 
-#part-channel .part::before {
+#part-channel .part::before,
+#close-private .part::before {
   content: "\f2f5"; /* right-from-bracket */
   font-family: var(--fa-family-classic);
   font-weight: 900;
@@ -796,8 +797,11 @@ ul.channel-controls {
   padding-right: 4px;
 }
 
-/* only channels can be parted */
-body:not([data-panel-type=channel]) #part-channel {
+/* only channels can be parted, and only private panels closed; a private
+   panel has no nick list */
+body:not([data-panel-type=channel]) #part-channel,
+body:not([data-panel-type=private]) #close-private,
+body[data-panel-type=private] #nicks {
   display: none;
 }
 
