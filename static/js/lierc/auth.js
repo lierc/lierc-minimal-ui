@@ -23,6 +23,24 @@ export async function is_auth_failure(res) {
   }
 }
 
+// is_unverified reports whether a response says the account hasn't
+// confirmed its email yet: /auth's user with verified false, or the API's
+// 403 with unverified set. The response's body is left unread.
+export async function is_unverified(res) {
+  if (res.status != 200 && res.status != 403)
+    return false;
+  const type = res.headers.get('Content-Type');
+  if (!type?.match(/^application\/javascript/))
+    return false;
+  try {
+    const data = await res.clone().json();
+    return res.status == 200 ? data?.verified === false : data?.unverified === true;
+  }
+  catch (e) {
+    return false;
+  }
+}
+
 export class Auth {
   #baseurl;
 

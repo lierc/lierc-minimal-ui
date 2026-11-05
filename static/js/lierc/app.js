@@ -1,5 +1,5 @@
 import { API } from "./api.js";
-import { is_auth_failure } from "./auth.js";
+import { is_auth_failure, is_unverified } from "./auth.js";
 import { Commands } from "./commands.js";
 import { Connection } from "./connection.js";
 import { Dialog } from "./dialog.js";
@@ -1269,6 +1269,13 @@ export class App {
 
   async ping_server() {
     const res = await this.api.auth();
+
+    // still logged in, but not let in: a signup that hasn't confirmed its
+    // email (e.g. an account gated while its app was open)
+    if (await is_unverified(res)) {
+      window.location = "/verify/";
+      return;
+    }
 
     if (res.status == 200)
       return;
