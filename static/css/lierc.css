@@ -1555,6 +1555,30 @@ p.embed-source {
   bottom: 0px;
   position: relative;
   background: var(--foot-bg);
+}
+
+/* the outline around the input, with the emoji and upload buttons
+   inside it on the right */
+#input-box {
+  display: flex;
+  flex-flow: row;
+  align-items: flex-end;
+  flex: 1 1 0;
+  min-width: 0;
+  margin: 5px;
+  margin-bottom: 0;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+
+  &:has(.input.disabled) {
+    background: var(--input-disabled-bg);
+  }
+
+  &:has(.input:focus) {
+    border-color: var(--input-focus-border);
+    box-shadow: 0 0 0 1px var(--input-focus-ring);
+    border-radius: 2px;
+  }
 
   @media (max-width: 800px) {
     flex-direction: row-reverse;
@@ -1563,8 +1587,7 @@ p.embed-source {
 
 #input {
   flex-grow: 1;
-  padding: 5px;
-  padding-bottom: 0;
+  min-width: 0;
   overflow: hidden;
 }
 
@@ -1585,22 +1608,12 @@ p.embed-source {
   font-size: 15px;
   line-height: 15px;
   min-height: 19px;
-  background: var(--input-bg);
-  border: 1px solid var(--input-border);
-  padding: 5px;
+  background: transparent;
+  border: 0;
+  padding: 6px;
   margin: 0;
   white-space: pre-wrap;
   font-family: var(--font-ui);
-
-  &.disabled {
-    background: var(--input-disabled-bg);
-  }
-
-  &:focus {
-    border: 1px solid var(--input-focus-border);
-    box-shadow: 0 0 0 1px var(--input-focus-ring);
-    border-radius: 2px;
-  }
 }
 
 /* emoji and upload buttons */
@@ -1669,7 +1682,7 @@ p.embed-source {
     color: var(--button-icon);
     height: 18px;
     line-height: 18px;
-    padding: 9px 5px 8px 5px;
+    padding: 6px 5px 7px 5px;
     cursor: pointer;
   }
 }
@@ -1686,7 +1699,7 @@ p.embed-source {
     font-size: 18px;
     height: 18px;
     line-height: 18px;
-    padding: 9px 5px 8px 5px;
+    padding: 6px 5px 7px 5px;
     cursor: pointer;
   }
 

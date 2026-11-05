@@ -108,21 +108,23 @@
         </div>
 
         <footer id="foot">
-          <form id="input"></form>
           <ul id="emoji-complete" hidden></ul>
-          <div id="emoji" class="popup-toggle">
-            <div class="emoji-popup">
-              <nav class="emoji-groups"></nav>
-              <div class="emoji-list"></div>
-              <form class="emoji-search"><input placeholder="Filter" type="text"><button type="button" class="emoji-tone" title="Skin tone">✋</button></form>
+          <div id="input-box">
+            <form id="input"></form>
+            <div id="emoji" class="popup-toggle">
+              <div class="emoji-popup">
+                <nav class="emoji-groups"></nav>
+                <div class="emoji-list"></div>
+                <form class="emoji-search"><input placeholder="Filter" type="text"><button type="button" class="emoji-tone" title="Skin tone">✋</button></form>
+              </div>
             </div>
-          </div>
-          <div id="upload" class="popup-toggle">
-            <div class="upload-popup">
-              <form method="POST" id="image-upload-form">
-                <input type="file" name="image" id="image-upload-input" />
-                <input type="submit" name="upload" value="Upload &#xf03e;">
-              </form>
+            <div id="upload" class="popup-toggle">
+              <div class="upload-popup">
+                <form method="POST" id="image-upload-form">
+                  <input type="file" name="image" id="image-upload-input" />
+                  <input type="submit" name="upload" value="Upload &#xf03e;">
+                </form>
+              </div>
             </div>
           </div>
           <p id="typing-indicator"></p>
