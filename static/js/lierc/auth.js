@@ -31,14 +31,19 @@ export class Auth {
   }
 
   // auth calls complete with the logged in user. Logged out, it goes to
-  // the login page; any other failure is retried, so an API restart
-  // doesn't send someone who is logged in to the login page.
+  // the login page, and a signup that hasn't confirmed its email yet to the
+  // verify page; any other failure is retried, so an API restart doesn't
+  // send someone who is logged in to the login page.
   async auth(complete) {
     let delay = retry_min;
     for (;;) {
       const user = await this.#check();
       if (user === false) {
         window.location = "/login/";
+        return;
+      }
+      if (user?.verified === false) {
+        window.location = "/verify/";
         return;
       }
       if (user) {

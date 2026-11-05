@@ -36,7 +36,7 @@ else if (verify_page) {
   // confirms without logging in, so it works whoever is logged in
   token = read_token();
   const show = (id) => {
-    for (const panel of ["confirmed", "invalid", "error"])
+    for (const panel of ["confirmed", "invalid", "error", "check"])
       document.getElementById(panel).hidden = panel != id;
   };
   // only a 400 means the link itself is bad; anything else (a server error,
@@ -50,10 +50,60 @@ else if (verify_page) {
       .catch(() => show("error"));
   };
   document.getElementById("retry").addEventListener("click", confirm);
+
+  // without a token: a signed-in signup that hasn't confirmed yet (sent
+  // here by the app) is told to check its email; anyone else has a bad
+  // link. Never sent back to the app, so the two pages can't loop.
+  const check = async () => {
+    try {
+      const res = await fetch("/api/auth", { credentials: "same-origin" });
+      const user = res.ok ? await res.json() : null;
+      if (user?.verified === false) {
+        document.getElementById("check-email").textContent = user.email;
+        show("check");
+        return;
+      }
+    }
+    catch (e) {}
+    show("invalid");
+  };
+
+  const resend = document.getElementById("resend");
+  const status = document.getElementById("resend-status");
+  resend.addEventListener("click", async () => {
+    resend.disabled = true;
+    status.textContent = "";
+    try {
+      const res = await fetch("/api/verify/resend", { method: "POST", credentials: "same-origin" });
+      if (!res.ok) {
+        let message = res.statusText;
+        try {
+          message = (await res.json()).error || message;
+        }
+        catch (_) {}
+        throw Error(message);
+      }
+      status.textContent = "Sent. Check your inbox.";
+    }
+    catch (e) {
+      status.textContent = e.message || "Something went wrong";
+    }
+    resend.disabled = false;
+  });
+
+  document.getElementById("logout").addEventListener("click", async (e) => {
+    e.preventDefault();
+    try {
+      await fetch("/api/logout", { method: "POST", credentials: "same-origin" });
+    }
+    catch (_) {}
+    window.location = "/login/";
+  });
+
   if (token)
     confirm();
   else
-    show("invalid");
+    check();
 }
 else {
   // someone already logged in goes straight to the app

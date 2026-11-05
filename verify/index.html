@@ -15,8 +15,18 @@
       <nav><a href="/login/">Log in</a></nav>
     </header>
 
-    <!-- opened from the emailed link; the script confirms the token after # -->
+    <!-- opened from the emailed link; the script confirms the token after #.
+         Without one, a signup that hasn't confirmed yet is told to check
+         its email. -->
     <main data-verify>
+      <section class="panel" id="check" hidden>
+        <h2>Check your email</h2>
+        <p>We sent a confirmation link to <b id="check-email"></b>. Open it to start using relaychat.</p>
+        <p class="status" id="resend-status" role="status"></p>
+        <input type="submit" value="Resend email" id="resend">
+        <p class="alt"><a href="/login/" id="logout">Log out</a></p>
+      </section>
+
       <section class="panel" id="confirmed" hidden>
         <h2>Email confirmed</h2>
         <p>Your email address is confirmed.</p>
