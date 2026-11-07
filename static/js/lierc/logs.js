@@ -263,10 +263,20 @@ export class Logs {
         }
       });
 
+      let limit_error = null;
+
+      this.es.addEventListener("search_error", (e) => {
+        try {
+          limit_error = JSON.parse(e.data).error;
+        } catch (err) {
+          limit_error = "Search failed";
+        }
+      });
+
       this.es.addEventListener("error", (e) => {
         this.es.close();
         this.es = null;
-        this.status.textContent = `${total} results`;
+        this.status.textContent = limit_error || `${total} results`;
         if (this.highlight) {
           const el = this.results.querySelector(`li[data-message-id="${this.highlight}"]`);
           if (el) {
