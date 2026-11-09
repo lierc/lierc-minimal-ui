@@ -1,6 +1,15 @@
+// Where a message belongs: the channel, or for a private message the
+// sender (Params[0] is then our own nick).
+function target(m) {
+  return m.Message.Direct ? m.Message.Prefix.Name : m.Message.Params[0];
+}
+
 self.addEventListener('push', function(event) {
   var data = event.data.json();
   var messages = data.data;
+  // the notifier may send fewer messages than it has, to fit the push size
+  // limit; count is how many there were
+  var count = data.count || messages.length;
 
   var icon = '/favicon.png';
   var title, body, url;
@@ -8,31 +17,29 @@ self.addEventListener('push', function(event) {
   if (messages.length == 0) {
     return;
   }
-  else if (messages.length == 1) {
-    var channel = messages[0].Message.Params[0];
-    var from = messages[0].Message.Prefix.Name;
-    var text = messages[0].Message.Params[1];
-    var conn = messages[0].ConnectionId;
 
-    title = channel;
-    body = "< " + from + "> " + text;
-    url = "/app/#/"
-          +  conn + "/"
-          + encodeURIComponent(channel);
+  var first = messages[0];
+  url = "/app/#/"
+        + first.ConnectionId + "/"
+        + encodeURIComponent(target(first));
+
+  if (count == 1) {
+    title = target(first);
+    body = "< " + first.Message.Prefix.Name + "> " + first.Message.Params[1];
   }
   else {
-    var channel = messages[0].Message.Params[0];
-    var conn = messages[0].ConnectionId;
+    var seen = {};
+    var targets = [];
+    messages.forEach(function(m) {
+      var t = target(m);
+      if (!seen[t]) {
+        seen[t] = true;
+        targets.push(t);
+      }
+    });
 
-    channels = messages.map(function(m) {
-      return m.Message.Params[0];
-    }).join(", ");
-
-    title = messages.length + " missed messages";
-    body = "in " + channels;
-    url = "/app/#/"
-          + conn + "/"
-          + encodeURIComponent(channel);
+    title = count + " missed messages";
+    body = "in " + targets.join(", ");
   }
 
   event.waitUntil(

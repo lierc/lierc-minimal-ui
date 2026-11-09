@@ -65,8 +65,8 @@ class WebPush {
     try {
       await subscription.unsubscribe();
       this.set_enabled(false);
-      const part = encodeURIComponent(subscription.endpoint);
-      this.#app.api.delete(`/notification/web_push/${part}`);
+      // in the query, not the path: nginx merges the slashes in a path
+      this.#app.api.delete("/notification/web_push", {}, { endpoint: subscription.endpoint });
     }
     catch (e) {
       console.log("Failed to unsubscribe", e);
