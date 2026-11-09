@@ -127,20 +127,40 @@ class WebPush {
 
     if (bool) {
       if (sub) {
-        const headers = new Headers();
-        headers.append(
-          'content-type',
-          'application/x-www-form-urlencoded; charset=UTF-8'
-        );
-        this.#app.api.post("/notification/web_push", {
-          body: this.#app.api.build_query(this.build_pref(sub)),
-          headers: headers
-        });
+        this.save(sub);
       }
       document.getElementById("web-notify").classList.add("enabled");
     }
     else {
       document.getElementById("web-notify").classList.remove("enabled");
+    }
+  }
+
+  // Sends the subscription to the API. If the API refuses it (it only takes
+  // the browsers' push services), push is turned back off and the browser
+  // unsubscribed, so the refused subscription isn't sent again on every load.
+  async save(sub) {
+    const headers = new Headers();
+    headers.append(
+      'content-type',
+      'application/x-www-form-urlencoded; charset=UTF-8'
+    );
+    try {
+      await this.#app.api.post("/notification/web_push", {
+        body: this.#app.api.build_query(this.build_pref(sub)),
+        headers: headers
+      });
+    }
+    catch (e) {
+      console.log("Push subscription refused", e);
+      this.set_enabled(false);
+      try {
+        await sub.unsubscribe();
+      }
+      catch (e) {
+        console.log("Failed to unsubscribe", e);
+      }
+      alert(`Couldn't turn on push notifications: ${e}`);
     }
   }
 }
