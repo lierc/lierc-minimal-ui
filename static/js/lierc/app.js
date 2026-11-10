@@ -230,6 +230,14 @@ export class App {
     this.pending_connected[id] = connected;
   }
 
+  // We joined channel. A live join (one with a message id, not from the
+  // replay) focuses its panel only if the panel is new: a rejoin after a
+  // reconnect leaves the focus where it is.
+  channel_joined(conn, channel, message) {
+    const is_new = !this.panels[App.panel_id(channel, conn)];
+    this.add_panel(channel, conn, {focus: is_new && ("Id" in message)});
+  }
+
   // Notes that a live connection event changed id since the stream
   // opened. The stream server builds its snapshot from liercd's statuses,
   // which can take seconds, while live events are sent at once, so the
@@ -287,7 +295,7 @@ export class App {
     }
 
     connection.on("channel:new", (conn, channel, message) => {
-      this.add_panel(channel, conn, {focus: ("Id" in message)});
+      this.channel_joined(conn, channel, message);
     });
 
     connection.on("private:msg", (conn, nick, message) => {
