@@ -230,16 +230,31 @@ export class App {
     this.pending_connected[id] = connected;
   }
 
+  // Notes that a live connection event changed id since the stream
+  // opened. The stream server builds its snapshot from liercd's statuses,
+  // which can take seconds, while live events are sent at once, so the
+  // snapshot can be older than them.
+  touch_connection(id) {
+    if (!this.touched_connections)
+      this.touched_connections = new Set();
+    this.touched_connections.add(id);
+  }
+
   // Brings the connections in line with list, the snapshot a stream sends
   // when it opens: adds the missing ones, removes ones that are gone (a
   // delete missed while the stream was down) and sets each one's state.
+  // Connections a live event has touched since the stream opened are left
+  // as those events made them: they're newer than the snapshot.
   apply_connections(list) {
+    const touched = this.touched_connections || new Set();
     const ids = new Set(list.map((c) => c.Id));
     for (const id of Object.keys(this.connections)) {
-      if (!ids.has(id))
+      if (!ids.has(id) && !touched.has(id))
         this.remove_connection(id);
     }
     for (const c of list) {
+      if (touched.has(c.Id))
+        continue;
       this.setup_connection(c.Id, c.Name, c.Nick);
       this.set_connected(c.Id, !!c.Connected);
     }
@@ -384,10 +399,12 @@ export class App {
     });
 
     connection.on("connect", (conn, message) => {
+      this.touch_connection(conn);
       this.set_connected(conn, true, message.Params[0]);
     });
 
     connection.on("disconnect", (conn, message) => {
+      this.touch_connection(conn);
       this.set_connected(conn, false, message.Params[0]);
     });
 
@@ -470,6 +487,7 @@ export class App {
 
     stream.on('create_connection', (e) => {
       const conn_id = e.ConnectionId;
+      this.touch_connection(conn_id);
       const message = e.Message;
       const nick    = message.Params[0];
       const host    = message.Params[1];
@@ -477,6 +495,7 @@ export class App {
     });
 
     stream.on('delete_connection', (e) => {
+      this.touch_connection(e.ConnectionId);
       this.remove_connection(e.ConnectionId);
     });
 
@@ -484,16 +503,27 @@ export class App {
     // CREATE/DELETE/CONNECT/DISCONNECT above instead)
     stream.on('connections', (list) => this.apply_connections(list));
     stream.on('connection:create', (c) => {
+      this.touch_connection(c.Id);
       this.setup_connection(c.Id, c.Name, c.Nick);
     });
     // an edit keeps the network's panels; only its name changes, and the
     // nick is left to the IRC NICK messages
     stream.on('connection:update', (c) => {
+      this.touch_connection(c.Id);
       this.rename_connection(c.Id, c.Name);
     });
-    stream.on('connection:delete', (c) => this.remove_connection(c.Id));
-    stream.on('connection:connect', (c) => this.connection_state(c.Id, true));
-    stream.on('connection:disconnect', (c) => this.connection_state(c.Id, false));
+    stream.on('connection:delete', (c) => {
+      this.touch_connection(c.Id);
+      this.remove_connection(c.Id);
+    });
+    stream.on('connection:connect', (c) => {
+      this.touch_connection(c.Id);
+      this.connection_state(c.Id, true);
+    });
+    stream.on('connection:disconnect', (c) => {
+      this.touch_connection(c.Id);
+      this.connection_state(c.Id, false);
+    });
 
     stream.on('close', (e) => {
       for (const id in this.panels) {
@@ -528,6 +558,8 @@ export class App {
     stream.on('connect-failed', () => this.ping_server());
 
     stream.on('open', (e) => {
+      // a new stream's snapshot is compared with this stream's live events
+      this.touched_connections = new Set();
       this.elem.body.classList.remove('disconnected');
       if (stream.last_id !== null) {
         this.fill_missed(stream, stream.last_id);
