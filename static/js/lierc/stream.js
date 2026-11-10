@@ -6,6 +6,13 @@ const wake_timeout = 7000;
 const wake_ping_timeout = 5000;
 // how many message ids to remember for dropping repeats
 const seen_limit = 1000;
+// connection events from the stream server, fired as app events of the
+// same name with their parsed data: the snapshot when a stream opens,
+// changes the API made, and liercd's connection state
+const connection_events = [
+  "connections", "connection:create", "connection:update",
+  "connection:delete", "connection:connect", "connection:disconnect",
+];
 
 export class Stream {
   #listeners = {};
@@ -34,6 +41,7 @@ export class Stream {
     this.touch = this.touch.bind(this);
     this.onping = this.onping.bind(this);
     this.onstream = this.onstream.bind(this);
+    this.onconnection = this.onconnection.bind(this);
 
     this.#connect();
     this.#check_timer = setInterval(() => this.check(), 1000);
@@ -63,6 +71,8 @@ export class Stream {
     es.addEventListener("error",   this.onerror);
     es.addEventListener("ping",    this.onping);
     es.addEventListener("stream",  this.onstream);
+    for (const name of connection_events)
+      es.addEventListener(name, this.onconnection);
 
     this.eventsource = es;
     this.#opened = false;
@@ -151,6 +161,19 @@ export class Stream {
     this.touch();
     this.fire("open");
     this.retries = 0;
+  }
+
+  onconnection(e) {
+    this.touch();
+    let data;
+    try {
+      data = JSON.parse(e.data);
+    }
+    catch (err) {
+      console.log(`bad ${e.type} event`, err);
+      return;
+    }
+    this.fire(e.type, data);
   }
 
   onmessage(e) {
@@ -267,6 +290,8 @@ export class Stream {
       this.eventsource.removeEventListener("error", this.onerror);
       this.eventsource.removeEventListener("ping", this.onping);
       this.eventsource.removeEventListener("stream", this.onstream);
+      for (const name of connection_events)
+        this.eventsource.removeEventListener(name, this.onconnection);
       this.eventsource.close();
     }
   }

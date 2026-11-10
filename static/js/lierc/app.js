@@ -217,6 +217,30 @@ export class App {
     }
   }
 
+  // Brings the connections in line with list, the snapshot a stream sends
+  // when it opens: adds the missing ones, removes ones that are gone (a
+  // delete missed while the stream was down) and sets each one's state.
+  apply_connections(list) {
+    const ids = new Set(list.map((c) => c.Id));
+    for (const id of Object.keys(this.connections)) {
+      if (!ids.has(id))
+        this.remove_connection(id);
+    }
+    for (const c of list) {
+      this.setup_connection(c.Id, c.Name, c.Nick);
+      this.set_connected(c.Id, !!c.Connected);
+    }
+  }
+
+  // Removes a connection and every panel it has.
+  remove_connection(conn_id) {
+    for (const id in this.panels) {
+      if (this.panels[id].connection == conn_id)
+        this.remove_panel(id);
+    }
+    delete this.connections[conn_id];
+  }
+
   setup_connection(id, host, nick) {
     if (this.connections[id])
       return;
@@ -434,16 +458,28 @@ export class App {
     });
 
     stream.on('delete_connection', (e) => {
-      const conn_id = e.ConnectionId;
+      this.remove_connection(e.ConnectionId);
+    });
 
-      for (const id in this.panels) {
-        const panel = this.panels[id];
-        if (panel.connection == conn_id) {
-          this.remove_panel(id);
-        }
-      }
-
-      delete this.connections[conn_id];
+    // connection events from the stream server (old servers send the
+    // CREATE/DELETE/CONNECT/DISCONNECT above instead)
+    stream.on('connections', (list) => this.apply_connections(list));
+    stream.on('connection:create', (c) => {
+      this.setup_connection(c.Id, c.Name, c.Nick);
+    });
+    // an edit keeps the network's panels; only its name changes, and the
+    // nick is left to the IRC NICK messages
+    stream.on('connection:update', (c) => {
+      this.rename_connection(c.Id, c.Name);
+    });
+    stream.on('connection:delete', (c) => this.remove_connection(c.Id));
+    stream.on('connection:connect', (c) => {
+      if (this.connections[c.Id])
+        this.set_connected(c.Id, true);
+    });
+    stream.on('connection:disconnect', (c) => {
+      if (this.connections[c.Id])
+        this.set_connected(c.Id, false);
     });
 
     stream.on('close', (e) => {
