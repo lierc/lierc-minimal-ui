@@ -217,6 +217,19 @@ export class App {
     }
   }
 
+  // A connection's state from liercd. It can arrive just before the
+  // connection's connection:create (they take different paths), so for an
+  // unknown connection it's kept for setup_connection.
+  connection_state(id, connected) {
+    if (this.connections[id]) {
+      this.set_connected(id, connected);
+      return;
+    }
+    if (!this.pending_connected)
+      this.pending_connected = {};
+    this.pending_connected[id] = connected;
+  }
+
   // Brings the connections in line with list, the snapshot a stream sends
   // when it opens: adds the missing ones, removes ones that are gone (a
   // delete missed while the stream was down) and sets each one's state.
@@ -251,6 +264,12 @@ export class App {
     const panel = this.add_panel("status", connection.id, {status: true});
     panel.change_name(host);
     panel.update_topic({value: "status."});
+    // a state that arrived before the connection did
+    if (this.pending_connected && id in this.pending_connected) {
+      const connected = this.pending_connected[id];
+      delete this.pending_connected[id];
+      this.set_connected(id, connected);
+    }
 
     connection.on("channel:new", (conn, channel, message) => {
       this.add_panel(channel, conn, {focus: ("Id" in message)});
@@ -473,14 +492,8 @@ export class App {
       this.rename_connection(c.Id, c.Name);
     });
     stream.on('connection:delete', (c) => this.remove_connection(c.Id));
-    stream.on('connection:connect', (c) => {
-      if (this.connections[c.Id])
-        this.set_connected(c.Id, true);
-    });
-    stream.on('connection:disconnect', (c) => {
-      if (this.connections[c.Id])
-        this.set_connected(c.Id, false);
-    });
+    stream.on('connection:connect', (c) => this.connection_state(c.Id, true));
+    stream.on('connection:disconnect', (c) => this.connection_state(c.Id, false));
 
     stream.on('close', (e) => {
       for (const id in this.panels) {
