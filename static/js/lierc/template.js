@@ -160,6 +160,25 @@ const templates = {
     <li data-index="${m.index}"${m.selected ? html` class="selected"` : ""}><span class="chars">${m.chars}</span> ${m.code}</li>
   `),
 
+  logins: (v) => html`
+    <section class="dialog logins">
+      <a href="#" class="close">close</a>
+      <h2>Logins</h2>
+      <p class="logins-intro">Browsers and devices signed in to your account. Ending a login signs that browser out within a minute.</p>
+      <p class="logins-error"${v.error ? "" : safe(" hidden")}>${v.error || ""}</p>
+      <ul class="logins-list">
+        ${each(v.logins, (l) => html`
+        <li class="login${l.current ? " current" : ""}" data-id="${l.id}">
+          <div class="login-info">
+            <div class="login-name">${l.name}${l.current ? html` <span class="this-browser">this browser</span>` : ""}</div>
+            <div class="login-meta">${l.meta}</div>
+          </div>
+          ${l.current ? "" : html`<button class="end-login" type="button">Log out</button>`}
+        </li>
+        `)}
+      </ul>
+    </section>
+  `,
   help: () => html`
     <aside class="dialog help">
       <a href="#" class="close">close</a>

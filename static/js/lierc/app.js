@@ -11,6 +11,7 @@ import { Render } from "./render.js";
 import { apply_theme } from "./theme.js";
 import { UIEvents } from "./uievents.js";
 import { UpdateCheck } from "./update.js";
+import { active_text, describe_agent, signed_in_text } from "./logins.js";
 
 // How often the app checks its session with GET /auth.
 const PING_INTERVAL = 90 * 1000;
@@ -1366,6 +1367,48 @@ export class App {
         this.focused, this.focused.oldest_message_id, focus
       );
     }
+  }
+
+  // The Logins dialog: this account's logins, and a Log out for each one
+  // but this browser's.
+  async show_logins() {
+    let logins = [], error = null;
+    try {
+      const now = new Date();
+      logins = (await this.api.request("GET", "/logins")).map((l) => ({
+        id: l.id,
+        current: l.current,
+        name: describe_agent(l.user_agent),
+        meta: [l.ip, active_text(new Date(l.last_used), l.current, now), "signed in " + signed_in_text(new Date(l.created), now)]
+          .filter(Boolean).join(" · "),
+      }));
+      // this browser first: its last_used is only refreshed hourly, so the
+      // API's most-recent-first order can put it anywhere
+      logins.sort((a, b) => b.current - a.current);
+    }
+    catch (e) {
+      error = "Couldn't load your logins — try again.";
+    }
+    const dialog = this.new_dialog("logins", { logins, error });
+    const message = dialog.el.querySelector(".logins-error");
+    dialog.el.addEventListener("click", async (e) => {
+      const button = e.target.closest("button.end-login");
+      if (!button)
+        return;
+      e.preventDefault();
+      const row = button.closest("li.login");
+      button.disabled = true;
+      try {
+        await this.api.request("DELETE", `/login/${encodeURIComponent(row.dataset.id)}`);
+        row.remove();
+        message.hidden = true;
+      }
+      catch (err) {
+        message.textContent = "Couldn't log out that login — try again.";
+        message.hidden = false;
+        button.disabled = false;
+      }
+    });
   }
 
   // Replaces the title's wave with a green icon that reloads the page.

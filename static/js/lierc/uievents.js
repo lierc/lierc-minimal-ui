@@ -531,6 +531,11 @@ export const UIEvents = function(app) {
     }
   });
 
+  clickTouchEvent(document.getElementById("logins"), (e) => {
+    e.preventDefault();
+    app.show_logins();
+  });
+
   clickTouchEvent(document.getElementById("help"), (e) => {
     e.preventDefault();
     app.new_dialog("help");
