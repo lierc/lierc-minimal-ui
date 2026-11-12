@@ -18,6 +18,8 @@
     <meta name="description" content="Chat on IRC in a web browser">
     <meta name="keywords" content="IRC,cloud,HTTP,chat,browser,irccloud,relaychat,party">
     <meta name="author" content="Lee Aylward">
+    <!-- this page's UI version, from static/version.json (make bust keeps it in step) -->
+    <meta name="ui-version" content="1">
     <link rel="manifest" href="/manifest.json">
     <title>relaychat.party 🍆</title>
   </head>
@@ -32,7 +34,7 @@
     <div class="flex-wrap">
       <div class="flex-wrap-left">
         <header>
-          <h1 id="title-top">:relaychat: <span style="font-weight:normal">👋</span></h1>
+          <h1 id="title-top">:relaychat: <span id="title-wave" style="font-weight:normal">👋</span></h1>
           <div class="header-right">
             <h2 id="panel-name"></h2>
             <a id="global-controls-toggle" class="fa-solid fa-chevron-down"></a>

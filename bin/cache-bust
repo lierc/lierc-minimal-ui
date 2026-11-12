@@ -8,6 +8,7 @@ use warnings;
 
 use FindBin;
 use Digest::SHA qw(sha1_hex);
+use JSON::PP qw(decode_json encode_json);
 
 my $root = "$FindBin::Bin/..";
 
@@ -26,6 +27,20 @@ sub version {
   local $/;
   return "?v=" . substr(sha1_hex(<$fh>), 0, 10);
 }
+
+# The UI version, stamped into each page that has a ui-version meta tag
+# (app/index.html), so a loaded page knows which version it is. Bump it in
+# static/version.json when open tabs should be told to reload.
+my $ui_version = do {
+  my $file = "$root/static/version.json";
+  open my $fh, '<:raw', $file or die "static/version.json: $!\n";
+  local $/;
+  my $v = eval { decode_json(<$fh>)->{version} };
+  die "static/version.json: version must be a positive whole number\n"
+    # a JSON number, not a string: re-encoding a number gives it back bare
+    unless defined $v && !ref $v && $v =~ /\A[1-9][0-9]*\z/ && encode_json([$v]) eq "[$v]";
+  $v;
+};
 
 my $importmap = do {
   my @modules = map { s{^\Q$root\E}{}r } sort glob "$root/static/js/lierc/*.js";
@@ -50,6 +65,8 @@ for my $html (@ARGV) {
   # imported modules don't go through src=, so map each one to its
   # versioned URL in the page's import map
   $out =~ s{(<script type="importmap">).*?(</script>)}{$1\n$importmap\n    $2}s;
+
+  $out =~ s{(<meta name="ui-version" content=")[^"]*(">)}{$1$ui_version$2}g;
 
   next if $out eq $src;
 
