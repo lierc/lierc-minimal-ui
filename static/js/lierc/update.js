@@ -4,6 +4,8 @@
 // bumped number counts: most deploys leave it alone and stay silent.
 
 const VERSION_URL = "/static/version.json";
+// the page a reload loads; it must carry the new version as well
+const PAGE_URL = "/app/";
 const INTERVAL = 10 * 60 * 1000;
 
 function positiveInt(v) {
@@ -18,6 +20,12 @@ export function pageVersion(doc) {
   return Number(s);
 }
 
+// The version in a page's HTML (its ui-version meta tag), or null.
+export function htmlVersion(text) {
+  const m = /<meta name="ui-version" content="([1-9][0-9]*)">/.exec(text || "");
+  return m ? Number(m[1]) : null;
+}
+
 // Whether version.json's data names a version newer than page.
 export function isNewer(page, data) {
   return positiveInt(page) && positiveInt(data?.version) && data.version > page;
@@ -25,8 +33,12 @@ export function isNewer(page, data) {
 
 // Checks every interval, and when the page comes back into view if the last
 // check was longer ago than that (a sleeping phone tab catches up). Not at
-// load: a page that just loaded is current. On finding a newer version it
-// calls onUpdate once and stops. Failures are ignored until the next check.
+// load: a page that just loaded is current. A newer version counts only if
+// the page a reload would load carries it too: if version.json was bumped
+// without make bust, or a deploy hasn't purged the old page from Fastly yet,
+// a reload would land back here, so nothing is shown and the next check
+// tries again. On finding it, it calls onUpdate once and stops. Failures
+// are ignored until the next check.
 export class UpdateCheck {
   #doc; #fetch; #now; #setInterval; #clearInterval; #interval; #onUpdate;
   #page; #last; #timer = null; #done = false;
@@ -69,6 +81,16 @@ export class UpdateCheck {
       return;
     }
     if (this.#done || !isNewer(this.#page, data))
+      return;
+    try {
+      const res = await this.#fetch(PAGE_URL, { cache: "no-cache" });
+      if (!res.ok || !(htmlVersion(await res.text()) >= data.version))
+        return;
+    }
+    catch (e) {
+      return;
+    }
+    if (this.#done)
       return;
     this.#done = true;
     this.#clearInterval(this.#timer);
