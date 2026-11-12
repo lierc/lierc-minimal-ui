@@ -9,6 +9,7 @@
 
 const token_form = document.querySelector("form[data-token]");
 const verify_page = document.querySelector("main[data-verify]");
+const unsubscribe_page = document.querySelector("main[data-unsubscribe]");
 let token = "";
 
 // a link mangled on the way (a bad % escape) counts as no token
@@ -104,6 +105,29 @@ else if (verify_page) {
     confirm();
   else
     check();
+}
+else if (unsubscribe_page) {
+  // works logged out; only the button posts, never the page load
+  token = read_token();
+  const show = (id) => {
+    for (const panel of ["confirm", "done", "error", "invalid", "none"])
+      document.getElementById(panel).hidden = panel != id;
+  };
+  const unsubscribe = (button) => {
+    button.disabled = true;
+    fetch("/api/unsubscribe", {
+      method: "POST",
+      credentials: "same-origin",
+      body: new URLSearchParams({ token: token }),
+    }).then((res) => show(res.ok ? "done" : res.status == 400 ? "invalid" : "error"))
+      .catch(() => show("error"))
+      .finally(() => button.disabled = false);
+  };
+  for (const id of ["unsubscribe", "retry"]) {
+    const button = document.getElementById(id);
+    button.addEventListener("click", () => unsubscribe(button));
+  }
+  show(token ? "confirm" : "none");
 }
 else {
   // someone already logged in goes straight to the app

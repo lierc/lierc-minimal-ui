@@ -1,7 +1,56 @@
-<html>
-<body>
-<p>
-<a href="/api/unsubscribe">Click here</a> to unsubscribe from Relaychat.party email notifications.
-</p>
-</body>
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#002b36">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
+    <link type="text/css" rel="stylesheet" href="/static/css/auth.css?v=4056d1833b">
+    <title>Unsubscribe · relaychat.party</title>
+  </head>
+  <body>
+    <header class="bar">
+      <h1 class="wordmark"><a href="/" title="IRC, with pictures">:relaychat: 👋</a></h1>
+      <nav><a href="/login/">Log in</a></nav>
+    </header>
+
+    <!-- opened from the link in a notification email; the token is after #.
+         Nothing changes until the button is pressed (mail scanners open
+         links). -->
+    <main data-unsubscribe>
+      <section class="panel" id="confirm" hidden>
+        <h2>Unsubscribe from email notifications?</h2>
+        <input type="submit" value="Unsubscribe" id="unsubscribe">
+      </section>
+
+      <section class="panel" id="done" hidden>
+        <h2>Unsubscribed</h2>
+        <p>You're unsubscribed. You can turn email notifications back on in the app's settings.</p>
+        <p class="alt"><a href="/app/">Open relaychat</a></p>
+      </section>
+
+      <!-- the request failed (network or server error): the link may be fine -->
+      <section class="panel" id="error" hidden>
+        <h2>Couldn't unsubscribe</h2>
+        <p>Something went wrong. Check your connection and try again.</p>
+        <input type="submit" value="Try again" id="retry">
+      </section>
+
+      <section class="panel" id="invalid" hidden>
+        <h2>Link not valid</h2>
+        <p>This unsubscribe link isn't valid.</p>
+        <p class="alt"><a href="/app/">Open relaychat</a></p>
+      </section>
+
+      <!-- no token: a link from an email sent before signed links -->
+      <section class="panel" id="none" hidden>
+        <h2>Unsubscribe</h2>
+        <p>To stop email notifications, turn them off in the app's settings, or use the link in a newer email.</p>
+        <p class="alt"><a href="/app/">Open relaychat</a></p>
+      </section>
+    </main>
+
+    <script src="/static/js/auth-page.js?v=2d7c4ab082"></script>
+  </body>
 </html>
