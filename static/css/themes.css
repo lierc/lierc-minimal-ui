@@ -29,6 +29,7 @@
 
 /* Latte (light) */
 body.catppuccin-latte {
+  --update-green: #1a7f37;         /* the update icon, on the light title bar */
   --ctp-scheme: light;
   --ctp-rosewater: #dc8a78;
   --ctp-flamingo:  #dd7878;

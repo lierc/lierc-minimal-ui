@@ -653,6 +653,21 @@ header:hover #global-controls-toggle {
   color: var(--sidebar-text-strong);
 }
 
+/* the title's update icon (app.js show_update), in place of the wave: a
+   bright green on the dark title bars, a dark one where a theme's is light
+   (--update-green), so it reads at 3:1 or better on every theme */
+#update-available {
+  color: var(--update-green, #3fb950);
+  font-size: 15px;
+  cursor: pointer;
+  text-decoration: none;
+
+  /* clear of the unread star, which sits just past the title's right edge */
+  @media (max-width: 800px) {
+    margin-right: 3px;
+  }
+}
+
 /* the star next to the title on mobile, where the nav is hidden */
 #title-top.unread::before {
   @media (max-width: 800px) {

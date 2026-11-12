@@ -10,6 +10,7 @@ import { Panel } from "./panel.js";
 import { Render } from "./render.js";
 import { apply_theme } from "./theme.js";
 import { UIEvents } from "./uievents.js";
+import { UpdateCheck } from "./update.js";
 
 // How often the app checks its session with GET /auth.
 const PING_INTERVAL = 90 * 1000;
@@ -83,6 +84,17 @@ export class App {
     setInterval(() => this.check_scroll(), 250);
     setInterval(() => this.ping_server(), PING_INTERVAL);
     setInterval(() => this.render_typing(), 500);
+
+    // a newer UI version (static/version.json bumped past this page's) swaps
+    // the title's wave for a reload icon
+    new UpdateCheck({
+      doc: document,
+      fetch: (...args) => fetch(...args),
+      now: () => Date.now(),
+      setInterval: (f, ms) => setInterval(f, ms),
+      clearInterval: (id) => clearInterval(id),
+      onUpdate: () => this.show_update(),
+    }).start();
 
     const wake_stream = () => this.stream?.wake();
 
@@ -1354,6 +1366,32 @@ export class App {
         this.focused, this.focused.oldest_message_id, focus
       );
     }
+  }
+
+  // Replaces the title's wave with a green icon that reloads the page.
+  show_update() {
+    const wave = document.getElementById('title-wave');
+    if (!wave)
+      return;
+    const icon = document.createElement('a');
+    icon.id = 'update-available';
+    icon.className = 'fa-solid fa-circle-arrow-down';
+    icon.title = 'Update available — click to reload';
+    icon.setAttribute('aria-label', icon.title);
+    icon.setAttribute('role', 'button');
+    icon.tabIndex = 0;
+    const reload = (e) => {
+      // not the header's own click, which opens the mobile menu
+      e.preventDefault();
+      e.stopPropagation();
+      window.location.reload();
+    };
+    icon.addEventListener('click', reload);
+    icon.addEventListener('keydown', (e) => {
+      if (e.key == 'Enter' || e.key == ' ')
+        reload(e);
+    });
+    wave.replaceWith(icon);
   }
 
   async ping_server() {
