@@ -54,8 +54,9 @@ export function active_text(last_used, current, now) {
 
 const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
 
-// "Nov 9", or "Dec 31, 2025" when it isn't this year (in UTC).
+// "Nov 9", or "Dec 31, 2025" when it isn't this year, in the viewer's own
+// time zone, so an evening sign-in isn't shown as the next day.
 export function signed_in_text(created, now) {
-  const day = `${MONTHS[created.getUTCMonth()]} ${created.getUTCDate()}`;
-  return created.getUTCFullYear() == now.getUTCFullYear() ? day : `${day}, ${created.getUTCFullYear()}`;
+  const day = `${MONTHS[created.getMonth()]} ${created.getDate()}`;
+  return created.getFullYear() == now.getFullYear() ? day : `${day}, ${created.getFullYear()}`;
 }

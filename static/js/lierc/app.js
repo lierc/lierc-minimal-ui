@@ -1404,9 +1404,16 @@ export class App {
         message.hidden = true;
       }
       catch (err) {
-        message.textContent = "Couldn't log out that login — try again.";
+        // ended elsewhere since the dialog opened: there's nothing to retry
+        if (String(err).includes("no such login")) {
+          row.remove();
+          message.textContent = "That login had already ended.";
+        }
+        else {
+          message.textContent = "Couldn't log out that login — try again.";
+          button.disabled = false;
+        }
         message.hidden = false;
-        button.disabled = false;
       }
     });
   }
