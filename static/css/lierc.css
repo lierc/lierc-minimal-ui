@@ -659,13 +659,18 @@ header:hover #global-controls-toggle {
 #update-available {
   color: var(--update-green, #3fb950);
   font-size: 15px;
-  cursor: pointer;
-  text-decoration: none;
 
   /* clear of the unread star, which sits just past the title's right edge */
   @media (max-width: 800px) {
     margin-right: 3px;
   }
+}
+
+/* the menu's first item while an update is ready (app.js show_update):
+   green, dark by default since most menus are light; dark menus set the
+   bright one (--update-menu-green), so it reads at 3:1 or better */
+#global-controls #update-reload a {
+  color: var(--update-menu-green, #1a7f37);
 }
 
 /* the star next to the title on mobile, where the nav is hidden */

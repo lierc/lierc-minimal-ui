@@ -61,6 +61,7 @@ body.catppuccin-latte {
 
 /* Frappé (dark) */
 body.catppuccin-frappe {
+  --update-menu-green: #3fb950;    /* the menu's update item, on a dark menu */
   --ctp-scheme: dark;
   --ctp-rosewater: #f2d5cf;
   --ctp-flamingo:  #eebebe;
@@ -92,6 +93,7 @@ body.catppuccin-frappe {
 
 /* Macchiato (dark) */
 body.catppuccin-macchiato {
+  --update-menu-green: #3fb950;    /* the menu's update item, on a dark menu */
   --ctp-scheme: dark;
   --ctp-rosewater: #f4dbd6;
   --ctp-flamingo:  #f0c6c6;
@@ -123,6 +125,7 @@ body.catppuccin-macchiato {
 
 /* Mocha (dark) */
 body.catppuccin-mocha {
+  --update-menu-green: #3fb950;    /* the menu's update item, on a dark menu */
   --ctp-scheme: dark;
   --ctp-rosewater: #f5e0dc;
   --ctp-flamingo:  #f2cdcd;
@@ -573,6 +576,7 @@ body.slack {
 
 /* Slack Dark: Slack's dark mode, with its near-black sidebar */
 body.slack-dark {
+  --update-menu-green: #3fb950;    /* the menu's update item, on a dark menu */
   --panel-bg: #1a1d21;
   --panel-text: #d1d2d3;
   --topic-bg: #1a1d21;

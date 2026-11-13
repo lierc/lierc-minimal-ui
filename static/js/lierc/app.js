@@ -1418,30 +1418,41 @@ export class App {
     });
   }
 
-  // Replaces the title's wave with a green icon that reloads the page.
+  // An update is ready: the title's wave becomes a green arrow (a sign
+  // only), and the menu gains a first item that refreshes the page.
   show_update() {
     const wave = document.getElementById('title-wave');
-    if (!wave)
-      return;
-    const icon = document.createElement('a');
-    icon.id = 'update-available';
-    icon.className = 'fa-solid fa-circle-arrow-down';
-    icon.title = 'Update available — click to reload';
-    icon.setAttribute('aria-label', icon.title);
-    icon.setAttribute('role', 'button');
-    icon.tabIndex = 0;
-    const reload = (e) => {
-      // not the header's own click, which opens the mobile menu
-      e.preventDefault();
-      e.stopPropagation();
-      window.location.reload();
-    };
-    icon.addEventListener('click', reload);
-    icon.addEventListener('keydown', (e) => {
-      if (e.key == 'Enter' || e.key == ' ')
-        reload(e);
-    });
-    wave.replaceWith(icon);
+    if (wave) {
+      const icon = document.createElement('span');
+      icon.id = 'update-available';
+      icon.className = 'fa-solid fa-circle-arrow-down';
+      icon.title = 'Update available';
+      wave.replaceWith(icon);
+    }
+    const menu = document.getElementById('global-controls');
+    if (menu && !document.getElementById('update-reload')) {
+      const item = document.createElement('li');
+      item.id = 'update-reload';
+      const link = document.createElement('a');
+      // an href, unlike the other items, so the keyboard reaches it as it
+      // reached the old clickable icon
+      link.href = '#';
+      const arrow = document.createElement('span');
+      arrow.className = 'fa-solid fa-circle-arrow-down';
+      link.append(arrow, ' Update available — click to refresh');
+      const refresh = (e) => {
+        e.preventDefault();
+        window.location.reload();
+      };
+      link.addEventListener('click', refresh);
+      // the app's own key handling takes Enter before it becomes a click
+      link.addEventListener('keydown', (e) => {
+        if (e.key == 'Enter' || e.key == ' ')
+          refresh(e);
+      });
+      item.append(link);
+      menu.prepend(item);
+    }
   }
 
   async ping_server() {
