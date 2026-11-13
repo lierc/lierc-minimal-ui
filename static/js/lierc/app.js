@@ -1379,7 +1379,7 @@ export class App {
         id: l.id,
         current: l.current,
         name: describe_agent(l.user_agent),
-        meta: [l.ip, active_text(new Date(l.last_used), l.current, now), "signed in " + signed_in_text(new Date(l.created), now)]
+        meta: [l.ip, active_text(new Date(l.last_used), l.current, now, l.connected), "signed in " + signed_in_text(new Date(l.created), now)]
           .filter(Boolean).join(" · "),
       }));
       // this browser first: its last_used is only refreshed hourly, so the

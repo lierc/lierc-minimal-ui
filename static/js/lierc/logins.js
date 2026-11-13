@@ -40,10 +40,13 @@ const plural = (n, word) => `${n} ${word}${n == 1 ? "" : "s"}`;
 
 // How recently a login was used. last_used is only updated about hourly,
 // so anything under an hour (or in the future, from clock skew) is "within
-// the hour".
-export function active_text(last_used, current, now) {
+// the hour". A login with the app open (an event stream connected) is
+// "connected now", except this browser's, which is always "active now".
+export function active_text(last_used, current, now, connected) {
   if (current)
     return "active now";
+  if (connected)
+    return "connected now";
   const ago = now - last_used;
   if (ago < HOUR)
     return "active within the hour";
