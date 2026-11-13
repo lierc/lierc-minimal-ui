@@ -673,6 +673,12 @@ header:hover #global-controls-toggle {
   color: var(--update-menu-green, #1a7f37);
 }
 
+/* on hover, the menu's own hover text: the green doesn't read on the Slack
+   themes' blue hover */
+#global-controls #update-reload:hover a {
+  color: var(--sidebar-menu-link-hover);
+}
+
 /* the star next to the title on mobile, where the nav is hidden */
 #title-top.unread::before {
   @media (max-width: 800px) {
