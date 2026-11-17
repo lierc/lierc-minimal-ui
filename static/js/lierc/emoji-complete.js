@@ -1,13 +1,15 @@
 // Inserting emoji by typing :name in the message input. Names are the
-// picker's names as Emoji.shortcode writes them.
+// picker's names as Emoji.shortcode writes them, and the Slack/GitHub
+// aliases (:pray:, :+1:).
 
 import { Emoji } from "./emoji.js";
 import { Template } from "./template.js";
 
-// the characters a typed name can hold, as Emoji.shortcode keeps them;
-// it starts with a letter or digit, so emoticons like :-o stay text
-const NAME = /^[\p{L}\p{N}_-]$/u;
-const NAME_START = /^[\p{L}\p{N}]$/u;
+// the characters a typed name can hold, as Emoji.shortcode keeps them,
+// and "+" for :+1:; it starts with a letter, digit or "+", so emoticons
+// like :-o stay text
+const NAME = /^[\p{L}\p{N}_+-]$/u;
+const NAME_START = /^[\p{L}\p{N}+]$/u;
 const MIN_QUERY = 2;
 // rows rendered at once; a longer query narrows the rest
 const MAX_ROWS = 100;
@@ -41,7 +43,8 @@ export function query_at(text, pos) {
 }
 
 // codes whose name contains query: those starting with it first, then the
-// rest, each in their original order
+// rest, each in their original order, and each emoji once, by its first
+// match (:thumbs lists :thumbs_up, not also the alias :thumbsup)
 export function rank(codes, query) {
   const prefix = [], rest = [];
   for (const c of codes) {
@@ -51,7 +54,8 @@ export function rank(codes, query) {
     else if (i > 0)
       rest.push(c);
   }
-  return prefix.concat(rest);
+  const seen = new Set();
+  return prefix.concat(rest).filter((c) => !seen.has(c.chars) && seen.add(c.chars));
 }
 
 // the emoji as inserted: in the chosen skin tone when it has tones

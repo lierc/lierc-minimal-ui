@@ -8,7 +8,8 @@ const RECENT_MAX = 24;
 // it into whichever element is opening it.
 export const Emoji = {
   names: {},
-  // what's typed between colons for each emoji, in picker order
+  // what's typed between colons for each emoji, in picker order: its
+  // name's shortcode, then its Slack/GitHub aliases (:pray:, :+1:)
   codes: [],
   // every standard emoji sequence, including skin tones and ZWJ sequences
   regex: /\p{RGI_Emoji}/gv,
@@ -31,7 +32,12 @@ Emoji.load = async function() {
   for (const group of data.groups) {
     for (const e of group.emoji) {
       Emoji.names[e.chars] = e.name;
-      Emoji.codes.push({ code: Emoji.shortcode(e.name), chars: e.chars, tones: e.tones });
+      const code = Emoji.shortcode(e.name);
+      Emoji.codes.push({ code, chars: e.chars, tones: e.tones });
+      for (const alias of e.aliases || []) {
+        if (alias != code)
+          Emoji.codes.push({ code: alias, chars: e.chars, tones: e.tones });
+      }
       (e.tones || []).forEach((tone, i) => {
         Emoji.names[tone] = `${e.name}: ${TONE_NAMES[i]} skin tone`;
       });

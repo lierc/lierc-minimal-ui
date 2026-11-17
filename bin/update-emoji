@@ -1,8 +1,9 @@
 #!/usr/bin/env perl
 
 # Builds static/emoji.json for the emoji picker from Unicode's
-# emoji-test.txt (names, groups, skin tone variants) and CLDR
-# annotations (search keywords). Prints the JSON to stdout.
+# emoji-test.txt (names, groups, skin tone variants), CLDR annotations
+# (search keywords) and GitHub's gemoji (the :shortcodes: Slack, GitHub
+# and Discord use, e.g. :pray: for folded hands). Prints the JSON to stdout.
 #
 # Pinned a version behind the latest so most devices can draw them.
 
@@ -14,9 +15,11 @@ use JSON::PP;
 
 my $EMOJI_VERSION = "17.0";
 my $CLDR_RELEASE  = "release-48";
+my $GEMOJI_TAG    = "v4.1.0";
 
 my $emoji_url = "https://www.unicode.org/Public/$EMOJI_VERSION.0/emoji/emoji-test.txt";
 my $cldr_url  = "https://raw.githubusercontent.com/unicode-org/cldr/$CLDR_RELEASE/common";
+my $gemoji_url = "https://raw.githubusercontent.com/github/gemoji/$GEMOJI_TAG/db/emoji.json";
 
 my $http = HTTP::Tiny->new;
 
@@ -46,6 +49,14 @@ for my $file ("annotations/en.xml", "annotationsDerived/en.xml") {
     my $cp = decode_xml($1);
     $keywords{$cp} ||= [ map { decode_xml($_) } split /\s*\|\s*/, $2 ];
   }
+}
+
+# gemoji's aliases by emoji, without the U+FE0F variation selector
+my %aliases;
+for my $e (@{ JSON::PP->new->decode(fetch($gemoji_url)) }) {
+  next unless $e->{emoji} && $e->{aliases};
+  (my $bare = $e->{emoji}) =~ s/\x{FE0F}//g;
+  $aliases{$bare} = $e->{aliases};
 }
 
 my $TONE = qr/(?:light|medium-light|medium|medium-dark|dark) skin tone/;
@@ -80,6 +91,7 @@ for (split /\n/, fetch($emoji_url)) {
     name     => ucfirst $name,
     keywords => lc join(" ", @words),
   };
+  $emoji->{aliases} = $aliases{$bare} if $aliases{$bare};
   push @{ $group->{emoji} }, $emoji;
   $by_name{$name} = $emoji;
 }
