@@ -1,6 +1,9 @@
 A basic UI for lierc
 ====================
 
+The web UI of [relaychat](https://relaychat.party/), a web IRC client that
+stays connected when you close the tab. Try it at <https://relaychat.party/>.
+
 This is a frontend that uses the lierc-api.
 
 This directory is mounted by the `lierc-h2o` container, and used
