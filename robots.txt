@@ -1,0 +1,14 @@
+# The landing page, login and register are public; the rest is the app
+# (behind a login) or one-off pages reached from emails.
+User-agent: *
+Disallow: /app/
+Disallow: /search/
+Disallow: /reset/
+Disallow: /verify/
+Disallow: /unsubscribe/
+Disallow: /api/
+Disallow: /docs/
+Disallow: /README.md
+Disallow: /features.md
+
+Sitemap: https://relaychat.party/sitemap.xml

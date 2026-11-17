@@ -6,10 +6,35 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <meta name="theme-color" content="#002b36">
     <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
-    <meta name="description" content="Chat on IRC in a web browser">
-    <meta name="keywords" content="IRC,cloud,HTTP,chat,browser,irccloud,relaychat,party">
+    <meta name="description" content="A free web IRC client that stays connected when you close the tab. Chat on Libera.Chat, OFTC or any IRC network from your browser or phone, with push notifications and searchable logs.">
     <meta name="author" content="Lee Aylward">
-    <title>Relaychat Party: Chat on IRC in a web browser</title>
+    <title>Relaychat: a web IRC client that stays connected</title>
+    <link rel="canonical" href="https://relaychat.party/">
+    <meta property="og:type" content="website">
+    <meta property="og:site_name" content="Relaychat">
+    <meta property="og:url" content="https://relaychat.party/">
+    <meta property="og:title" content="Relaychat: a web IRC client that stays connected">
+    <meta property="og:description" content="Chat on any IRC network from your browser or phone. Relaychat stays connected when you close the tab, and notifies you when you're mentioned.">
+    <meta property="og:image" content="https://relaychat.party/static/icon-512.png">
+    <meta property="og:image:width" content="512">
+    <meta property="og:image:height" content="512">
+    <meta property="og:image:alt" content="The relaychat icon">
+    <meta name="twitter:card" content="summary">
+    <script type="application/ld+json">
+      {
+        "@context": "https://schema.org",
+        "@type": "WebApplication",
+        "name": "Relaychat",
+        "url": "https://relaychat.party/",
+        "description": "A web IRC client that stays connected when you close the tab, with push and email notifications, last-read tracking and searchable logs.",
+        "applicationCategory": "CommunicationApplication",
+        "operatingSystem": "Web",
+        "browserRequirements": "Requires JavaScript",
+        "isAccessibleForFree": true,
+        "offers": {"@type": "Offer", "price": "0", "priceCurrency": "USD"},
+        "image": "https://relaychat.party/static/icon-512.png"
+      }
+    </script>
     <style type="text/css">
       :root {
         --navy: #002b36;      /* the app's sidebar and header */
@@ -109,7 +134,7 @@
         }
       }
 
-      .hero h2 {
+      .hero h1 {
         margin: 0 0 16px;
         font-size: 44px;
         line-height: 1.08;
@@ -302,7 +327,7 @@
   <body>
     <div class="band">
       <header class="bar wrap">
-        <h1 class="wordmark" title="IRC, with pictures">:relaychat: 👋</h1>
+        <div class="wordmark" title="IRC, with pictures">:relaychat: 👋</div>
         <nav>
           <a href="/login/">Log in</a>
           <a href="/register/">Register</a>
@@ -311,8 +336,8 @@
 
       <section class="hero wrap">
         <div>
-          <h2>IRC that stays connected when you close the tab.</h2>
-          <p>Relaychat keeps your networks and channels running on our server, so you can pick up the conversation in any browser, on your laptop or your phone.</p>
+          <h1>A web IRC client that stays connected when you close the tab.</h1>
+          <p>Relaychat is a free, open source IRC client in your browser. It keeps your networks and channels running on our server, so you can pick up the conversation in any browser, on your laptop or your phone.</p>
           <div class="actions">
             <a class="button primary" href="/register/">Create an account</a>
             <a class="button secondary" href="/login/">Log in</a>
