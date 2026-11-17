@@ -104,24 +104,6 @@ class WebPush {
     }
   }
 
-  build_pref(sub) {
-    const rawKey = sub.getKey ? sub.getKey('p256dh') : '';
-    const key = rawKey ?
-      base64url.encode(rawKey) :
-      '';
-
-    const rawAuthSecret = sub.getKey ? sub.getKey('auth') : '';
-    const authSecret = rawAuthSecret ?
-      base64url.encode(rawAuthSecret) :
-      '';
-
-    return {
-      endpoint: sub.endpoint,
-      key: key,
-      auth: authSecret
-    };
-  }
-
   set_enabled(bool, sub) {
     this.subscribed = bool;
 
@@ -136,19 +118,15 @@ class WebPush {
     }
   }
 
-  // Sends the subscription to the API. If the API refuses it (it only takes
+  // Sends the subscription to the API, as the browser's toJSON() gives it
+  // (endpoint and base64url keys). If the API refuses it (it only takes
   // the browsers' push services), push is turned back off and the browser
   // unsubscribed, so the refused subscription isn't sent again on every load.
   async save(sub) {
-    const headers = new Headers();
-    headers.append(
-      'content-type',
-      'application/x-www-form-urlencoded; charset=UTF-8'
-    );
     try {
       await this.#app.api.post("/notification/web_push", {
-        body: this.#app.api.build_query(this.build_pref(sub)),
-        headers: headers
+        body: sub.toJSON(),
+        headers: { "content-type": "application/json" }
       });
     }
     catch (e) {
