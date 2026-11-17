@@ -22,7 +22,8 @@ export const Emoji = {
 };
 
 Emoji.load = async function() {
-  const response = await fetch("/static/emoji.json");
+  // ?v: bump it with each make emoji, so browsers don't keep an old copy
+  const response = await fetch("/static/emoji.json?v=2");
   if (!response.ok)
     throw Error(response.statusText);
   const data = await response.json();
