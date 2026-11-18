@@ -1,0 +1,91 @@
+# The files a release ships, one exact path per line (no directories or
+# wildcards). Anything not listed is left out of the release, so a new
+# file needs a line here. bin/build fails if a shipped file refers to one
+# that isn't listed. static/ files ship under static/X.Y.Z/.
+
+# pages
+app/index.html
+index.html
+join/index.html
+login/index.html
+register/index.html
+reset/index.html
+search/index.html
+unsubscribe/index.html
+verify/index.html
+
+# site root
+favicon.png
+manifest.json
+robots.txt
+service-worker.js
+sitemap.xml
+
+# css and fonts
+static/css/ParisineStd-Regular.eot
+static/css/ParisineStd-Regular.ttf
+static/css/ParisineStd-Regular.woff
+static/css/ParisineStdClair-Regular.eot
+static/css/ParisineStdClair-Regular.ttf
+static/css/ParisineStdClair-Regular.woff
+static/css/auth.css
+static/css/fonts.css
+static/css/lierc.css
+static/css/search.css
+static/css/themes.css
+
+# page scripts
+static/js/auth-page.js
+static/js/join.js
+
+# modules
+static/js/lierc/api.js
+static/js/lierc/app.js
+static/js/lierc/auth.js
+static/js/lierc/channel.js
+static/js/lierc/commands.js
+static/js/lierc/completion.js
+static/js/lierc/connection.js
+static/js/lierc/dialog.js
+static/js/lierc/editor.js
+static/js/lierc/embed.js
+static/js/lierc/emoji-complete.js
+static/js/lierc/emoji.js
+static/js/lierc/favicon.js
+static/js/lierc/format.js
+static/js/lierc/history.js
+static/js/lierc/join-link.js
+static/js/lierc/logins.js
+static/js/lierc/logs.js
+static/js/lierc/networks.js
+static/js/lierc/notifier.js
+static/js/lierc/panel.js
+static/js/lierc/relaymsg.js
+static/js/lierc/render.js
+static/js/lierc/stream.js
+static/js/lierc/template.js
+static/js/lierc/theme.js
+static/js/lierc/uievents.js
+static/js/lierc/update.js
+
+# vendored scripts
+static/js/vendor/base64.js
+static/js/vendor/datalist-polyfill.js
+
+# font awesome
+static/font-awesome/css/brands.css
+static/font-awesome/css/brands.min.css
+static/font-awesome/css/fontawesome.css
+static/font-awesome/css/fontawesome.min.css
+static/font-awesome/css/solid.css
+static/font-awesome/css/solid.min.css
+static/font-awesome/webfonts/fa-brands-400.woff2
+static/font-awesome/webfonts/fa-solid-900.woff2
+
+# media and data
+static/emoji.json
+static/ent_communicator1.mp3
+static/ent_communicator1.ogg
+static/icon-192.png
+static/icon-512.png
+static/play_overlay.png

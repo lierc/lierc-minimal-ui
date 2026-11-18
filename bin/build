@@ -1,0 +1,156 @@
+#!/usr/bin/env perl
+
+# bin/build <vX.Y.Z> <outdir>: the release tree for version vX.Y.Z.
+#
+# Copies each file listed in ship.txt into <outdir>, static/ ones under
+# static/X.Y.Z/; points the pages' and manifest.json's /static/ URLs at that
+# folder; stamps the version into app/index.html's meta tags and writes
+# static/version.json. Fails if a shipped file refers to one that isn't
+# shipped, or if a script or stylesheet names /static/ directly (they refer
+# to each other relatively, so each release loads its own copies).
+# Core modules only, so it runs on a stock CI runner.
+
+use strict;
+use warnings;
+
+use FindBin;
+use File::Copy qw(copy);
+use File::Path qw(make_path);
+use File::Basename qw(dirname);
+
+my $root = "$FindBin::Bin/..";
+
+die "usage: $0 vX.Y.Z outdir\n" unless @ARGV == 2;
+my ($tag, $out) = @ARGV;
+
+my ($major, $minor, $patch) =
+  $tag =~ /\Av(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\.(0|[1-9][0-9]*)\z/
+  or die "$tag: not a version tag (vX.Y.Z)\n";
+my $version = "$major.$minor.$patch";
+
+die "$out: exists already\n" if -e $out;
+
+# ship.txt: one exact repo path per line; # comments and blank lines skipped
+my @ship;
+{
+  open my $fh, '<', "$root/ship.txt" or die "ship.txt: $!\n";
+  my %seen;
+  while (my $line = <$fh>) {
+    chomp $line;
+    $line =~ s/\s+\z//;
+    next if $line eq '' || $line =~ /\A#/;
+    die "ship.txt: $line: listed twice\n" if $seen{$line}++;
+    die "ship.txt: $line: must be a relative path inside the repo\n"
+      if $line =~ m{\A/} || grep { $_ eq '..' || $_ eq '.' || $_ eq '' } split m{/}, $line;
+    die "ship.txt: $line: not a file\n" unless -f "$root/$line";
+    push @ship, $line;
+  }
+}
+
+# where a listed file lands in the release
+sub shipped_path {
+  my $path = shift;
+  return $path =~ s{\Astatic/}{static/$version/}r;
+}
+
+my %shipped = map { shipped_path($_) => 1 } @ship;
+$shipped{"static/version.json"} = 1;
+
+sub slurp {
+  my $file = shift;
+  open my $fh, '<:raw', $file or die "$file: $!\n";
+  local $/;
+  return scalar <$fh>;
+}
+
+sub spew {
+  my ($file, $data) = @_;
+  make_path(dirname($file));
+  open my $fh, '>:raw', $file or die "$file: $!\n";
+  print $fh $data;
+  close $fh or die "$file: $!\n";
+}
+
+for my $path (@ship) {
+  my $dest = "$out/" . shipped_path($path);
+  if ($path =~ /(?:\.html|\Amanifest\.json)\z/) {
+    my $text = slurp("$root/$path");
+    $text =~ s{/static/}{/static/$version/}g;
+    $text =~ s{(<meta name="ui-version" content=")[^"]*(">)}{$1$major$2}g;
+    $text =~ s{(<meta name="ui-release" content=")[^"]*(">)}{$1$version$2}g;
+    spew($dest, $text);
+  }
+  else {
+    make_path(dirname($dest));
+    copy("$root/$path", $dest) or die "$path: $!\n";
+  }
+}
+
+# {"release": "X.Y.Z", "version": X}: version, the major as a number, is
+# for tabs running code from before releases, which compare a whole number
+spew("$out/static/version.json", qq({"release":"$version","version":$major}\n));
+
+# The checks. A reference is resolved against the referring file's place in
+# the release; query strings and fragments are dropped.
+my @errors;
+
+sub resolve {
+  my ($from, $ref) = @_;
+  $ref =~ s/[?#].*\z//s;
+  my @parts = $ref =~ m{\A/} ? () : split m{/}, dirname($from);
+  @parts = () if @parts == 1 && $parts[0] eq '.';
+  for my $seg (split m{/}, $ref) {
+    next if $seg eq '' || $seg eq '.';
+    if ($seg eq '..') { pop @parts; next }
+    push @parts, $seg;
+  }
+  return join '/', @parts;
+}
+
+sub need {
+  my ($from, $ref) = @_;
+  my $path = resolve($from, $ref);
+  push @errors, "$from: refers to $ref, which isn't shipped (add it to ship.txt)"
+    unless $shipped{$path};
+}
+
+for my $path (sort keys %shipped) {
+  my $text = slurp("$out/$path");
+  if ($path =~ /(?:\.html|\Amanifest\.json)\z/) {
+    need($path, $1) while $text =~ m{(/static/$version/[^"'\s)<>]+)}g;
+  }
+  elsif ($path =~ /\.js\z/) {
+    for my $ref (
+      $text =~ m{\bfrom\s*["']([^"']+)["']}g,
+      $text =~ m{\bimport\s*\(\s*["']([^"']+)["']}g,
+      $text =~ m{\bimport\s*["']([^"']+)["']}g,
+      $text =~ m{\bnew\s+URL\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url}g,
+    ) {
+      need($path, $ref) if $ref =~ m{\A\.\.?/};
+    }
+    # update.js polls the one fixed static URL
+    my $scan = $path eq "static/$version/js/lierc/update.js"
+      ? $text =~ s{"/static/version\.json"}{}r
+      : $text;
+    push @errors, "$path: names /static/ directly; refer to it relatively"
+      if $scan =~ m{["'`]/static/};
+  }
+  elsif ($path =~ /\.css\z/) {
+    while ($text =~ m{url\(\s*["']?([^"')]+?)["']?\s*\)}g) {
+      my $ref = $1;
+      next if $ref =~ m{\A(?:data:|https?:|#)};
+      if ($ref =~ m{\A/}) {
+        push @errors, "$path: url($ref) names a path directly; refer to it relatively";
+        next;
+      }
+      need($path, $ref);
+    }
+  }
+}
+
+if (@errors) {
+  print STDERR "$_\n" for @errors;
+  die "build failed\n";
+}
+
+print "built $tag in $out\n";

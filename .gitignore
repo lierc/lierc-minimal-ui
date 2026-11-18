@@ -1,3 +1,4 @@
 *.gz
 *.br
 /docs/
+/dist/
