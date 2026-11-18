@@ -6,7 +6,7 @@ stays connected when you close the tab. Try it at <https://relaychat.party/>.
 
 Questions or ideas? Come talk in [#relaychat](https://relaychat.party/join/?network=relaychat&channel=relaychat).
 
-This is a frontend thaThe frontend that uses [lierc-api](https://github.com/lierc/lierc-api).
+The frontend that uses [lierc-api](https://github.com/lierc/lierc-api).
 There is no build step for development: the files are served as they are,
 and the dev stack in
 [lierc-docker-compose](https://github.com/lierc/lierc-docker-compose)
