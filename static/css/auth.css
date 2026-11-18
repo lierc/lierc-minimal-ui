@@ -131,7 +131,14 @@ input {
   }
 }
 
-input[type="submit"] {
+input[type="submit"],
+.button {
+  display: block;
+  box-sizing: border-box;
+  width: 100%;
+  text-align: center;
+  text-decoration: none;
+  border-radius: 4px;
   margin: 8px 0 0;
   padding: 11px 20px;
   border: none;
@@ -154,8 +161,29 @@ input[type="submit"] {
   }
 }
 
+/* the verify page's Resend email, under Start chatting */
+input[type="submit"].secondary {
+  margin-top: 12px;
+  border: 1px solid var(--border);
+  background: #fff;
+  color: var(--ink);
+
+  &:hover {
+    background: #fff;
+    border-color: var(--muted);
+  }
+}
+
 .panel p {
   margin: 0 0 12px;
+}
+
+/* the verify page's 3-day notice */
+.panel .warning {
+  padding: 8px 10px;
+  border-radius: 4px;
+  background: rgba(255, 161, 48, 0.14);
+  font-size: 15px;
 }
 
 /* the reset link under the login page's password field */

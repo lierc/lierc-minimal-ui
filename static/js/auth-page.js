@@ -1,7 +1,8 @@
 // The login, register, reset and verify pages: post a form to its data-api
 // endpoint, showing the API's error on failure. On success a form goes to
-// the app, or, with data-success="message", is replaced by the element named
-// in data-message.
+// the page in data-next (the app if it has none), or, with
+// data-success="message", is replaced by the element named in
+// data-message.
 //
 // The reset and verify pages are opened from emailed links that carry a
 // token after "#" (so it never reaches the server or its logs). It's read
@@ -53,8 +54,8 @@ else if (verify_page) {
   document.getElementById("retry").addEventListener("click", confirm);
 
   // without a token: a signed-in signup that hasn't confirmed yet (sent
-  // here by the app) is told to check its email; anyone else has a bad
-  // link. Never sent back to the app, so the two pages can't loop.
+  // here after registering) is told to confirm, and can start chatting;
+  // anyone else has a bad link.
   const check = async () => {
     try {
       const res = await fetch("/api/auth", { credentials: "same-origin" });
@@ -169,7 +170,7 @@ document.querySelectorAll("form[data-api]").forEach((form) => {
         document.getElementById(form.dataset.message).hidden = false;
       }
       else {
-        window.location = "/app/";
+        window.location = form.dataset.next || "/app/";
       }
     }
     catch (e) {

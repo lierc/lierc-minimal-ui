@@ -23,24 +23,6 @@ export async function is_auth_failure(res) {
   }
 }
 
-// is_unverified reports whether a response says the account hasn't
-// confirmed its email yet: /auth's user with verified false, or the API's
-// 403 with unverified set. The response's body is left unread.
-export async function is_unverified(res) {
-  if (res.status != 200 && res.status != 403)
-    return false;
-  const type = res.headers.get('Content-Type');
-  if (!type?.match(/^application\/javascript/))
-    return false;
-  try {
-    const data = await res.clone().json();
-    return res.status == 200 ? data?.verified === false : data?.unverified === true;
-  }
-  catch (e) {
-    return false;
-  }
-}
-
 export class Auth {
   #baseurl;
 
@@ -48,20 +30,16 @@ export class Auth {
     this.#baseurl = baseurl;
   }
 
-  // auth calls complete with the logged in user. Logged out, it goes to
-  // the login page, and a signup that hasn't confirmed its email yet to the
-  // verify page; any other failure is retried, so an API restart doesn't
-  // send someone who is logged in to the login page.
+  // auth calls complete with the logged in user (one who hasn't confirmed
+  // their email yet included). Logged out, it goes to the login page; any
+  // other failure is retried, so an API restart doesn't send someone who
+  // is logged in to the login page.
   async auth(complete) {
     let delay = retry_min;
     for (;;) {
       const user = await this.#check();
       if (user === false) {
         window.location = "/login/";
-        return;
-      }
-      if (user?.verified === false) {
-        window.location = "/verify/";
         return;
       }
       if (user) {

@@ -6,7 +6,7 @@
     <meta name="theme-color" content="#002b36">
     <link rel="icon" type="image/png" href="/favicon.png">
     <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
-    <link type="text/css" rel="stylesheet" href="/static/css/auth.css?v=4056d1833b">
+    <link type="text/css" rel="stylesheet" href="/static/css/auth.css?v=44caab6328">
     <title>Confirm your email · relaychat.party</title>
   </head>
   <body>
@@ -19,11 +19,15 @@
          Without one, a signup that hasn't confirmed yet is told to check
          its email. -->
     <main data-verify>
+      <!-- after signing up, and for a signed-in signup that hasn't
+           confirmed: the account is usable now -->
       <section class="panel" id="check" hidden>
-        <h2>Check your email</h2>
-        <p>We sent a confirmation link to <b id="check-email"></b>. Open it to start using relaychat.</p>
+        <h2>Confirm your email address</h2>
+        <p>Your account is ready. We sent a confirmation link to <b id="check-email"></b>: open it to confirm your address.</p>
+        <p class="warning">Accounts that aren't confirmed within 3 days are deleted.</p>
+        <a class="button" href="/app/">Start chatting</a>
         <p class="status" id="resend-status" role="status"></p>
-        <input type="submit" value="Resend email" id="resend">
+        <input type="submit" class="secondary" value="Resend email" id="resend">
         <p class="alt"><a href="/login/" id="logout">Log out</a></p>
       </section>
 
@@ -47,6 +51,6 @@
       </section>
     </main>
 
-    <script src="/static/js/auth-page.js?v=2d7c4ab082"></script>
+    <script src="/static/js/auth-page.js?v=fc93443c8c"></script>
   </body>
 </html>
