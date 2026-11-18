@@ -8,6 +8,20 @@
 // token after "#" (so it never reaches the server or its logs). It's read
 // once, removed from the address bar, and sent as "token" in a POST body.
 
+// next: where login and signup go on to afterwards, given as ?next=. Only
+// a join link on this site is followed (the same rule as safe_next in
+// static/js/lierc/join-link.js); anything else is ignored.
+const next = (() => {
+  const n = new URLSearchParams(location.search).get("next");
+  return n && n.startsWith("/join/?") ? n : null;
+})();
+
+// the login and register pages' links to each other keep next
+if (next) {
+  for (const a of document.querySelectorAll('a[href="/login/"], a[href="/register/"]'))
+    a.href = a.getAttribute("href") + "?next=" + encodeURIComponent(next);
+}
+
 const token_form = document.querySelector("form[data-token]");
 const verify_page = document.querySelector("main[data-verify]");
 const unsubscribe_page = document.querySelector("main[data-unsubscribe]");
@@ -52,6 +66,10 @@ else if (verify_page) {
       .catch(() => show("error"));
   };
   document.getElementById("retry").addEventListener("click", confirm);
+
+  // after signing up from a join link, Start chatting goes on to it
+  if (next)
+    document.querySelector('#check a.button[href="/app/"]').href = next;
 
   // without a token: a signed-in signup that hasn't confirmed yet (sent
   // here after registering) is told to confirm, and can start chatting;
@@ -131,10 +149,10 @@ else if (unsubscribe_page) {
   show(token ? "confirm" : "none");
 }
 else {
-  // someone already logged in goes straight to the app
+  // someone already logged in goes straight to the app (or the join link)
   fetch("/api/auth", { credentials: "same-origin" }).then((res) => {
     if (res.ok)
-      window.location = "/app/";
+      window.location = next || "/app/";
   });
 }
 
@@ -169,8 +187,12 @@ document.querySelectorAll("form[data-api]").forEach((form) => {
         form.hidden = true;
         document.getElementById(form.dataset.message).hidden = false;
       }
+      else if (form.dataset.next == "/verify/") {
+        // signup: the verify page, which goes on to next afterwards
+        window.location = next ? "/verify/?next=" + encodeURIComponent(next) : "/verify/";
+      }
       else {
-        window.location = form.dataset.next || "/app/";
+        window.location = next || form.dataset.next || "/app/";
       }
     }
     catch (e) {
