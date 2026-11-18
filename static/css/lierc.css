@@ -833,9 +833,10 @@ ul.channel-controls {
   padding-right: 4px;
 }
 
-/* only channels can be shared and parted, and only private panels closed;
-   a private panel has no nick list */
-body:not([data-panel-type=channel]) #share-channel,
+/* only channels can be parted, and only private panels closed; a private
+   panel has no nick list; only a channel on a preset network has a share
+   link (data-shareable, set as it's focused) */
+body:not([data-shareable]) #share-channel,
 body:not([data-panel-type=channel]) #part-channel,
 body:not([data-panel-type=private]) #close-private,
 body[data-panel-type=private] #nicks {

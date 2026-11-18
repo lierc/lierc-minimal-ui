@@ -45,11 +45,11 @@ export function irc_nick(username) {
   return nick.slice(0, 32).join("");
 }
 
-// share_url is the join link, on origin, for channel on the connection
-// with config (its Host and Port), or null if there can't be one: links
-// only name preset networks, and only channels they can carry.
-export function share_url(origin, config, channel) {
-  const network = network_for(config?.Host, config?.Port);
+// share_url is the join link, on origin, for channel on the server host
+// and port, or null if there can't be one: links only name preset
+// networks, and only channels they can carry.
+export function share_url(origin, host, port, channel) {
+  const network = network_for(host, port);
   if (!network)
     return null;
   const link = parse_join(new URLSearchParams({ network: network.Alias, channel }));

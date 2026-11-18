@@ -3,10 +3,14 @@ import { Channel } from "./channel.js";
 export class Connection {
   #listeners = {};
 
-  constructor(id, host, nick) {
+  constructor(id, host, nick, server_host = null, server_port = null) {
     this.id = id;
-    this.host = host;
+    this.host = host; // the network's name: its alias, else its host
     this.nick = nick;
+    // the server, for share links (which only name preset networks); null
+    // when the API didn't say (an older one)
+    this.server_host = server_host;
+    this.server_port = server_port;
     this.connected = false;
     this.channels = [];
     this.isupport = {};

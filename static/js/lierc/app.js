@@ -221,6 +221,21 @@ export class App {
   }
 
   // Shows a connection's new network name on its status panel.
+  // An edited connection: its name, and its server, which the edit may have
+  // changed (Share link follows it).
+  update_connection(id, host, server_host, server_port) {
+    const connection = this.connections[id];
+    if (!connection)
+      return;
+    this.rename_connection(id, host);
+    if (server_host) {
+      connection.server_host = server_host;
+      connection.server_port = server_port;
+    }
+    if (this.focused?.connection == id)
+      this.update_shareable(this.focused);
+  }
+
   rename_connection(id, host) {
     const connection = this.connections[id];
     if (!connection)
@@ -278,7 +293,7 @@ export class App {
     for (const c of list) {
       if (touched.has(c.Id))
         continue;
-      this.setup_connection(c.Id, c.Name, c.Nick);
+      this.setup_connection(c.Id, c.Name, c.Nick, c.Host, c.Port);
       this.set_connected(c.Id, !!c.Connected);
     }
   }
@@ -292,11 +307,26 @@ export class App {
     delete this.connections[conn_id];
   }
 
-  setup_connection(id, host, nick) {
+  // share_link is the panel's join link, or null if it can't have one: not
+  // a channel, a network that isn't a preset, or one not known yet.
+  share_link(panel) {
+    const conn = this.connections[panel?.connection];
+    if (panel?.type != "channel" || !conn?.server_host)
+      return null;
+    return share_url(location.origin, conn.server_host, conn.server_port, panel.name);
+  }
+
+  // Share link is only in the menu of a channel that can have a link.
+  update_shareable(panel) {
+    this.elem.body.toggleAttribute("data-shareable", !!this.share_link(panel));
+  }
+
+  setup_connection(id, host, nick, server_host, server_port) {
     if (this.connections[id])
       return;
 
-    const connection = new Connection(id, host);
+    // no nick: it's set from the server's own messages (001, NICK), as before
+    const connection = new Connection(id, host, undefined, server_host, server_port);
     this.connections[id] = connection;
 
     const panel = this.add_panel("status", connection.id, {status: true});
@@ -463,7 +493,7 @@ export class App {
       const conn_id   = conn.Id;
       const host = conn.Config.Alias || conn.Config.Host;
       const nick = conn.Nick;
-      this.setup_connection(conn_id, host, nick);
+      this.setup_connection(conn_id, host, nick, conn.Config.Host, conn.Config.Port);
     });
 
     if (this.stream)
@@ -527,13 +557,13 @@ export class App {
     stream.on('connections', (list) => this.apply_connections(list));
     stream.on('connection:create', (c) => {
       this.touch_connection(c.Id);
-      this.setup_connection(c.Id, c.Name, c.Nick);
+      this.setup_connection(c.Id, c.Name, c.Nick, c.Host, c.Port);
     });
     // an edit keeps the network's panels; only its name changes, and the
     // nick is left to the IRC NICK messages
     stream.on('connection:update', (c) => {
       this.touch_connection(c.Id);
-      this.rename_connection(c.Id, c.Name);
+      this.update_connection(c.Id, c.Name, c.Host, c.Port);
     });
     stream.on('connection:delete', (c) => {
       this.touch_connection(c.Id);
@@ -850,24 +880,14 @@ export class App {
     this.elem.title.textContent = name;
   }
 
-  // Shares a join link for the channel panel: the share sheet where there is
+  // Shares the channel panel's join link: the share sheet where there is
   // one (phones), otherwise copied, with "Link copied" in the menu for a
-  // moment. Links only name preset networks; other channels get told so.
+  // moment.
   async share_channel(panel) {
-    let url;
-    try {
-      const conn = await this.api.get(`/connection/${panel.connection}`);
-      url = share_url(location.origin, conn.Config, panel.name);
-    }
-    catch (e) {
-      alert(`Couldn't make a link: ${e}`);
+    // the item is only shown when there's a link
+    const url = this.share_link(panel);
+    if (!url)
       return;
-    }
-    if (!url) {
-      const names = NETWORKS.map((n) => n.name).join(", ");
-      alert(`Share links work for channels on ${names}.`);
-      return;
-    }
     if (navigator.share && this.mobile) {
       try {
         await navigator.share({ title: `Join ${panel.name}`, url });
@@ -1221,6 +1241,7 @@ export class App {
     this.replace_child("filler", panel.elem.filler);
 
     this.elem.body.setAttribute("data-panel-type", panel.type);
+    this.update_shareable(panel);
     this.replace_child("nicks", panel.elem.nicks);
 
     if (this.focused) {
