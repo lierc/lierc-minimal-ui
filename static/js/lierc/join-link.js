@@ -2,7 +2,7 @@
 // projects to link to their channel ("chat with us in your browser"). Only
 // the presets in networks.js can be linked to.
 
-import { NETWORKS } from "./lierc/networks.js";
+import { NETWORKS } from "./networks.js";
 
 // a channel name after its # or &: 1-49 characters, none of them a space,
 // a comma or a control character (BEL among them)

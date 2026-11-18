@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#002b36">
+    <link rel="icon" type="image/png" href="/favicon.png">
+    <link rel="apple-touch-icon" href="/static/icon-192.png?v=2769fee676">
+    <link type="text/css" rel="stylesheet" href="/static/css/auth.css?v=f9626cfa41">
+    <title>Join a channel · relaychat.party</title>
+  </head>
+  <body>
+    <header class="bar">
+      <h1 class="wordmark"><a href="/" title="IRC, with pictures">:relaychat: 👋</a></h1>
+    </header>
+
+    <!-- A channel join link: /join/?network=<preset alias>&channel=<channel>.
+         Nothing happens until Join is clicked. -->
+    <main data-join>
+      <section class="panel" id="logged-out" hidden>
+        <h2>Join <b class="channel"></b> on <b class="network"></b></h2>
+        <p>Relaychat is an IRC client in your browser that stays connected when you close the tab.</p>
+        <a class="button" id="register" href="/register/">Create an account</a>
+        <p class="alt">Have an account? <a id="login" href="/login/">Log in</a></p>
+      </section>
+
+      <section class="panel" id="logged-in" hidden>
+        <h2>Join <b class="channel"></b> on <b class="network"></b></h2>
+        <p class="error" id="join-error" role="alert"></p>
+        <button class="button" id="join" type="button">Join</button>
+      </section>
+
+      <section class="panel" id="invalid" hidden>
+        <h2>Link not valid</h2>
+        <p>This join link isn't valid.</p>
+        <p class="alt"><a href="/">Go to relaychat</a></p>
+      </section>
+    </main>
+
+    <!-- versioned by make bust, so a changed module is fetched again -->
+    <script type="importmap">
+    {
+      "imports": {
+        "/static/js/lierc/api.js": "/static/js/lierc/api.js?v=91adf76b92",
+        "/static/js/lierc/app.js": "/static/js/lierc/app.js?v=ede78c8deb",
+        "/static/js/lierc/auth.js": "/static/js/lierc/auth.js?v=9d1d3e3bc2",
+        "/static/js/lierc/channel.js": "/static/js/lierc/channel.js?v=d47521e56f",
+        "/static/js/lierc/commands.js": "/static/js/lierc/commands.js?v=cd79d9d3c2",
+        "/static/js/lierc/completion.js": "/static/js/lierc/completion.js?v=6d5c7aefb1",
+        "/static/js/lierc/connection.js": "/static/js/lierc/connection.js?v=0521bf5a34",
+        "/static/js/lierc/dialog.js": "/static/js/lierc/dialog.js?v=d167c6f986",
+        "/static/js/lierc/editor.js": "/static/js/lierc/editor.js?v=c1aca3f542",
+        "/static/js/lierc/embed.js": "/static/js/lierc/embed.js?v=5f861c4cf8",
+        "/static/js/lierc/emoji-complete.js": "/static/js/lierc/emoji-complete.js?v=7a0bd5b43b",
+        "/static/js/lierc/emoji.js": "/static/js/lierc/emoji.js?v=947deb5476",
+        "/static/js/lierc/favicon.js": "/static/js/lierc/favicon.js?v=7fd9965bc8",
+        "/static/js/lierc/format.js": "/static/js/lierc/format.js?v=2b26984243",
+        "/static/js/lierc/history.js": "/static/js/lierc/history.js?v=6c7a26078c",
+        "/static/js/lierc/join-link.js": "/static/js/lierc/join-link.js?v=fc67a076bc",
+        "/static/js/lierc/logins.js": "/static/js/lierc/logins.js?v=2a912446cf",
+        "/static/js/lierc/logs.js": "/static/js/lierc/logs.js?v=10e42cb514",
+        "/static/js/lierc/networks.js": "/static/js/lierc/networks.js?v=0139fe345e",
+        "/static/js/lierc/notifier.js": "/static/js/lierc/notifier.js?v=a12746c9c9",
+        "/static/js/lierc/panel.js": "/static/js/lierc/panel.js?v=6529f6f497",
+        "/static/js/lierc/relaymsg.js": "/static/js/lierc/relaymsg.js?v=6ade5dded3",
+        "/static/js/lierc/render.js": "/static/js/lierc/render.js?v=229ba502ba",
+        "/static/js/lierc/stream.js": "/static/js/lierc/stream.js?v=7af338fe44",
+        "/static/js/lierc/template.js": "/static/js/lierc/template.js?v=efc5255a78",
+        "/static/js/lierc/theme.js": "/static/js/lierc/theme.js?v=14c8f6fa24",
+        "/static/js/lierc/uievents.js": "/static/js/lierc/uievents.js?v=ac21959416",
+        "/static/js/lierc/update.js": "/static/js/lierc/update.js?v=836c95e45b"
+      }
+    }
+    </script>
+    <script type="module" src="/static/js/join.js?v=2dbffb9b86"></script>
+  </body>
+</html>

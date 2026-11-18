@@ -161,6 +161,12 @@ input[type="submit"],
   }
 }
 
+/* the join page's Join: a button doesn't inherit the font, as inputs do */
+button.button {
+  font: inherit;
+  font-weight: 600;
+}
+
 /* the verify page's Resend email, under Start chatting */
 input[type="submit"].secondary {
   margin-top: 12px;
