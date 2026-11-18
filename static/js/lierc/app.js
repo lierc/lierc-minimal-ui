@@ -88,7 +88,7 @@ export class App {
     setInterval(() => this.ping_server(), PING_INTERVAL);
     setInterval(() => this.render_typing(), 500);
 
-    // a newer UI version (static/version.json bumped past this page's) swaps
+    // a newer UI release (a new major or minor in static/version.json) swaps
     // the title's wave for a reload icon
     new UpdateCheck({
       doc: document,
