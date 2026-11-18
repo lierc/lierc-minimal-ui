@@ -1,0 +1,38 @@
+# Every push builds the release tree, so a file missing from ship.txt fails
+# here before anyone tags. Pushing a tag vX.Y.Z publishes that release: the
+# tarball relaychat-infra deploys, and its sha256.
+name: Release
+
+on:
+  push:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: bin/build v0.0.0 dist
+
+  release:
+    if: startsWith(github.ref, 'refs/tags/v')
+    needs: [build]
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    env:
+      GH_TOKEN: ${{ github.token }}
+      TAG: ${{ github.ref_name }}
+    steps:
+      - uses: actions/checkout@v4
+      - name: Build
+        run: bin/build "$TAG" dist
+      - name: Pack
+        run: |
+          tar --sort=name --owner=0 --group=0 --numeric-owner --mtime=@0 \
+            -C dist -czf "lierc-web-$TAG.tar.gz" .
+          sha256sum "lierc-web-$TAG.tar.gz" > "lierc-web-$TAG.tar.gz.sha256"
+      - name: Publish
+        run: |
+          gh release create "$TAG" --title "$TAG" --notes "" \
+            "lierc-web-$TAG.tar.gz" "lierc-web-$TAG.tar.gz.sha256"
