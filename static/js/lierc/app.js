@@ -67,7 +67,7 @@ export class App {
       title: document.getElementsByTagName('title')[0],
       nicks: document.getElementById('nicks'),
       body: document.body,
-      audio: Audio ? new Audio("/static/ent_communicator1.mp3") : undefined,
+      audio: Audio ? new Audio(new URL("../../ent_communicator1.mp3", import.meta.url)) : undefined,
       emoji: document.getElementById('emoji'),
       switcher: document.getElementById('switcher-wrap'),
       panel_name: document.getElementById('panel-name'),

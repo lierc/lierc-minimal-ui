@@ -22,8 +22,8 @@ export const Emoji = {
 };
 
 Emoji.load = async function() {
-  // ?v: bump it with each make emoji, so browsers don't keep an old copy
-  const response = await fetch("/static/emoji.json?v=2");
+  // relative to this module, so a release loads its own copy
+  const response = await fetch(new URL("../../emoji.json", import.meta.url));
   if (!response.ok)
     throw Error(response.statusText);
   const data = await response.json();

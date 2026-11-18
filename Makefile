@@ -1,7 +1,3 @@
-.PHONY: bust
-bust:
-	bin/cache-bust index.html join/index.html app/index.html search/index.html unsubscribe/index.html login/index.html register/index.html reset/index.html verify/index.html
-
 .PHONY: emoji
 emoji:
 	bin/update-emoji > static/emoji.json

@@ -1468,7 +1468,7 @@ p.embed-source {
   left: 0px;
   bottom: 0px;
   right: 0px;
-  background-image: url(/static/play_overlay.png);
+  background-image: url(../play_overlay.png);
   background-repeat: no-repeat;
   background-size: 30px 45px;
   background-position: center center;
