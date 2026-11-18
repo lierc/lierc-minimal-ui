@@ -812,6 +812,16 @@ ul.channel-controls {
   content: "\f0f6";
 }
 
+#share-channel .share::before {
+  content: "\f1e0"; /* share-nodes */
+  font-family: var(--fa-family-classic);
+  font-weight: 900;
+  width: 15px;
+  text-align: left;
+  display: inline-block;
+  padding-right: 4px;
+}
+
 #part-channel .part::before,
 #close-private .part::before {
   content: "\f2f5"; /* right-from-bracket */
@@ -823,8 +833,9 @@ ul.channel-controls {
   padding-right: 4px;
 }
 
-/* only channels can be parted, and only private panels closed; a private
-   panel has no nick list */
+/* only channels can be shared and parted, and only private panels closed;
+   a private panel has no nick list */
+body:not([data-panel-type=channel]) #share-channel,
 body:not([data-panel-type=channel]) #part-channel,
 body:not([data-panel-type=private]) #close-private,
 body[data-panel-type=private] #nicks {

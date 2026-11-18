@@ -2,7 +2,7 @@
 // projects to link to their channel ("chat with us in your browser"). Only
 // the presets in networks.js can be linked to.
 
-import { NETWORKS } from "./networks.js";
+import { NETWORKS, network_for } from "./networks.js";
 
 // a channel name after its # or &: 1-49 characters, none of them a space,
 // a comma or a control character (BEL among them)
@@ -43,4 +43,15 @@ export function irc_nick(username) {
   if (/[0-9]/.test(nick[0] ?? ""))
     nick.unshift("_");
   return nick.slice(0, 32).join("");
+}
+
+// share_url is the join link, on origin, for channel on the connection
+// with config (its Host and Port), or null if there can't be one: links
+// only name preset networks, and only channels they can carry.
+export function share_url(origin, config, channel) {
+  const network = network_for(config?.Host, config?.Port);
+  if (!network)
+    return null;
+  const link = parse_join(new URLSearchParams({ network: network.Alias, channel }));
+  return link ? origin + join_path(link.network, link.channel) : null;
 }

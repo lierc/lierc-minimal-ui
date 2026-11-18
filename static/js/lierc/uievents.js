@@ -319,6 +319,12 @@ export const UIEvents = function(app) {
     app.open_log(app.focused);
   });
 
+  clickTouchEvent(document.querySelector('#share-channel'), (e) => {
+    e.preventDefault();
+    if (app.focused?.type == "channel")
+      app.share_channel(app.focused);
+  });
+
   clickTouchEvent(document.querySelector('#part-channel'), (e) => {
     e.preventDefault();
     if (app.focused?.type == "channel")

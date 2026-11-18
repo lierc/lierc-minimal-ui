@@ -6,6 +6,7 @@ import { Dialog } from "./dialog.js";
 import { Emoji } from "./emoji.js";
 import { Favicon, favicon_state } from "./favicon.js";
 import { NETWORKS, network_for } from "./networks.js";
+import { share_url } from "./join-link.js";
 import { Notifier } from "./notifier.js";
 import { Panel } from "./panel.js";
 import { Render } from "./render.js";
@@ -847,6 +848,44 @@ export class App {
     }
 
     this.elem.title.textContent = name;
+  }
+
+  // Shares a join link for the channel panel: the share sheet where there is
+  // one (phones), otherwise copied, with "Link copied" in the menu for a
+  // moment. Links only name preset networks; other channels get told so.
+  async share_channel(panel) {
+    let url;
+    try {
+      const conn = await this.api.get(`/connection/${panel.connection}`);
+      url = share_url(location.origin, conn.Config, panel.name);
+    }
+    catch (e) {
+      alert(`Couldn't make a link: ${e}`);
+      return;
+    }
+    if (!url) {
+      const names = NETWORKS.map((n) => n.name).join(", ");
+      alert(`Share links work for channels on ${names}.`);
+      return;
+    }
+    if (navigator.share && this.mobile) {
+      try {
+        await navigator.share({ title: `Join ${panel.name}`, url });
+      }
+      catch (e) {} // dismissed
+      return;
+    }
+    const label = document.querySelector('#share-channel .label');
+    try {
+      await navigator.clipboard.writeText(url);
+      label.textContent = "Link copied";
+      clearTimeout(this.share_label_timer);
+      this.share_label_timer = setTimeout(() => label.textContent = "Share link", 2000);
+    }
+    catch (e) {
+      // no clipboard (plain http, or refused): show it to copy by hand
+      prompt("Copy this link:", url);
+    }
   }
 
   async part_channel(name, connection) {
