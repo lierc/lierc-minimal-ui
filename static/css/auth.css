@@ -184,6 +184,31 @@ input[type="submit"].secondary {
   margin: 0 0 12px;
 }
 
+/* the join page's network: its line about it, and its server */
+.panel .network-info {
+  margin: -8px 0 20px;
+  padding: 10px 12px;
+  border-left: 3px solid var(--cyan);
+  border-radius: 0 4px 4px 0;
+  background: rgba(42, 161, 152, 0.08);
+  font-size: 15px;
+
+  & p {
+    margin: 0;
+  }
+
+  & .about:empty {
+    display: none;
+  }
+
+  & .server {
+    margin-top: 4px;
+    color: var(--muted);
+    font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+    font-size: 13px;
+  }
+}
+
 /* the verify page's 3-day notice */
 .panel .warning {
   padding: 8px 10px;

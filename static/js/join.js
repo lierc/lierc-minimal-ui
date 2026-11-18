@@ -5,6 +5,7 @@
 // it's joined.
 
 import { parse_join, join_path, irc_nick } from "./lierc/join-link.js";
+import { server_label } from "./lierc/networks.js";
 
 const link = parse_join(new URLSearchParams(location.search));
 
@@ -71,6 +72,10 @@ async function main() {
     el.textContent = link.channel;
   for (const el of document.querySelectorAll(".network"))
     el.textContent = link.network.name;
+  for (const el of document.querySelectorAll(".network-info .about"))
+    el.textContent = link.network.About ?? "";
+  for (const el of document.querySelectorAll(".network-info .server"))
+    el.textContent = server_label(link.network);
   document.title = `Join ${link.channel} on ${link.network.name} · relaychat.party`;
 
   let user = null;

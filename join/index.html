@@ -19,6 +19,10 @@
     <main data-join>
       <section class="panel" id="logged-out" hidden>
         <h2>Join <b class="channel"></b> on <b class="network"></b></h2>
+        <div class="network-info">
+          <p class="about"></p>
+          <p class="server"></p>
+        </div>
         <p>Relaychat is an IRC client in your browser that stays connected when you close the tab.</p>
         <a class="button" id="register" href="/register/">Create an account</a>
         <p class="alt">Have an account? <a id="login" href="/login/">Log in</a></p>
@@ -26,6 +30,10 @@
 
       <section class="panel" id="logged-in" hidden>
         <h2>Join <b class="channel"></b> on <b class="network"></b></h2>
+        <div class="network-info">
+          <p class="about"></p>
+          <p class="server"></p>
+        </div>
         <p class="error" id="join-error" role="alert"></p>
         <button class="button" id="join" type="button">Join</button>
       </section>
