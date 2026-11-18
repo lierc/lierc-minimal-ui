@@ -33,3 +33,14 @@ export function join_path(network, channel) {
 export function safe_next(next) {
   return typeof next == "string" && next.startsWith("/join/?") ? next : null;
 }
+
+// irc_nick is the IRC nick for a username, as lierc-api's accounts.IrcNick
+// makes it for the default network: anything outside [A-Za-z0-9_] becomes
+// "_", a leading digit gets a "_" in front, and it keeps at most 32
+// characters. Usernames may have "." and start with a digit; nicks can't.
+export function irc_nick(username) {
+  let nick = Array.from(username, (c) => /[A-Za-z0-9_]/.test(c) ? c : "_");
+  if (/[0-9]/.test(nick[0] ?? ""))
+    nick.unshift("_");
+  return nick.slice(0, 32).join("");
+}

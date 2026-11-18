@@ -4,7 +4,7 @@
 // channel. Then it opens the app on the channel, which focuses it once
 // it's joined.
 
-import { parse_join, join_path } from "./lierc/join-link.js";
+import { parse_join, join_path, irc_nick } from "./lierc/join-link.js";
 
 const link = parse_join(new URLSearchParams(location.search));
 
@@ -45,16 +45,18 @@ async function join(user) {
     await api("POST", `/connection/${encodeURIComponent(conn.Id)}`, `JOIN ${channel}`, "application/irc");
     return conn.Id;
   }
+  // the username as a nick, as the default network has it
+  const nick = irc_nick(user.user);
   const created = await api("POST", "/connection", JSON.stringify({
     Host: network.Host,
     Port: network.Port,
     Ssl: network.Ssl,
     Alias: network.Alias,
-    Nick: user.user,
-    User: user.user,
+    Nick: nick,
+    User: nick,
     Pass: "",
     SASL: false,
-    Highlight: [user.user],
+    Highlight: [nick],
     Channels: [channel],
   }), "application/json");
   return created.Id;
