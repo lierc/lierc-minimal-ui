@@ -37,6 +37,15 @@ const templates = {
       <a href="#" class="close">close</a>
       <h2>${v.edit ? "Edit connection" : "Add a connection"}</h2>
       <form method="${v.method}" action="${v.action}">
+        ${v.edit ? "" : html`
+        <fieldset class="input-group network-preset">
+          <label for="network">Network</label>
+          <select name="network">
+            ${each(v.networks, (n) => html`<option value="${n.name}"${n.name == v.network ? safe(" selected") : ""}>${n.name}</option>`)}
+            <option value=""${v.network ? "" : safe(" selected")}>Other…</option>
+          </select>
+        </fieldset>
+        `}
         <div class="input-h-group">
           <fieldset class="input-group">
             <label for="host">Address <span class="required">*</span></label>

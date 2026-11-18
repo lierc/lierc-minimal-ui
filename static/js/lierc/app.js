@@ -5,6 +5,7 @@ import { Connection } from "./connection.js";
 import { Dialog } from "./dialog.js";
 import { Emoji } from "./emoji.js";
 import { Favicon, favicon_state } from "./favicon.js";
+import { NETWORKS, network_for } from "./networks.js";
 import { Notifier } from "./notifier.js";
 import { Panel } from "./panel.js";
 import { Render } from "./render.js";
@@ -1256,13 +1257,14 @@ export class App {
       vars.User = this.user.user;
       vars.Highlight = this.user.user;
 
+      // the first connection starts on Libera.Chat, in #lierc; after that
+      // the form starts empty, on Other
       if (Object.keys(this.connections).length == 0) {
-        vars.Host = "irc.libera.chat";
-        vars.Port = "6697";
-        vars.Ssl = true;
+        Object.assign(vars, network_for("irc.libera.chat", 6697));
         vars.Channels = "#lierc";
-        vars.Alias = "libera";
       }
+      vars.networks = NETWORKS;
+      vars.network = network_for(vars.Host, vars.Port)?.name ?? "";
 
       vars.action = "/connection";
       vars.method = "POST";
@@ -1286,6 +1288,9 @@ export class App {
         });
       }
     }
+
+    if (!connection)
+      this.bind_network_presets(dialog.el);
 
     const del = dialog.el.querySelector('.delete-connection');
     if (del && connection) {
@@ -1349,6 +1354,42 @@ export class App {
           : "Couldn't save the connection");
       }
     });
+  }
+
+  // The Add a connection dialog's Network menu: picking a network fills in
+  // its server, TLS and alias (and channels, for one that has a default,
+  // unless some were typed); changing the server by hand moves the menu to
+  // whichever network it now is, or Other.
+  bind_network_presets(el) {
+    const select = el.querySelector('select[name="network"]');
+    if (!select)
+      return;
+    const field = (name) => el.querySelector(`input[name="${name}"]`);
+    let filled_channels = field("Channels").value;
+
+    select.addEventListener("change", () => {
+      const network = NETWORKS.find((n) => n.name == select.value);
+      if (!network) {
+        field("Host").focus();
+        return;
+      }
+      field("Host").value = network.Host;
+      field("Port").value = network.Port;
+      field("Ssl").checked = network.Ssl;
+      field("Alias").value = network.Alias;
+      // channels typed by hand are kept; ones a preset filled are replaced
+      const channels = field("Channels");
+      if (channels.value == filled_channels) {
+        channels.value = network.Channels ?? "";
+        filled_channels = channels.value;
+      }
+    });
+
+    for (const name of ["Host", "Port"]) {
+      field(name).addEventListener("input", () => {
+        select.value = network_for(field("Host").value, field("Port").value)?.name ?? "";
+      });
+    }
   }
 
   check_scroll(focus) {
