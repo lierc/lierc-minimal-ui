@@ -4,7 +4,9 @@
 #
 # Copies each file listed in ship.txt into <outdir>, static/ ones under
 # static/X.Y.Z/; points the pages' and manifest.json's /static/ URLs at that
-# folder; stamps the version into app/index.html's meta tags and writes
+# folder, except full URLs on the site (https://relaychat.party/static/...),
+# which stay as they are, with the file they name copied to that fixed path
+# too: link previews keep an og:image URL long after the release is gone; stamps the version into app/index.html's meta tags and writes
 # static/version.json. Fails if a shipped file refers to one that isn't
 # shipped, or if a script or stylesheet names /static/ directly (they refer
 # to each other relatively, so each release loads its own copies).
@@ -19,6 +21,9 @@ use File::Path qw(make_path);
 use File::Basename qw(dirname);
 
 my $root = "$FindBin::Bin/..";
+
+# the site's own host: a full URL on it keeps a fixed path (see above)
+my $site = "relaychat.party";
 
 die "usage: $0 vX.Y.Z outdir\n" unless @ARGV == 2;
 my ($tag, $out) = @ARGV;
@@ -53,6 +58,14 @@ sub shipped_path {
   return $path =~ s{\Astatic/}{static/$version/}r;
 }
 
+# the repo path a release path came from, for error messages: the file to
+# fix, or the ship.txt line to add
+sub repo_path {
+  my $path = shift;
+  return $path =~ s{\Astatic/\Q$version\E/}{static/}r;
+}
+
+my %listed  = map { $_ => 1 } @ship;
 my %shipped = map { shipped_path($_) => 1 } @ship;
 $shipped{"static/version.json"} = 1;
 
@@ -75,7 +88,8 @@ for my $path (@ship) {
   my $dest = "$out/" . shipped_path($path);
   if ($path =~ /(?:\.html|\Amanifest\.json)\z/) {
     my $text = slurp("$root/$path");
-    $text =~ s{/static/}{/static/$version/}g;
+    # a /static/ not after a host: full URLs on the site keep fixed paths
+    $text =~ s{(?<![\w.:-])/static/}{/static/$version/}g;
     $text =~ s{(<meta name="ui-version" content=")[^"]*(">)}{$1$major$2}g;
     $text =~ s{(<meta name="ui-release" content=")[^"]*(">)}{$1$version$2}g;
     spew($dest, $text);
@@ -90,9 +104,29 @@ for my $path (@ship) {
 # for tabs running code from before releases, which compare a whole number
 spew("$out/static/version.json", qq({"release":"$version","version":$major}\n));
 
-# The checks. A reference is resolved against the referring file's place in
-# the release; query strings and fragments are dropped.
+# The files full site URLs name, copied to their fixed paths (outside
+# static/X.Y.Z/, so the current release always has them).
 my @errors;
+my %fixed;
+for my $path (@ship) {
+  next unless $path =~ /(?:\.html|\Amanifest\.json)\z/;
+  my $text = slurp("$root/$path");
+  while ($text =~ m{https?://\Q$site\E(/static/[^"'\s)<>?#]+)}g) {
+    my $url = $1;
+    my $file = substr($url, 1);
+    if (!$listed{$file}) {
+      push @errors, "$path: refers to https://$site$url, which isn't shipped (add $file to ship.txt)";
+      next;
+    }
+    next if $fixed{$file}++;
+    make_path(dirname("$out/$file"));
+    copy("$root/$file", "$out/$file") or die "$file: $!\n";
+  }
+}
+
+# The checks. A reference is resolved against the referring file's place in
+# the release; query strings and fragments are dropped. Errors name repo
+# paths, as ship.txt does.
 
 sub resolve {
   my ($from, $ref) = @_;
@@ -110,7 +144,8 @@ sub resolve {
 sub need {
   my ($from, $ref) = @_;
   my $path = resolve($from, $ref);
-  push @errors, "$from: refers to $ref, which isn't shipped (add it to ship.txt)"
+  push @errors, repo_path($from) . ": refers to $ref, which isn't shipped (add "
+    . repo_path($path) . " to ship.txt)"
     unless $shipped{$path};
 }
 
@@ -121,26 +156,30 @@ for my $path (sort keys %shipped) {
   }
   elsif ($path =~ /\.js\z/) {
     for my $ref (
-      $text =~ m{\bfrom\s*["']([^"']+)["']}g,
-      $text =~ m{\bimport\s*\(\s*["']([^"']+)["']}g,
-      $text =~ m{\bimport\s*["']([^"']+)["']}g,
-      $text =~ m{\bnew\s+URL\(\s*["']([^"']+)["']\s*,\s*import\.meta\.url}g,
+      $text =~ m{\bfrom\s*["'`]([^"'`]+)["'`]}g,
+      $text =~ m{\bimport\s*\(\s*["'`]([^"'`]+)["'`]}g,
+      $text =~ m{\bimport\s*["'`]([^"'`]+)["'`]}g,
+      $text =~ m{\bnew\s+URL\(\s*["'`]([^"'`]+)["'`]\s*,\s*import\.meta\.url}g,
     ) {
-      need($path, $ref) if $ref =~ m{\A\.\.?/};
+      # a template with ${...} in it can't be checked until it runs
+      need($path, $ref) if $ref =~ m{\A\.\.?/} && $ref !~ /\$\{/;
     }
     # update.js polls the one fixed static URL
     my $scan = $path eq "static/$version/js/lierc/update.js"
       ? $text =~ s{"/static/version\.json"}{}r
       : $text;
-    push @errors, "$path: names /static/ directly; refer to it relatively"
+    push @errors, repo_path($path) . ": names /static/ directly; refer to it relatively"
       if $scan =~ m{["'`]/static/};
   }
   elsif ($path =~ /\.css\z/) {
-    while ($text =~ m{url\(\s*["']?([^"')]+?)["']?\s*\)}g) {
-      my $ref = $1;
+    # url(...), and @import "..." (@import url(...) is a url())
+    for my $ref (
+      $text =~ m{url\(\s*["']?([^"')]+?)["']?\s*\)}g,
+      $text =~ m{\@import\s+["']([^"']+)["']}g,
+    ) {
       next if $ref =~ m{\A(?:data:|https?:|#)};
       if ($ref =~ m{\A/}) {
-        push @errors, "$path: url($ref) names a path directly; refer to it relatively";
+        push @errors, repo_path($path) . ": $ref names a path directly; refer to it relatively";
         next;
       }
       need($path, $ref);

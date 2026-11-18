@@ -27,6 +27,9 @@ the release tree:
 - `static/` files go under `static/X.Y.Z/`, and the pages and
   `manifest.json` point there, so each release's files have their own
   URLs and browsers never mix releases;
+- a full URL on the site (`https://relaychat.party/static/icon-512.png`,
+  the link-preview image) keeps its fixed path, and the file is copied
+  there too, so previews made from an old release still find it;
 - `app/index.html` gets the release in its `ui-release` meta tag, and
   `static/version.json` names it;
 - the build fails if a shipped file refers to one that isn't shipped, or
@@ -34,7 +37,9 @@ the release tree:
 
 CI builds on every push, so a missing `ship.txt` line fails there. Pushing
 a tag `vX.Y.Z` publishes the release: the tarball and its sha256, attached
-to a GitHub release, which relaychat-infra deploys.
+to a GitHub release, which relaychat-infra deploys. If the publish fails
+partway, re-run the job: it adds whatever the release is missing and
+leaves a complete release alone.
 
 Versions are semver. A new major or minor (`v7.1.0`) shows open tabs
 "Update available"; a patch (`v7.0.1`) deploys without telling them.

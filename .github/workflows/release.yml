@@ -27,12 +27,21 @@ jobs:
       - uses: actions/checkout@v4
       - name: Build
         run: bin/build "$TAG" dist
+      # gzip -n leaves out the time, so a re-run packs the same bytes
       - name: Pack
         run: |
           tar --sort=name --owner=0 --group=0 --numeric-owner --mtime=@0 \
-            -C dist -czf "lierc-web-$TAG.tar.gz" .
+            -C dist -cf - . | gzip -n > "lierc-web-$TAG.tar.gz"
           sha256sum "lierc-web-$TAG.tar.gz" > "lierc-web-$TAG.tar.gz.sha256"
+      # Re-runnable: a release left without its files by a failed run gets
+      # them. One already complete isn't touched, so what's deployed from
+      # it stays what was published.
       - name: Publish
         run: |
-          gh release create "$TAG" --title "$TAG" --notes "" \
-            "lierc-web-$TAG.tar.gz" "lierc-web-$TAG.tar.gz.sha256"
+          if ! gh release view "$TAG" > /dev/null 2>&1; then
+            gh release create "$TAG" --title "$TAG" --notes ""
+          fi
+          have=$(gh release view "$TAG" --json assets --jq '.assets[].name')
+          for f in "lierc-web-$TAG.tar.gz" "lierc-web-$TAG.tar.gz.sha256"; do
+            grep -qxF "$f" <<< "$have" || gh release upload "$TAG" "$f"
+          done
