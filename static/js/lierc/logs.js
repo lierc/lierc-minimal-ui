@@ -5,7 +5,8 @@ import { apply_theme } from "./theme.js";
 export class Logs {
   constructor(url) {
     this.api = new API(url);
-    this.es = null;
+    // counts searches, so a slow answer to one that's been replaced is dropped
+    this.searches = 0;
     this.highlight = null;
     this.query = false;
     this.form = document.getElementById("log-search");
@@ -156,7 +157,7 @@ export class Logs {
       this.populate_datalist();
     });
 
-    this.form.addEventListener("submit", (e) => {
+    this.form.addEventListener("submit", async (e) => {
       e.preventDefault();
 
       this.results.innerHTML = '';
@@ -240,51 +241,48 @@ export class Logs {
         path += `?${query}`;
       }
 
-      if (this.es) {
-        this.es.close();
-      }
-
-      this.es = new EventSource(this.api.baseurl + path);
-
+      const search = ++this.searches;
       window.history.replaceState({}, path, `/search/#!${path}`);
-
       this.status.textContent = "searching...";
-      let total = 0;
 
-      this.es.addEventListener("log", (e) => {
-        total++;
-        const line = JSON.parse(e.data);
+      let res;
+      try {
+        res = await this.api.get(path);
+      }
+      catch (err) {
+        if (search == this.searches) {
+          // the API's own message ("Search at most 31 days at a time"), or
+          // a generic one when the request itself failed
+          const msg = String(err).match(/^API Error: ([^\[].*)$/);
+          this.status.textContent = msg ? msg[1] : "Search failed";
+        }
+        return;
+      }
+      if (search != this.searches)
+        return;
+
+      const list = document.createDocumentFragment();
+      for (const line of res.messages) {
         const message = line.Message;
         message.Id = line.MessageId;
-        message.Highlight = e.Highlight;
+        message.Highlight = line.Highlight;
         const el = Render(message, {controls: false, full_date: true});
+        if (el)
+          list.appendChild(el);
+      }
+      this.results.appendChild(list);
+
+      const n = res.messages.length;
+      this.status.textContent = res.truncated
+        ? `the first ${n} results: narrow the search for the rest`
+        : `${n} results`;
+      if (this.highlight) {
+        const el = this.results.querySelector(`li[data-message-id="${this.highlight}"]`);
         if (el) {
-          this.results.appendChild(el);
+          el.scrollIntoView();
+          el.classList.add('focused');
         }
-      });
-
-      let limit_error = null;
-
-      this.es.addEventListener("search_error", (e) => {
-        try {
-          limit_error = JSON.parse(e.data).error;
-        } catch (err) {
-          limit_error = "Search failed";
-        }
-      });
-
-      this.es.addEventListener("error", (e) => {
-        this.es.close();
-        this.es = null;
-        this.status.textContent = limit_error || `${total} results`;
-        if (this.highlight) {
-          const el = this.results.querySelector(`li[data-message-id="${this.highlight}"]`);
-          if (el) {
-            el.scrollIntoView();
-            el.classList.add('focused');
-          }
-        }
-      });
+      }
     });
   }
 
