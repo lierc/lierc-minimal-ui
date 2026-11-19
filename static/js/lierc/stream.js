@@ -4,6 +4,13 @@ const heartbeat_timeout = 15000;
 const wake_timeout = 7000;
 // a wake ping is answered on the stream within this time
 const wake_ping_timeout = 5000;
+// a gap this long between checks (which run each second) means the
+// machine slept: longer than any browser's throttling of a hidden tab's
+// timers (Chrome's is once a minute)
+const sleep_gap = 90000;
+// after a sleep, a hidden tab waits this long before reconnecting, to sit
+// out the dark wakes of a closed laptop
+const wake_wait = 120000;
 // how many message ids to remember for dropping repeats
 const seen_limit = 1000;
 // connection events from the stream server, fired as app events of the
@@ -21,6 +28,11 @@ export class Stream {
   #events = 0;
   // whether the current eventsource has opened
   #opened = false;
+  // when check last ran, and when the machine last woke from a sleep
+  #last_check = Date.now();
+  #woke = null;
+  // closed after a sleep while hidden (see check)
+  #parked = false;
 
   constructor(baseurl) {
     this.baseurl = baseurl;
@@ -255,9 +267,30 @@ export class Stream {
   }
 
   check(timeout = heartbeat_timeout) {
+    const now = Date.now();
+    const silent = now - this.last_event > timeout;
+    if (now - this.#last_check > sleep_gap)
+      this.#woke = now;
+    this.#last_check = now;
+    if (!document.hidden)
+      this.#woke = null;
+
+    // Just woke from a sleep, hidden, and the stream is dead: this may be
+    // a dark wake (a closed laptop waking for a few seconds to check the
+    // network). There's no event for going to sleep, so a reconnect here
+    // would open a stream nobody reads, and the server would keep counting
+    // it as open (holding back notifications) long after the laptop
+    // sleeps again. Wait until the page is visible, or the machine has
+    // stayed awake for wake_wait; the new stream fills in what was missed
+    // when it opens. Without a sleep, a hidden tab reconnects as usual.
+    if (silent && this.#woke !== null && now - this.#woke < wake_wait) {
+      this.#park();
+      return;
+    }
+    this.#parked = false;
+
     // a half-open connection (e.g. after sleep) stays OPEN forever
-    if (this.eventsource?.readyState == 1
-        && Date.now() - this.last_event > timeout) {
+    if (this.eventsource?.readyState == 1 && silent) {
       console.log("no heartbeat, forcing reconnect");
       this.close();
     }
@@ -278,6 +311,18 @@ export class Stream {
         this.fire("reconnect-status", "Reconnecting now");
       }
     }
+  }
+
+  #park() {
+    if (this.#parked)
+      return;
+    console.log("woke while hidden, reconnecting once visible or awake a while");
+    this.#parked = true;
+    clearTimeout(this.timer);
+    this.timer = null;
+    this.retries = 0;
+    this.close();
+    this.fire("close");
   }
 
   destroy() {
