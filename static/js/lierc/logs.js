@@ -245,9 +245,17 @@ export class Logs {
       window.history.replaceState({}, path, `/search/#!${path}`);
       this.status.textContent = "searching...";
 
+      // the dates are days in the browser's time zone, as the times are
+      // shown; it's left out of the page's address, so a shared link
+      // searches the days of whoever opens it
+      const tz = Intl.DateTimeFormat().resolvedOptions().timeZone;
+      const request = tz
+        ? `${path}${query ? "&" : "?"}${this.api.build_query({tz})}`
+        : path;
+
       let res;
       try {
-        res = await this.api.get(path);
+        res = await this.api.get(request);
       }
       catch (err) {
         if (search == this.searches) {
