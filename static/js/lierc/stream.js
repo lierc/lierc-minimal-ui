@@ -5,12 +5,13 @@ const wake_timeout = 7000;
 // a wake ping is answered on the stream within this time
 const wake_ping_timeout = 5000;
 // a gap this long between checks (which run each second) means the
-// machine slept: longer than any browser's throttling of a hidden tab's
-// timers (Chrome's is once a minute)
-const sleep_gap = 90000;
-// after a sleep, a hidden tab waits this long before reconnecting, to sit
-// out the dark wakes of a closed laptop
-const wake_wait = 120000;
+// machine slept; a hidden tab's must be longer than browsers' throttling
+// of its timers (Chrome's is once a minute)
+const sleep_gap = 30000;
+const hidden_sleep_gap = 90000;
+// after a sleep, wait for input or this long awake before reconnecting,
+// to sit out the dark wakes of a closed laptop
+const wake_wait = 60000;
 // how many message ids to remember for dropping repeats
 const seen_limit = 1000;
 // connection events from the stream server, fired as app events of the
@@ -31,7 +32,7 @@ export class Stream {
   // when check last ran, and when the machine last woke from a sleep
   #last_check = Date.now();
   #woke = null;
-  // closed after a sleep while hidden (see check)
+  // closed after a sleep, until input or wake_wait (see check)
   #parked = false;
 
   constructor(baseurl) {
@@ -224,6 +225,7 @@ export class Stream {
   // the page became visible again, possibly after sleep: ask the server to
   // ping this stream, which fails at once if the server has dropped it
   async wake() {
+    this.active();
     if (this.eventsource?.readyState != 1 || !this.stream_id) {
       this.check(wake_timeout);
       return;
@@ -269,21 +271,22 @@ export class Stream {
   check(timeout = heartbeat_timeout) {
     const now = Date.now();
     const silent = now - this.last_event > timeout;
-    if (now - this.#last_check > sleep_gap)
+    if (now - this.#last_check > (document.hidden ? hidden_sleep_gap : sleep_gap))
       this.#woke = now;
     this.#last_check = now;
-    if (!document.hidden)
+    if (this.#woke !== null && (!silent || now - this.#woke >= wake_wait))
       this.#woke = null;
 
-    // Just woke from a sleep, hidden, and the stream is dead: this may be
-    // a dark wake (a closed laptop waking for a few seconds to check the
-    // network). There's no event for going to sleep, so a reconnect here
-    // would open a stream nobody reads, and the server would keep counting
-    // it as open (holding back notifications) long after the laptop
-    // sleeps again. Wait until the page is visible, or the machine has
-    // stayed awake for wake_wait; the new stream fills in what was missed
-    // when it opens. Without a sleep, a hidden tab reconnects as usual.
-    if (silent && this.#woke !== null && now - this.#woke < wake_wait) {
+    // Just woke from a sleep and the stream is dead: this may be a dark
+    // wake (a closed laptop waking for a few seconds to check the
+    // network). There's no event for going to sleep, and the page can't
+    // tell: Firefox reports a closed laptop's tab as visible. A reconnect
+    // here would open a stream nobody reads, which the server counts as
+    // open (holding back notifications) long after the laptop sleeps
+    // again. So wait for input (active) or wake_wait awake; the new stream
+    // fills in what was missed when it opens. Without a sleep, it
+    // reconnects as usual.
+    if (this.#woke !== null) {
       this.#park();
       return;
     }
@@ -313,10 +316,19 @@ export class Stream {
     }
   }
 
+  // someone is using the page (input, focus, the page shown): after a
+  // sleep, reconnect now instead of waiting out wake_wait
+  active() {
+    if (this.#woke === null)
+      return;
+    this.#woke = null;
+    this.check();
+  }
+
   #park() {
     if (this.#parked)
       return;
-    console.log("woke while hidden, reconnecting once visible or awake a while");
+    console.log("woke from sleep, reconnecting on input or after a minute awake");
     this.#parked = true;
     clearTimeout(this.timer);
     this.timer = null;

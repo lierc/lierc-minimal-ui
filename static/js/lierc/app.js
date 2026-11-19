@@ -106,6 +106,10 @@ export class App {
         wake_stream();
     });
     window.addEventListener("pageshow", wake_stream);
+    // after a sleep the stream waits for someone to use the page
+    const active = () => this.stream?.active();
+    for (const name of ["pointerdown", "pointermove", "keydown", "focus"])
+      window.addEventListener(name, active, {passive: true});
     window.addEventListener("online", () => this.stream?.reconnect());
     window.addEventListener("offline", () => this.stream?.close());
     this.setup_highlights();
